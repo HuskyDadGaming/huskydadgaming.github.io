@@ -55,7 +55,6 @@
 
         .group-wrapper { margin-top: 35px; }
         
-        /* Consistent Heading Style with Blue Line */
         .group-header-flex { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
         
         .category-header { 
@@ -156,13 +155,15 @@
 </div>
 
 <script>
+    // UPDATED MASTER ORDER WITH "FACTION WEEKLIES"
     const defaultData = [
         { title: "World Weeklies and Quests", id: "world", tasks: [
             { id: "w1", text: "Buy Rep Contract from AH", desc: "Maximize Reputation gains" },
             { id: "w2", text: "Neighbourhood", desc: "Weekly Quest - Easy Crest bundles" },
             { id: "w3", text: "Silvermoon", desc: "Pickup all available from Silvermoon" },
             { id: "w4", text: "World Boss", desc: "Champion gear ilvl 250 drop chance" },
-            { id: "w5", text: "Singularity (Decimus)", desc: "Decimus Storyline - Elemental Voidcores" }
+            { id: "w5", text: "Singularity (Decimus)", desc: "Decimus Storyline - Elemental Voidcores" },
+            { id: "w6", text: "World Quests", desc: "Quick easy gear, Adventurer only" }
         ]},
         { title: "Delves", id: "delve", tasks: [
             { id: "d1", text: "Gilded Jackpot (Delve Rank 4)", desc: "Run Tier 11s for Hero/Mythic crests" },
@@ -172,12 +173,11 @@
         { title: "Prey", id: "prey", tasks: [
             { id: "p1", text: "Prey - Nightmare", desc: "Renown Rank 4 - Unlocks Nightmare Mode" }
         ]},
-        { title: "Optional Weeklies", id: "optional", tasks: [
+        { title: "Faction Weeklies", id: "faction", tasks: [
             { id: "o1", text: "Singularity (Stormarion Assault)", desc: "Singularity Renown 7 (Champion Trinket - ilvl 246)" },
             { id: "o2", text: "Silvermoon Court (Saltheril’s Soiree)", desc: "Reputation and event rewards" },
             { id: "o3", text: "Hara'ti (Legends of the Haranir)", desc: "Reputation and event rewards" },
-            { id: "o4", text: "Amani-Tribe (The Abundance)", desc: "Reputation and event rewards" },
-            { id: "o5", text: "World Quests", desc: "Quick easy gear, Adventurer only" }
+            { id: "o4", text: "Amani-Tribe (The Abundance)", desc: "Reputation and event rewards" }
         ]},
         { title: "Crafting", id: "craft", tasks: [
             { id: "c1", text: "First profession patron weekly", desc: "Craft x3 patron work orders" },
@@ -230,10 +230,20 @@
     }
 
     function sync() {
-        const tasks = document.querySelectorAll('.prog-task');
-        tasks.forEach(cb => cb.closest('tr').classList.toggle('row-done', cb.checked));
-        const done = document.querySelectorAll('.prog-task:checked').length;
-        const p = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+        const allTasks = document.querySelectorAll('.prog-task');
+        const countableTasks = Array.from(allTasks).filter(cb => {
+            const groupWrapper = cb.closest('.group-wrapper');
+            if (!groupWrapper) return true;
+            const headerElement = groupWrapper.querySelector('.category-header');
+            const groupHeader = headerElement ? headerElement.innerText : "";
+            return groupHeader.trim().toUpperCase() !== "REPUTATION";
+        });
+        allTasks.forEach(cb => {
+            const row = cb.closest('tr');
+            if (row) row.classList.toggle('row-done', cb.checked);
+        });
+        const done = countableTasks.filter(cb => cb.checked).length;
+        const p = countableTasks.length ? Math.round((done / countableTasks.length) * 100) : 0;
         document.getElementById('bar-fill').style.width = p + '%';
         document.getElementById('percent-text').innerText = p + '%';
     }
@@ -242,13 +252,7 @@
         const container = document.getElementById('task-groups-container');
         container.innerHTML = '';
         data.forEach(group => container.appendChild(createGroupUI(group)));
-        
-        // Init Task Sorting
-        document.querySelectorAll('.sortable-list').forEach(list => {
-            new Sortable(list, { group: 'tasks', animation: 150, handle: '.drag-icon', onEnd: () => saveState(false) });
-        });
-        
-        // Init Group Sorting
+        document.querySelectorAll('.sortable-list').forEach(list => new Sortable(list, { group: 'tasks', animation: 150, handle: '.drag-icon', onEnd: () => saveState(false) }));
         new Sortable(container, { animation: 150, handle: '.group-drag-handle', onEnd: () => saveState(false) });
         sync();
     }
@@ -257,18 +261,26 @@
         const groups = [];
         document.querySelectorAll('.group-wrapper').forEach(wrap => {
             const list = wrap.querySelector('.sortable-list');
+            const headerElement = wrap.querySelector('.category-header');
             const tasks = [];
             list.querySelectorAll('tr').forEach(tr => {
+                const actionText = tr.querySelector('.action-text');
+                const descText = tr.querySelector('.desc-text');
+                const input = tr.querySelector('input');
                 tasks.push({ 
                     id: tr.dataset.id, 
-                    text: tr.querySelector('.action-text').innerText, 
-                    desc: tr.querySelector('.desc-text').innerText, 
-                    checked: tr.querySelector('input').checked 
+                    text: actionText ? actionText.innerText : "", 
+                    desc: descText ? descText.innerText : "", 
+                    checked: input ? input.checked : false 
                 });
             });
-            groups.push({ id: list.dataset.group, title: wrap.querySelector('.category-header').innerText, tasks: tasks });
+            groups.push({ 
+                id: list.dataset.group, 
+                title: headerElement ? headerElement.innerText : "Untitled Group", 
+                tasks: tasks 
+            });
         });
-        localStorage.setItem('midnight_save_vFinalLayout', JSON.stringify(groups));
+        localStorage.setItem('midnight_save_vMasterV9', JSON.stringify(groups));
         if(manual) alert("Layout & Progress Saved");
     }
 
@@ -276,8 +288,10 @@
         const n = prompt("Task Name:"); if(!n) return;
         const d = prompt("Description:");
         const tbody = document.querySelector(`.sortable-list[data-group="${groupId}"]`);
-        tbody.appendChild(createTaskRow("c_" + Date.now(), n, d || ""));
-        saveState(false); sync();
+        if (tbody) {
+            tbody.appendChild(createTaskRow("c_" + Date.now(), n, d || ""));
+            saveState(false); sync();
+        }
     }
 
     function addNewGroup() {
@@ -289,13 +303,13 @@
         saveState(false);
     }
 
-    function removeTask(btn) { btn.closest('tr').remove(); sync(); saveState(false); }
-    function removeGroup(btn) { if(confirm("Delete entire group?")) { btn.closest('.group-wrapper').remove(); sync(); saveState(false); } }
+    function removeTask(btn) { const row = btn.closest('tr'); if(row) row.remove(); sync(); saveState(false); }
+    function removeGroup(btn) { if(confirm("Delete entire group?")) { const wrap = btn.closest('.group-wrapper'); if(wrap) wrap.remove(); sync(); saveState(false); } }
     function weeklyReset() { document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false); sync(); saveState(false); }
-    function resetToDefault() { if(confirm("Reset to default order and categories?")) { localStorage.removeItem('midnight_save_vFinalLayout'); renderGroups(defaultData); } }
+    function resetToDefault() { if(confirm("Reset to the updated master layout?")) { localStorage.removeItem('midnight_save_vMasterV9'); renderGroups(defaultData); } }
 
     window.onload = () => {
-        const saved = JSON.parse(localStorage.getItem('midnight_save_vFinalLayout'));
+        const saved = JSON.parse(localStorage.getItem('midnight_save_vMasterV9'));
         renderGroups(saved || defaultData);
     };
 </script>
