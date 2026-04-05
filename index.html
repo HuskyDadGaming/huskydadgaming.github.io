@@ -67,23 +67,26 @@
             text-transform: uppercase; letter-spacing: 1.5px; margin: 30px 0 10px 10px;
             display: flex; align-items: center; gap: 10px;
         }
-        /* REVERTED: Category line back to Blue/Border mix */
         .category-header::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--blue), transparent); opacity: 0.6; }
 
         table { width: 100%; border-collapse: collapse; background: rgba(18, 12, 29, 0.8); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 10px; backdrop-filter: blur(4px); table-layout: fixed; }
         th { text-align: left; padding: 12px 15px; color: var(--gold); font-size: 0.75rem; text-transform: uppercase; border-bottom: 2px solid var(--border); }
         
-        tbody tr { transition: 0.2s; cursor: grab; }
-        tbody tr:hover td { background: rgba(138, 43, 226, 0.1); }
+        tbody tr { transition: 0.2s; }
+        tbody tr:hover td { background: rgba(138, 43, 226, 0.05); }
         .row-done { opacity: 0.3; }
         .row-done .action-text { text-decoration: line-through; }
 
         td { padding: 12px 15px; border-bottom: 1px solid rgba(45, 36, 61, 0.5); vertical-align: middle; overflow: hidden; }
         
-        .col-check { width: 50px; text-align: center; }
+        .col-check { width: 80px; text-align: center; white-space: nowrap; }
+        .drag-icon { color: var(--dim); margin-right: 8px; font-size: 1.2rem; vertical-align: middle; user-select: none; cursor: grab; }
+        .drag-icon:active { cursor: grabbing; }
+        .drag-icon:hover { color: var(--accent); }
+        
         .col-status { width: 130px; text-align: right; }
         
-        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--accent); }
+        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--accent); vertical-align: middle; }
         .action-text { font-weight: 600; color: #fff; display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
         .desc-text { font-size: 0.8rem; color: var(--dim); display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 
@@ -124,38 +127,38 @@
     <div class="category-header">World Weeklies and Quests</div>
     <table>
         <tbody class="sortable-list" data-group="world">
-            <tr data-id="world_ah" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="world_ah">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Buy Rep Contract from AH</span><span class="desc-text">Maximize Reputation gains</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="world1" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="world1">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Neighbourhood</span><span class="desc-text">Weekly Quest - Easy Crest bundles</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="world_sm" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="world_sm">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Silvermoon</span><span class="desc-text">Pickup all available from Silvermoon</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="world5" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="world5">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">World Boss</span><span class="desc-text">Champion gear ilvl 250 drop chance</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="sing_storm" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="sing_storm">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Singularity (Stormarion Assault) - Voidstorm</span><span class="desc-text">Singularity Renown 7 (Champion Trinket - ilvl 246)</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="sing_deci" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="sing_deci">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Singularity (Decimus) - Voidstorm</span><span class="desc-text">Decimus Storyline - Elemental Voidcores</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="world6" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="world6">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">World Quests</span><span class="desc-text">Quick easy gear, Adventurer only</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
@@ -165,18 +168,18 @@
     <div class="category-header">Optional Weeklies</div>
     <table>
         <tbody class="sortable-list" data-group="optional">
-            <tr data-id="opt_silvermoon" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="opt_silvermoon">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Silvermoon Court (Saltheril’s Soiree) - Eversong Woods</span><span class="desc-text">Reputation and event rewards</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="opt_harati" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="opt_harati">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Hara'ti (Legends of the Haranir) - Harandar</span><span class="desc-text">Reputation and event rewards</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="opt_amani" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="opt_amani">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Amani-Tribe (The Abundance) - All Zones</span><span class="desc-text">Reputation and event rewards</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
@@ -186,8 +189,8 @@
     <div class="category-header">Prey</div>
     <table>
         <tbody class="sortable-list" data-group="prey">
-            <tr data-id="prey2" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="prey2">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Prey - Nightmare</span><span class="desc-text">Renown Rank 4 - Unlocks Nightmare Mode</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
@@ -197,18 +200,18 @@
     <div class="category-header">Delves</div>
     <table>
         <tbody class="sortable-list" data-group="delve">
-            <tr data-id="delve2" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="delve2">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Gilded Jackpot (Delve Rank 4)</span><span class="desc-text">Run Tier 11s for Hero/Mythic crests</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="delve3" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="delve3">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Nullaeus ?</span><span class="desc-text">Kill weekly for 5 Hero crests</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="delve4" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="delve4">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Nullaeus ??</span><span class="desc-text">Kill weekly for 5 Mythic crests</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
@@ -218,23 +221,23 @@
     <div class="category-header">Crafting</div>
     <table>
         <tbody class="sortable-list" data-group="craft">
-            <tr data-id="craft_prof1" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="craft_prof1">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">First profession patron weekly</span><span class="desc-text">Craft x3 patron work orders</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="craft_prof2" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="craft_prof2">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Second profession patron weekly</span><span class="desc-text">Craft x3 patron work orders</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="craft_contract1" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="craft_contract1">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">First profession contract</span><span class="desc-text">Submit work order</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="craft_contract2" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+            <tr data-id="craft_contract2">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
                 <td><span class="action-text">Second profession contract</span><span class="desc-text">Submit work order</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
@@ -246,23 +249,23 @@
     <div class="category-header">Reputation</div>
     <table>
         <tbody class="sortable-list" data-group="rep">
-            <tr data-id="rep1" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox"></td>
+            <tr data-id="rep1">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"></td>
                 <td><span class="action-text">Singularity rep</span><span class="desc-text">Renown 7 - Unlock Champion trinket ilvl 246</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="rep2" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox"></td>
+            <tr data-id="rep2">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"></td>
                 <td><span class="action-text">Silvermoon Court rep</span><span class="desc-text">Renown 9 - Unlock Champion head ilvl 246</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="rep3" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox"></td>
+            <tr data-id="rep3">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"></td>
                 <td><span class="action-text">Hara'ti rep</span><span class="desc-text">Renown 8 - Unlock Champion belt ilvl 246</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
-            <tr data-id="rep4" onclick="toggleRow(this, event)">
-                <td class="col-check"><input type="checkbox"></td>
+            <tr data-id="rep4">
+                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"></td>
                 <td><span class="action-text">Amani-Tribe rep</span><span class="desc-text">Renown 9 - Unlock Champion neck ilvl 246</span></td>
                 <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
@@ -324,16 +327,13 @@
 
     const lists = document.querySelectorAll('.sortable-list');
     lists.forEach(list => {
-        new Sortable(list, { animation: 150, ghostClass: 'sortable-ghost', onEnd: () => sync() });
+        new Sortable(list, { 
+            animation: 150, 
+            ghostClass: 'sortable-ghost',
+            handle: '.drag-icon', // ONLY the icon is the handle now
+            onEnd: () => saveState(false)
+        });
     });
-
-    function toggleRow(row, event) {
-        if (event.target.type !== 'checkbox') {
-            const cb = row.querySelector('input');
-            if (cb) cb.checked = !cb.checked;
-        }
-        sync();
-    }
 
     function sync() {
         document.querySelectorAll('tbody tr').forEach(row => {
