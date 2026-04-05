@@ -54,13 +54,19 @@
         .btn:hover { background: #2d243d; border-color: var(--accent); }
 
         .group-wrapper { margin-top: 35px; }
+        
+        /* Consistent Heading Style with Blue Line */
         .group-header-flex { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
         
         .category-header { 
             color: var(--blue); font-size: 0.9rem; font-weight: 800; 
             text-transform: uppercase; display: flex; align-items: center; gap: 10px; flex-grow: 1;
         }
-        .category-header::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--blue), transparent); opacity: 0.4; margin-right: 15px;}
+        .category-header::after { 
+            content: ""; flex: 1; height: 1px; 
+            background: linear-gradient(to right, var(--blue), transparent); 
+            opacity: 0.4; margin-left: 10px;
+        }
 
         .group-drag-handle { color: var(--blue); cursor: grab; font-size: 1.4rem; }
         
@@ -150,7 +156,6 @@
 </div>
 
 <script>
-    // New Default Order established from User Request
     const defaultData = [
         { title: "World Weeklies and Quests", id: "world", tasks: [
             { id: "w1", text: "Buy Rep Contract from AH", desc: "Maximize Reputation gains" },
@@ -237,7 +242,13 @@
         const container = document.getElementById('task-groups-container');
         container.innerHTML = '';
         data.forEach(group => container.appendChild(createGroupUI(group)));
-        document.querySelectorAll('.sortable-list').forEach(list => new Sortable(list, { group: 'tasks', animation: 150, handle: '.drag-icon', onEnd: () => saveState(false) }));
+        
+        // Init Task Sorting
+        document.querySelectorAll('.sortable-list').forEach(list => {
+            new Sortable(list, { group: 'tasks', animation: 150, handle: '.drag-icon', onEnd: () => saveState(false) });
+        });
+        
+        // Init Group Sorting
         new Sortable(container, { animation: 150, handle: '.group-drag-handle', onEnd: () => saveState(false) });
         sync();
     }
@@ -248,19 +259,24 @@
             const list = wrap.querySelector('.sortable-list');
             const tasks = [];
             list.querySelectorAll('tr').forEach(tr => {
-                tasks.push({ id: tr.dataset.id, text: tr.querySelector('.action-text').innerText, desc: tr.querySelector('.desc-text').innerText, checked: tr.querySelector('input').checked });
+                tasks.push({ 
+                    id: tr.dataset.id, 
+                    text: tr.querySelector('.action-text').innerText, 
+                    desc: tr.querySelector('.desc-text').innerText, 
+                    checked: tr.querySelector('input').checked 
+                });
             });
             groups.push({ id: list.dataset.group, title: wrap.querySelector('.category-header').innerText, tasks: tasks });
         });
-        localStorage.setItem('midnight_save_vNewOrder', JSON.stringify(groups));
+        localStorage.setItem('midnight_save_vFinalLayout', JSON.stringify(groups));
         if(manual) alert("Layout & Progress Saved");
     }
 
     function addTaskPrompt(groupId) {
-        const n = prompt("Task:"); if(!n) return;
+        const n = prompt("Task Name:"); if(!n) return;
         const d = prompt("Description:");
         const tbody = document.querySelector(`.sortable-list[data-group="${groupId}"]`);
-        tbody.appendChild(createTaskRow("c_" + Date.now(), n, d));
+        tbody.appendChild(createTaskRow("c_" + Date.now(), n, d || ""));
         saveState(false); sync();
     }
 
@@ -276,10 +292,10 @@
     function removeTask(btn) { btn.closest('tr').remove(); sync(); saveState(false); }
     function removeGroup(btn) { if(confirm("Delete entire group?")) { btn.closest('.group-wrapper').remove(); sync(); saveState(false); } }
     function weeklyReset() { document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false); sync(); saveState(false); }
-    function resetToDefault() { if(confirm("Reset to the new default order?")) { localStorage.removeItem('midnight_save_vNewOrder'); renderGroups(defaultData); } }
+    function resetToDefault() { if(confirm("Reset to default order and categories?")) { localStorage.removeItem('midnight_save_vFinalLayout'); renderGroups(defaultData); } }
 
     window.onload = () => {
-        const saved = JSON.parse(localStorage.getItem('midnight_save_vNewOrder'));
+        const saved = JSON.parse(localStorage.getItem('midnight_save_vFinalLayout'));
         renderGroups(saved || defaultData);
     };
 </script>
