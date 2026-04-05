@@ -55,17 +55,23 @@
         .btn:hover { background: #2d243d; border-color: var(--accent); }
 
         /* HEADERS */
-        .category-header { 
-            color: var(--blue); font-size: 0.9rem; font-weight: 800; 
-            text-transform: uppercase; display: flex; align-items: center; gap: 10px; flex: 1;
-        }
-        .category-header::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--blue), transparent); opacity: 0.6; }
-
         .group-wrapper { margin-top: 35px; }
         .group-header-flex { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        
+        .category-header { 
+            color: var(--blue); font-size: 0.9rem; font-weight: 800; 
+            text-transform: uppercase; display: flex; align-items: center; gap: 10px; flex-grow: 1;
+        }
+        .category-header::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--blue), transparent); opacity: 0.4; margin-right: 15px;}
+
         .group-drag-handle { color: var(--blue); cursor: grab; font-size: 1.4rem; }
-        .delete-group { color: var(--dim); background: none; border: none; cursor: pointer; font-size: 0.7rem; }
-        .delete-group:hover { color: var(--danger); }
+        
+        .delete-group { 
+            color: var(--dim); background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
+            cursor: pointer; font-size: 0.6rem; text-transform: uppercase; padding: 4px 8px; 
+            border-radius: 4px; transition: 0.2s; font-weight: bold;
+        }
+        .delete-group:hover { color: var(--danger); border-color: var(--danger); background: rgba(255, 77, 77, 0.1); }
 
         /* TABLES */
         table { width: 100%; border-collapse: collapse; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
@@ -73,19 +79,22 @@
         .row-done .action-text { text-decoration: line-through; color: var(--green); }
 
         td { padding: 12px 15px; border-bottom: 1px solid rgba(45, 36, 61, 0.4); vertical-align: middle; }
-        .col-drag { width: 30px; text-align: center; }
-        .col-check { width: 40px; }
-        .col-delete { width: 40px; text-align: center; }
+        
+        /* CONTROLS COLUMN */
+        .col-controls { width: 110px; white-space: nowrap; }
+        .control-flex { display: flex; align-items: center; gap: 12px; }
         
         .drag-icon { color: var(--dim); cursor: grab; font-size: 1.1rem; }
         input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--green); }
+        .delete-task { color: var(--dim); cursor: pointer; background: none; border: none; font-size: 1.2rem; line-height: 1; padding: 0; }
+        .delete-task:hover { color: var(--danger); }
+
         .action-text { font-weight: 600; color: #fff; display: block; font-size: 0.95rem; }
         .desc-text { font-size: 0.75rem; color: var(--dim); display: block; margin-top: 2px; }
 
-        .delete-task { color: var(--dim); cursor: pointer; background: none; border: none; font-size: 1.2rem; }
-        .delete-task:hover { color: var(--danger); }
+        .btn-add { margin: 5px auto 0 0; width: 80px; font-size: 0.6rem; }
 
-        /* GEARING TRACKS & PRIORITY */
+        /* FOOTER INFO */
         .track-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; justify-content: space-around; text-align: center; margin-bottom: 30px; }
         .track-item div:first-child { font-weight: 900; font-size: 0.75rem; margin-bottom: 5px; }
         .track-item div:last-child { font-weight: 600; color: #fff; }
@@ -185,10 +194,14 @@
         tr.dataset.id = id;
         if(checked) tr.classList.add('row-done');
         tr.innerHTML = `
-            <td class="col-drag"><span class="drag-icon">⠿</span></td>
-            <td class="col-check"><input type="checkbox" class="prog-task" ${checked ? 'checked' : ''} onchange="sync()"></td>
+            <td class="col-controls">
+                <div class="control-flex">
+                    <span class="drag-icon">⠿</span>
+                    <input type="checkbox" class="prog-task" ${checked ? 'checked' : ''} onchange="sync()">
+                    <button class="delete-task" onclick="removeTask(this)">×</button>
+                </div>
+            </td>
             <td><span class="action-text">${text}</span><span class="desc-text">${desc}</span></td>
-            <td class="col-delete"><button class="delete-task" onclick="removeTask(this)">×</button></td>
         `;
         return tr;
     }
@@ -200,10 +213,10 @@
             <div class="group-header-flex">
                 <span class="group-drag-handle">⠿</span>
                 <div class="category-header">${group.title}</div>
-                <button class="delete-group" onclick="removeGroup(this)">Remove</button>
+                <button class="delete-group" onclick="removeGroup(this)">Remove Group</button>
             </div>
             <table><tbody class="sortable-list" data-group="${group.id}"></tbody></table>
-            <button class="btn btn-add" style="margin: 5px 0 0 auto; width: 80px; font-size: 0.6rem;" onclick="addTaskPrompt('${group.id}')">+ Task</button>
+            <button class="btn btn-add" onclick="addTaskPrompt('${group.id}')">+ Task</button>
         `;
         const tbody = wrapper.querySelector('tbody');
         group.tasks.forEach(t => tbody.appendChild(createTaskRow(t.id, t.text, t.desc, t.checked)));
@@ -238,8 +251,8 @@
             });
             groups.push({ id: list.dataset.group, title: wrap.querySelector('.category-header').innerText, tasks: tasks });
         });
-        localStorage.setItem('midnight_save_complete', JSON.stringify(groups));
-        if(manual) alert("All Layout & Progress Saved");
+        localStorage.setItem('midnight_save_vFinalLayout', JSON.stringify(groups));
+        if(manual) alert("Layout & Progress Saved");
     }
 
     function addTaskPrompt(groupId) {
@@ -260,12 +273,12 @@
     }
 
     function removeTask(btn) { btn.closest('tr').remove(); sync(); saveState(false); }
-    function removeGroup(btn) { if(confirm("Delete group?")) { btn.closest('.group-wrapper').remove(); sync(); saveState(false); } }
+    function removeGroup(btn) { if(confirm("Delete entire group?")) { btn.closest('.group-wrapper').remove(); sync(); saveState(false); } }
     function weeklyReset() { document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false); sync(); saveState(false); }
-    function resetToDefault() { if(confirm("Reset all?")) { localStorage.removeItem('midnight_save_complete'); renderGroups(defaultData); } }
+    function resetToDefault() { if(confirm("Reset all groups and progress?")) { localStorage.removeItem('midnight_save_vFinalLayout'); renderGroups(defaultData); } }
 
     window.onload = () => {
-        const saved = JSON.parse(localStorage.getItem('midnight_save_complete'));
+        const saved = JSON.parse(localStorage.getItem('midnight_save_vFinalLayout'));
         renderGroups(saved || defaultData);
     };
 </script>
