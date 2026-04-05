@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Midnight Gearing - Master List</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+    
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <style>
         :root {
@@ -31,7 +34,6 @@
 
         .container { width: 100%; max-width: 900px; padding: 40px 20px; }
 
-        /* Progress Box Styling */
         .progress-box {
             background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border);
             margin-bottom: 30px; position: sticky; top: 20px; z-index: 100;
@@ -44,8 +46,7 @@
             transition: width 0.6s ease;
         }
 
-        /* Control Buttons Styling */
-        .controls-top { margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .controls-top { margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .btn-ctrl {
             background: var(--btn-bg); color: #fff; border: 1px solid var(--border);
             padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer;
@@ -54,7 +55,6 @@
         }
         .btn-ctrl:hover { background: #2d243d; border-color: var(--accent); }
 
-        /* Group and Task Styling */
         .group-wrapper { margin-top: 35px; }
         .group-header-flex { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
         .category-header { 
@@ -87,7 +87,6 @@
         .action-text { font-weight: 600; color: #fff; display: block; font-size: 0.95rem; }
         .desc-text { font-size: 0.75rem; color: var(--dim); display: block; margin-top: 2px; }
 
-        /* Gearing Section Styling */
         .section-divider { margin-top: 50px; margin-bottom: 20px; }
         .track-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; justify-content: space-around; text-align: center; margin-bottom: 30px; }
         .track-item div:first-child { font-weight: 900; font-size: 0.75rem; margin-bottom: 5px; text-transform: uppercase; }
@@ -110,7 +109,6 @@
         <div class="bar-bg"><div id="bar-fill"></div></div>
         
         <div class="controls-top">
-            <button class="btn-ctrl" onclick="saveState(true)">💾 SAVE</button>
             <button class="btn-ctrl" onclick="addNewGroup()">📁 NEW GROUP</button>
             <button class="btn-ctrl" onclick="resetToDefault()">↩️ RESET</button>
             <button class="btn-ctrl" onclick="weeklyReset()">🧹 CLEAR</button>
@@ -147,7 +145,6 @@
 </div>
 
 <script>
-    // Exact order and content from Master List images
     const defaultData = [
         { title: "World Weeklies and Quests", id: "world", tasks: [
             { id: "w1", text: "Buy Rep Contract from AH", desc: "Maximize Reputation gains" },
@@ -195,7 +192,7 @@
         tr.dataset.id = id;
         if(checked) tr.classList.add('row-done');
         tr.innerHTML = `
-            <td class="col-left"><div style="display:flex; align-items:center; gap:15px;"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" ${checked ? 'checked' : ''} onchange="sync()"></div></td>
+            <td class="col-left"><div style="display:flex; align-items:center; gap:15px;"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" ${checked ? 'checked' : ''} onchange="sync(); saveState();"></div></td>
             <td><span class="action-text">${text}</span><span class="desc-text">${desc}</span></td>
             <td style="width:40px; text-align:center;"><button style="background:none; border:none; color:var(--dim); cursor:pointer; font-size:1.2rem;" onclick="removeTask(this)">×</button></td>
         `;
@@ -217,7 +214,6 @@
 
     function sync() {
         const allTasks = document.querySelectorAll('.prog-task');
-        // Rep is excluded from progress tracking per master design
         const countableTasks = Array.from(allTasks).filter(cb => {
             const groupWrapper = cb.closest('.group-wrapper');
             return groupWrapper && groupWrapper.querySelector('.category-header').innerText.trim().toUpperCase() !== "REPUTATION";
@@ -234,13 +230,22 @@
         container.innerHTML = '';
         data.forEach(group => container.appendChild(createGroupUI(group)));
         
-        // Initialize drag and drop
-        document.querySelectorAll('.sortable-list').forEach(list => new Sortable(list, { group: 'tasks', animation: 150, handle: '.drag-icon', onEnd: () => saveState(false) }));
-        new Sortable(container, { animation: 150, handle: '.group-drag-handle', onEnd: () => saveState(false) });
+        document.querySelectorAll('.sortable-list').forEach(list => new Sortable(list, { 
+            group: 'tasks', 
+            animation: 150, 
+            handle: '.drag-icon', 
+            onEnd: () => saveState() 
+        }));
+        
+        new Sortable(container, { 
+            animation: 150, 
+            handle: '.group-drag-handle', 
+            onEnd: () => saveState() 
+        });
         sync();
     }
 
-    function saveState(manual) {
+    function saveState() {
         const groups = [];
         document.querySelectorAll('.group-wrapper').forEach(wrap => {
             const list = wrap.querySelector('.sortable-list');
@@ -253,8 +258,7 @@
             }));
             groups.push({ id: list.dataset.group, title: wrap.querySelector('.category-header').innerText, tasks: tasks });
         });
-        localStorage.setItem('midnight_gear_final_v3', JSON.stringify(groups));
-        if(manual) alert("Progress and Layout Saved");
+        localStorage.setItem('midnight_gear_autosave_v1', JSON.stringify(groups));
     }
 
     function addTaskPrompt(groupId) {
@@ -262,7 +266,7 @@
         if(n) { 
             document.querySelector(`.sortable-list[data-group="${groupId}"]`).appendChild(createTaskRow("c_" + Date.now(), n, d || "")); 
             sync(); 
-            saveState(false); 
+            saveState(); 
         }
     }
 
@@ -271,16 +275,16 @@
         if(n) { 
             const g = { title: n, id: "g_" + Date.now(), tasks: [] }; 
             document.getElementById('task-groups-container').appendChild(createGroupUI(g)); 
-            saveState(false); 
+            saveState(); 
         }
     }
 
-    function removeTask(btn) { btn.closest('tr').remove(); sync(); saveState(false); }
-    function removeGroup(btn) { if(confirm("Delete entire group?")) { btn.closest('.group-wrapper').remove(); sync(); saveState(false); } }
-    function weeklyReset() { document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false); sync(); saveState(false); }
-    function resetToDefault() { if(confirm("Reset to official master layout?")) { localStorage.removeItem('midnight_gear_final_v3'); renderGroups(defaultData); } }
+    function removeTask(btn) { btn.closest('tr').remove(); sync(); saveState(); }
+    function removeGroup(btn) { if(confirm("Delete entire group?")) { btn.closest('.group-wrapper').remove(); sync(); saveState(); } }
+    function weeklyReset() { document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false); sync(); saveState(); }
+    function resetToDefault() { if(confirm("Reset to official master layout?")) { localStorage.removeItem('midnight_gear_autosave_v1'); renderGroups(defaultData); } }
 
-    window.onload = () => renderGroups(JSON.parse(localStorage.getItem('midnight_gear_final_v3')) || defaultData);
+    window.onload = () => renderGroups(JSON.parse(localStorage.getItem('midnight_gear_autosave_v1')) || defaultData);
 </script>
 </body>
 </html>
