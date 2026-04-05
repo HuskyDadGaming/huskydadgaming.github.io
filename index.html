@@ -8,7 +8,8 @@
     <style>
         :root {
             --bg: #050308;
-            --surface: #120c1d;
+            --surface: #0a0812;
+            --card-bg: #120c1d;
             --border: #2d243d;
             --accent: #8a2be2;
             --gold: #ffcc33;
@@ -17,6 +18,7 @@
             --text: #e0dced;
             --dim: #8b869c;
             --btn-bg: #1e152e;
+            --danger: #ff4d4d;
         }
 
         body {
@@ -25,407 +27,247 @@
             font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 0; padding: 0;
             display: flex; justify-content: center; min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(51, 204, 255, 0.05) 0%, transparent 50%),
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px);
-            background-size: 100% 100%, 100% 100%, 550px 550px, 350px 350px;
         }
 
-        .container { width: 100%; max-width: 900px; padding: 40px 20px; position: relative; z-index: 10; }
+        .container { width: 100%; max-width: 900px; padding: 40px 20px; }
 
-        /* JAZZY PROGRESS BAR STYLES */
+        /* PROGRESS SECTION */
         .progress-box {
-            background: var(--surface); padding: 20px; border-radius: 12px; border: 1px solid var(--border);
+            background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border);
             margin-bottom: 30px; position: sticky; top: 20px; z-index: 100;
             box-shadow: 0 15px 40px rgba(0,0,0,0.8); backdrop-filter: blur(10px);
         }
 
-        .bar-bg { 
-            background: #000; 
-            height: 14px; 
-            border-radius: 7px; 
-            margin-top: 10px; 
-            border: 1px solid #1a1a1a; 
-            overflow: hidden;
-            position: relative;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-        }
-
+        .bar-bg { background: #000; height: 16px; border-radius: 8px; margin-top: 5px; border: 1px solid #1a1a1a; overflow: hidden; }
         #bar-fill { 
-            height: 100%; 
-            width: 0%; 
-            background: linear-gradient(90deg, var(--accent), var(--blue), var(--accent));
-            background-size: 200% 100%;
-            transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            position: relative;
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.6);
-            animation: shimmer 3s infinite linear;
+            height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--blue), var(--accent));
+            transition: width 0.6s ease;
         }
 
-        /* Animated Stripes Overlay */
-        #bar-fill::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background-image: linear-gradient(
-                -45deg, 
-                rgba(255, 255, 255, 0.1) 25%, 
-                transparent 25%, 
-                transparent 50%, 
-                rgba(255, 255, 255, 0.1) 50%, 
-                rgba(255, 255, 255, 0.1) 75%, 
-                transparent 75%, 
-                transparent
-            );
-            background-size: 30px 30px;
-            animation: move-stripes 2s infinite linear;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        @keyframes move-stripes {
-            from { background-position: 0 0; }
-            to { background-position: 30px 0; }
-        }
-
-        .bar-pulse { animation: bar-bump 0.4s ease; }
-        @keyframes bar-bump {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); filter: brightness(1.3); }
-            100% { transform: scale(1); }
-        }
-
-        /* REST OF STYLES */
-        .controls-top { margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .controls-top { margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 
         .btn {
-            background: var(--btn-bg); color: #fff !important; border: 1px solid var(--border);
+            background: var(--btn-bg); color: #fff; border: 1px solid var(--border);
             padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer;
-            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;
-            display: flex; align-items: center; justify-content: center; gap: 6px;
+            font-size: 0.65rem; text-transform: uppercase; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
         }
         .btn:hover { background: #2d243d; border-color: var(--accent); }
 
+        /* HEADERS */
         .category-header { 
             color: var(--blue); font-size: 0.9rem; font-weight: 800; 
-            text-transform: uppercase; letter-spacing: 1.5px; margin: 30px 0 10px 10px;
-            display: flex; align-items: center; gap: 10px;
+            text-transform: uppercase; display: flex; align-items: center; gap: 10px; flex: 1;
         }
         .category-header::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--blue), transparent); opacity: 0.6; }
 
-        table { width: 100%; border-collapse: collapse; background: rgba(18, 12, 29, 0.8); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 10px; backdrop-filter: blur(4px); table-layout: fixed; }
-        th { text-align: left; padding: 12px 15px; color: var(--gold); font-size: 0.75rem; text-transform: uppercase; border-bottom: 2px solid var(--border); }
-        
-        tbody tr { transition: background 0.3s ease, opacity 0.3s ease; }
-        
-        .row-done td { background: rgba(57, 255, 20, 0.1) !important; border-bottom-color: var(--green); }
+        .group-wrapper { margin-top: 35px; }
+        .group-header-flex { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .group-drag-handle { color: var(--blue); cursor: grab; font-size: 1.4rem; }
+        .delete-group { color: var(--dim); background: none; border: none; cursor: pointer; font-size: 0.7rem; }
+        .delete-group:hover { color: var(--danger); }
+
+        /* TABLES */
+        table { width: 100%; border-collapse: collapse; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
+        .row-done td { opacity: 0.4; background: rgba(57, 255, 20, 0.03) !important; }
         .row-done .action-text { text-decoration: line-through; color: var(--green); }
 
-        td { padding: 12px 15px; border-bottom: 1px solid rgba(45, 36, 61, 0.5); vertical-align: middle; overflow: hidden; }
+        td { padding: 12px 15px; border-bottom: 1px solid rgba(45, 36, 61, 0.4); vertical-align: middle; }
+        .col-drag { width: 30px; text-align: center; }
+        .col-check { width: 40px; }
+        .col-delete { width: 40px; text-align: center; }
         
-        .col-check { width: 60px; text-align: left; white-space: nowrap; }
-        .flex-cell { display: flex; align-items: center; gap: 12px; }
+        .drag-icon { color: var(--dim); cursor: grab; font-size: 1.1rem; }
+        input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--green); }
+        .action-text { font-weight: 600; color: #fff; display: block; font-size: 0.95rem; }
+        .desc-text { font-size: 0.75rem; color: var(--dim); display: block; margin-top: 2px; }
 
-        .drag-icon { color: var(--dim); font-size: 1.2rem; user-select: none; cursor: grab; }
-        
-        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--green); margin: 0; }
-        
-        .action-text { font-weight: 600; color: #fff; display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; transition: 0.3s; }
-        .desc-text { font-size: 0.8rem; color: var(--dim); display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+        .delete-task { color: var(--dim); cursor: pointer; background: none; border: none; font-size: 1.2rem; }
+        .delete-task:hover { color: var(--danger); }
 
-        .track-row { display: flex; justify-content: space-around; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin: 20px 0; text-align: center; }
-        .track-item { display: flex; flex-direction: column; gap: 4px; }
-        .track-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
-        .track-val { font-size: 0.9rem; font-weight: 600; color: #fff; }
+        /* GEARING TRACKS & PRIORITY */
+        .track-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; justify-content: space-around; text-align: center; margin-bottom: 30px; }
+        .track-item div:first-child { font-weight: 900; font-size: 0.75rem; margin-bottom: 5px; }
+        .track-item div:last-child { font-weight: 600; color: #fff; }
 
-        .footer-section { margin-top: 50px; }
-
-        @media (max-width: 1000px) { .void-decor { display: none; } }
+        .priority-table th { text-align: left; color: var(--gold); font-size: 0.75rem; text-transform: uppercase; padding: 15px; border-bottom: 2px solid var(--border); }
+        .priority-table td:first-child { font-weight: 700; color: #fff; width: 230px; border-right: 1px solid var(--border); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="progress-box">
-        <div style="display:flex; justify-content:space-between; font-weight: bold; letter-spacing: 1px; font-size: 0.8rem;">
-            <span>TOTAL PROGRESS</span>
-            <span id="percent-text" style="color: var(--blue);">0%</span>
+        <div style="display:flex; justify-content:space-between; align-items: flex-end; font-weight: 900; margin-bottom: 8px;">
+            <span style="font-size: 1.1rem;">TOTAL PROGRESS</span>
+            <span id="percent-text" style="color: var(--blue); font-size: 1.8rem;">0%</span>
         </div>
         <div class="bar-bg"><div id="bar-fill"></div></div>
         <div class="controls-top">
-            <button class="btn btn-save" onclick="saveState(true)">💾 Commit Order</button>
-            <button class="btn btn-utility" onclick="resetOrder()">↩️ Reset Order</button>
-            <button class="btn btn-weekly" onclick="weeklyReset()">🧹 Reset Weeklies</button>
+            <button class="btn" onclick="saveState(true)">💾 Save</button>
+            <button class="btn" onclick="addNewGroup()">📁 New Group</button>
+            <button class="btn" onclick="resetToDefault()">↩️ Reset</button>
+            <button class="btn" onclick="weeklyReset()">🧹 Clear</button>
         </div>
     </div>
 
-    <div class="category-header">World Weeklies and Quests</div>
-    <table>
-        <tbody class="sortable-list" data-group="world">
-            <tr data-id="world_ah">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Buy Rep Contract from AH</span><span class="desc-text">Maximize Reputation gains</span></td>
-            </tr>
-            <tr data-id="world1">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Neighbourhood</span><span class="desc-text">Weekly Quest - Easy Crest bundles</span></td>
-            </tr>
-            <tr data-id="world_sm">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Silvermoon</span><span class="desc-text">Pickup all available from Silvermoon</span></td>
-            </tr>
-            <tr data-id="world5">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">World Boss</span><span class="desc-text">Champion gear ilvl 250 drop chance</span></td>
-            </tr>
-            <tr data-id="sing_storm">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Singularity (Stormarion Assault)</span><span class="desc-text">Singularity Renown 7 (Champion Trinket - ilvl 246)</span></td>
-            </tr>
-            <tr data-id="sing_deci">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Singularity (Decimus)</span><span class="desc-text">Decimus Storyline - Elemental Voidcores</span></td>
-            </tr>
-            <tr data-id="world6">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">World Quests</span><span class="desc-text">Quick easy gear, Adventurer only</span></td>
-            </tr>
-        </tbody>
-    </table>
+    <div id="task-groups-container"></div>
 
-    <div class="category-header">Optional Weeklies</div>
-    <table>
-        <tbody class="sortable-list" data-group="optional">
-            <tr data-id="opt_silvermoon">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Silvermoon Court (Saltheril’s Soiree)</span><span class="desc-text">Reputation and event rewards</span></td>
-            </tr>
-            <tr data-id="opt_harati">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Hara'ti (Legends of the Haranir)</span><span class="desc-text">Reputation and event rewards</span></td>
-            </tr>
-            <tr data-id="opt_amani">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Amani-Tribe (The Abundance)</span><span class="desc-text">Reputation and event rewards</span></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="category-header">Prey</div>
-    <table>
-        <tbody class="sortable-list" data-group="prey">
-            <tr data-id="prey2">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Prey - Nightmare</span><span class="desc-text">Renown Rank 4 - Unlocks Nightmare Mode</span></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="category-header">Delves</div>
-    <table>
-        <tbody class="sortable-list" data-group="delve">
-            <tr data-id="delve2">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Gilded Jackpot (Delve Rank 4)</span><span class="desc-text">Run Tier 11s for Hero/Mythic crests</span></td>
-            </tr>
-            <tr data-id="delve3">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Nullaeus ?</span><span class="desc-text">Kill weekly for 5 Hero crests</span></td>
-            </tr>
-            <tr data-id="delve4">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Nullaeus ??</span><span class="desc-text">Kill weekly for 5 Mythic crests</span></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="category-header">Crafting</div>
-    <table>
-        <tbody class="sortable-list" data-group="craft">
-            <tr data-id="craft_prof1">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">First profession patron weekly</span><span class="desc-text">Craft x3 patron work orders</span></td>
-            </tr>
-            <tr data-id="craft_prof2">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Second profession patron weekly</span><span class="desc-text">Craft x3 patron work orders</span></td>
-            </tr>
-            <tr data-id="craft_contract1">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">First profession contract</span><span class="desc-text">Submit work order</span></td>
-            </tr>
-            <tr data-id="craft_contract2">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Second profession contract</span><span class="desc-text">Submit work order</span></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="category-header">Reputation</div>
-    <table>
-        <tbody class="sortable-list" data-group="rep">
-            <tr data-id="rep1">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Singularity rep</span><span class="desc-text">Renown 7 - Unlock Champion trinket ilvl 246</span></td>
-            </tr>
-            <tr data-id="rep2">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Silvermoon Court rep</span><span class="desc-text">Renown 9 - Unlock Champion head ilvl 246</span></td>
-            </tr>
-            <tr data-id="rep3">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Hara'ti rep</span><span class="desc-text">Renown 8 - Unlock Champion belt ilvl 246</span></td>
-            </tr>
-            <tr data-id="rep4">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync(this)"></div></td>
-                <td><span class="action-text">Amani-Tribe rep</span><span class="desc-text">Renown 9 - Unlock Champion neck ilvl 246</span></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="footer-section">
-        <div class="category-header">Gearing Tracks</div>
-        
-        <div class="track-row">
-            <div class="track-item"><span class="track-label" style="color:var(--green);">Adventurer</span><span class="track-val">220-230</span></div>
-            <div class="track-item"><span class="track-label" style="color:var(--blue);">Veteran</span><span class="track-val">233-243</span></div>
-            <div class="track-item"><span class="track-label" style="color:var(--accent);">Champion</span><span class="track-val">246-256</span></div>
-            <div class="track-item"><span class="track-label" style="color:var(--gold);">Hero</span><span class="track-val">259-269</span></div>
-            <div class="track-item"><span class="track-label" style="color:#ff4500;">Myth</span><span class="track-val">272-289</span></div>
+    <div class="footer-sections">
+        <div class="group-header-flex" style="margin-top:50px;">
+            <div class="category-header">Gearing Tracks</div>
+        </div>
+        <div class="track-card">
+            <div class="track-item"><div style="color:var(--green)">ADVENTURER</div><div>220-230</div></div>
+            <div class="track-item"><div style="color:var(--blue)">VETERAN</div><div>233-243</div></div>
+            <div class="track-item"><div style="color:var(--accent)">CHAMPION</div><div>246-256</div></div>
+            <div class="track-item"><div style="color:var(--gold)">HERO</div><div>259-269</div></div>
+            <div class="track-item"><div style="color:#ff4500">MYTH</div><div>272-289</div></div>
         </div>
 
-        <div class="category-header" style="margin-top: 40px;">Gearing Priority</div>
-        <table>
-            <thead><tr><th style="width: 250px;">Slot</th><th>Priority Reasoning</th></tr></thead>
+        <div class="group-header-flex">
+            <div class="category-header">Gearing Priority</div>
+        </div>
+        <table class="priority-table">
+            <thead><tr><th>Slot</th><th>Priority Reasoning</th></tr></thead>
             <tbody>
-                <tr><td><span class="action-text">Weapon</span></td><td class="desc-text">Largest source of Attack Power/Spell Power. Usually the best use of your first Spark</td></tr>
-                <tr><td><span class="action-text">Trinkets</span></td><td class="desc-text">These often provide unique effects or massive stat procs that outweigh raw ilvl</td></tr>
-                <tr><td><span class="action-text">Chest / Head / Legs</span></td><td class="desc-text">These have the largest "stat budget" for Stamina and Primary stats</td></tr>
-                <tr><td><span class="action-text">Shoulders / Hands / Feet</span></td><td class="desc-text">Moderate stat gains; often the best slots for your Tier Set pieces</td></tr>
-                <tr><td><span class="action-text">Cloak / Bracers / Belt</span></td><td class="desc-text">Smallest stat pools. Upgrade these only when everything else is capped</td></tr>
-                <tr><td><span class="action-text">Rings / Neck</span></td><td class="desc-text">No primary stats (Intellect/Strength/Agility). Only upgrade these for Secondary Stat optimization</td></tr>
+                <tr><td>Weapon</td><td class="desc-text">Largest source of Attack Power/Spell Power. Usually the best use of your first Spark</td></tr>
+                <tr><td>Trinkets</td><td class="desc-text">These often provide unique effects or massive stat procs that outweigh raw ilvl</td></tr>
+                <tr><td>Chest / Head / Legs</td><td class="desc-text">These have the largest "stat budget" for Stamina and Primary stats</td></tr>
+                <tr><td>Shoulders / Hands / Feet</td><td class="desc-text">Moderate stat gains; often the best slots for your Tier Set pieces</td></tr>
+                <tr><td>Cloak / Bracers / Belt</td><td class="desc-text">Smallest stat pools. Upgrade these only when everything else is capped</td></tr>
+                <tr><td>Rings / Neck</td><td class="desc-text">No primary stats (Intellect/Strength/Agility). Only upgrade these for Secondary Stat optimization</td></tr>
             </tbody>
         </table>
     </div>
 </div>
 
 <script>
-    const masterOrder = {
-        world: ['world_ah', 'world1', 'world_sm', 'world5', 'sing_storm', 'sing_deci', 'world6'],
-        optional: ['opt_silvermoon', 'opt_harati', 'opt_amani'],
-        prey: ['prey2'],
-        delve: ['delve2', 'delve3', 'delve4'],
-        craft: ['craft_prof1', 'craft_prof2', 'craft_contract1', 'craft_contract2'],
-        rep: ['rep1', 'rep2', 'rep3', 'rep4']
-    };
+    const defaultData = [
+        { title: "World Weeklies and Quests", id: "world", tasks: [
+            { id: "w1", text: "Neighbourhood", desc: "Weekly Quest - Easy Crest bundles" },
+            { id: "w2", text: "Buy Rep Contract from AH", desc: "Maximize Reputation gains" },
+            { id: "w3", text: "Silvermoon", desc: "Pickup all available from Silvermoon" },
+            { id: "w4", text: "World Boss", desc: "Champion gear ilvl 250 drop chance" },
+            { id: "w5", text: "Singularity (Stormarion Assault)", desc: "Singularity Renown 7 (Champion Trinket - ilvl 246)" },
+            { id: "w6", text: "Singularity (Decimus)", desc: "Decimus Storyline - Elemental Voidcores" },
+            { id: "w7", text: "World Quests", desc: "Quick easy gear, Adventurer only" }
+        ]},
+        { title: "Optional Weeklies", id: "optional", tasks: [
+            { id: "o1", text: "Silvermoon Court (Saltheril’s Soiree)", desc: "Reputation and event rewards" },
+            { id: "o2", text: "Hara'ti (Legends of the Haranir)", desc: "Reputation and event rewards" },
+            { id: "o3", text: "Amani-Tribe (The Abundance)", desc: "Reputation and event rewards" }
+        ]},
+        { title: "Prey", id: "prey", tasks: [
+            { id: "p1", text: "Prey - Nightmare", desc: "Renown Rank 4 - Unlocks Nightmare Mode" }
+        ]},
+        { title: "Delves", id: "delve", tasks: [
+            { id: "d1", text: "Gilded Jackpot (Delve Rank 4)", desc: "Run Tier 11s for Hero/Mythic crests" },
+            { id: "d2", text: "Nullaeus ?", desc: "Kill weekly for 5 Hero crests" },
+            { id: "d3", text: "Nullaeus ??", desc: "Kill weekly for 5 Mythic crests" }
+        ]},
+        { title: "Crafting", id: "craft", tasks: [
+            { id: "c1", text: "First profession patron weekly", desc: "Craft x3 patron work orders" },
+            { id: "c2", text: "Second profession patron weekly", desc: "Craft x3 patron work orders" },
+            { id: "c3", text: "First profession contract", desc: "Submit work order" },
+            { id: "c4", text: "Second profession contract", desc: "Submit work order" }
+        ]},
+        { title: "Reputation", id: "rep", tasks: [
+            { id: "r1", text: "Singularity rep", desc: "Renown 7 - Unlock Champion trinket ilvl 246" },
+            { id: "r2", text: "Silvermoon Court rep", desc: "Renown 9 - Unlock Champion head ilvl 246" },
+            { id: "r3", text: "Hara'ti rep", desc: "Renown 8 - Unlock Champion belt ilvl 246" },
+            { id: "r4", text: "Amani-Tribe rep", desc: "Renown 9 - Unlock Champion neck ilvl 246" }
+        ]}
+    ];
 
-    const lists = document.querySelectorAll('.sortable-list');
-    lists.forEach(list => {
-        new Sortable(list, { 
-            animation: 150, 
-            handle: '.drag-icon', 
-            onEnd: () => saveState(false)
-        });
-    });
+    function createTaskRow(id, text, desc, checked = false) {
+        const tr = document.createElement('tr');
+        tr.dataset.id = id;
+        if(checked) tr.classList.add('row-done');
+        tr.innerHTML = `
+            <td class="col-drag"><span class="drag-icon">⠿</span></td>
+            <td class="col-check"><input type="checkbox" class="prog-task" ${checked ? 'checked' : ''} onchange="sync()"></td>
+            <td><span class="action-text">${text}</span><span class="desc-text">${desc}</span></td>
+            <td class="col-delete"><button class="delete-task" onclick="removeTask(this)">×</button></td>
+        `;
+        return tr;
+    }
 
-    function sync(el) {
-        document.querySelectorAll('tbody tr').forEach(row => {
-            const cb = row.querySelector('input[type="checkbox"]');
-            if (cb && cb.checked) {
-                row.classList.add('row-done');
-            } else if (cb) {
-                row.classList.remove('row-done');
-            }
-        });
+    function createGroupUI(group) {
+        const wrapper = document.createElement('div');
+        wrapper.className = "group-wrapper";
+        wrapper.innerHTML = `
+            <div class="group-header-flex">
+                <span class="group-drag-handle">⠿</span>
+                <div class="category-header">${group.title}</div>
+                <button class="delete-group" onclick="removeGroup(this)">Remove</button>
+            </div>
+            <table><tbody class="sortable-list" data-group="${group.id}"></tbody></table>
+            <button class="btn btn-add" style="margin: 5px 0 0 auto; width: 80px; font-size: 0.6rem;" onclick="addTaskPrompt('${group.id}')">+ Task</button>
+        `;
+        const tbody = wrapper.querySelector('tbody');
+        group.tasks.forEach(t => tbody.appendChild(createTaskRow(t.id, t.text, t.desc, t.checked)));
+        return wrapper;
+    }
 
-        const progTasks = document.querySelectorAll('.prog-task');
-        const completed = document.querySelectorAll('.prog-task:checked').length;
-        const p = Math.round((completed / (progTasks.length || 1)) * 100);
-        
-        const barFill = document.getElementById('bar-fill');
-        barFill.style.width = p + '%';
+    function sync() {
+        const tasks = document.querySelectorAll('.prog-task');
+        tasks.forEach(cb => cb.closest('tr').classList.toggle('row-done', cb.checked));
+        const done = document.querySelectorAll('.prog-task:checked').length;
+        const p = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+        document.getElementById('bar-fill').style.width = p + '%';
         document.getElementById('percent-text').innerText = p + '%';
+    }
 
-        // Add jazzy bump animation when checking something
-        if(el && el.checked) {
-            barFill.classList.remove('bar-pulse');
-            void barFill.offsetWidth; // Trigger reflow
-            barFill.classList.add('bar-pulse');
-        }
-
-        saveState(false);
+    function renderGroups(data) {
+        const container = document.getElementById('task-groups-container');
+        container.innerHTML = '';
+        data.forEach(group => container.appendChild(createGroupUI(group)));
+        document.querySelectorAll('.sortable-list').forEach(list => new Sortable(list, { group: 'tasks', animation: 150, handle: '.drag-icon', onEnd: () => saveState(false) }));
+        new Sortable(container, { animation: 150, handle: '.group-drag-handle', onEnd: () => saveState(false) });
+        sync();
     }
 
     function saveState(manual) {
-        const state = { checked: {}, orders: {} };
-        document.querySelectorAll('tr[data-id]').forEach(tr => {
-            const cb = tr.querySelector('input');
-            if(cb) state.checked[tr.dataset.id] = cb.checked;
-        });
-        document.querySelectorAll('.sortable-list').forEach(tbody => {
-            const group = tbody.dataset.group;
-            state.orders[group] = Array.from(tbody.querySelectorAll('tr')).map(tr => tr.dataset.id);
-        });
-        localStorage.setItem('midnight_gear_vFinal', JSON.stringify(state)); 
-        if(manual) {
-            const btn = document.querySelector('.btn-save');
-            btn.innerText = "✅ Saved!";
-            setTimeout(() => { btn.innerText = "💾 Commit Order"; }, 2000);
-        }
-    }
-
-    function resetOrder() {
-        Object.keys(masterOrder).forEach(group => {
-            const tbody = document.querySelector(`.sortable-list[data-group="${group}"]`);
-            if (tbody) {
-                masterOrder[group].forEach(id => {
-                    const row = document.querySelector(`[data-id="${id}"]`);
-                    if (row) tbody.appendChild(row);
-                });
-            }
-        });
-        sync();
-    }
-
-    function weeklyReset() {
-        if(confirm("Reset all weeklies?")) {
-            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            sync();
-        }
-    }
-
-    function loadState() {
-        const saved = JSON.parse(localStorage.getItem('midnight_gear_vFinal'));
-        if (!saved) { sync(); return; }
-        if (saved.orders) {
-            Object.keys(saved.orders).forEach(group => {
-                const tbody = document.querySelector(`.sortable-list[data-group="${group}"]`);
-                if (tbody) {
-                    saved.orders[group].forEach(id => {
-                        const row = document.querySelector(`[data-id="${id}"]`);
-                        if (row) tbody.appendChild(row);
-                    });
-                }
+        const groups = [];
+        document.querySelectorAll('.group-wrapper').forEach(wrap => {
+            const list = wrap.querySelector('.sortable-list');
+            const tasks = [];
+            list.querySelectorAll('tr').forEach(tr => {
+                tasks.push({ id: tr.dataset.id, text: tr.querySelector('.action-text').innerText, desc: tr.querySelector('.desc-text').innerText, checked: tr.querySelector('input').checked });
             });
-        }
-        if (saved.checked) {
-            Object.keys(saved.checked).forEach(id => {
-                const row = document.querySelector(`[data-id="${id}"]`);
-                if (row) {
-                    const cb = row.querySelector('input');
-                    if(cb) cb.checked = saved.checked[id];
-                }
-            });
-        }
-        sync();
+            groups.push({ id: list.dataset.group, title: wrap.querySelector('.category-header').innerText, tasks: tasks });
+        });
+        localStorage.setItem('midnight_save_complete', JSON.stringify(groups));
+        if(manual) alert("All Layout & Progress Saved");
     }
-    window.onload = loadState;
+
+    function addTaskPrompt(groupId) {
+        const n = prompt("Task:"); if(!n) return;
+        const d = prompt("Description:");
+        const tbody = document.querySelector(`.sortable-list[data-group="${groupId}"]`);
+        tbody.appendChild(createTaskRow("c_" + Date.now(), n, d));
+        saveState(false); sync();
+    }
+
+    function addNewGroup() {
+        const n = prompt("Group Name:"); if(!n) return;
+        const g = { title: n, id: "g_" + Date.now(), tasks: [] };
+        const wrap = createGroupUI(g);
+        document.getElementById('task-groups-container').appendChild(wrap);
+        new Sortable(wrap.querySelector('.sortable-list'), { group: 'tasks', animation: 150, handle: '.drag-icon', onEnd: () => saveState(false) });
+        saveState(false);
+    }
+
+    function removeTask(btn) { btn.closest('tr').remove(); sync(); saveState(false); }
+    function removeGroup(btn) { if(confirm("Delete group?")) { btn.closest('.group-wrapper').remove(); sync(); saveState(false); } }
+    function weeklyReset() { document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false); sync(); saveState(false); }
+    function resetToDefault() { if(confirm("Reset all?")) { localStorage.removeItem('midnight_save_complete'); renderGroups(defaultData); } }
+
+    window.onload = () => {
+        const saved = JSON.parse(localStorage.getItem('midnight_save_complete'));
+        renderGroups(saved || defaultData);
+    };
 </script>
-
 </body>
 </html>
