@@ -146,22 +146,28 @@
 
 <script>
     const defaultData = [
+        { title: "Crafting", id: "craft", tasks: [
+            { id: "c1", text: "First profession patron weekly", desc: "Craft x3 patron work orders" },
+            { id: "c2", text: "Second profession patron weekly", desc: "Craft x3 patron work orders" },
+            { id: "c3", text: "First profession contract", desc: "Submit work order" },
+            { id: "c4", text: "Second profession contract", desc: "Submit work order" }
+        ]},
         { title: "World Weeklies and Quests", id: "world", tasks: [
-            { id: "w1", text: "Buy Rep Contract from AH", desc: "Maximize rep gains" },
+            { id: "w1", text: "Buy Rep Contract from AH", desc: "Maximize Reputation gains" },
             { id: "w2", text: "Campaign", desc: "Complete any new chapters" },
             { id: "w3", text: "Neighbourhood", desc: "Quick Crest bundle" },
             { id: "w4", text: "Silvermoon", desc: "Accept and complete all available from Silvermoon" },
             { id: "w5", text: "World Boss", desc: "Champion gear ilvl 250 drop chance" },
             { id: "w6", text: "Singularity (Decimus)", desc: "Decimus Storyline - Elemental Voidcores" }
         ]},
+        { title: "Prey", id: "prey", tasks: [
+            { id: "p1", text: "Prey - Nightmare", desc: "Renown Rank 4 - Unlocks Nightmare Mode" }
+        ]},
         { title: "Delves", id: "delve", tasks: [
             { id: "d1", text: "Gilded Jackpot (Delve Rank 4)", desc: "Run Tier 11s for Hero/Mythic crests" },
             { id: "d2", text: "Bountiful", desc: "Spend keys - Rewarded Crests downgrade to lesser track if weekly capped e.g. Hero > Champ" },
             { id: "d3", text: "Nullaeus ?", desc: "Kill weekly for 5 Hero crests" },
             { id: "d4", text: "Nullaeus ??", desc: "Kill weekly for 5 Mythic crests" }
-        ]},
-        { title: "Prey", id: "prey", tasks: [
-            { id: "p1", text: "Prey - Nightmare", desc: "Renown Rank 4 - Unlocks Nightmare Mode" }
         ]},
         { title: "Faction Weeklies", id: "faction", tasks: [
             { id: "f1", text: "Singularity (Stormarion Assault)", desc: "Singularity Renown 7 (Champion Trinket - ilvl 246)" },
@@ -172,12 +178,6 @@
         { title: "Optional Weeklies", id: "optional", tasks: [
             { id: "ow1", text: "Special Assignments", desc: "Check for active world event assignments" },
             { id: "ow2", text: "World Quests", desc: "Quick easy gear, Adventurer only" }
-        ]},
-        { title: "Crafting", id: "craft", tasks: [
-            { id: "c1", text: "First profession patron weekly", desc: "Craft x3 patron work orders" },
-            { id: "c2", text: "Second profession patron weekly", desc: "Craft x3 patron work orders" },
-            { id: "c3", text: "First profession contract", desc: "Submit work order" },
-            { id: "c4", text: "Second profession contract", desc: "Submit work order" }
         ]},
         { title: "Reputation", id: "rep", tasks: [
             { id: "r1", text: "Singularity rep", desc: "Renown 7 - Unlock Champion trinket ilvl 246" },
@@ -216,7 +216,10 @@
         const allTasks = document.querySelectorAll('.prog-task');
         const countableTasks = Array.from(allTasks).filter(cb => {
             const groupWrapper = cb.closest('.group-wrapper');
-            return groupWrapper && groupWrapper.querySelector('.category-header').innerText.trim().toUpperCase() !== "REPUTATION";
+            if (!groupWrapper) return false;
+            const title = groupWrapper.querySelector('.category-header').innerText.trim().toUpperCase();
+            // Exclude both Reputation and Optional Weeklies
+            return title !== "REPUTATION" && title !== "OPTIONAL WEEKLIES";
         });
         allTasks.forEach(cb => cb.closest('tr').classList.toggle('row-done', cb.checked));
         const done = countableTasks.filter(cb => cb.checked).length;
