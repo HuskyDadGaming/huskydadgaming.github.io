@@ -22,10 +22,31 @@
             --dim: #8b869c;
             --btn-bg: #1e152e;
             --danger: #ff4d4d;
+            
+            /* Void Accent Colors */
+            --void-core: #130026;
+            --void-glow: #3d0073;
+            --void-highlight: #7c00e6;
+        }
+
+        @keyframes voidSwirl {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes voidPulse {
+            0% { text-shadow: 0 0 5px var(--void-highlight), 0 0 10px var(--void-highlight); }
+            50% { text-shadow: 0 0 10px var(--void-highlight), 0 0 20px var(--void-highlight); }
+            100% { text-shadow: 0 0 5px var(--void-highlight), 0 0 10px var(--void-highlight); }
         }
 
         body {
-            background-color: var(--bg);
+            /* Void Graphics: Swirling background */
+            background: linear-gradient(-45deg, #050308, #130026, #000c1a, #1a0033);
+            background-size: 400% 400%;
+            animation: voidSwirl 15s ease infinite;
+            
             color: var(--text);
             font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 0; padding: 0;
@@ -34,28 +55,81 @@
 
         .container { width: 100%; max-width: 900px; padding: 40px 20px; }
 
+        /* Character Profile Card - Heavily Corrupted */
+        .char-profile-card {
+            background: linear-gradient(145deg, #0d001a, #130026);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid var(--void-highlight);
+            margin-bottom: 20px;
+            
+            /* Void Graphics: Aggressive Abyssal Shadow */
+            box-shadow: 0 0 20px 5px var(--void-glow), inset 0 0 15px rgba(0,0,0,0.8);
+        }
+
+        .char-flex { display: flex; align-items: center; gap: 20px; }
+        .portrait-frame {
+            width: 80px; height: 80px; border-radius: 50%; 
+            border: 2px solid var(--blue); 
+            box-shadow: 0 0 15px rgba(51, 204, 255, 0.6);
+            background: #000; overflow: hidden;
+            flex-shrink: 0;
+        }
+        #char-portrait { width: 100%; height: 100%; object-fit: cover; }
+
+        .char-name { 
+            font-weight: 900; font-size: 1.4rem; color: #fff; letter-spacing: 1px; display: block; 
+            /* Void Graphics: Corrupted text pulse */
+            animation: voidPulse 3s infinite;
+        }
+        .char-details { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; }
+        .char-realm { color: var(--blue); font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
+        
+        .mplus-badge {
+            background: rgba(255, 204, 51, 0.1);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Progress Tracker Section */
         .progress-box {
-            background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border);
+            background: rgba(18, 12, 29, 0.95); padding: 25px; border-radius: 12px; border: 1px solid var(--border);
             margin-bottom: 30px; position: sticky; top: 20px; z-index: 100;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            
+            /* Void Graphics: Abyssal Shadow */
+            box-shadow: 0 15px 40px -10px rgba(61, 0, 115, 0.6);
         }
 
         .bar-bg { background: #000; height: 16px; border-radius: 8px; margin-top: 5px; border: 1px solid #1a1a1a; overflow: hidden; }
         #bar-fill { 
-            height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--blue), var(--accent));
+            /* Modified to be a Void/Blue mix */
+            height: 100%; width: 0%; background: linear-gradient(90deg, var(--void-highlight), var(--blue), var(--void-highlight));
             transition: width 0.6s ease;
         }
 
-        .controls-top { margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .controls-top { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .btn-ctrl {
             background: var(--btn-bg); color: #fff; border: 1px solid var(--border);
             padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer;
             font-size: 0.75rem; text-transform: uppercase; transition: 0.2s;
             display: flex; align-items: center; justify-content: center; gap: 8px;
+            text-decoration: none;
         }
-        .btn-ctrl:hover { background: #2d243d; border-color: var(--accent); }
+        .btn-ctrl:hover { background: var(--void-glow); border-color: var(--void-highlight); box-shadow: 0 0 10px var(--void-glow); }
 
-        .group-wrapper { margin-top: 35px; }
+        .group-wrapper { 
+            margin-top: 35px; 
+            /* Void Graphics: Slight abyssal float */
+            filter: drop-shadow(0 5px 10px rgba(61, 0, 115, 0.3));
+        }
         .group-header-flex { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
         .category-header { 
             color: var(--blue); font-size: 0.9rem; font-weight: 800; 
@@ -63,10 +137,10 @@
         }
         .category-header::after { 
             content: ""; flex: 1; height: 1px; 
-            background: linear-gradient(to right, var(--blue), transparent); 
-            opacity: 0.4; margin-left: 10px;
+            background: linear-gradient(to right, var(--void-highlight), transparent); 
+            opacity: 0.6; margin-left: 10px;
         }
-        .group-drag-handle { color: var(--blue); cursor: grab; font-size: 1.4rem; }
+        .group-drag-handle { color: var(--void-highlight); cursor: grab; font-size: 1.4rem; }
         
         .remove-group-btn { 
             color: var(--dim); background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
@@ -81,14 +155,14 @@
         
         td { padding: 12px 15px; border-bottom: 1px solid rgba(45, 36, 61, 0.4); vertical-align: middle; }
         .col-left { width: 70px; white-space: nowrap; }
-        .drag-icon { color: var(--dim); cursor: grab; font-size: 1.1rem; text-align: center; }
-        input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--green); }
+        .drag-icon { color: var(--void-glow); cursor: grab; font-size: 1.1rem; text-align: center; }
+        input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--void-highlight); }
 
         .action-text { font-weight: 600; color: #fff; display: block; font-size: 0.95rem; }
         .desc-text { font-size: 0.75rem; color: var(--dim); display: block; margin-top: 2px; }
 
         .section-divider { margin-top: 50px; margin-bottom: 20px; }
-        .track-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; justify-content: space-around; text-align: center; margin-bottom: 30px; }
+        .track-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; justify-content: space-around; text-align: center; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .track-item div:first-child { font-weight: 900; font-size: 0.75rem; margin-bottom: 5px; text-transform: uppercase; }
         .track-item div:last-child { font-weight: 600; color: #fff; font-size: 1.1rem; }
         
@@ -101,6 +175,29 @@
 <body>
 
 <div class="container">
+    <div class="char-profile-card">
+        <div class="char-flex">
+            <div class="portrait-frame">
+                <img id="char-portrait" src="https://render.worldofwarcraft.com/eu/icons/512/classicon_shaman.jpg" alt="Portrait">
+            </div>
+            <div style="flex-grow: 1;">
+                <span class="char-name">HUSKYSHAM</span>
+                <div class="char-details">
+                    <span class="char-realm">EU - Silvermoon</span>
+                    <div class="mplus-badge">
+                        <span>🏆 M+ SCORE:</span>
+                        <span id="mplus-score">--</span>
+                    </div>
+                </div>
+                <div class="controls-top" style="margin-top: 10px;">
+                    <a href="https://worldofwarcraft.blizzard.com/en-gb/character/eu/silvermoon/huskysham" target="_blank" class="btn-ctrl">🛡️ ARMORY</a>
+                    <a href="https://raider.io/characters/eu/silvermoon/Huskysham" target="_blank" class="btn-ctrl">📈 RAIDER.IO</a>
+                    <a href="https://www.warcraftlogs.com/character/eu/silvermoon/huskysham" target="_blank" class="btn-ctrl">📜 LOGS</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="progress-box">
         <div style="display:flex; justify-content:space-between; align-items: flex-end; font-weight: 900; margin-bottom: 8px;">
             <span style="font-size: 1.1rem;">TOTAL PROGRESS</span>
@@ -108,7 +205,7 @@
         </div>
         <div class="bar-bg"><div id="bar-fill"></div></div>
         
-        <div class="controls-top">
+        <div class="controls-top" style="margin-top: 20px;">
             <button class="btn-ctrl" onclick="addNewGroup()">📁 NEW GROUP</button>
             <button class="btn-ctrl" onclick="resetToDefault()">↩️ RESET</button>
             <button class="btn-ctrl" onclick="weeklyReset()">🧹 CLEAR</button>
@@ -153,37 +250,59 @@
             { id: "c4", text: "Second profession contract", desc: "Submit work order - Rewards Knowledge points" }
         ]},
         { title: "World Weeklies and Quests", id: "world", tasks: [
-            { id: "w1", text: "Rep Contract", desc: "Buy from AH - Maximise reputation gains" },
-            { id: "w2", text: "Campaign", desc: "Complete any new chapter(s)" },
-            { id: "w4", text: "Silvermoon", desc: "Unity Against the Void, Weekly Dungeon, Housing, Weekend Event (Skip - PvP and Pet Battles)" },
-            { id: "w5", text: "World Boss", desc: "Drop chance - Champion gear ilvl 250" },
+            { id: "w1", text: "Buy Rep Contract from AH", desc: "Maximize Reputation gains" },
+            { id: "w2", text: "Campaign", desc: "Complete any new chapters" },
+            { id: "w4", text: "Silvermoon", desc: "Unity Against the Void, Weekly Dungeon, Weekend Event" },
+            { id: "w5", text: "World Boss", desc: "Champion gear ilvl 250 drop chance" },
             { id: "w6", text: "Singularity (Decimus)", desc: "Decimus Storyline - Elemental Voidcores" }
         ]},
         { title: "Prey", id: "prey", tasks: [
-            { id: "p1", text: "Prey - Nightmare", desc: "Renown Rank 4 - To unlock Nightmare Mode - Rewards Champion Gear, Champion and Hero Crests" }
+            { id: "p1", text: "Prey - Nightmare", desc: "Renown Rank 4 - Unlocks Nightmare Mode" }
         ]},
         { title: "Delves", id: "delve", tasks: [
-            { id: "d1", text: "Bountiful", desc: "Run 11s and spend all keys - Rank 4 (Myth Crests), Rank 9 (Drop chance - Hero gear)" },
-            { id: "d2", text: "Nullaeus ?", desc: "Kill weekly for 5 Hero crests" },
-            { id: "d3", text: "Nullaeus ??", desc: "Kill weekly for 5 Myth crests" }
+            { id: "d1", text: "Gilded Jackpot (Delve Rank 4)", desc: "Run Tier 11s for Hero/Mythic crests" },
+            { id: "d2", text: "Bountiful", desc: "Spend keys - Rewarded Crests downgrade to lesser track if weekly capped e.g. Hero > Champ" },
+            { id: "d3", text: "Nullaeus ?", desc: "Kill weekly for 5 Hero crests" },
+            { id: "d4", text: "Nullaeus ??", desc: "Kill weekly for 5 Mythic crests" }
         ]},
         { title: "Faction Weeklies", id: "faction", tasks: [
-            { id: "f1", text: "Singularity (Stormarion Assault)", desc: "Reputation and event rewards" },
+            { id: "f1", text: "Singularity (Stormarion Assault)", desc: "Singularity Renown 7 (Champion Trinket - ilvl 246)" },
             { id: "f2", text: "Silvermoon Court (Saltheril’s Soiree)", desc: "Reputation and event rewards" },
             { id: "f3", text: "Hara'ti (Legends of the Haranir)", desc: "Reputation and event rewards" },
             { id: "f4", text: "Amani-Tribe (The Abundance)", desc: "Reputation and event rewards" }
         ]},
         { title: "Optional Weeklies", id: "optional", tasks: [
-            { id: "ow1", text: "Special Assignments", desc: "Complete x2" },
-            { id: "ow2", text: "World Quests", desc: "Quick easy gear - Adventurer only" }
+            { id: "ow1", text: "Special Assignments", desc: "Check for active world event assignments" },
+            { id: "ow2", text: "World Quests", desc: "Quick easy gear, Adventurer only" }
         ]},
         { title: "Reputation", id: "rep", tasks: [
-            { id: "r1", text: "Singularity rep", desc: "Renown 7 - Unlock Champion trinket ilvl 246 (Priority)" },
+            { id: "r1", text: "Singularity rep", desc: "Renown 7 - Unlock Champion trinket ilvl 246" },
             { id: "r2", text: "Silvermoon Court rep", desc: "Renown 9 - Unlock Champion head ilvl 246" },
             { id: "r3", text: "Hara'ti rep", desc: "Renown 8 - Unlock Champion belt ilvl 246" },
             { id: "r4", text: "Amani-Tribe rep", desc: "Renown 9 - Unlock Champion neck ilvl 246" }
         ]}
     ];
+
+    async function fetchCharacterData() {
+        try {
+            // Fetching portrait AND m+ score fields
+            const response = await fetch('https://raider.io/api/v1/characters/profile?region=eu&realm=silvermoon&name=huskysham&fields=mythic_plus_scores_by_season%3Acurrent');
+            const data = await response.json();
+            
+            // Set Portrait
+            if (data.thumbnail_url) {
+                document.getElementById('char-portrait').src = data.thumbnail_url;
+            }
+            
+            // Set M+ Score
+            if (data.mythic_plus_scores_by_season && data.mythic_plus_scores_by_season.length > 0) {
+                const score = data.mythic_plus_scores_by_season[0].scores.all;
+                document.getElementById('mplus-score').innerText = Math.round(score);
+            }
+        } catch (e) {
+            console.error("API load error:", e);
+        }
+    }
 
     function createTaskRow(id, text, desc, checked = false) {
         const tr = document.createElement('tr');
@@ -216,7 +335,6 @@
             const groupWrapper = cb.closest('.group-wrapper');
             if (!groupWrapper) return false;
             const title = groupWrapper.querySelector('.category-header').innerText.trim().toUpperCase();
-            // Exclude both Reputation and Optional Weeklies
             return title !== "REPUTATION" && title !== "OPTIONAL WEEKLIES";
         });
         allTasks.forEach(cb => cb.closest('tr').classList.toggle('row-done', cb.checked));
@@ -232,17 +350,11 @@
         data.forEach(group => container.appendChild(createGroupUI(group)));
         
         document.querySelectorAll('.sortable-list').forEach(list => new Sortable(list, { 
-            group: 'tasks', 
-            animation: 150, 
-            handle: '.drag-icon', 
+            group: 'tasks', animation: 150, handle: '.drag-icon', 
             onEnd: () => saveState() 
         }));
         
-        new Sortable(container, { 
-            animation: 150, 
-            handle: '.group-drag-handle', 
-            onEnd: () => saveState() 
-        });
+        new Sortable(container, { animation: 150, handle: '.group-drag-handle', onEnd: () => saveState() });
         sync();
     }
 
@@ -252,10 +364,8 @@
             const list = wrap.querySelector('.sortable-list');
             const tasks = [];
             list.querySelectorAll('tr').forEach(tr => tasks.push({ 
-                id: tr.dataset.id, 
-                text: tr.querySelector('.action-text').innerText, 
-                desc: tr.querySelector('.desc-text').innerText, 
-                checked: tr.querySelector('input').checked 
+                id: tr.dataset.id, text: tr.querySelector('.action-text').innerText, 
+                desc: tr.querySelector('.desc-text').innerText, checked: tr.querySelector('input').checked 
             }));
             groups.push({ id: list.dataset.group, title: wrap.querySelector('.category-header').innerText, tasks: tasks });
         });
@@ -266,8 +376,7 @@
         const n = prompt("Task Name:"), d = prompt("Description:");
         if(n) { 
             document.querySelector(`.sortable-list[data-group="${groupId}"]`).appendChild(createTaskRow("c_" + Date.now(), n, d || "")); 
-            sync(); 
-            saveState(); 
+            sync(); saveState(); 
         }
     }
 
@@ -275,8 +384,7 @@
         const n = prompt("Group Name:");
         if(n) { 
             const g = { title: n, id: "g_" + Date.now(), tasks: [] }; 
-            document.getElementById('task-groups-container').appendChild(createGroupUI(g)); 
-            saveState(); 
+            document.getElementById('task-groups-container').appendChild(createGroupUI(g)); saveState(); 
         }
     }
 
@@ -285,7 +393,10 @@
     function weeklyReset() { document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false); sync(); saveState(); }
     function resetToDefault() { if(confirm("Reset to official master layout?")) { localStorage.removeItem('midnight_gear_autosave_v1'); renderGroups(defaultData); } }
 
-    window.onload = () => renderGroups(JSON.parse(localStorage.getItem('midnight_gear_autosave_v1')) || defaultData);
+    window.onload = () => {
+        renderGroups(JSON.parse(localStorage.getItem('midnight_gear_autosave_v1')) || defaultData);
+        fetchCharacterData();
+    };
 </script>
 </body>
 </html>
