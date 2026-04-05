@@ -129,15 +129,13 @@
         .track-item { flex: 1; min-width: 100px; }
 
         @media screen and (max-width: 600px) {
-            .priority-table thead { display: none; }
-            .priority-table, .priority-table tbody, .priority-table tr, .priority-table td { display: block; width: 100%; }
-            .priority-table tr { margin-bottom: 15px; border-bottom: 2px solid var(--border); }
-            .priority-table td { border: none !important; padding: 10px 15px; text-align: left; }
-            .priority-table td:first-child { background: rgba(255,255,255,0.05); color: var(--gold); font-size: 1rem; }
+            /* Kept block layout for task tables, but allowed priority table to flex better */
+            .priority-table td:first-child { max-width: 100px; word-break: break-word; }
         }
 
         .priority-table th { text-align: left; color: var(--gold); font-size: 0.75rem; text-transform: uppercase; padding: 15px; border-bottom: 2px solid var(--border); }
-        .priority-table td:first-child { font-weight: 700; color: #fff; width: 230px; border-right: 1px solid var(--border); }
+        /* Changed width to max-width and added word-break for mobile headers */
+        .priority-table td:first-child { font-weight: 700; color: #fff; max-width: 230px; border-right: 1px solid var(--border); word-break: normal; }
 
         .btn-add-task { margin: 5px auto 0 0; width: 85px; font-size: 0.65rem; background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); padding: 6px; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-weight: bold; }
     </style>
