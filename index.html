@@ -33,14 +33,6 @@
             background-size: 100% 100%, 100% 100%, 550px 550px, 350px 350px;
         }
 
-        .void-decor {
-            position: fixed; top: 50%; transform: translateY(-50%);
-            width: 300px; height: 600px; pointer-events: none; z-index: 1; opacity: 0.4;
-            filter: blur(40px); border-radius: 50%;
-        }
-        .void-left { left: -150px; background: radial-gradient(ellipse at center, var(--accent) 0%, transparent 70%); box-shadow: 0 0 100px var(--accent); }
-        .void-right { right: -150px; background: radial-gradient(ellipse at center, var(--blue) 0%, transparent 70%); box-shadow: 0 0 100px var(--blue); }
-
         .container { width: 100%; max-width: 900px; padding: 40px 20px; position: relative; z-index: 10; }
 
         .progress-box {
@@ -72,50 +64,35 @@
         table { width: 100%; border-collapse: collapse; background: rgba(18, 12, 29, 0.8); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 10px; backdrop-filter: blur(4px); table-layout: fixed; }
         th { text-align: left; padding: 12px 15px; color: var(--gold); font-size: 0.75rem; text-transform: uppercase; border-bottom: 2px solid var(--border); }
         
-        tbody tr { transition: 0.2s; }
-        tbody tr:hover td { background: rgba(138, 43, 226, 0.05); }
-        .row-done { opacity: 0.3; }
-        .row-done .action-text { text-decoration: line-through; }
+        tbody tr { transition: background 0.3s ease, opacity 0.3s ease; }
+        
+        .row-done td { background: rgba(57, 255, 20, 0.1) !important; border-bottom-color: var(--green); }
+        .row-done .action-text { text-decoration: line-through; color: var(--green); }
 
         td { padding: 12px 15px; border-bottom: 1px solid rgba(45, 36, 61, 0.5); vertical-align: middle; overflow: hidden; }
         
-        .col-check { width: 100px; text-align: left; white-space: nowrap; }
-        .flex-cell { display: flex; align-items: center; gap: 8px; }
+        .col-check { width: 60px; text-align: left; white-space: nowrap; }
+        .flex-cell { display: flex; align-items: center; gap: 12px; }
 
         .drag-icon { color: var(--dim); font-size: 1.2rem; user-select: none; cursor: grab; }
-        .drag-icon:active { cursor: grabbing; }
-        .drag-icon:hover { color: var(--accent); }
         
-        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--accent); margin: 0; }
+        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--green); margin: 0; }
         
-        .status-circle { 
-            width: 20px; height: 20px; border-radius: 50%; border: 1px solid transparent;
-            font-size: 0.55rem; font-weight: 900; display: flex; align-items: center; justify-content: center;
-            transition: 0.3s;
-        }
-        /* IP (In-Progress) is Blue */
-        .sc-ip { color: var(--blue); border-color: var(--blue); }
-        /* CO (Complete) is Green */
-        .sc-co { color: var(--green); border-color: var(--green); }
-
-        .action-text { font-weight: 600; color: #fff; display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+        .action-text { font-weight: 600; color: #fff; display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; transition: 0.3s; }
         .desc-text { font-size: 0.8rem; color: var(--dim); display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
-
-        .priority-box { margin-top: 10px; padding-top: 10px; }
-        .priority-header { color: var(--gold); font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
 
         .track-row { display: flex; justify-content: space-around; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin: 20px 0; text-align: center; }
         .track-item { display: flex; flex-direction: column; gap: 4px; }
         .track-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
         .track-val { font-size: 0.9rem; font-weight: 600; color: #fff; }
 
+        /* Footer Section Styling - Divider removed */
+        .footer-section { margin-top: 50px; }
+
         @media (max-width: 1000px) { .void-decor { display: none; } }
     </style>
 </head>
 <body>
-
-<div class="void-decor void-left"></div>
-<div class="void-decor void-right"></div>
 
 <div class="container">
     <div class="progress-box">
@@ -135,31 +112,31 @@
     <table>
         <tbody class="sortable-list" data-group="world">
             <tr data-id="world_ah">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
                 <td><span class="action-text">Buy Rep Contract from AH</span><span class="desc-text">Maximize Reputation gains</span></td>
             </tr>
             <tr data-id="world1">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
                 <td><span class="action-text">Neighbourhood</span><span class="desc-text">Weekly Quest - Easy Crest bundles</span></td>
             </tr>
             <tr data-id="world_sm">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
                 <td><span class="action-text">Silvermoon</span><span class="desc-text">Pickup all available from Silvermoon</span></td>
             </tr>
             <tr data-id="world5">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
                 <td><span class="action-text">World Boss</span><span class="desc-text">Champion gear ilvl 250 drop chance</span></td>
             </tr>
             <tr data-id="sing_storm">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
-                <td><span class="action-text">Singularity (Stormarion Assault) - Voidstorm</span><span class="desc-text">Singularity Renown 7 (Champion Trinket - ilvl 246)</span></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
+                <td><span class="action-text">Singularity (Stormarion Assault)</span><span class="desc-text">Singularity Renown 7 (Champion Trinket - ilvl 246)</span></td>
             </tr>
             <tr data-id="sing_deci">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
-                <td><span class="action-text">Singularity (Decimus) - Voidstorm</span><span class="desc-text">Decimus Storyline - Elemental Voidcores</span></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
+                <td><span class="action-text">Singularity (Decimus)</span><span class="desc-text">Decimus Storyline - Elemental Voidcores</span></td>
             </tr>
             <tr data-id="world6">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
                 <td><span class="action-text">World Quests</span><span class="desc-text">Quick easy gear, Adventurer only</span></td>
             </tr>
         </tbody>
@@ -169,16 +146,16 @@
     <table>
         <tbody class="sortable-list" data-group="optional">
             <tr data-id="opt_silvermoon">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
-                <td><span class="action-text">Silvermoon Court (Saltheril’s Soiree) - Eversong Woods</span><span class="desc-text">Reputation and event rewards</span></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
+                <td><span class="action-text">Silvermoon Court (Saltheril’s Soiree)</span><span class="desc-text">Reputation and event rewards</span></td>
             </tr>
             <tr data-id="opt_harati">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
-                <td><span class="action-text">Hara'ti (Legends of the Haranir) - Harandar</span><span class="desc-text">Reputation and event rewards</span></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
+                <td><span class="action-text">Hara'ti (Legends of the Haranir)</span><span class="desc-text">Reputation and event rewards</span></td>
             </tr>
             <tr data-id="opt_amani">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
-                <td><span class="action-text">Amani-Tribe (The Abundance) - All Zones</span><span class="desc-text">Reputation and event rewards</span></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
+                <td><span class="action-text">Amani-Tribe (The Abundance)</span><span class="desc-text">Reputation and event rewards</span></td>
             </tr>
         </tbody>
     </table>
@@ -187,7 +164,7 @@
     <table>
         <tbody class="sortable-list" data-group="prey">
             <tr data-id="prey2">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
                 <td><span class="action-text">Prey - Nightmare</span><span class="desc-text">Renown Rank 4 - Unlocks Nightmare Mode</span></td>
             </tr>
         </tbody>
@@ -197,15 +174,15 @@
     <table>
         <tbody class="sortable-list" data-group="delve">
             <tr data-id="delve2">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
                 <td><span class="action-text">Gilded Jackpot (Delve Rank 4)</span><span class="desc-text">Run Tier 11s for Hero/Mythic crests</span></td>
             </tr>
             <tr data-id="delve3">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
                 <td><span class="action-text">Nullaeus ?</span><span class="desc-text">Kill weekly for 5 Hero crests</span></td>
             </tr>
             <tr data-id="delve4">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
                 <td><span class="action-text">Nullaeus ??</span><span class="desc-text">Kill weekly for 5 Mythic crests</span></td>
             </tr>
         </tbody>
@@ -215,19 +192,19 @@
     <table>
         <tbody class="sortable-list" data-group="craft">
             <tr data-id="craft_prof1">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
                 <td><span class="action-text">First profession patron weekly</span><span class="desc-text">Craft x3 patron work orders</span></td>
             </tr>
             <tr data-id="craft_prof2">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
                 <td><span class="action-text">Second profession patron weekly</span><span class="desc-text">Craft x3 patron work orders</span></td>
             </tr>
             <tr data-id="craft_contract1">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
                 <td><span class="action-text">First profession contract</span><span class="desc-text">Submit work order</span></td>
             </tr>
             <tr data-id="craft_contract2">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync(this)"></div></td>
                 <td><span class="action-text">Second profession contract</span><span class="desc-text">Submit work order</span></td>
             </tr>
         </tbody>
@@ -237,36 +214,38 @@
     <table>
         <tbody class="sortable-list" data-group="rep">
             <tr data-id="rep1">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync(this)"></div></td>
                 <td><span class="action-text">Singularity rep</span><span class="desc-text">Renown 7 - Unlock Champion trinket ilvl 246</span></td>
             </tr>
             <tr data-id="rep2">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync(this)"></div></td>
                 <td><span class="action-text">Silvermoon Court rep</span><span class="desc-text">Renown 9 - Unlock Champion head ilvl 246</span></td>
             </tr>
             <tr data-id="rep3">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync(this)"></div></td>
                 <td><span class="action-text">Hara'ti rep</span><span class="desc-text">Renown 8 - Unlock Champion belt ilvl 246</span></td>
             </tr>
             <tr data-id="rep4">
-                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync(this)"></div></td>
                 <td><span class="action-text">Amani-Tribe rep</span><span class="desc-text">Renown 9 - Unlock Champion neck ilvl 246</span></td>
             </tr>
         </tbody>
     </table>
 
-    <div class="track-row">
-        <div class="track-item"><span class="track-label" style="color:var(--green);">Adventurer</span><span class="track-val">220-230</span></div>
-        <div class="track-item"><span class="track-label" style="color:var(--blue);">Veteran</span><span class="track-val">233-243</span></div>
-        <div class="track-item"><span class="track-label" style="color:var(--accent);">Champion</span><span class="track-val">246-256</span></div>
-        <div class="track-item"><span class="track-label" style="color:var(--gold);">Hero</span><span class="track-val">259-269</span></div>
-        <div class="track-item"><span class="track-label" style="color:#ff4500;">Myth</span><span class="track-val">272-289</span></div>
-    </div>
+    <div class="footer-section">
+        <div class="category-header">Gearing Tracks</div>
+        
+        <div class="track-row">
+            <div class="track-item"><span class="track-label" style="color:var(--green);">Adventurer</span><span class="track-val">220-230</span></div>
+            <div class="track-item"><span class="track-label" style="color:var(--blue);">Veteran</span><span class="track-val">233-243</span></div>
+            <div class="track-item"><span class="track-label" style="color:var(--accent);">Champion</span><span class="track-val">246-256</span></div>
+            <div class="track-item"><span class="track-label" style="color:var(--gold);">Hero</span><span class="track-val">259-269</span></div>
+            <div class="track-item"><span class="track-label" style="color:#ff4500;">Myth</span><span class="track-val">272-289</span></div>
+        </div>
 
-    <div class="priority-box">
-        <div class="priority-header">Gearing Priority</div>
+        <div class="category-header" style="margin-top: 40px;">Gearing Priority</div>
         <table>
-            <thead><tr><th style="width: 200px;">Slot</th><th>Priority Reasoning</th></tr></thead>
+            <thead><tr><th style="width: 250px;">Slot</th><th>Priority Reasoning</th></tr></thead>
             <tbody>
                 <tr><td><span class="action-text">Weapon</span></td><td class="desc-text">Largest source of Attack Power/Spell Power. Usually the best use of your first Spark</td></tr>
                 <tr><td><span class="action-text">Trinkets</span></td><td class="desc-text">These often provide unique effects or massive stat procs that outweigh raw ilvl</td></tr>
@@ -293,30 +272,23 @@
     lists.forEach(list => {
         new Sortable(list, { 
             animation: 150, 
-            ghostClass: 'sortable-ghost',
             handle: '.drag-icon', 
             onEnd: () => saveState(false)
         });
     });
 
-    function sync() {
+    function sync(el) {
+        if (el && el.checked) {
+            const row = el.closest('tr');
+            row.parentNode.prepend(row);
+        }
+
         document.querySelectorAll('tbody tr').forEach(row => {
             const cb = row.querySelector('input[type="checkbox"]');
-            const statusCircle = row.querySelector('.status-circle');
             if (cb && cb.checked) {
                 row.classList.add('row-done');
-                if (statusCircle) { 
-                    statusCircle.innerText = "CO"; 
-                    statusCircle.classList.remove('sc-ip');
-                    statusCircle.classList.add('sc-co'); 
-                }
             } else if (cb) {
                 row.classList.remove('row-done');
-                if (statusCircle) { 
-                    statusCircle.innerText = "IP"; 
-                    statusCircle.classList.remove('sc-co');
-                    statusCircle.classList.add('sc-ip'); 
-                }
             }
         });
 
@@ -356,11 +328,11 @@
                 });
             }
         });
-        saveState(false);
+        sync();
     }
 
     function weeklyReset() {
-        if(confirm("Reset all weeklies (Reputation will be saved)?")) {
+        if(confirm("Reset all weeklies?")) {
             document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false);
             sync();
         }
