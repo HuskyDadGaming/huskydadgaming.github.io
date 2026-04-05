@@ -93,16 +93,37 @@
         .bar-bg { background: #000; height: 16px; border-radius: 8px; margin-top: 5px; border: 1px solid #1a1a1a; overflow: hidden; }
         #bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--void-highlight), var(--blue), var(--void-highlight)); transition: width 0.6s ease; }
 
-        .external-links, .progress-controls {
+        .external-links {
             display: flex !important;
             margin-top: 12px;
             gap: 8px;
         }
-        .external-links .btn-ctrl, .progress-controls .btn-ctrl {
+        .external-links .btn-ctrl {
             flex: 1;
             padding: 10px 5px;
             font-size: 0.65rem;
             white-space: nowrap;
+        }
+        .progress-controls {
+            display: grid !important;
+            grid-template-columns: repeat(5, 1fr);
+            margin-top: 12px;
+            gap: 8px;
+        }
+        .progress-controls .btn-ctrl {
+            padding: 10px 4px;
+            font-size: 0.6rem;
+            white-space: nowrap;
+            gap: 4px;
+        }
+        @media screen and (max-width: 520px) {
+            .progress-controls {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .progress-controls .btn-ctrl:last-child,
+            .progress-controls .btn-ctrl:nth-last-child(2) {
+                grid-column: span 1;
+            }
         }
 
         .btn-ctrl {
@@ -263,7 +284,7 @@
             <span id="percent-text" style="color: var(--blue); font-size: 1.8rem;">0%</span>
         </div>
         <div class="bar-bg"><div id="bar-fill"></div></div>
-        <div class="progress-controls" style="margin-top: 12px;">
+        <div class="progress-controls">
             <button class="btn-ctrl" onclick="openNewGroupModal()">📁 NEW GROUP</button>
             <button class="btn-ctrl" onclick="exportData()">💾 EXPORT</button>
             <button class="btn-ctrl" onclick="importData()">📂 IMPORT</button>
