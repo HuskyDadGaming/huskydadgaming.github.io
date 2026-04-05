@@ -83,8 +83,6 @@
         .bar-bg { background: #000; height: 16px; border-radius: 8px; margin-top: 5px; border: 1px solid #1a1a1a; overflow: hidden; }
         #bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--void-highlight), var(--blue), var(--void-highlight)); transition: width 0.6s ease; }
 
-        .controls-top { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
-        
         .external-links, .progress-controls { 
             display: flex !important; 
             margin-top: 12px; 
@@ -128,14 +126,35 @@
         .track-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-wrap: wrap; justify-content: space-around; gap: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .track-item { flex: 1; min-width: 100px; }
 
+        /* FIXED: Improved Mobile Gearing Priority Table */
         @media screen and (max-width: 600px) {
-            /* Kept block layout for task tables, but allowed priority table to flex better */
-            .priority-table td:first-child { max-width: 100px; word-break: break-word; }
+            .priority-table thead { display: none; }
+            .priority-table, .priority-table tbody, .priority-table tr, .priority-table td { 
+                display: block; 
+                width: 100%; 
+                box-sizing: border-box;
+            }
+            .priority-table tr { 
+                margin-bottom: 0; 
+                border-bottom: 1px solid var(--border); 
+            }
+            .priority-table td:first-child { 
+                background: rgba(138, 43, 226, 0.1); 
+                color: var(--gold); 
+                font-size: 0.85rem; 
+                padding: 10px 15px; 
+                border-right: none !important;
+                max-width: 100%;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            .priority-table td:last-child {
+                padding: 10px 15px 15px 15px;
+            }
         }
 
         .priority-table th { text-align: left; color: var(--gold); font-size: 0.75rem; text-transform: uppercase; padding: 15px; border-bottom: 2px solid var(--border); }
-        /* Changed width to max-width and added word-break for mobile headers */
-        .priority-table td:first-child { font-weight: 700; color: #fff; max-width: 230px; border-right: 1px solid var(--border); word-break: normal; }
+        .priority-table td:first-child { font-weight: 700; color: #fff; width: 230px; border-right: 1px solid var(--border); }
 
         .btn-add-task { margin: 5px auto 0 0; width: 85px; font-size: 0.65rem; background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); padding: 6px; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-weight: bold; }
     </style>
