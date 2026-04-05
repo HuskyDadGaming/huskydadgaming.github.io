@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midnight Gearing - Huskysham Master List</title>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <style>
+        :root {
+            --bg: #050308;
+            --surface: #120c1d;
+            --border: #2d243d;
+            --accent: #8a2be2;
+            --gold: #ffcc33;
+            --blue: #33ccff;
+            --green: #39ff14;
+            --text: #e0dced;
+            --dim: #8b869c;
+            --btn-bg: #1e152e;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(51, 204, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px);
+            background-size: 100% 100%, 100% 100%, 550px 550px, 350px 350px;
+        }
+
+        .void-decor {
+            position: fixed; top: 50%; transform: translateY(-50%);
+            width: 300px; height: 600px; pointer-events: none; z-index: 1; opacity: 0.4;
+            filter: blur(40px); border-radius: 50%;
+        }
+        .void-left { left: -150px; background: radial-gradient(ellipse at center, var(--accent) 0%, transparent 70%); box-shadow: 0 0 100px var(--accent); }
+        .void-right { right: -150px; background: radial-gradient(ellipse at center, var(--blue) 0%, transparent 70%); box-shadow: 0 0 100px var(--blue); }
+
+        .container { width: 100%; max-width: 900px; padding: 40px 20px; position: relative; z-index: 10; }
+
+        .progress-box {
+            background: var(--surface); padding: 20px; border-radius: 12px; border: 1px solid var(--border);
+            margin-bottom: 30px; position: sticky; top: 20px; z-index: 100;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+        }
+
+        .bar-bg { background: #000; height: 10px; border-radius: 5px; margin-top: 10px; border: 1px solid #1a1a1a; }
+        #bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--blue)); transition: width 0.5s ease; box-shadow: 0 0 10px var(--accent); }
+
+        .controls-top { margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+        .btn {
+            background: var(--btn-bg); color: #fff !important; border: 1px solid var(--border);
+            padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .btn:hover { background: #2d243d; border-color: var(--accent); }
+
+        .category-header { 
+            color: var(--blue); font-size: 0.9rem; font-weight: 800; 
+            text-transform: uppercase; letter-spacing: 1.5px; margin: 30px 0 10px 10px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        /* REVERTED: Category line back to Blue/Border mix */
+        .category-header::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--blue), transparent); opacity: 0.6; }
+
+        table { width: 100%; border-collapse: collapse; background: rgba(18, 12, 29, 0.8); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 10px; backdrop-filter: blur(4px); table-layout: fixed; }
+        th { text-align: left; padding: 12px 15px; color: var(--gold); font-size: 0.75rem; text-transform: uppercase; border-bottom: 2px solid var(--border); }
+        
+        tbody tr { transition: 0.2s; cursor: grab; }
+        tbody tr:hover td { background: rgba(138, 43, 226, 0.1); }
+        .row-done { opacity: 0.3; }
+        .row-done .action-text { text-decoration: line-through; }
+
+        td { padding: 12px 15px; border-bottom: 1px solid rgba(45, 36, 61, 0.5); vertical-align: middle; overflow: hidden; }
+        
+        .col-check { width: 50px; text-align: center; }
+        .col-status { width: 130px; text-align: right; }
+        
+        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--accent); }
+        .action-text { font-weight: 600; color: #fff; display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+        .desc-text { font-size: 0.8rem; color: var(--dim); display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+
+        .pill { font-size: 0.6rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; border: 1px solid transparent; display: inline-block; min-width: 85px; text-align: center; }
+        .pill-ip { color: var(--blue); border-color: var(--blue); }
+        .pill-co { color: var(--green); border-color: var(--green); }
+
+        .priority-box { margin-top: 10px; padding-top: 10px; }
+        .priority-header { color: var(--gold); font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+
+        .track-row { display: flex; justify-content: space-around; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin: 20px 0; text-align: center; }
+        .track-item { display: flex; flex-direction: column; gap: 4px; }
+        .track-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
+        .track-val { font-size: 0.9rem; font-weight: 600; color: #fff; }
+
+        @media (max-width: 1000px) { .void-decor { display: none; } }
+    </style>
+</head>
+<body>
+
+<div class="void-decor void-left"></div>
+<div class="void-decor void-right"></div>
+
+<div class="container">
+    <div class="progress-box">
+        <div style="display:flex; justify-content:space-between; font-weight: bold;">
+            <span>TOTAL PROGRESS</span>
+            <span id="percent-text">0%</span>
+        </div>
+        <div class="bar-bg"><div id="bar-fill"></div></div>
+        <div class="controls-top">
+            <button class="btn btn-save" onclick="saveState(true)">💾 Commit Order</button>
+            <button class="btn btn-utility" onclick="resetOrder()">↩️ Reset Order</button>
+            <button class="btn btn-weekly" onclick="weeklyReset()">🧹 Reset Weeklies</button>
+        </div>
+    </div>
+
+    <div class="category-header">World Weeklies and Quests</div>
+    <table>
+        <tbody class="sortable-list" data-group="world">
+            <tr data-id="world_ah" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Buy Rep Contract from AH</span><span class="desc-text">Maximize reputation gains from World Quests</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="world1" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Neighbourhood</span><span class="desc-text">Weekly Quest - Hero, Champion crest bundle</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="world_sm" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Silvermoon</span><span class="desc-text">Pickup all - Complete for crafting spark</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="world5" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">World Boss</span><span class="desc-text">Champion gear ilvl 250 drop chance</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="sing_storm" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Singularity (Stormarion Assault) - Voidstorm</span><span class="desc-text">Singularity Renown 7 (Champion Trinket - ilvl 246)</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="sing_deci" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Singularity (Decimus) - Voidstorm</span><span class="desc-text">Decimus Storyline - Elemental Voidcores</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="world6" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">World Quests</span><span class="desc-text">Quick easy gear, Adventurer only</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="category-header">Optional Weeklies</div>
+    <table>
+        <tbody class="sortable-list" data-group="optional">
+            <tr data-id="opt_silvermoon" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Silvermoon Court (Saltheril’s Soiree) - Eversong Woods</span><span class="desc-text">Reputation and event rewards</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="opt_harati" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Hara'ti (Legends of the Haranir) - Harandar</span><span class="desc-text">Reputation and event rewards</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="opt_amani" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Amani-Tribe (The Abundance) - All Zones</span><span class="desc-text">Reputation and event rewards</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="category-header">Prey</div>
+    <table>
+        <tbody class="sortable-list" data-group="prey">
+            <tr data-id="prey2" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Prey - Nightmare</span><span class="desc-text">Renown Rank 4 - Unlocks Nightmare Mode</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="category-header">Delves</div>
+    <table>
+        <tbody class="sortable-list" data-group="delve">
+            <tr data-id="delve2" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Gilded Jackpot (Delve Rank 4)</span><span class="desc-text">Run Tier 11s for Hero/Mythic crests</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="delve3" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Nullaeus ?</span><span class="desc-text">Kill weekly for 5 Hero crests</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="delve4" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Nullaeus ??</span><span class="desc-text">Kill weekly for 5 Mythic crests</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="category-header">Crafting</div>
+    <table>
+        <tbody class="sortable-list" data-group="craft">
+            <tr data-id="craft_prof1" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">First profession patron weekly</span><span class="desc-text">Craft x3 patron work orders</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="craft_prof2" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Second profession patron weekly</span><span class="desc-text">Craft x3 patron work orders</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="craft_contract1" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">First profession contract</span><span class="desc-text">Submit work order</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="craft_contract2" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox" class="prog-task"></td>
+                <td><span class="action-text">Second profession contract</span><span class="desc-text">Submit work order</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; height: 1px; background: var(--accent); margin: 40px 0 10px 0;">
+
+    <div class="category-header">Reputation</div>
+    <table>
+        <tbody class="sortable-list" data-group="rep">
+            <tr data-id="rep1" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox"></td>
+                <td><span class="action-text">Singularity rep</span><span class="desc-text">Renown 7 - Unlock Champion trinket ilvl 246</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="rep2" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox"></td>
+                <td><span class="action-text">Silvermoon Court rep</span><span class="desc-text">Renown 9 - Unlock Champion head ilvl 246</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="rep3" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox"></td>
+                <td><span class="action-text">Hara'ti rep</span><span class="desc-text">Renown 8 - Unlock Champion belt ilvl 246</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+            <tr data-id="rep4" onclick="toggleRow(this, event)">
+                <td class="col-check"><input type="checkbox"></td>
+                <td><span class="action-text">Amani-Tribe rep</span><span class="desc-text">Renown 9 - Unlock Champion neck ilvl 246</span></td>
+                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; height: 1px; background: var(--accent); margin: 30px 0 10px 0;">
+
+    <div class="track-row">
+        <div class="track-item">
+            <span class="track-label" style="color:var(--green);">Adventurer</span>
+            <span class="track-val">220-230</span>
+        </div>
+        <div class="track-item">
+            <span class="track-label" style="color:var(--blue);">Veteran</span>
+            <span class="track-val">233-243</span>
+        </div>
+        <div class="track-item">
+            <span class="track-label" style="color:var(--accent);">Champion</span>
+            <span class="track-val">246-256</span>
+        </div>
+        <div class="track-item">
+            <span class="track-label" style="color:var(--gold);">Hero</span>
+            <span class="track-val">259-269</span>
+        </div>
+        <div class="track-item">
+            <span class="track-label" style="color:#ff4500;">Myth</span>
+            <span class="track-val">272-289</span>
+        </div>
+    </div>
+
+    <div class="priority-box">
+        <div class="priority-header">Gearing Priority</div>
+        <table>
+            <thead>
+                <tr><th style="width: 200px;">Slot</th><th>Priority Reasoning</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><span class="action-text">Weapon</span></td><td class="desc-text">Largest source of Attack Power/Spell Power. Usually the best use of your first Spark</td></tr>
+                <tr><td><span class="action-text">Trinkets</span></td><td class="desc-text">These often provide unique effects or massive stat procs that outweigh raw ilvl</td></tr>
+                <tr><td><span class="action-text">Chest / Head / Legs</span></td><td class="desc-text">These have the largest "stat budget" for Stamina and Primary stats</td></tr>
+                <tr><td><span class="action-text">Shoulders / Hands / Feet</span></td><td class="desc-text">Moderate stat gains; often the best slots for your Tier Set pieces</td></tr>
+                <tr><td><span class="action-text">Cloak / Bracers / Belt</span></td><td class="desc-text">Smallest stat pools. Upgrade these only when everything else is capped</td></tr>
+                <tr><td><span class="action-text">Rings / Neck</span></td><td class="desc-text">No primary stats (Intellect/Strength/Agility). Only upgrade these for Secondary Stat optimization</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const masterOrder = {
+        world: ['world_ah', 'world1', 'world_sm', 'world5', 'sing_storm', 'sing_deci', 'world6'],
+        optional: ['opt_silvermoon', 'opt_harati', 'opt_amani'],
+        prey: ['prey2'],
+        delve: ['delve2', 'delve3', 'delve4'],
+        craft: ['craft_prof1', 'craft_prof2', 'craft_contract1', 'craft_contract2'],
+        rep: ['rep1', 'rep2', 'rep3', 'rep4']
+    };
+
+    const lists = document.querySelectorAll('.sortable-list');
+    lists.forEach(list => {
+        new Sortable(list, { animation: 150, ghostClass: 'sortable-ghost', onEnd: () => sync() });
+    });
+
+    function toggleRow(row, event) {
+        if (event.target.type !== 'checkbox') {
+            const cb = row.querySelector('input');
+            if (cb) cb.checked = !cb.checked;
+        }
+        sync();
+    }
+
+    function sync() {
+        document.querySelectorAll('tbody tr').forEach(row => {
+            const cb = row.querySelector('input[type="checkbox"]');
+            const pill = row.querySelector('.pill');
+            if (cb && cb.checked) {
+                row.classList.add('row-done');
+                if (pill) { pill.innerText = "Done"; pill.className = "pill pill-co"; }
+            } else if (cb) {
+                row.classList.remove('row-done');
+                if (pill) { pill.innerText = "In-Progress"; pill.className = "pill pill-ip"; }
+            }
+        });
+
+        const progTasks = document.querySelectorAll('.prog-task');
+        const completed = document.querySelectorAll('.prog-task:checked').length;
+        const p = Math.round((completed / (progTasks.length || 1)) * 100);
+        document.getElementById('bar-fill').style.width = p + '%';
+        document.getElementById('percent-text').innerText = p + '%';
+        saveState(false);
+    }
+
+    function saveState(manual) {
+        const state = { checked: {}, orders: {} };
+        document.querySelectorAll('tr[data-id]').forEach(tr => {
+            const cb = tr.querySelector('input');
+            if(cb) state.checked[tr.dataset.id] = cb.checked;
+        });
+        document.querySelectorAll('.sortable-list').forEach(tbody => {
+            const group = tbody.dataset.group;
+            state.orders[group] = Array.from(tbody.querySelectorAll('tr')).map(tr => tr.dataset.id);
+        });
+        localStorage.setItem('midnight_gear_v48', JSON.stringify(state)); 
+        if(manual) {
+            const btn = document.querySelector('.btn-save');
+            btn.innerText = "✅ Saved!";
+            setTimeout(() => { btn.innerText = "💾 Commit Order"; }, 2000);
+        }
+    }
+
+    function resetOrder() {
+        Object.keys(masterOrder).forEach(group => {
+            const tbody = document.querySelector(`.sortable-list[data-group="${group}"]`);
+            if (tbody) {
+                masterOrder[group].forEach(id => {
+                    const row = document.querySelector(`[data-id="${id}"]`);
+                    if (row) tbody.appendChild(row);
+                });
+            }
+        });
+        saveState(false);
+    }
+
+    function weeklyReset() {
+        if(confirm("Reset all weeklies (Reputation will be saved)?")) {
+            document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false);
+            sync();
+        }
+    }
+
+    function loadState() {
+        const saved = JSON.parse(localStorage.getItem('midnight_gear_v48'));
+        if (!saved) { sync(); return; }
+        if (saved.orders) {
+            Object.keys(saved.orders).forEach(group => {
+                const tbody = document.querySelector(`.sortable-list[data-group="${group}"]`);
+                if (tbody) {
+                    saved.orders[group].forEach(id => {
+                        const row = document.querySelector(`[data-id="${id}"]`);
+                        if (row) tbody.appendChild(row);
+                    });
+                }
+            });
+        }
+        if (saved.checked) {
+            Object.keys(saved.checked).forEach(id => {
+                const row = document.querySelector(`[data-id="${id}"]`);
+                if (row) {
+                    const cb = row.querySelector('input');
+                    if(cb) cb.checked = saved.checked[id];
+                }
+            });
+        }
+        sync();
+    }
+    window.onload = loadState;
+</script>
+
+</body>
+</html>
