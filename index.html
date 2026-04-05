@@ -84,8 +84,18 @@
 
         .controls-top { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
         
-        /* New separation for external links */
-        .external-links { margin-top: 12px; } 
+        /* Fixed: Buttons forced into one row and shrunk slightly for mobile */
+        .external-links { 
+            display: flex !important; 
+            margin-top: 12px; 
+            gap: 8px; 
+        } 
+        .external-links .btn-ctrl { 
+            flex: 1; 
+            padding: 10px 5px; 
+            font-size: 0.65rem; 
+            white-space: nowrap; 
+        }
 
         .btn-ctrl {
             background: var(--btn-bg); color: #fff; border: 1px solid var(--border);
@@ -144,7 +154,7 @@
                     <span class="char-realm">EU - Silvermoon</span>
                     <div class="mplus-badge">🏆 M+ SCORE: <span id="mplus-score">--</span></div>
                 </div>
-                <div class="controls-top external-links">
+                <div class="external-links">
                     <a href="https://worldofwarcraft.blizzard.com/en-gb/character/eu/silvermoon/huskysham" target="_blank" class="btn-ctrl">🛡️ ARMORY</a>
                     <a href="https://raider.io/characters/eu/silvermoon/Huskysham" target="_blank" class="btn-ctrl">📈 RIO</a>
                     <a href="https://www.warcraftlogs.com/character/eu/silvermoon/huskysham" target="_blank" class="btn-ctrl">📜 LOGS</a>
