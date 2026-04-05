@@ -44,6 +44,7 @@
             transition: width 0.6s ease;
         }
 
+        /* REORDERED CONTROLS */
         .controls-top { margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 
         .btn {
@@ -80,12 +81,13 @@
 
         td { padding: 12px 15px; border-bottom: 1px solid rgba(45, 36, 61, 0.4); vertical-align: middle; }
         
-        /* CONTROLS COLUMN */
-        .col-controls { width: 110px; white-space: nowrap; }
-        .control-flex { display: flex; align-items: center; gap: 12px; }
+        .col-left { width: 70px; white-space: nowrap; }
+        .left-flex { display: flex; align-items: center; gap: 15px; }
         
-        .drag-icon { color: var(--dim); cursor: grab; font-size: 1.1rem; }
+        .drag-icon { color: var(--dim); cursor: grab; font-size: 1.1rem; text-align: center; }
         input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--green); }
+
+        .col-right { width: 40px; text-align: center; }
         .delete-task { color: var(--dim); cursor: pointer; background: none; border: none; font-size: 1.2rem; line-height: 1; padding: 0; }
         .delete-task:hover { color: var(--danger); }
 
@@ -112,9 +114,10 @@
             <span id="percent-text" style="color: var(--blue); font-size: 1.8rem;">0%</span>
         </div>
         <div class="bar-bg"><div id="bar-fill"></div></div>
+        
         <div class="controls-top">
-            <button class="btn" onclick="saveState(true)">💾 Save</button>
             <button class="btn" onclick="addNewGroup()">📁 New Group</button>
+            <button class="btn" onclick="saveState(true)">💾 Save</button>
             <button class="btn" onclick="resetToDefault()">↩️ Reset</button>
             <button class="btn" onclick="weeklyReset()">🧹 Clear</button>
         </div>
@@ -194,14 +197,16 @@
         tr.dataset.id = id;
         if(checked) tr.classList.add('row-done');
         tr.innerHTML = `
-            <td class="col-controls">
-                <div class="control-flex">
+            <td class="col-left">
+                <div class="left-flex">
                     <span class="drag-icon">⠿</span>
                     <input type="checkbox" class="prog-task" ${checked ? 'checked' : ''} onchange="sync()">
-                    <button class="delete-task" onclick="removeTask(this)">×</button>
                 </div>
             </td>
             <td><span class="action-text">${text}</span><span class="desc-text">${desc}</span></td>
+            <td class="col-right">
+                <button class="delete-task" onclick="removeTask(this)">×</button>
+            </td>
         `;
         return tr;
     }
@@ -251,7 +256,7 @@
             });
             groups.push({ id: list.dataset.group, title: wrap.querySelector('.category-header').innerText, tasks: tasks });
         });
-        localStorage.setItem('midnight_save_vFinalLayout', JSON.stringify(groups));
+        localStorage.setItem('midnight_save_vOrderUpdate', JSON.stringify(groups));
         if(manual) alert("Layout & Progress Saved");
     }
 
@@ -275,10 +280,10 @@
     function removeTask(btn) { btn.closest('tr').remove(); sync(); saveState(false); }
     function removeGroup(btn) { if(confirm("Delete entire group?")) { btn.closest('.group-wrapper').remove(); sync(); saveState(false); } }
     function weeklyReset() { document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false); sync(); saveState(false); }
-    function resetToDefault() { if(confirm("Reset all groups and progress?")) { localStorage.removeItem('midnight_save_vFinalLayout'); renderGroups(defaultData); } }
+    function resetToDefault() { if(confirm("Reset everything?")) { localStorage.removeItem('midnight_save_vOrderUpdate'); renderGroups(defaultData); } }
 
     window.onload = () => {
-        const saved = JSON.parse(localStorage.getItem('midnight_save_vFinalLayout'));
+        const saved = JSON.parse(localStorage.getItem('midnight_save_vOrderUpdate'));
         renderGroups(saved || defaultData);
     };
 </script>
