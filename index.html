@@ -69,12 +69,12 @@
 
         .group-drag-handle { color: var(--blue); cursor: grab; font-size: 1.4rem; }
         
-        .delete-group { 
+        .remove-group-btn { 
             color: var(--dim); background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
             cursor: pointer; font-size: 0.6rem; text-transform: uppercase; padding: 4px 8px; 
             border-radius: 4px; transition: 0.2s; font-weight: bold;
         }
-        .delete-group:hover { color: var(--danger); border-color: var(--danger); background: rgba(255, 77, 77, 0.1); }
+        .remove-group-btn:hover { color: var(--danger); border-color: var(--danger); background: rgba(255, 77, 77, 0.1); }
 
         table { width: 100%; border-collapse: collapse; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
         .row-done td { opacity: 0.4; background: rgba(57, 255, 20, 0.03) !important; }
@@ -155,15 +155,15 @@
 </div>
 
 <script>
-    // UPDATED MASTER ORDER WITH "FACTION WEEKLIES"
+    // MASTER ORDER FOR RESET BASED ON IMAGE_446544.PNG
     const defaultData = [
         { title: "World Weeklies and Quests", id: "world", tasks: [
             { id: "w1", text: "Buy Rep Contract from AH", desc: "Maximize Reputation gains" },
+            { id: "w_new", text: "Complete Any New Campaign", desc: "Complete New Chapters" },
             { id: "w2", text: "Neighbourhood", desc: "Weekly Quest - Easy Crest bundles" },
             { id: "w3", text: "Silvermoon", desc: "Pickup all available from Silvermoon" },
             { id: "w4", text: "World Boss", desc: "Champion gear ilvl 250 drop chance" },
-            { id: "w5", text: "Singularity (Decimus)", desc: "Decimus Storyline - Elemental Voidcores" },
-            { id: "w6", text: "World Quests", desc: "Quick easy gear, Adventurer only" }
+            { id: "w5", text: "Singularity (Decimus)", desc: "Decimus Storyline - Elemental Voidcores" }
         ]},
         { title: "Delves", id: "delve", tasks: [
             { id: "d1", text: "Gilded Jackpot (Delve Rank 4)", desc: "Run Tier 11s for Hero/Mythic crests" },
@@ -174,10 +174,14 @@
             { id: "p1", text: "Prey - Nightmare", desc: "Renown Rank 4 - Unlocks Nightmare Mode" }
         ]},
         { title: "Faction Weeklies", id: "faction", tasks: [
-            { id: "o1", text: "Singularity (Stormarion Assault)", desc: "Singularity Renown 7 (Champion Trinket - ilvl 246)" },
-            { id: "o2", text: "Silvermoon Court (Saltheril’s Soiree)", desc: "Reputation and event rewards" },
-            { id: "o3", text: "Hara'ti (Legends of the Haranir)", desc: "Reputation and event rewards" },
-            { id: "o4", text: "Amani-Tribe (The Abundance)", desc: "Reputation and event rewards" }
+            { id: "f1", text: "Singularity (Stormarion Assault)", desc: "Singularity Renown 7 (Champion Trinket - ilvl 246)" },
+            { id: "f2", text: "Silvermoon Court (Saltheril’s Soiree)", desc: "Reputation and event rewards" },
+            { id: "f3", text: "Hara'ti (Legends of the Haranir)", desc: "Reputation and event rewards" },
+            { id: "f4", text: "Amani-Tribe (The Abundance)", desc: "Reputation and event rewards" }
+        ]},
+        { title: "Optional Weeklies", id: "optional", tasks: [
+            { id: "ow1", text: "Special Assignments", desc: "Check for active world event assignments" },
+            { id: "ow2", text: "World Quests", desc: "Quick easy gear, Adventurer only" }
         ]},
         { title: "Crafting", id: "craft", tasks: [
             { id: "c1", text: "First profession patron weekly", desc: "Craft x3 patron work orders" },
@@ -219,7 +223,7 @@
             <div class="group-header-flex">
                 <span class="group-drag-handle">⠿</span>
                 <div class="category-header">${group.title}</div>
-                <button class="delete-group" onclick="removeGroup(this)">Remove Group</button>
+                <button class="remove-group-btn" onclick="removeGroup(this)">Remove Group</button>
             </div>
             <table><tbody class="sortable-list" data-group="${group.id}"></tbody></table>
             <button class="btn btn-add" onclick="addTaskPrompt('${group.id}')">+ Task</button>
@@ -280,7 +284,7 @@
                 tasks: tasks 
             });
         });
-        localStorage.setItem('midnight_save_vMasterV9', JSON.stringify(groups));
+        localStorage.setItem('midnight_save_final_v1', JSON.stringify(groups));
         if(manual) alert("Layout & Progress Saved");
     }
 
@@ -306,10 +310,10 @@
     function removeTask(btn) { const row = btn.closest('tr'); if(row) row.remove(); sync(); saveState(false); }
     function removeGroup(btn) { if(confirm("Delete entire group?")) { const wrap = btn.closest('.group-wrapper'); if(wrap) wrap.remove(); sync(); saveState(false); } }
     function weeklyReset() { document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false); sync(); saveState(false); }
-    function resetToDefault() { if(confirm("Reset to the updated master layout?")) { localStorage.removeItem('midnight_save_vMasterV9'); renderGroups(defaultData); } }
+    function resetToDefault() { if(confirm("Reset to the official master layout?")) { localStorage.removeItem('midnight_save_final_v1'); renderGroups(defaultData); } }
 
     window.onload = () => {
-        const saved = JSON.parse(localStorage.getItem('midnight_save_vMasterV9'));
+        const saved = JSON.parse(localStorage.getItem('midnight_save_final_v1'));
         renderGroups(saved || defaultData);
     };
 </script>
