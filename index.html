@@ -57,7 +57,6 @@
             margin-bottom: 20px; box-shadow: 0 0 20px 5px var(--void-glow), inset 0 0 15px rgba(0,0,0,0.8);
         }
 
-        /* Fixed: Changed flex-wrap to nowrap to force portrait to stay left */
         .char-flex { display: flex; align-items: center; gap: 15px; flex-wrap: nowrap; }
         
         .portrait-frame {
@@ -86,12 +85,12 @@
 
         .controls-top { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
         
-        .external-links { 
+        .external-links, .progress-controls { 
             display: flex !important; 
             margin-top: 12px; 
             gap: 8px; 
         } 
-        .external-links .btn-ctrl { 
+        .external-links .btn-ctrl, .progress-controls .btn-ctrl { 
             flex: 1; 
             padding: 10px 5px; 
             font-size: 0.65rem; 
@@ -170,7 +169,7 @@
             <span id="percent-text" style="color: var(--blue); font-size: 1.8rem;">0%</span>
         </div>
         <div class="bar-bg"><div id="bar-fill"></div></div>
-        <div class="controls-top" style="margin-top: 20px;">
+        <div class="progress-controls" style="margin-top: 20px;">
             <button class="btn-ctrl" onclick="addNewGroup()">📁 NEW GROUP</button>
             <button class="btn-ctrl" onclick="resetToDefault()">↩️ RESET</button>
             <button class="btn-ctrl" onclick="weeklyReset()">🧹 CLEAR</button>
