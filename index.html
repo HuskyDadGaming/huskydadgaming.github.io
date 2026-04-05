@@ -31,7 +31,6 @@
 
         .container { width: 100%; max-width: 900px; padding: 40px 20px; }
 
-        /* PROGRESS SECTION */
         .progress-box {
             background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border);
             margin-bottom: 30px; position: sticky; top: 20px; z-index: 100;
@@ -44,7 +43,6 @@
             transition: width 0.6s ease;
         }
 
-        /* REORDERED CONTROLS */
         .controls-top { margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 
         .btn {
@@ -55,7 +53,6 @@
         }
         .btn:hover { background: #2d243d; border-color: var(--accent); }
 
-        /* HEADERS */
         .group-wrapper { margin-top: 35px; }
         .group-header-flex { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
         
@@ -74,7 +71,6 @@
         }
         .delete-group:hover { color: var(--danger); border-color: var(--danger); background: rgba(255, 77, 77, 0.1); }
 
-        /* TABLES */
         table { width: 100%; border-collapse: collapse; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
         .row-done td { opacity: 0.4; background: rgba(57, 255, 20, 0.03) !important; }
         .row-done .action-text { text-decoration: line-through; color: var(--green); }
@@ -96,7 +92,6 @@
 
         .btn-add { margin: 5px auto 0 0; width: 80px; font-size: 0.6rem; }
 
-        /* FOOTER INFO */
         .track-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; justify-content: space-around; text-align: center; margin-bottom: 30px; }
         .track-item div:first-child { font-weight: 900; font-size: 0.75rem; margin-bottom: 5px; }
         .track-item div:last-child { font-weight: 600; color: #fff; }
@@ -155,28 +150,29 @@
 </div>
 
 <script>
+    // New Default Order established from User Request
     const defaultData = [
         { title: "World Weeklies and Quests", id: "world", tasks: [
-            { id: "w1", text: "Neighbourhood", desc: "Weekly Quest - Easy Crest bundles" },
-            { id: "w2", text: "Buy Rep Contract from AH", desc: "Maximize Reputation gains" },
+            { id: "w1", text: "Buy Rep Contract from AH", desc: "Maximize Reputation gains" },
+            { id: "w2", text: "Neighbourhood", desc: "Weekly Quest - Easy Crest bundles" },
             { id: "w3", text: "Silvermoon", desc: "Pickup all available from Silvermoon" },
             { id: "w4", text: "World Boss", desc: "Champion gear ilvl 250 drop chance" },
-            { id: "w5", text: "Singularity (Stormarion Assault)", desc: "Singularity Renown 7 (Champion Trinket - ilvl 246)" },
-            { id: "w6", text: "Singularity (Decimus)", desc: "Decimus Storyline - Elemental Voidcores" },
-            { id: "w7", text: "World Quests", desc: "Quick easy gear, Adventurer only" }
-        ]},
-        { title: "Optional Weeklies", id: "optional", tasks: [
-            { id: "o1", text: "Silvermoon Court (Saltheril’s Soiree)", desc: "Reputation and event rewards" },
-            { id: "o2", text: "Hara'ti (Legends of the Haranir)", desc: "Reputation and event rewards" },
-            { id: "o3", text: "Amani-Tribe (The Abundance)", desc: "Reputation and event rewards" }
-        ]},
-        { title: "Prey", id: "prey", tasks: [
-            { id: "p1", text: "Prey - Nightmare", desc: "Renown Rank 4 - Unlocks Nightmare Mode" }
+            { id: "w5", text: "Singularity (Decimus)", desc: "Decimus Storyline - Elemental Voidcores" }
         ]},
         { title: "Delves", id: "delve", tasks: [
             { id: "d1", text: "Gilded Jackpot (Delve Rank 4)", desc: "Run Tier 11s for Hero/Mythic crests" },
             { id: "d2", text: "Nullaeus ?", desc: "Kill weekly for 5 Hero crests" },
             { id: "d3", text: "Nullaeus ??", desc: "Kill weekly for 5 Mythic crests" }
+        ]},
+        { title: "Prey", id: "prey", tasks: [
+            { id: "p1", text: "Prey - Nightmare", desc: "Renown Rank 4 - Unlocks Nightmare Mode" }
+        ]},
+        { title: "Optional Weeklies", id: "optional", tasks: [
+            { id: "o1", text: "Singularity (Stormarion Assault)", desc: "Singularity Renown 7 (Champion Trinket - ilvl 246)" },
+            { id: "o2", text: "Silvermoon Court (Saltheril’s Soiree)", desc: "Reputation and event rewards" },
+            { id: "o3", text: "Hara'ti (Legends of the Haranir)", desc: "Reputation and event rewards" },
+            { id: "o4", text: "Amani-Tribe (The Abundance)", desc: "Reputation and event rewards" },
+            { id: "o5", text: "World Quests", desc: "Quick easy gear, Adventurer only" }
         ]},
         { title: "Crafting", id: "craft", tasks: [
             { id: "c1", text: "First profession patron weekly", desc: "Craft x3 patron work orders" },
@@ -256,7 +252,7 @@
             });
             groups.push({ id: list.dataset.group, title: wrap.querySelector('.category-header').innerText, tasks: tasks });
         });
-        localStorage.setItem('midnight_save_vOrderUpdate', JSON.stringify(groups));
+        localStorage.setItem('midnight_save_vNewOrder', JSON.stringify(groups));
         if(manual) alert("Layout & Progress Saved");
     }
 
@@ -280,10 +276,10 @@
     function removeTask(btn) { btn.closest('tr').remove(); sync(); saveState(false); }
     function removeGroup(btn) { if(confirm("Delete entire group?")) { btn.closest('.group-wrapper').remove(); sync(); saveState(false); } }
     function weeklyReset() { document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false); sync(); saveState(false); }
-    function resetToDefault() { if(confirm("Reset everything?")) { localStorage.removeItem('midnight_save_vOrderUpdate'); renderGroups(defaultData); } }
+    function resetToDefault() { if(confirm("Reset to the new default order?")) { localStorage.removeItem('midnight_save_vNewOrder'); renderGroups(defaultData); } }
 
     window.onload = () => {
-        const saved = JSON.parse(localStorage.getItem('midnight_save_vOrderUpdate'));
+        const saved = JSON.parse(localStorage.getItem('midnight_save_vNewOrder'));
         renderGroups(saved || defaultData);
     };
 </script>
