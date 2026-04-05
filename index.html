@@ -79,20 +79,27 @@
 
         td { padding: 12px 15px; border-bottom: 1px solid rgba(45, 36, 61, 0.5); vertical-align: middle; overflow: hidden; }
         
-        .col-check { width: 80px; text-align: center; white-space: nowrap; }
-        .drag-icon { color: var(--dim); margin-right: 8px; font-size: 1.2rem; vertical-align: middle; user-select: none; cursor: grab; }
+        .col-check { width: 100px; text-align: left; white-space: nowrap; }
+        .flex-cell { display: flex; align-items: center; gap: 8px; }
+
+        .drag-icon { color: var(--dim); font-size: 1.2rem; user-select: none; cursor: grab; }
         .drag-icon:active { cursor: grabbing; }
         .drag-icon:hover { color: var(--accent); }
         
-        .col-status { width: 130px; text-align: right; }
+        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--accent); margin: 0; }
         
-        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--accent); vertical-align: middle; }
+        .status-circle { 
+            width: 20px; height: 20px; border-radius: 50%; border: 1px solid transparent;
+            font-size: 0.55rem; font-weight: 900; display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+        }
+        /* IP (In-Progress) is Blue */
+        .sc-ip { color: var(--blue); border-color: var(--blue); }
+        /* CO (Complete) is Green */
+        .sc-co { color: var(--green); border-color: var(--green); }
+
         .action-text { font-weight: 600; color: #fff; display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
         .desc-text { font-size: 0.8rem; color: var(--dim); display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
-
-        .pill { font-size: 0.6rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; border: 1px solid transparent; display: inline-block; min-width: 85px; text-align: center; }
-        .pill-ip { color: var(--blue); border-color: var(--blue); }
-        .pill-co { color: var(--green); border-color: var(--green); }
 
         .priority-box { margin-top: 10px; padding-top: 10px; }
         .priority-header { color: var(--gold); font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
@@ -128,39 +135,32 @@
     <table>
         <tbody class="sortable-list" data-group="world">
             <tr data-id="world_ah">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Buy Rep Contract from AH</span><span class="desc-text">Maximize Reputation gains</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="world1">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Neighbourhood</span><span class="desc-text">Weekly Quest - Easy Crest bundles</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="world_sm">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Silvermoon</span><span class="desc-text">Pickup all available from Silvermoon</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="world5">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">World Boss</span><span class="desc-text">Champion gear ilvl 250 drop chance</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="sing_storm">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Singularity (Stormarion Assault) - Voidstorm</span><span class="desc-text">Singularity Renown 7 (Champion Trinket - ilvl 246)</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="sing_deci">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Singularity (Decimus) - Voidstorm</span><span class="desc-text">Decimus Storyline - Elemental Voidcores</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="world6">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">World Quests</span><span class="desc-text">Quick easy gear, Adventurer only</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
         </tbody>
     </table>
@@ -169,19 +169,16 @@
     <table>
         <tbody class="sortable-list" data-group="optional">
             <tr data-id="opt_silvermoon">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Silvermoon Court (Saltheril’s Soiree) - Eversong Woods</span><span class="desc-text">Reputation and event rewards</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="opt_harati">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Hara'ti (Legends of the Haranir) - Harandar</span><span class="desc-text">Reputation and event rewards</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="opt_amani">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Amani-Tribe (The Abundance) - All Zones</span><span class="desc-text">Reputation and event rewards</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
         </tbody>
     </table>
@@ -190,9 +187,8 @@
     <table>
         <tbody class="sortable-list" data-group="prey">
             <tr data-id="prey2">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Prey - Nightmare</span><span class="desc-text">Renown Rank 4 - Unlocks Nightmare Mode</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
         </tbody>
     </table>
@@ -201,19 +197,16 @@
     <table>
         <tbody class="sortable-list" data-group="delve">
             <tr data-id="delve2">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Gilded Jackpot (Delve Rank 4)</span><span class="desc-text">Run Tier 11s for Hero/Mythic crests</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="delve3">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Nullaeus ?</span><span class="desc-text">Kill weekly for 5 Hero crests</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="delve4">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Nullaeus ??</span><span class="desc-text">Kill weekly for 5 Mythic crests</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
         </tbody>
     </table>
@@ -222,87 +215,58 @@
     <table>
         <tbody class="sortable-list" data-group="craft">
             <tr data-id="craft_prof1">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">First profession patron weekly</span><span class="desc-text">Craft x3 patron work orders</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="craft_prof2">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Second profession patron weekly</span><span class="desc-text">Craft x3 patron work orders</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="craft_contract1">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">First profession contract</span><span class="desc-text">Submit work order</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="craft_contract2">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Second profession contract</span><span class="desc-text">Submit work order</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
         </tbody>
     </table>
-
-    <hr style="border: 0; height: 1px; background: var(--accent); margin: 40px 0 10px 0;">
 
     <div class="category-header">Reputation</div>
     <table>
         <tbody class="sortable-list" data-group="rep">
             <tr data-id="rep1">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Singularity rep</span><span class="desc-text">Renown 7 - Unlock Champion trinket ilvl 246</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="rep2">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Silvermoon Court rep</span><span class="desc-text">Renown 9 - Unlock Champion head ilvl 246</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="rep3">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Hara'ti rep</span><span class="desc-text">Renown 8 - Unlock Champion belt ilvl 246</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
             <tr data-id="rep4">
-                <td class="col-check"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"></td>
+                <td class="col-check"><div class="flex-cell"><span class="drag-icon">⠿</span><input type="checkbox" onchange="sync()"><div class="status-circle sc-ip">IP</div></div></td>
                 <td><span class="action-text">Amani-Tribe rep</span><span class="desc-text">Renown 9 - Unlock Champion neck ilvl 246</span></td>
-                <td class="col-status"><span class="pill pill-ip">In-Progress</span></td>
             </tr>
         </tbody>
     </table>
 
-    <hr style="border: 0; height: 1px; background: var(--accent); margin: 30px 0 10px 0;">
-
     <div class="track-row">
-        <div class="track-item">
-            <span class="track-label" style="color:var(--green);">Adventurer</span>
-            <span class="track-val">220-230</span>
-        </div>
-        <div class="track-item">
-            <span class="track-label" style="color:var(--blue);">Veteran</span>
-            <span class="track-val">233-243</span>
-        </div>
-        <div class="track-item">
-            <span class="track-label" style="color:var(--accent);">Champion</span>
-            <span class="track-val">246-256</span>
-        </div>
-        <div class="track-item">
-            <span class="track-label" style="color:var(--gold);">Hero</span>
-            <span class="track-val">259-269</span>
-        </div>
-        <div class="track-item">
-            <span class="track-label" style="color:#ff4500;">Myth</span>
-            <span class="track-val">272-289</span>
-        </div>
+        <div class="track-item"><span class="track-label" style="color:var(--green);">Adventurer</span><span class="track-val">220-230</span></div>
+        <div class="track-item"><span class="track-label" style="color:var(--blue);">Veteran</span><span class="track-val">233-243</span></div>
+        <div class="track-item"><span class="track-label" style="color:var(--accent);">Champion</span><span class="track-val">246-256</span></div>
+        <div class="track-item"><span class="track-label" style="color:var(--gold);">Hero</span><span class="track-val">259-269</span></div>
+        <div class="track-item"><span class="track-label" style="color:#ff4500;">Myth</span><span class="track-val">272-289</span></div>
     </div>
 
     <div class="priority-box">
         <div class="priority-header">Gearing Priority</div>
         <table>
-            <thead>
-                <tr><th style="width: 200px;">Slot</th><th>Priority Reasoning</th></tr>
-            </thead>
+            <thead><tr><th style="width: 200px;">Slot</th><th>Priority Reasoning</th></tr></thead>
             <tbody>
                 <tr><td><span class="action-text">Weapon</span></td><td class="desc-text">Largest source of Attack Power/Spell Power. Usually the best use of your first Spark</td></tr>
                 <tr><td><span class="action-text">Trinkets</span></td><td class="desc-text">These often provide unique effects or massive stat procs that outweigh raw ilvl</td></tr>
@@ -330,7 +294,7 @@
         new Sortable(list, { 
             animation: 150, 
             ghostClass: 'sortable-ghost',
-            handle: '.drag-icon', // ONLY the icon is the handle now
+            handle: '.drag-icon', 
             onEnd: () => saveState(false)
         });
     });
@@ -338,13 +302,21 @@
     function sync() {
         document.querySelectorAll('tbody tr').forEach(row => {
             const cb = row.querySelector('input[type="checkbox"]');
-            const pill = row.querySelector('.pill');
+            const statusCircle = row.querySelector('.status-circle');
             if (cb && cb.checked) {
                 row.classList.add('row-done');
-                if (pill) { pill.innerText = "Done"; pill.className = "pill pill-co"; }
+                if (statusCircle) { 
+                    statusCircle.innerText = "CO"; 
+                    statusCircle.classList.remove('sc-ip');
+                    statusCircle.classList.add('sc-co'); 
+                }
             } else if (cb) {
                 row.classList.remove('row-done');
-                if (pill) { pill.innerText = "In-Progress"; pill.className = "pill pill-ip"; }
+                if (statusCircle) { 
+                    statusCircle.innerText = "IP"; 
+                    statusCircle.classList.remove('sc-co');
+                    statusCircle.classList.add('sc-ip'); 
+                }
             }
         });
 
@@ -366,7 +338,7 @@
             const group = tbody.dataset.group;
             state.orders[group] = Array.from(tbody.querySelectorAll('tr')).map(tr => tr.dataset.id);
         });
-        localStorage.setItem('midnight_gear_v48', JSON.stringify(state)); 
+        localStorage.setItem('midnight_gear_vFinal', JSON.stringify(state)); 
         if(manual) {
             const btn = document.querySelector('.btn-save');
             btn.innerText = "✅ Saved!";
@@ -395,7 +367,7 @@
     }
 
     function loadState() {
-        const saved = JSON.parse(localStorage.getItem('midnight_gear_v48'));
+        const saved = JSON.parse(localStorage.getItem('midnight_gear_vFinal'));
         if (!saved) { sync(); return; }
         if (saved.orders) {
             Object.keys(saved.orders).forEach(group => {
