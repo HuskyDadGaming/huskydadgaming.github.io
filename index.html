@@ -258,7 +258,6 @@
 <body>
 <div class="container">
 
-    <!-- Character Profile -->
     <div class="char-profile-card">
         <div class="char-flex">
             <div class="portrait-frame"><img id="char-portrait" src="https://render.worldofwarcraft.com/eu/icons/512/classicon_shaman.jpg" alt="Portrait"></div>
@@ -277,7 +276,6 @@
         </div>
     </div>
 
-    <!-- Progress Box -->
     <div class="progress-box">
         <div style="display:flex; justify-content:space-between; align-items: flex-end; font-weight: 900; margin-bottom: 8px;">
             <span style="font-size: 1.1rem;">TOTAL PROGRESS</span>
@@ -293,10 +291,8 @@
         </div>
     </div>
 
-    <!-- Task Groups -->
     <div id="task-groups-container"></div>
 
-    <!-- Gearing Tracks -->
     <div class="section-divider"><div class="category-header">Gearing Tracks</div></div>
     <div class="track-card">
         <div class="track-item"><div style="color:var(--green)">ADVENTURER</div><div>220-230</div></div>
@@ -306,7 +302,6 @@
         <div class="track-item"><div style="color:#ff4500">MYTH</div><div>272-289</div></div>
     </div>
 
-    <!-- Gearing Priority -->
     <div class="section-divider"><div class="category-header">Gearing Priority</div></div>
     <table class="priority-table">
         <thead><tr><th>Slot</th><th>Priority Reasoning</th></tr></thead>
@@ -321,10 +316,8 @@
     </table>
 </div>
 
-<!-- Toast -->
 <div id="toast"></div>
 
-<!-- New Group Modal -->
 <div class="modal-overlay" id="group-modal">
     <div class="modal-box">
         <h3>📁 New Group</h3>
@@ -338,50 +331,51 @@
 
 <script>
     /* ──────────────────────────────────────────
-       DEFAULT DATA
+        DEFAULT DATA
     ────────────────────────────────────────── */
     const defaultData = [
         { title: "Crafting", id: "craft", tasks: [
-            { id: "c1", text: "First profession patron weekly", desc: "Craft x3 patron work orders - Rewards Knowledge points" },
-            { id: "c2", text: "Second profession patron weekly", desc: "Craft x3 patron work orders - Rewards Knowledge points" },
-            { id: "c3", text: "First profession contract", desc: "Submit work order - Rewards Knowledge points" },
-            { id: "c4", text: "Second profession contract", desc: "Submit work order - Rewards Knowledge points" }
+            { id: "c1", text: "First profession patron weekly", desc: "Complete 3 Patron Crafting Orders — weekly quest rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops from orders as Glimmers of Knowledge (quality-dependent). ~19 KP total across all 4 weekly sources" },
+            { id: "c2", text: "Second profession patron weekly", desc: "Complete 3 Patron Crafting Orders — weekly quest rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops from orders as Glimmers of Knowledge (quality-dependent). ~19 KP total across all 4 weekly sources" },
+            { id: "c3", text: "First profession treatise", desc: "Craft or buy from AH — consume for 5 KP (one per profession per week). Scribes with Calm Hands spec get +1 bonus KP. Tradeable and Warband-bound" },
+            { id: "c4", text: "Second profession treatise", desc: "Craft or buy from AH — consume for 5 KP (one per profession per week). Tradeable and Warband-bound — an Inscription alt can craft and mail them to your main" }
         ]},
         { title: "World Weeklies and Quests", id: "world", tasks: [
-            { id: "w1", text: "Rep Contract", desc: "Buy from AH - Maximise reputation gains" },
-            { id: "w2", text: "Campaign", desc: "Complete any new chapter(s)" },
-            { id: "w3", text: "Silvermoon", desc: "Unity Against the Void, Weekly Dungeon, Housing, Weekend Event (Skip - PvP and Pet Battles)" },
-            { id: "w4", text: "World Boss", desc: "Drop chance - Champion gear ilvl 250" },
-            { id: "w5", text: "Singularity (Decimus)", desc: "Decimus Storyline - Elemental Voidcores" }
+            { id: "w0", text: "Buy Rep Contract from AH", desc: "Maximize Reputation gains" },
+            { id: "w1", text: "Lady Liadrin — Spark of Radiance quest", desc: "Pick up from Lady Liadrin in Silvermoon each reset — choose one of four weekly quests. Rewards Apex Cache (Coffer Key Shards, Voidlight Marl, Veteran Dawncrest, gold) + chance at Spark of Radiance. Second Spark available from Lor'themar's World Tour. Do not skip either!" },
+            { id: "w2", text: "Campaign", desc: "Complete any new story chapter(s) — unlocks zone content, Renown, and faction progress" },
+            { id: "w3", text: "Silvermoon weeklies", desc: "Weekly Dungeon quest from Halduron Brightwing (1,000 rep with chosen faction). Housing weekly from Vaeli outside the bank. Skip PvP and Pet Battle quests" },
+            { id: "w4", text: "World Boss", desc: "Guaranteed Warbound ilvl 250 Champion gear (2/6). Rotates weekly: Lu'ashal, Cragpine, Thorm'belan, Predaxas. Do on alts too" },
+            { id: "w5", text: "Singularity (Decimus / Voidforge)", desc: "Collect 3x Elementary Voidcore Shards from raids, Bountiful Delves, or M+ to progress the Voidforge with Decimus. Full Nebulous & Ascendant Voidcore system (targeted loot + item upgrades) unlocks in patch 12.0.5" }
         ]},
         { title: "Prey", id: "prey", tasks: [
-            { id: "p1", text: "Prey - Nightmare", desc: "Renown Rank 4 (To unlock Nightmare Mode) - Rewards Champion Gear, Champion and Hero Crests" }
+            { id: "p1", text: "Prey - Nightmare x3 (Weekly Quest)", desc: "Nightmare unlocks at Rank 4 on Preyseeker's Journey (Journeys tab — not faction Renown). Weekly quest 'A Nightmarish Task' from Astalor in Murder Row. Rewards: Champion gear, 20 Hero Dawncrest (uncapped), 1x Beacon of Hope (summons Nullaeus in Delves). Fills Great Vault World slot" }
         ]},
         { title: "Delves", id: "delve", tasks: [
-            { id: "d1", text: "Bountiful", desc: "Run 11s and spend all keys - Rank 4 (Myth Crests), Rank 9 (Drop chance - Hero gear)" },
-            { id: "d2", text: "Nullaeus ?", desc: "Kill weekly for 5 Hero crests" },
-            { id: "d3", text: "Nullaeus ??", desc: "Kill weekly for 5 Mythic crests" }
+            { id: "d1", text: "Bountiful Delves — Tier 8+ with Coffer Keys", desc: "Use Restored Coffer Keys on T8+ — Trovehunter's Bounty Map guarantees a Hero gear piece. T11 Gilded Stashes give Hero Dawncrest; Delver's Journey Rank 4 adds Myth Dawncrest. Gear quality caps at T8. Fills Great Vault Delve slot" },
+            { id: "d2", text: "Nullaeus ? (ONE-TIME per season)", desc: "30 Hero Dawncrest (uncapped) + cosmetic helm 'Nullaeus Domaneye'. Summon via Beacon of Hope at any Restoration Stone in a Delve" },
+            { id: "d3", text: "Nullaeus ?? (ONE-TIME per season)", desc: "30 Hero Dawncrest + 30 Myth Dawncrest (both uncapped) + title 'the Ominous'. Killing ?? first grants both rewards and skips the need to kill ? separately" }
         ]},
         { title: "Faction Weeklies", id: "faction", tasks: [
-            { id: "f1", text: "Singularity (Stormarion Assault)", desc: "Reputation and event rewards" },
-            { id: "f2", text: "Silvermoon Court (Saltheril's Soiree)", desc: "Reputation and event rewards" },
-            { id: "f3", text: "Hara'ti (Legends of the Haranir)", desc: "Reputation and event rewards" },
-            { id: "f4", text: "Amani-Tribe (The Abundance)", desc: "Reputation and event rewards" }
+            { id: "f1", text: "Singularity — Stormarion Assault (Voidstorm)", desc: "Quest: Stand Your Ground. Defend Stormarion Citadel (SW Voidstorm, every 30 mins). Rewards: Pinnacle Cache (gold, 100 Coffer Key Shards, Voidlight Marl, 20 Veteran Dawncrest) + 2,000 Singularity rep. First 2 caches/week include Veteran gear; first 4 include a Restored Coffer Key" },
+            { id: "f2", text: "Silvermoon Court — Saltheril's Soiree (Eversong Woods)", desc: "Requires short unlock chain. Fortify the Runestones: Pinnacle Cache + 150 Brimming Arcana + 2,000 Silvermoon Court rep. Favor of the Court: 3x Saltheril's Favor tokens (subfaction weeklies for extra rep + Arcana)" },
+            { id: "f3", text: "Hara'ti — Legends of the Haranir (Harandar)", desc: "Quest: Lost Legends — pick a relic scenario weekly. Rewards: 1,000 Hara'ti rep + Pinnacle Cache (gear, Spark of Radiance chance) + housing decor based on relic chosen" },
+            { id: "f4", text: "Amani-Tribe — The Abundance (Zul'Aman / all zones)", desc: "Earn 20,000 Abundance points for weekly quest. Rewards: 1,000 Amani Tribe rep + Pinnacle Cache. Use up to 8x Shards of Dundun/week to earn Unalloyed Abundance currency — spend on mounts and profession knowledge items" }
         ]},
         { title: "Optional Weeklies", id: "optional", tasks: [
-            { id: "ow1", text: "Special Assignments", desc: "Complete x2" },
-            { id: "ow2", text: "World Quests", desc: "Quick easy gear - Adventurer only" }
+            { id: "ow1", text: "Special Assignments", desc: "Complete 3 World Quests in a zone to unlock — rewards rep with chosen faction + zone currency" },
+            { id: "ow2", text: "World Quests", desc: "Adventurer gear (ilvl 220-230), Voidlight Marl, faction rep. Mainly useful for alts or early gearing" }
         ]},
         { title: "Reputation", id: "rep", tasks: [
-            { id: "r1", text: "Singularity rep", desc: "Renown 7 - Unlock Champion trinket ilvl 246 (Priority)" },
-            { id: "r2", text: "Silvermoon Court rep", desc: "Renown 9 - Unlock Champion head ilvl 246" },
-            { id: "r3", text: "Hara'ti rep", desc: "Renown 8 - Unlock Champion belt ilvl 246" },
-            { id: "r4", text: "Amani-Tribe rep", desc: "Renown 9 - Unlock Champion neck ilvl 246" }
+            { id: "r1", text: "Singularity — target Renown 7", desc: "Renown 7: Champion trinket ilvl 246 (Crucible of Erratic Energies) — priority pick, high-value slot. Renown 2 unlocks Research Console (1 Void Sample/week from 3 Voidstorm WQs). Each rank = 2,500 rep. Warband-wide" },
+            { id: "r2", text: "Silvermoon Court — target Renown 9", desc: "Renown 9: Champion head ilvl 246. Warband-wide. Choose Soiree sub-faction allegiance carefully — it affects Blood Knights, Farstriders, Magisters, and Shades of the Row standings simultaneously" },
+            { id: "r3", text: "Hara'ti — target Renown 8", desc: "Renown 8: Champion belt (ilvl 220 base, upgradeable) via quest from Naynar in The Den. Warband-wide" },
+            { id: "r4", text: "Amani-Tribe — target Renown 9", desc: "Renown 9: Champion necklace ilvl 246 — two stat choices: Haste/Crit or Mastery/Vers. Warband-wide. Lower priority — neck has no primary stats, secondary stat optimisation only" }
         ]}
     ];
 
     /* ──────────────────────────────────────────
-       TOAST
+        TOAST
     ────────────────────────────────────────── */
     let toastTimer = null;
     function showToast(msg) {
@@ -393,7 +387,7 @@
     }
 
     /* ──────────────────────────────────────────
-       MODAL
+        MODAL
     ────────────────────────────────────────── */
     function openNewGroupModal() {
         document.getElementById('group-modal').classList.add('open');
@@ -426,7 +420,7 @@
     });
 
     /* ──────────────────────────────────────────
-       CHARACTER DATA
+        CHARACTER DATA
     ────────────────────────────────────────── */
     async function fetchCharacterData() {
         try {
@@ -444,7 +438,7 @@
     }
 
     /* ──────────────────────────────────────────
-       ROW / GROUP CREATION
+        ROW / GROUP CREATION
     ────────────────────────────────────────── */
     function createTaskRow(id, text, desc, checked = false) {
         const tr = document.createElement('tr');
@@ -526,168 +520,163 @@
         `;
         const tbody = wrapper.querySelector('tbody');
         group.tasks.forEach(t => tbody.appendChild(createTaskRow(t.id, t.text, t.desc, t.checked)));
-        // Inline add row (always last)
-        const addRow = createAddTaskRow(group.id);
-        tbody.appendChild(addRow);
+        tbody.appendChild(createAddTaskRow(group.id));
+
         wrapper.querySelector('.btn-add-task').addEventListener('click', () => {
+            const addRow = tbody.querySelector('.add-task-row');
             addRow.classList.add('visible');
             addRow.querySelector('.new-task-name').focus();
         });
-        wrapper.querySelector('.remove-group-btn').addEventListener('click', () => removeGroup(wrapper));
+
+        wrapper.querySelector('.remove-group-btn').addEventListener('click', () => {
+            if (confirm(`Delete group "${group.title}" and all its tasks?`)) {
+                wrapper.remove();
+                sync(); saveState();
+                updateEmptyState();
+                showToast(`Group "${group.title}" removed`);
+            }
+        });
         return wrapper;
     }
 
     /* ──────────────────────────────────────────
-       EMPTY STATE
-    ────────────────────────────────────────── */
-    function updateEmptyState() {
-        const container = document.getElementById('task-groups-container');
-        const existing = container.querySelector('.empty-state');
-        const hasGroups = container.querySelectorAll('.group-wrapper').length > 0;
-        if (hasGroups && existing) { existing.remove(); return; }
-        if (!hasGroups && !existing) {
-            const div = document.createElement('div');
-            div.className = 'empty-state';
-            div.innerHTML = `<span>📋</span><strong>No groups yet</strong><p>Click <strong>NEW GROUP</strong> to start building your tracker.</p>`;
-            container.appendChild(div);
-        }
-    }
-
-    /* ──────────────────────────────────────────
-       SYNC / PROGRESS
+        STATE MANAGEMENT
     ────────────────────────────────────────── */
     function sync() {
-        const allTasks = document.querySelectorAll('.prog-task');
-        const countableTasks = Array.from(allTasks).filter(cb => {
-            const groupWrapper = cb.closest('.group-wrapper');
-            if (!groupWrapper) return false;
-            const title = groupWrapper.querySelector('.category-header').innerText.trim().toUpperCase();
-            return title !== "REPUTATION" && title !== "OPTIONAL WEEKLIES";
-        });
-        allTasks.forEach(cb => cb.closest('tr').classList.toggle('row-done', cb.checked));
-        const done = countableTasks.filter(cb => cb.checked).length;
-        const p = countableTasks.length ? Math.round((done / countableTasks.length) * 100) : 0;
-        document.getElementById('bar-fill').style.width = p + '%';
-        document.getElementById('percent-text').innerText = p + '%';
-    }
+        const tasks = document.querySelectorAll('.prog-task');
+        const done = Array.from(tasks).filter(t => t.checked).length;
+        const total = tasks.length;
+        const pct = total === 0 ? 0 : Math.round((done / total) * 100);
 
-    /* ──────────────────────────────────────────
-       SORTABLE
-    ────────────────────────────────────────── */
-    function initSortableGroup(tbody) {
-        new Sortable(tbody, {
-            group: 'tasks', animation: 150, handle: '.drag-icon',
-            filter: '.add-task-row',
-            onEnd: () => saveState()
+        document.getElementById('percent-text').innerText = pct + "%";
+        document.getElementById('bar-fill').style.width = pct + "%";
+
+        tasks.forEach(t => {
+            const row = t.closest('tr');
+            if (t.checked) row.classList.add('row-done');
+            else row.classList.remove('row-done');
         });
     }
 
-    /* ──────────────────────────────────────────
-       RENDER
-    ────────────────────────────────────────── */
-    function renderGroups(data) {
-        const container = document.getElementById('task-groups-container');
-        container.innerHTML = '';
-        data.forEach(group => container.appendChild(createGroupUI(group)));
-        document.querySelectorAll('.sortable-list').forEach(initSortableGroup);
-        new Sortable(container, {
-            animation: 150, handle: '.group-drag-handle',
-            filter: '.empty-state',
-            onEnd: () => saveState()
-        });
-        sync();
-        updateEmptyState();
-    }
-
-    /* ──────────────────────────────────────────
-       SAVE / LOAD
-    ────────────────────────────────────────── */
     function saveState() {
         const groups = [];
-        document.querySelectorAll('.group-wrapper').forEach(wrap => {
-            const list = wrap.querySelector('.sortable-list');
+        document.querySelectorAll('.group-wrapper').forEach(gw => {
+            const title = gw.querySelector('.category-header').innerText;
+            const id = gw.querySelector('tbody').dataset.group;
             const tasks = [];
-            list.querySelectorAll('tr:not(.add-task-row)').forEach(tr => tasks.push({
-                id: tr.dataset.id,
-                text: tr.querySelector('.action-text').innerText,
-                desc: tr.querySelector('.desc-text').innerText,
-                checked: tr.querySelector('input') ? tr.querySelector('input').checked : false
-            }));
-            groups.push({ id: list.dataset.group, title: wrap.querySelector('.category-header').innerText, tasks });
+            gw.querySelectorAll('tr:not(.add-task-row)').forEach(tr => {
+                tasks.push({
+                    id: tr.dataset.id,
+                    text: tr.querySelector('.action-text').innerText,
+                    desc: tr.querySelector('.desc-text').innerText,
+                    checked: tr.querySelector('.prog-task').checked
+                });
+            });
+            groups.push({ title, id, tasks });
         });
-        try {
-            localStorage.setItem('midnight_gear_autosave_v1', JSON.stringify(groups));
-        } catch (e) {
-            console.warn("Could not save to localStorage:", e);
-            showToast("⚠️ Save failed — storage may be full");
+        localStorage.setItem('gearing_master_list_v2', JSON.stringify(groups));
+    }
+
+    function loadState() {
+        const saved = localStorage.getItem('gearing_master_list_v2');
+        const data = saved ? JSON.parse(saved) : defaultData;
+        const container = document.getElementById('task-groups-container');
+        container.innerHTML = '';
+        data.forEach(g => container.appendChild(createGroupUI(g)));
+        updateEmptyState();
+        initSortables();
+        sync();
+    }
+
+    function updateEmptyState() {
+        const container = document.getElementById('task-groups-container');
+        if (container.children.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <span>🏜️</span>
+                    <p>Your list is empty.</p>
+                    <p style="font-size: 0.75rem; opacity: 0.7;">Click "New Group" to start building your tracker.</p>
+                </div>`;
+        } else {
+            const es = container.querySelector('.empty-state');
+            if (es) es.remove();
         }
     }
 
     /* ──────────────────────────────────────────
-       ACTIONS
+        SORTABLE
+    ────────────────────────────────────────── */
+    function initSortables() {
+        // Group dragging (reorder sections)
+        new Sortable(document.getElementById('task-groups-container'), {
+            animation: 150,
+            handle: '.group-drag-handle',
+            ghostClass: 'sortable-ghost',
+            onEnd: () => saveState()
+        });
+        // Task dragging (reorder tasks within sections)
+        document.querySelectorAll('.sortable-list').forEach(el => initSortableGroup(el));
+    }
+
+    function initSortableGroup(el) {
+        new Sortable(el, {
+            animation: 150,
+            handle: '.drag-icon',
+            filter: '.add-task-row',
+            ghostClass: 'sortable-ghost',
+            onEnd: () => saveState()
+        });
+    }
+
+    /* ──────────────────────────────────────────
+        ACTIONS
     ────────────────────────────────────────── */
     function removeTask(tr) {
         tr.remove();
-        sync(); saveState(); updateEmptyState();
-    }
-
-    function removeGroup(wrapper) {
-        const title = wrapper.querySelector('.category-header').innerText;
-        if (confirm(`Delete group "${title}" and all its tasks?`)) {
-            wrapper.remove();
-            sync(); saveState(); updateEmptyState();
-            showToast(`Group "${title}" removed`);
-        }
+        sync(); saveState();
     }
 
     function weeklyReset() {
-        if (!confirm("Clear all checkboxes for the new week?")) return;
-        document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false);
-        sync(); saveState();
-        showToast("✅ Weekly reset done!");
+        if (confirm("Reset all progress for the new week?")) {
+            document.querySelectorAll('.prog-task').forEach(t => t.checked = false);
+            sync(); saveState();
+            showToast("Progress cleared for reset");
+        }
     }
 
     function resetToDefault() {
-        if (!confirm("Reset to the official master layout? All custom groups and tasks will be lost.")) return;
-        localStorage.removeItem('midnight_gear_autosave_v1');
-        renderGroups(defaultData);
-        showToast("↩️ Reset to default layout");
+        if (confirm("Restore everything to default settings? Your custom tasks and groups will be lost.")) {
+            localStorage.removeItem('gearing_master_list_v2');
+            loadState();
+            showToast("Restored to default template");
+        }
     }
 
-    /* ──────────────────────────────────────────
-       EXPORT / IMPORT
-    ────────────────────────────────────────── */
     function exportData() {
-        const raw = localStorage.getItem('midnight_gear_autosave_v1');
-        if (!raw) { showToast("Nothing to export yet!"); return; }
-        const blob = new Blob([raw], { type: 'application/json' });
+        const data = localStorage.getItem('gearing_master_list_v2') || JSON.stringify(defaultData);
+        const blob = new Blob([data], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `midnight-gearing-${new Date().toISOString().slice(0,10)}.json`;
+        a.download = `Midnight_Gearing_${new Date().toISOString().split('T')[0]}.json`;
         a.click();
-        URL.revokeObjectURL(url);
-        showToast("💾 Data exported!");
     }
 
     function importData() {
         const input = document.createElement('input');
         input.type = 'file';
-        input.accept = '.json,application/json';
+        input.accept = '.json';
         input.onchange = e => {
             const file = e.target.files[0];
-            if (!file) return;
             const reader = new FileReader();
-            reader.onload = ev => {
+            reader.onload = event => {
                 try {
-                    const data = JSON.parse(ev.target.result);
-                    if (!Array.isArray(data)) throw new Error("Invalid format");
-                    if (!confirm("Import this file? Your current data will be replaced.")) return;
-                    localStorage.setItem('midnight_gear_autosave_v1', JSON.stringify(data));
-                    renderGroups(data);
-                    showToast("📂 Data imported successfully!");
+                    const parsed = JSON.parse(event.target.result);
+                    localStorage.setItem('gearing_master_list_v2', JSON.stringify(parsed));
+                    loadState();
+                    showToast("Data imported successfully");
                 } catch (err) {
-                    showToast("❌ Invalid file — import failed");
+                    alert("Invalid JSON file");
                 }
             };
             reader.readAsText(file);
@@ -695,25 +684,17 @@
         input.click();
     }
 
-    /* ──────────────────────────────────────────
-       UTILITY
-    ────────────────────────────────────────── */
     function escapeHTML(str) {
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
+        return str.replace(/[&<>"']/g, m => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[m]);
     }
 
-    /* ──────────────────────────────────────────
-       INIT
-    ────────────────────────────────────────── */
-    window.onload = () => {
-        const saved = localStorage.getItem('midnight_gear_autosave_v1');
-        renderGroups(saved ? JSON.parse(saved) : defaultData);
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        loadState();
         fetchCharacterData();
-    };
+    });
 </script>
 </body>
 </html>
