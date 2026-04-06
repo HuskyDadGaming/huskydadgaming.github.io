@@ -59,7 +59,6 @@
 
         .container { width: 100%; max-width: 900px; padding: 20px 15px; box-sizing: border-box; }
 
-        /* ── Character Profile ── */
         .char-profile-card {
             background: linear-gradient(145deg, #0d001a, #130026);
             padding: 20px; border-radius: 12px; border: 2px solid var(--void-highlight);
@@ -83,7 +82,6 @@
             padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; display: flex; align-items: center; gap: 5px;
         }
 
-        /* ── Progress Box ── */
         .progress-box {
             background: rgba(18, 12, 29, 0.95); padding: 25px; border-radius: 12px; border: 1px solid var(--border);
             margin-bottom: 30px; position: sticky; top: 10px; z-index: 100; backdrop-filter: blur(10px);
@@ -120,10 +118,6 @@
             .progress-controls {
                 grid-template-columns: repeat(3, 1fr);
             }
-            .progress-controls .btn-ctrl:last-child,
-            .progress-controls .btn-ctrl:nth-last-child(2) {
-                grid-column: span 1;
-            }
         }
 
         .btn-ctrl {
@@ -134,7 +128,6 @@
         }
         .btn-ctrl:hover { background: #2a1a42; border-color: var(--void-highlight); }
 
-        /* ── Toast Notification ── */
         #toast {
             position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
             background: #1e152e; border: 1px solid var(--void-highlight); color: var(--text);
@@ -145,7 +138,6 @@
         }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        /* ── Modal ── */
         .modal-overlay {
             display: none; position: fixed; inset: 0; background: rgba(5,3,8,0.85);
             backdrop-filter: blur(6px); z-index: 500; align-items: center; justify-content: center;
@@ -168,7 +160,6 @@
         .btn-primary { background: var(--void-highlight) !important; border-color: var(--void-highlight) !important; }
         .btn-primary:hover { background: #9900ff !important; }
 
-        /* ── Task Groups ── */
         .group-wrapper { margin: 0 0 30px 0; filter: drop-shadow(0 5px 10px rgba(61, 0, 115, 0.3)); animation: slideIn 0.25s ease; }
         .group-header-flex { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
         .category-header { color: var(--blue); font-size: 0.9rem; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 10px; flex-grow: 1; }
@@ -190,7 +181,6 @@
         .action-text { font-weight: 600; color: #fff; display: block; font-size: 0.95rem; }
         .desc-text { font-size: 0.75rem; color: var(--dim); display: block; margin-top: 2px; }
 
-        /* Remove button - bigger touch target */
         .remove-task-btn {
             background: none; border: none; color: var(--dim); cursor: pointer;
             font-size: 1.2rem; padding: 8px 10px; border-radius: 6px; transition: color 0.2s, background 0.2s;
@@ -198,7 +188,6 @@
         }
         .remove-task-btn:hover { color: var(--danger); background: rgba(255,77,77,0.1); }
 
-        /* ── Inline Add Task Row ── */
         .add-task-row { display: none; }
         .add-task-row.visible { display: table-row; animation: slideIn 0.2s ease; }
         .add-task-inputs { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -224,7 +213,6 @@
         }
         .btn-add-task:hover { border-color: var(--void-highlight); }
 
-        /* ── Section Title for End-Game ── */
         .section-big-title {
             color: var(--gold);
             font-size: 1.1rem;
@@ -239,7 +227,6 @@
             text-align: center;
         }
 
-        /* ── Empty state ── */
         .empty-state {
             text-align: center; padding: 50px 20px; color: var(--dim);
             border: 2px dashed var(--border); border-radius: 12px; margin-bottom: 30px;
@@ -247,7 +234,6 @@
         .empty-state p { font-size: 0.9rem; margin: 8px 0 0 0; }
         .empty-state span { font-size: 2.5rem; display: block; margin-bottom: 10px; }
 
-        /* ── Section Divider / Gearing Sections ── */
         .section-divider { margin: 0 0 20px 0; }
         .track-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-wrap: wrap; justify-content: space-around; gap: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .track-item { flex: 1; min-width: 100px; }
@@ -345,9 +331,6 @@
 </div>
 
 <script>
-    /* ──────────────────────────────────────────
-        DEFAULT DATA
-    ────────────────────────────────────────── */
     const defaultData = [
         { title: "Fresh Level 90 Checklist", id: "fresh90", tasks: [
             { id: "f90_1", text: "Buy Singularity reputation contract", desc: "Renown 7 - Quest for trinket (Crucible of Erratic Energies) **Priority" },
@@ -400,15 +383,10 @@
         ]}
     ];
 
-    // Groups that count toward total progress (by id)
-    const PROGRESS_GROUP_IDS = new Set(["craft", "world", "prey", "delve", "faction"]);
+    // Groups excluded from total progress: Fresh Level 90 (one-time setup), Optional Weeklies, Reputation
+    const PROGRESS_EXCLUDED_IDS = new Set(["fresh90", "optional", "rep"]);
 
-    // Groups that are protected from the weekly clear (by id)
-    const CLEAR_PROTECTED_IDS = new Set(["fresh90", "rep"]);
-
-    /* ──────────────────────────────────────────
-        TOAST
-    ────────────────────────────────────────── */
+    /* ── TOAST ── */
     let toastTimer = null;
     function showToast(msg) {
         const t = document.getElementById('toast');
@@ -418,9 +396,7 @@
         toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
     }
 
-    /* ──────────────────────────────────────────
-        MODAL
-    ────────────────────────────────────────── */
+    /* ── MODAL ── */
     function openNewGroupModal() {
         document.getElementById('group-modal').classList.add('open');
         setTimeout(() => document.getElementById('group-name-input').focus(), 100);
@@ -441,19 +417,15 @@
         closeGroupModal();
         showToast(`Group "${n}" created`);
     }
-    // Close modal on overlay click
     document.getElementById('group-modal').addEventListener('click', function(e) {
         if (e.target === this) closeGroupModal();
     });
-    // Enter key in modal
     document.getElementById('group-name-input').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') confirmNewGroup();
         if (e.key === 'Escape') closeGroupModal();
     });
 
-    /* ──────────────────────────────────────────
-        CHARACTER DATA
-    ────────────────────────────────────────── */
+    /* ── CHARACTER DATA ── */
     async function fetchCharacterData() {
         try {
             const response = await fetch('https://raider.io/api/v1/characters/profile?region=eu&realm=silvermoon&name=huskysham&fields=mythic_plus_scores_by_season%3Acurrent');
@@ -469,9 +441,7 @@
         }
     }
 
-    /* ──────────────────────────────────────────
-        ROW / GROUP CREATION
-    ────────────────────────────────────────── */
+    /* ── ROW / GROUP CREATION ── */
     function createTaskRow(id, text, desc, checked = false) {
         const tr = document.createElement('tr');
         tr.dataset.id = id;
@@ -541,7 +511,6 @@
     function createGroupUI(group) {
         const wrapper = document.createDocumentFragment();
 
-        // Specific trigger to add the End-Game Title before "Crafting"
         if (group.title.toLowerCase() === "crafting") {
             const sectionHeader = document.createElement('div');
             sectionHeader.className = "section-big-title";
@@ -572,7 +541,6 @@
 
         div.querySelector('.remove-group-btn').addEventListener('click', () => {
             if (confirm(`Delete group "${group.title}"?`)) {
-                // If it's crafting, we should remove the section title too if it exists
                 if (group.title.toLowerCase() === "crafting" && div.previousElementSibling?.className === "section-big-title") {
                     div.previousElementSibling.remove();
                 }
@@ -587,9 +555,7 @@
         return wrapper;
     }
 
-    /* ──────────────────────────────────────────
-        CORE LOGIC
-    ────────────────────────────────────────── */
+    /* ── CORE LOGIC ── */
     function sync() {
         const groups = document.querySelectorAll('.group-wrapper');
         let total = 0;
@@ -597,10 +563,9 @@
 
         groups.forEach(gw => {
             const groupId = gw.querySelector('.sortable-list')?.dataset.group;
-            const tasks = gw.querySelectorAll('.prog-task');
-            const countsForProgress = PROGRESS_GROUP_IDS.has(groupId);
+            const countsForProgress = !PROGRESS_EXCLUDED_IDS.has(groupId);
 
-            tasks.forEach(cb => {
+            gw.querySelectorAll('.prog-task').forEach(cb => {
                 const tr = cb.closest('tr');
                 if (cb.checked) tr.classList.add('row-done');
                 else tr.classList.remove('row-done');
@@ -620,10 +585,7 @@
     function removeTask(tr) {
         tr.style.opacity = '0';
         tr.style.transform = 'translateX(20px)';
-        setTimeout(() => {
-            tr.remove();
-            sync(); saveState();
-        }, 200);
+        setTimeout(() => { tr.remove(); sync(); saveState(); }, 200);
     }
 
     function updateEmptyState() {
@@ -668,21 +630,16 @@
         const saved = localStorage.getItem('huskysham_v2');
         const data = saved ? JSON.parse(saved) : defaultData;
         data.forEach(g => container.appendChild(createGroupUI(g)));
-        
         document.querySelectorAll('.sortable-list').forEach(initSortableGroup);
         initSortableContainer(container);
         updateEmptyState();
         sync();
     }
 
+    // Clears ALL checkboxes across every group with no exceptions
     function weeklyReset() {
-        if (confirm("Reset all checkboxes for a new week?\n\n(Fresh Level 90 Checklist and Reputation will not be cleared)")) {
-            document.querySelectorAll('.group-wrapper').forEach(gw => {
-                const groupId = gw.querySelector('.sortable-list')?.dataset.group;
-                if (!CLEAR_PROTECTED_IDS.has(groupId)) {
-                    gw.querySelectorAll('.prog-task').forEach(cb => cb.checked = false);
-                }
-            });
+        if (confirm("Reset all checkboxes for a new week?")) {
+            document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false);
             sync(); saveState();
             showToast("Progress cleared for the week!");
         }
@@ -739,11 +696,7 @@
     function initSortableContainer(el) {
         new Sortable(el, {
             animation: 150, handle: '.group-drag-handle', ghostClass: 'sortable-ghost',
-            onEnd: () => { 
-                // Re-rendering on end to preserve the special title placement if groups are moved
-                saveState(); 
-                loadState(); 
-            }
+            onEnd: () => { saveState(); loadState(); }
         });
     }
 
@@ -753,10 +706,7 @@
         return p.innerHTML;
     }
 
-    window.onload = () => {
-        loadState();
-        fetchCharacterData();
-    };
+    window.onload = () => { loadState(); fetchCharacterData(); };
 </script>
 </body>
 </html>
