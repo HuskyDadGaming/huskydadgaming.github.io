@@ -71,7 +71,7 @@ margin-bottom: 20px; box-shadow: 0 0 20px 5px var(--void-glow), inset 0 0 15px r
 width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--blue);
 box-shadow: 0 0 15px rgba(51, 204, 255, 0.6); background: #000; overflow: hidden; flex-shrink: 0;
 }
-#char-portrait { width: 100%; height: 100%; object-fit: cover; }
+.char-portrait { width: 100%; height: 100%; object-fit: cover; }
 
 .char-name { font-weight: 900; font-size: 1.2rem; color: #fff; letter-spacing: 1px; display: block; animation: voidPulse 3s infinite; }
 .char-details { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; flex-wrap: wrap; }
@@ -263,17 +263,35 @@ border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacin
 
 <div class="char-profile-card">
 <div class="char-flex">
-<div class="portrait-frame"><img id="char-portrait" src="https://render.worldofwarcraft.com/eu/icons/512/classicon_shaman.jpg" alt="Portrait"></div>
+<div class="portrait-frame"><img class="char-portrait" id="portrait-huskysham" src="https://render.worldofwarcraft.com/eu/icons/512/classicon_shaman.jpg" alt="Portrait"></div>
 <div style="flex-grow: 1; min-width: 0;">
 <span class="char-name">HUSKYSHAM</span>
 <div class="char-details">
 <span class="char-realm">EU - Silvermoon</span>
-<div class="mplus-badge">🏆 M+ SCORE: <span id="mplus-score">--</span></div>
+<div class="mplus-badge">🏆 M+ SCORE: <span id="mplus-huskysham">--</span></div>
 </div>
 <div class="external-links">
 <a href="https://worldofwarcraft.blizzard.com/en-gb/character/eu/silvermoon/huskysham" target="_blank" class="btn-ctrl">🛡️ ARMORY</a>
 <a href="https://raider.io/characters/eu/silvermoon/Huskysham" target="_blank" class="btn-ctrl">📈 RIO</a>
 <a href="https://www.warcraftlogs.com/character/eu/silvermoon/huskysham" target="_blank" class="btn-ctrl">📜 LOGS</a>
+</div>
+</div>
+</div>
+</div>
+
+<div class="char-profile-card">
+<div class="char-flex">
+<div class="portrait-frame"><img class="char-portrait" id="portrait-huskydk" src="https://render.worldofwarcraft.com/eu/icons/512/classicon_deathknight.jpg" alt="Portrait"></div>
+<div style="flex-grow: 1; min-width: 0;">
+<span class="char-name">HUSKYDK</span>
+<div class="char-details">
+<span class="char-realm">EU - Silvermoon</span>
+<div class="mplus-badge">🏆 M+ SCORE: <span id="mplus-huskydk">--</span></div>
+</div>
+<div class="external-links">
+<a href="https://worldofwarcraft.blizzard.com/en-gb/character/eu/silvermoon/huskydk" target="_blank" class="btn-ctrl">🛡️ ARMORY</a>
+<a href="https://raider.io/characters/eu/silvermoon/huskydk" target="_blank" class="btn-ctrl">📈 RIO</a>
+<a href="https://www.warcraftlogs.com/character/eu/silvermoon/huskydk" target="_blank" class="btn-ctrl">📜 LOGS</a>
 </div>
 </div>
 </div>
@@ -428,18 +446,18 @@ if (e.key === 'Escape') closeGroupModal();
 });
 
 /* ── CHARACTER DATA ── */
-async function fetchCharacterData() {
+async function fetchCharacterData(name, realm, mplusId, portraitId) {
 try {
-const response = await fetch('https://raider.io/api/v1/characters/profile?region=eu&realm=silvermoon&name=huskysham&fields=mythic_plus_scores_by_season%3Acurrent');
+const response = await fetch(`https://raider.io/api/v1/characters/profile?region=eu&realm=${realm}&name=${name}&fields=mythic_plus_scores_by_season%3Acurrent`);
 if (!response.ok) throw new Error('API error');
 const data = await response.json();
-if (data.thumbnail_url) document.getElementById('char-portrait').src = data.thumbnail_url;
+if (data.thumbnail_url) document.getElementById(portraitId).src = data.thumbnail_url;
 if (data.mythic_plus_scores_by_season && data.mythic_plus_scores_by_season.length) {
-document.getElementById('mplus-score').innerText = Math.round(data.mythic_plus_scores_by_season[0].scores.all);
+document.getElementById(mplusId).innerText = Math.round(data.mythic_plus_scores_by_season[0].scores.all);
 }
 } catch (e) {
-document.getElementById('mplus-score').innerText = 'N/A';
-console.warn("Raider.IO API unavailable:", e);
+document.getElementById(mplusId).innerText = 'N/A';
+console.warn(`Raider.IO API unavailable for ${name}:`, e);
 }
 }
 
@@ -722,7 +740,11 @@ p.textContent = str;
 return p.innerHTML;
 }
 
-window.onload = () => { loadState(); fetchCharacterData(); };
+window.onload = () => { 
+loadState(); 
+fetchCharacterData('huskysham', 'silvermoon', 'mplus-huskysham', 'portrait-huskysham'); 
+fetchCharacterData('huskydk', 'silvermoon', 'mplus-huskydk', 'portrait-huskydk'); 
+};
 </script>
 </body>
 </html>
