@@ -1,712 +1,728 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Midnight Gearing - Master List</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-    <style>
-        :root {
-            --bg: #050308;
-            --surface: #0a0812;
-            --card-bg: #120c1d;
-            --border: #2d243d;
-            --accent: #8a2be2;
-            --gold: #ffcc33;
-            --blue: #33ccff;
-            --green: #39ff14;
-            --text: #e0dced;
-            --dim: #8b869c;
-            --btn-bg: #1e152e;
-            --danger: #ff4d4d;
-            --void-core: #130026;
-            --void-glow: #3d0073;
-            --void-highlight: #7c00e6;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Midnight Gearing - Master List</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<style>
+:root {
+--bg: #050308;
+--surface: #0a0812;
+--card-bg: #120c1d;
+--border: #2d243d;
+--accent: #8a2be2;
+--gold: #ffcc33;
+--blue: #33ccff;
+--green: #39ff14;
+--text: #e0dced;
+--dim: #8b869c;
+--btn-bg: #1e152e;
+--danger: #ff4d4d;
+--void-core: #130026;
+--void-glow: #3d0073;
+--void-highlight: #7c00e6;
+}
 
-        @keyframes voidSwirl {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+@keyframes voidSwirl {
+0% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+100% { background-position: 0% 50%; }
+}
 
-        @keyframes voidPulse {
-            0% { text-shadow: 0 0 5px var(--void-highlight), 0 0 10px var(--void-highlight); }
-            50% { text-shadow: 0 0 10px var(--void-highlight), 0 0 20px var(--void-highlight); }
-            100% { text-shadow: 0 0 5px var(--void-highlight), 0 0 10px var(--void-highlight); }
-        }
+@keyframes voidPulse {
+0% { text-shadow: 0 0 5px var(--void-highlight), 0 0 10px var(--void-highlight); }
+50% { text-shadow: 0 0 10px var(--void-highlight), 0 0 20px var(--void-highlight); }
+100% { text-shadow: 0 0 5px var(--void-highlight), 0 0 10px var(--void-highlight); }
+}
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+@keyframes fadeInDown {
+from { opacity: 0; transform: translateY(-8px); }
+to { opacity: 1; transform: translateY(0); }
+}
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
+@keyframes slideIn {
+from { opacity: 0; transform: translateX(-10px); }
+to { opacity: 1; transform: translateX(0); }
+}
 
-        body {
-            background: linear-gradient(-45deg, #050308, #130026, #000c1a, #1a0033);
-            background-size: 400% 400%;
-            animation: voidSwirl 15s ease infinite;
-            color: var(--text);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            margin: 0; padding: 0;
-            display: flex; justify-content: center; min-height: 100vh;
-        }
+body {
+background: linear-gradient(-45deg, #050308, #130026, #000c1a, #1a0033);
+background-size: 400% 400%;
+animation: voidSwirl 15s ease infinite;
+color: var(--text);
+font-family: 'Segoe UI', Tahoma, sans-serif;
+margin: 0; padding: 0;
+display: flex; justify-content: center; min-height: 100vh;
+}
 
-        .container { width: 100%; max-width: 900px; padding: 20px 15px; box-sizing: border-box; }
+.container { width: 100%; max-width: 900px; padding: 20px 15px; box-sizing: border-box; }
 
-        .char-profile-card {
-            background: linear-gradient(145deg, #0d001a, #130026);
-            padding: 20px; border-radius: 12px; border: 2px solid var(--void-highlight);
-            margin-bottom: 20px; box-shadow: 0 0 20px 5px var(--void-glow), inset 0 0 15px rgba(0,0,0,0.8);
-        }
+.char-profile-card {
+background: linear-gradient(145deg, #0d001a, #130026);
+padding: 20px; border-radius: 12px; border: 2px solid var(--void-highlight);
+margin-bottom: 20px; box-shadow: 0 0 20px 5px var(--void-glow), inset 0 0 15px rgba(0,0,0,0.8);
+}
 
-        .char-flex { display: flex; align-items: center; gap: 15px; flex-wrap: nowrap; }
+.char-flex { display: flex; align-items: center; gap: 15px; flex-wrap: nowrap; }
 
-        .portrait-frame {
-            width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--blue);
-            box-shadow: 0 0 15px rgba(51, 204, 255, 0.6); background: #000; overflow: hidden; flex-shrink: 0;
-        }
-        #char-portrait { width: 100%; height: 100%; object-fit: cover; }
+.portrait-frame {
+width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--blue);
+box-shadow: 0 0 15px rgba(51, 204, 255, 0.6); background: #000; overflow: hidden; flex-shrink: 0;
+}
+#char-portrait { width: 100%; height: 100%; object-fit: cover; }
 
-        .char-name { font-weight: 900; font-size: 1.2rem; color: #fff; letter-spacing: 1px; display: block; animation: voidPulse 3s infinite; }
-        .char-details { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; flex-wrap: wrap; }
-        .char-realm { color: var(--blue); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+.char-name { font-weight: 900; font-size: 1.2rem; color: #fff; letter-spacing: 1px; display: block; animation: voidPulse 3s infinite; }
+.char-details { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; flex-wrap: wrap; }
+.char-realm { color: var(--blue); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
 
-        .mplus-badge {
-            background: rgba(255, 204, 51, 0.1); border: 1px solid var(--gold); color: var(--gold);
-            padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; display: flex; align-items: center; gap: 5px;
-        }
+.mplus-badge {
+background: rgba(255, 204, 51, 0.1); border: 1px solid var(--gold); color: var(--gold);
+padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; display: flex; align-items: center; gap: 5px;
+}
 
-        .progress-box {
-            background: rgba(18, 12, 29, 0.95); padding: 25px; border-radius: 12px; border: 1px solid var(--border);
-            margin-bottom: 30px; position: sticky; top: 10px; z-index: 100; backdrop-filter: blur(10px);
-            box-shadow: 0 15px 40px -10px rgba(61, 0, 115, 0.6);
-        }
+.progress-box {
+background: rgba(18, 12, 29, 0.95); padding: 25px; border-radius: 12px; border: 1px solid var(--border);
+margin-bottom: 30px; position: sticky; top: 10px; z-index: 100; backdrop-filter: blur(10px);
+box-shadow: 0 15px 40px -10px rgba(61, 0, 115, 0.6);
+}
 
-        .bar-bg { background: #000; height: 16px; border-radius: 8px; margin-top: 5px; border: 1px solid #1a1a1a; overflow: hidden; }
-        #bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--void-highlight), var(--blue), var(--void-highlight)); transition: width 0.6s ease; }
+.bar-bg { background: #000; height: 16px; border-radius: 8px; margin-top: 5px; border: 1px solid #1a1a1a; overflow: hidden; }
+#bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--void-highlight), var(--blue), var(--void-highlight)); transition: width 0.6s ease; }
 
-        .external-links {
-            display: flex !important;
-            margin-top: 12px;
-            gap: 8px;
-        }
-        .external-links .btn-ctrl {
-            flex: 1;
-            padding: 10px 5px;
-            font-size: 0.65rem;
-            white-space: nowrap;
-        }
-        .progress-controls {
-            display: grid !important;
-            grid-template-columns: repeat(5, 1fr);
-            margin-top: 12px;
-            gap: 8px;
-        }
-        .progress-controls .btn-ctrl {
-            padding: 10px 4px;
-            font-size: 0.6rem;
-            white-space: nowrap;
-            gap: 4px;
-        }
-        @media screen and (max-width: 520px) {
-            .progress-controls {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
+.external-links {
+display: flex !important;
+margin-top: 12px;
+gap: 8px;
+}
+.external-links .btn-ctrl {
+flex: 1;
+padding: 10px 5px;
+font-size: 0.65rem;
+white-space: nowrap;
+}
+.progress-controls {
+display: grid !important;
+grid-template-columns: repeat(5, 1fr);
+margin-top: 12px;
+gap: 8px;
+}
+.progress-controls .btn-ctrl {
+padding: 10px 4px;
+font-size: 0.6rem;
+white-space: nowrap;
+gap: 4px;
+}
+@media screen and (max-width: 520px) {
+.progress-controls {
+grid-template-columns: repeat(3, 1fr);
+}
+}
 
-        .btn-ctrl {
-            background: var(--btn-bg); color: #fff; border: 1px solid var(--border);
-            padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer;
-            font-size: 0.75rem; text-transform: uppercase; transition: background 0.2s, border-color 0.2s;
-            display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
-        }
-        .btn-ctrl:hover { background: #2a1a42; border-color: var(--void-highlight); }
+.btn-ctrl {
+background: var(--btn-bg); color: #fff; border: 1px solid var(--border);
+padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer;
+font-size: 0.75rem; text-transform: uppercase; transition: background 0.2s, border-color 0.2s;
+display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+}
+.btn-ctrl:hover { background: #2a1a42; border-color: var(--void-highlight); }
 
-        #toast {
-            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-            background: #1e152e; border: 1px solid var(--void-highlight); color: var(--text);
-            padding: 12px 24px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
-            z-index: 9999; transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s;
-            opacity: 0; pointer-events: none; white-space: nowrap;
-            box-shadow: 0 0 20px rgba(124,0,230,0.4);
-        }
-        #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+#toast {
+position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+background: #1e152e; border: 1px solid var(--void-highlight); color: var(--text);
+padding: 12px 24px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+z-index: 9999; transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s;
+opacity: 0; pointer-events: none; white-space: nowrap;
+box-shadow: 0 0 20px rgba(124,0,230,0.4);
+}
+#toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        .modal-overlay {
-            display: none; position: fixed; inset: 0; background: rgba(5,3,8,0.85);
-            backdrop-filter: blur(6px); z-index: 500; align-items: center; justify-content: center;
-        }
-        .modal-overlay.open { display: flex; animation: fadeInDown 0.2s ease; }
-        .modal-box {
-            background: #120c1d; border: 1px solid var(--void-highlight); border-radius: 14px;
-            padding: 28px; width: 90%; max-width: 420px;
-            box-shadow: 0 0 40px rgba(124,0,230,0.5);
-        }
-        .modal-box h3 { margin: 0 0 18px 0; font-size: 1rem; text-transform: uppercase; color: var(--blue); letter-spacing: 1px; }
-        .modal-input {
-            width: 100%; box-sizing: border-box; background: #0a0812; border: 1px solid var(--border);
-            color: var(--text); padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 12px;
-            font-family: inherit; transition: border-color 0.2s;
-        }
-        .modal-input:focus { outline: none; border-color: var(--void-highlight); }
-        .modal-actions { display: flex; gap: 10px; margin-top: 6px; }
-        .modal-actions .btn-ctrl { flex: 1; }
-        .btn-primary { background: var(--void-highlight) !important; border-color: var(--void-highlight) !important; }
-        .btn-primary:hover { background: #9900ff !important; }
+.modal-overlay {
+display: none; position: fixed; inset: 0; background: rgba(5,3,8,0.85);
+backdrop-filter: blur(6px); z-index: 500; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; animation: fadeInDown 0.2s ease; }
+.modal-box {
+background: #120c1d; border: 1px solid var(--void-highlight); border-radius: 14px;
+padding: 28px; width: 90%; max-width: 420px;
+box-shadow: 0 0 40px rgba(124,0,230,0.5);
+}
+.modal-box h3 { margin: 0 0 18px 0; font-size: 1rem; text-transform: uppercase; color: var(--blue); letter-spacing: 1px; }
+.modal-input {
+width: 100%; box-sizing: border-box; background: #0a0812; border: 1px solid var(--border);
+color: var(--text); padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 12px;
+font-family: inherit; transition: border-color 0.2s;
+}
+.modal-input:focus { outline: none; border-color: var(--void-highlight); }
+.modal-actions { display: flex; gap: 10px; margin-top: 6px; }
+.modal-actions .btn-ctrl { flex: 1; }
+.btn-primary { background: var(--void-highlight) !important; border-color: var(--void-highlight) !important; }
+.btn-primary:hover { background: #9900ff !important; }
 
-        .group-wrapper { margin: 0 0 30px 0; filter: drop-shadow(0 5px 10px rgba(61, 0, 115, 0.3)); animation: slideIn 0.25s ease; }
-        .group-header-flex { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-        .category-header { color: var(--blue); font-size: 0.9rem; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 10px; flex-grow: 1; }
-        .category-header::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--void-highlight), transparent); opacity: 0.6; margin-left: 10px; }
+.group-wrapper { margin: 0 0 30px 0; filter: drop-shadow(0 5px 10px rgba(61, 0, 115, 0.3)); animation: slideIn 0.25s ease; }
+.group-header-flex { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.category-header { color: var(--blue); font-size: 0.9rem; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 10px; flex-grow: 1; }
+.category-header::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--void-highlight), transparent); opacity: 0.6; margin-left: 10px; }
 
-        .group-drag-handle { color: var(--dim); cursor: grab; font-size: 1.1rem; user-select: none; }
-        .remove-group-btn { color: var(--dim); background: rgba(255,255,255,0.05); border: 1px solid var(--border); cursor: pointer; font-size: 0.6rem; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; font-weight: bold; transition: color 0.2s, border-color 0.2s; }
-        .remove-group-btn:hover { color: var(--danger); border-color: var(--danger); }
+.group-drag-handle { color: var(--dim); cursor: grab; font-size: 1.1rem; user-select: none; }
+.remove-group-btn { color: var(--dim); background: rgba(255,255,255,0.05); border: 1px solid var(--border); cursor: pointer; font-size: 0.6rem; text-transform: uppercase; padding: 4px 8px;
+border-radius: 4px; font-weight: bold; transition: color 0.2s, border-color 0.2s; }
+.remove-group-btn:hover { color: var(--danger); border-color: var(--danger); }
 
-        table { width: 100%; border-collapse: collapse; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
-        .row-done td { opacity: 0.4; background: rgba(57, 255, 20, 0.03) !important; }
-        .row-done .action-text { text-decoration: line-through; color: var(--green); }
+table { width: 100%; border-collapse: collapse; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
+.row-done td { opacity: 0.4; background: rgba(57, 255, 20, 0.03) !important; }
+.row-done .action-text { text-decoration: line-through; color: var(--green); }
 
-        td { padding: 12px 15px; border-bottom: 1px solid rgba(45, 36, 61, 0.4); vertical-align: middle; }
-        .col-left { width: 70px; white-space: nowrap; }
-        .drag-icon { color: var(--void-glow); cursor: grab; font-size: 1.1rem; text-align: center; }
-        input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--void-highlight); }
+td { padding: 12px 15px; border-bottom: 1px solid rgba(45, 36, 61, 0.4); vertical-align: middle; }
+.col-left { width: 70px; white-space: nowrap; }
+.drag-icon { color: var(--void-glow); cursor: grab; font-size: 1.1rem; text-align: center; }
+input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--void-highlight); }
 
-        .action-text { font-weight: 600; color: #fff; display: block; font-size: 0.95rem; }
-        .desc-text { font-size: 0.75rem; color: var(--dim); display: block; margin-top: 2px; }
+.action-text { font-weight: 600; color: #fff; display: block; font-size: 0.95rem; }
+.desc-text { font-size: 0.75rem; color: var(--dim); display: block; margin-top: 2px; }
 
-        .remove-task-btn {
-            background: none; border: none; color: var(--dim); cursor: pointer;
-            font-size: 1.2rem; padding: 8px 10px; border-radius: 6px; transition: color 0.2s, background 0.2s;
-            display: flex; align-items: center; justify-content: center; min-width: 36px; min-height: 36px;
-        }
-        .remove-task-btn:hover { color: var(--danger); background: rgba(255,77,77,0.1); }
+.remove-task-btn {
+background: none; border: none; color: var(--dim); cursor: pointer;
+font-size: 1.2rem; padding: 8px 10px; border-radius: 6px; transition: color 0.2s, background 0.2s;
+display: flex; align-items: center; justify-content: center; min-width: 36px; min-height: 36px;
+}
+.remove-task-btn:hover { color: var(--danger); background: rgba(255,77,77,0.1); }
 
-        .add-task-row { display: none; }
-        .add-task-row.visible { display: table-row; animation: slideIn 0.2s ease; }
-        .add-task-inputs { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-        .add-task-inputs input {
-            background: #0a0812; border: 1px solid var(--void-highlight); color: var(--text);
-            padding: 7px 10px; border-radius: 6px; font-size: 0.8rem; font-family: inherit;
-            flex: 1; min-width: 100px;
-        }
-        .add-task-inputs input:focus { outline: none; }
-        .add-task-inputs input::placeholder { color: var(--dim); }
-        .add-task-confirm-btn {
-            background: var(--void-highlight); border: none; color: #fff; cursor: pointer;
-            padding: 7px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; white-space: nowrap;
-        }
-        .add-task-cancel-btn {
-            background: none; border: 1px solid var(--border); color: var(--dim); cursor: pointer;
-            padding: 7px 10px; border-radius: 6px; font-size: 0.8rem;
-        }
-        .btn-add-task {
-            margin: 5px auto 0 0; width: 85px; font-size: 0.65rem; background: var(--btn-bg);
-            color: var(--text); border: 1px solid var(--border); padding: 6px; border-radius: 4px;
-            cursor: pointer; text-transform: uppercase; font-weight: bold; transition: border-color 0.2s;
-        }
-        .btn-add-task:hover { border-color: var(--void-highlight); }
+.add-task-row { display: none; }
+.add-task-row.visible { display: table-row; animation: slideIn 0.2s ease; }
+.add-task-inputs { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.add-task-inputs input {
+background: #0a0812; border: 1px solid var(--void-highlight); color: var(--text);
+padding: 7px 10px; border-radius: 6px; font-size: 0.8rem; font-family: inherit;
+flex: 1; min-width: 100px;
+}
+.add-task-inputs input:focus { outline: none; }
+.add-task-inputs input::placeholder { color: var(--dim); }
+.add-task-confirm-btn {
+background: var(--void-highlight); border: none; color: #fff; cursor: pointer;
+padding: 7px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; white-space: nowrap;
+}
+.add-task-cancel-btn {
+background: none; border: 1px solid var(--border); color: var(--dim); cursor: pointer;
+padding: 7px 10px; border-radius: 6px; font-size: 0.8rem;
+}
+.btn-add-task {
+margin: 5px auto 0 0; width: 85px; font-size: 0.65rem; background: var(--btn-bg);
+color: var(--text); border: 1px solid var(--border); padding: 6px; border-radius: 4px;
+cursor: pointer; text-transform: uppercase; font-weight: bold; transition: border-color 0.2s;
+}
+.btn-add-task:hover { border-color: var(--void-highlight); }
 
-        .section-big-title {
-            color: var(--gold);
-            font-size: 1.1rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin: 40px 0 20px 0;
-            padding: 10px;
-            border-bottom: 2px solid var(--gold);
-            display: block;
-            text-shadow: 0 0 10px rgba(255, 204, 51, 0.3);
-            text-align: center;
-        }
+.section-big-title {
+color: var(--gold);
+font-size: 1.1rem;
+font-weight: 900;
+text-transform: uppercase;
+letter-spacing: 2px;
+margin: 40px 0 20px 0;
+padding: 10px;
+border-bottom: 2px solid var(--gold);
+display: block;
+text-shadow: 0 0 10px rgba(255, 204, 51, 0.3);
+text-align: center;
+}
 
-        .empty-state {
-            text-align: center; padding: 50px 20px; color: var(--dim);
-            border: 2px dashed var(--border); border-radius: 12px; margin-bottom: 30px;
-        }
-        .empty-state p { font-size: 0.9rem; margin: 8px 0 0 0; }
-        .empty-state span { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+.empty-state {
+text-align: center; padding: 50px 20px; color: var(--dim);
+border: 2px dashed var(--border); border-radius: 12px; margin-bottom: 30px;
+}
+.empty-state p { font-size: 0.9rem; margin: 8px 0 0 0; }
+.empty-state span { font-size: 2.5rem; display: block; margin-bottom: 10px; }
 
-        .section-divider { margin: 0 0 20px 0; }
-        .track-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-wrap: wrap; justify-content: space-around; gap: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .track-item { flex: 1; min-width: 100px; }
+.section-divider { margin: 0 0 20px 0; }
+.track-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-wrap: wrap; justify-content: space-around; gap: 15px;
+text-align: center; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+.track-item { flex: 1; min-width: 100px; }
 
-        .priority-table th { text-align: left; color: var(--gold); font-size: 0.75rem; text-transform: uppercase; padding: 15px; border-bottom: 2px solid var(--border); }
-        .priority-table td:first-child { font-weight: 700; color: #fff; width: 230px; border-right: 1px solid var(--border); }
+.priority-table th { text-align: left; color: var(--gold); font-size: 0.75rem; text-transform: uppercase; padding: 15px; border-bottom: 2px solid var(--border); }
+.priority-table td:first-child { font-weight: 700; color: #fff; width: 230px; border-right: 1px solid var(--border); }
 
-        @media screen and (max-width: 600px) {
-            .priority-table thead { display: none; }
-            .priority-table, .priority-table tbody, .priority-table tr, .priority-table td { display: block; width: 100%; }
-            .priority-table tr { border-bottom: 2px solid var(--border); }
-            .priority-table td:first-child {
-                background: rgba(138, 43, 226, 0.15); color: #fff; font-weight: 900;
-                font-size: 0.9rem; padding: 12px 15px; border-right: none !important;
-                border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 1px;
-            }
-            .priority-table td:last-child { padding: 15px; }
-            .add-task-inputs { flex-direction: column; }
-            .add-task-inputs input { min-width: unset; width: 100%; }
-        }
-    </style>
+@media screen and (max-width: 600px) {
+.priority-table thead { display: none; }
+.priority-table, .priority-table tbody, .priority-table tr, .priority-table td { display: block; width: 100%; }
+.priority-table tr { border-bottom: 2px solid var(--border); }
+.priority-table td:first-child {
+background: rgba(138, 43, 226, 0.15); color: #fff; font-weight: 900;
+font-size: 0.9rem; padding: 12px 15px; border-right: none !important;
+border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 1px;
+}
+.priority-table td:last-child { padding: 15px; }
+.add-task-inputs { flex-direction: column; }
+.add-task-inputs input { min-width: unset; width: 100%; }
+}
+</style>
 </head>
 <body>
 <div class="container">
 
-    <div class="char-profile-card">
-        <div class="char-flex">
-            <div class="portrait-frame"><img id="char-portrait" src="https://render.worldofwarcraft.com/eu/icons/512/classicon_shaman.jpg" alt="Portrait"></div>
-            <div style="flex-grow: 1; min-width: 0;">
-                <span class="char-name">HUSKYSHAM</span>
-                <div class="char-details">
-                    <span class="char-realm">EU - Silvermoon</span>
-                    <div class="mplus-badge">🏆 M+ SCORE: <span id="mplus-score">--</span></div>
-                </div>
-                <div class="external-links">
-                    <a href="https://worldofwarcraft.blizzard.com/en-gb/character/eu/silvermoon/huskysham" target="_blank" class="btn-ctrl">🛡️ ARMORY</a>
-                    <a href="https://raider.io/characters/eu/silvermoon/Huskysham" target="_blank" class="btn-ctrl">📈 RIO</a>
-                    <a href="https://www.warcraftlogs.com/character/eu/silvermoon/huskysham" target="_blank" class="btn-ctrl">📜 LOGS</a>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="char-profile-card">
+<div class="char-flex">
+<div class="portrait-frame"><img id="char-portrait" src="https://render.worldofwarcraft.com/eu/icons/512/classicon_shaman.jpg" alt="Portrait"></div>
+<div style="flex-grow: 1; min-width: 0;">
+<span class="char-name">HUSKYSHAM</span>
+<div class="char-details">
+<span class="char-realm">EU - Silvermoon</span>
+<div class="mplus-badge">🏆 M+ SCORE: <span id="mplus-score">--</span></div>
+</div>
+<div class="external-links">
+<a href="https://worldofwarcraft.blizzard.com/en-gb/character/eu/silvermoon/huskysham" target="_blank" class="btn-ctrl">🛡️ ARMORY</a>
+<a href="https://raider.io/characters/eu/silvermoon/Huskysham" target="_blank" class="btn-ctrl">📈 RIO</a>
+<a href="https://www.warcraftlogs.com/character/eu/silvermoon/huskysham" target="_blank" class="btn-ctrl">📜 LOGS</a>
+</div>
+</div>
+</div>
+</div>
 
-    <div class="progress-box">
-        <div style="display:flex; justify-content:space-between; align-items: flex-end; font-weight: 900; margin-bottom: 8px;">
-            <span style="font-size: 1.1rem;">TOTAL PROGRESS</span>
-            <span id="percent-text" style="color: var(--blue); font-size: 1.8rem;">0%</span>
-        </div>
-        <div class="bar-bg"><div id="bar-fill"></div></div>
-        <div class="progress-controls">
-            <button class="btn-ctrl" onclick="openNewGroupModal()">📁 NEW GROUP</button>
-            <button class="btn-ctrl" onclick="exportData()">💾 EXPORT</button>
-            <button class="btn-ctrl" onclick="importData()">📂 IMPORT</button>
-            <button class="btn-ctrl" onclick="resetToDefault()">↩️ RESET</button>
-            <button class="btn-ctrl" onclick="weeklyReset()">🧹 CLEAR</button>
-        </div>
-    </div>
+<div class="progress-box">
+<div style="display:flex; justify-content:space-between; align-items: flex-end; font-weight: 900; margin-bottom: 8px;">
+<span style="font-size: 1.1rem;">TOTAL PROGRESS</span>
+<span id="percent-text" style="color: var(--blue); font-size: 1.8rem;">0%</span>
+</div>
+<div class="bar-bg"><div id="bar-fill"></div></div>
+<div class="progress-controls">
+<button class="btn-ctrl" onclick="openNewGroupModal()">📁 NEW GROUP</button>
+<button class="btn-ctrl" onclick="exportData()">💾 EXPORT</button>
+<button class="btn-ctrl" onclick="importData()">📂 IMPORT</button>
+<button class="btn-ctrl" onclick="resetToDefault()">↩️ RESET</button>
+<button class="btn-ctrl" onclick="weeklyReset()">🧹 CLEAR</button>
+</div>
+</div>
 
-    <div id="task-groups-container"></div>
+<div id="task-groups-container"></div>
 
-    <div class="section-divider"><div class="category-header">Gearing Tracks</div></div>
-    <div class="track-card">
-        <div class="track-item"><div style="color:var(--green)">ADVENTURER</div><div>220-230</div></div>
-        <div class="track-item"><div style="color:var(--blue)">VETERAN</div><div>233-243</div></div>
-        <div class="track-item"><div style="color:var(--accent)">CHAMPION</div><div>246-256</div></div>
-        <div class="track-item"><div style="color:var(--gold)">HERO</div><div>259-269</div></div>
-        <div class="track-item"><div style="color:#ff4500">MYTH</div><div>272-289</div></div>
-    </div>
+<div class="section-divider"><div class="category-header">Gearing Tracks</div></div>
+<div class="track-card">
+<div class="track-item"><div style="color:var(--green)">ADVENTURER</div><div>220-230</div></div>
+<div class="track-item"><div style="color:var(--blue)">VETERAN</div><div>233-243</div></div>
+<div class="track-item"><div style="color:var(--accent)">CHAMPION</div><div>246-256</div></div>
+<div class="track-item"><div style="color:var(--gold)">HERO</div><div>259-269</div></div>
+<div class="track-item"><div style="color:#ff4500">MYTH</div><div>272-289</div></div>
+</div>
 
-    <div class="section-divider"><div class="category-header">Gearing Priority</div></div>
-    <table class="priority-table">
-        <thead><tr><th>Slot</th><th>Priority Reasoning</th></tr></thead>
-        <tbody>
-            <tr><td>Weapon</td><td class="desc-text">Largest source of Attack Power/Spell Power. Usually the best use of your first Spark</td></tr>
-            <tr><td>Trinkets</td><td class="desc-text">These often provide unique effects or massive stat procs that outweigh raw ilvl</td></tr>
-            <tr><td>Chest / Head / Legs</td><td class="desc-text">These have the largest "stat budget" for Stamina and Primary stats</td></tr>
-            <tr><td>Shoulders / Hands / Feet</td><td class="desc-text">Moderate stat gains; often the best slots for your Tier Set pieces</td></tr>
-            <tr><td>Cloak / Bracers / Belt</td><td class="desc-text">Smallest stat pools. Upgrade these only when everything else is capped</td></tr>
-            <tr><td>Rings / Neck</td><td class="desc-text">No primary stats (Intellect/Strength/Agility). Only upgrade these for Secondary Stat optimization</td></tr>
-        </tbody>
-    </table>
+<div class="section-divider"><div class="category-header">Gearing Priority</div></div>
+<table class="priority-table">
+<thead><tr><th>Slot</th><th>Priority Reasoning</th></tr></thead>
+<tbody>
+<tr><td>Weapon</td><td class="desc-text">Largest source of Attack Power/Spell Power. Usually the best use of your first Spark</td></tr>
+<tr><td>Trinkets</td><td class="desc-text">These often provide unique effects or massive stat procs that outweigh raw ilvl</td></tr>
+<tr><td>Chest / Head / Legs</td><td class="desc-text">These have the largest "stat budget" for Stamina and Primary stats</td></tr>
+<tr><td>Shoulders / Hands / Feet</td><td class="desc-text">Moderate stat gains; often the best slots for your Tier Set pieces</td></tr>
+<tr><td>Cloak / Bracers / Belt</td><td class="desc-text">Smallest stat pools. Upgrade these only when everything else is capped</td></tr>
+<tr><td>Rings / Neck</td><td class="desc-text">No primary stats (Intellect/Strength/Agility). Only upgrade these for Secondary Stat optimization</td></tr>
+</tbody>
+</table>
 </div>
 
 <div id="toast"></div>
 
 <div class="modal-overlay" id="group-modal">
-    <div class="modal-box">
-        <h3>📁 New Group</h3>
-        <input class="modal-input" id="group-name-input" type="text" placeholder="Group name (e.g. Raids, PvP)" maxlength="60" />
-        <div class="modal-actions">
-            <button class="btn-ctrl" onclick="closeGroupModal()">Cancel</button>
-            <button class="btn-ctrl btn-primary" onclick="confirmNewGroup()">Create</button>
-        </div>
-    </div>
+<div class="modal-box">
+<h3>📁 New Group</h3>
+<input class="modal-input" id="group-name-input" type="text" placeholder="Group name (e.g. Raids, PvP)" maxlength="60" />
+<div class="modal-actions">
+<button class="btn-ctrl" onclick="closeGroupModal()">Cancel</button>
+<button class="btn-ctrl btn-primary" onclick="confirmNewGroup()">Create</button>
+</div>
+</div>
 </div>
 
 <script>
-    const defaultData = [
-        { title: "Fresh Level 90 Checklist", id: "fresh90", tasks: [
-            { id: "f90_1", text: "Buy Singularity reputation contract", desc: "Renown 7 - Quest for trinket (Crucible of Erratic Energies) **Priority" },
-            { id: "f90_2", text: "Silvermoon Weeklies", desc: "Pickup first before heading out to do any activities - Rewards crafting spark" },
-            { id: "f90_3", text: "Player Housing", desc: "Quick easy weekly quest - Rewards crest bundles" },
-            { id: "f90_4", text: "World Boss", desc: "Quick easy weekly for chance of Champion gear ilvl250" },
-            { id: "f90_5", text: "World Quests", desc: "Easy gear - Adventurer only (Good source for gold as well)" },
-            { id: "f90_6", text: "Prey - Normal & Hard", desc: "x2 Adv gear chests + Adventurer crests / x2 Vet gear chests + Veteran crests / Renown 4 - Unlocks Nightmare (Rewards x2 chests per mode, crests thereafter) **Priority" },
-            { id: "f90_7", text: "Delves - Claim Key Shards", desc: "Claim 200 free coffer key shards from the Delve Vendor - This can go over cap, one time only / Unlock Tier 8 and spend Coffer Keys on Bountiful for Champion Gear / Unlock Rank 4 'Gilded Jackpot'" },
-            { id: "f90_8", text: "Voidstorm Weeklies (Stormarion Assault)", desc: "Singularity Renown 7 progression (Champion Trinket)" },
-            { id: "f90_9", text: "Voidstorm Weeklies (Decimus)", desc: "Decimus Storyline - To start working on the Elemental Voidcores, unlocked with 6 Voidcores" },
-            { id: "f90_10", text: "Eversong Weeklies (Saltheril's Soiree)", desc: "Silvermoon Renown 9 (Champion Head) - Sink all favors into one rep **Blood Knights for Transmog**" }
-        ]},
-        { title: "Crafting", id: "craft", tasks: [
-            { id: "c1", text: "First profession patron weekly", desc: "Complete 3 Patron Crafting Orders — weekly quest rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops from orders as Glimmers of Knowledge (quality-dependent). ~19 KP total across all 4 weekly sources" },
-            { id: "c2", text: "Second profession patron weekly", desc: "Complete 3 Patron Crafting Orders — weekly quest rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops from orders as Glimmers of Knowledge (quality-dependent). ~19 KP total across all 4 weekly sources" },
-            { id: "c3", text: "First profession treatise", desc: "Craft or buy from AH — consume for 5 KP (one per profession per week). Scribes with Calm Hands spec get +1 bonus KP. Tradeable and Warband-bound" },
-            { id: "c4", text: "Second profession treatise", desc: "Craft or buy from AH — consume for 5 KP (one per profession per week). Tradeable and Warband-bound — an Inscription alt can craft and mail them to your main" }
-        ]},
-        { title: "World Weeklies and Quests", id: "world", tasks: [
-            { id: "w0", text: "Buy Rep Contract from Auction House", desc: "Maximise Reputation gains during activities" },
-            { id: "w1", text: "Campaign", desc: "Complete any new story chapter(s) — unlocks zone content, Renown, and faction progress" },
-            { id: "w2", text: "Lady Liadrin — Spark of Radiance quest", desc: "Pick up from Lady Liadrin in Silvermoon each reset — choose one of four weekly quests. Rewards Apex Cache (Coffer Key Shards, Voidlight Marl, Veteran Dawncrest, gold) + chance at Spark of Radiance. Second Spark available from Lor'themar's World Tour. Do not skip either!" },
-            { id: "w3", text: "Silvermoon weeklies", desc: "Weekly Dungeon quest from Halduron Brightwing (1,000 rep with chosen faction). Housing weekly from Vaeli outside the bank. Skip PvP and Pet Battle quests" },
-            { id: "w4", text: "World Boss", desc: "Guaranteed Warbound ilvl 250 Champion gear (2/6). Rotates weekly: Lu'ashal, Cragpine, Thorm'belan, Predaxas. Do on alts too" },
-            { id: "w5", text: "Singularity (Decimus / Voidforge)", desc: "Collect 3x Elementary Voidcore Shards from raids, Bountiful Delves, or M+ to progress the Voidforge with Decimus. Full Nebulous & Ascendant Voidcore system (targeted loot + item upgrades) unlocks in patch 12.0.5" }
-        ]},
-        { title: "Prey", id: "prey", tasks: [
-            { id: "p1", text: "Prey - Nightmare x3 (Weekly Quest)", desc: "Nightmare unlocks at Rank 4 on Preyseeker's Journey (Journeys tab — not faction Renown). Weekly quest 'A Nightmarish Task' from Astalor in Murder Row. Rewards: Champion gear, 20 Hero Dawncrest (uncapped), 1x Beacon of Hope (summons Nullaeus in Delves). Fills Great Vault World slot" }
-        ]},
-        { title: "Delves", id: "delve", tasks: [
-            { id: "d1", text: "Bountiful Delves — Tier 11+ with Coffer Keys & Beacon of Hope from Prey weekly", desc: "Use Restored Coffer Keys on T11 — Trovehunter's Bounty Map guarantees a Hero gear piece. T11 Gilded Stashes give Hero Dawncrest; Delver's Journey Rank 4 adds Myth Dawncrest. Gear quality caps at T8 but T11 fills Great Vault Delve slot for Hero slot" },
-            { id: "d2", text: "Nullaeus ??", desc: "30 Hero Dawncrest + 30 Myth Dawncrest (both uncapped - ONE-TIME per season - 5 Hero and Myth thereafter) + title 'the Ominous'. Killing ?? first grants both rewards and skips the need to kill ? separately" }
-        ]},
-        { title: "Faction Weeklies", id: "faction", tasks: [
-            { id: "f1", text: "Singularity — Stormarion Assault (Voidstorm)", desc: "Quest: Stand Your Ground. Defend Stormarion Citadel (SW Voidstorm, every 30 mins). Rewards: Pinnacle Cache (gold, 100 Coffer Key Shards, Voidlight Marl, 20 Veteran Dawncrest) + 2,000 Singularity rep. First 2 caches/week include Veteran gear; first 4 include a Restored Coffer Key" },
-            { id: "f2", text: "Silvermoon Court — Saltheril's Soiree (Eversong Woods)", desc: "Requires short unlock chain. Fortify the Runestones: Pinnacle Cache + 150 Brimming Arcana + 2,000 Silvermoon Court rep. Favor of the Court: 3x Saltheril's Favor tokens (subfaction weeklies for extra rep + Arcana)" },
-            { id: "f3", text: "Hara'ti — Legends of the Haranir (Harandar)", desc: "Quest: Lost Legends — pick a relic scenario weekly. Rewards: 1,000 Hara'ti rep + Pinnacle Cache (gear, Spark of Radiance chance) + housing decor based on relic chosen" },
-            { id: "f4", text: "Amani-Tribe — The Abundance (Zul'Aman / all zones)", desc: "Earn 20,000 Abundance points for weekly quest. Rewards: 1,000 Amani Tribe rep + Pinnacle Cache. Use up to 8x Shards of Dundun/week to earn Unalloyed Abundance currency — spend on mounts and profession knowledge items" }
-        ]},
-        { title: "Optional Weeklies", id: "optional", tasks: [
-            { id: "ow1", text: "Special Assignments", desc: "Complete 3 World Quests in a zone to unlock — rewards rep with chosen faction + zone currency" },
-            { id: "ow2", text: "World Quests", desc: "Adventurer gear (ilvl 220-230), Voidlight Marl, faction rep. Mainly useful for alts or early gearing" }
-        ]},
-        { title: "Reputation", id: "rep", tasks: [
-            { id: "r1", text: "Singularity — target Renown 7", desc: "Renown 7: Champion trinket ilvl 246 (Crucible of Erratic Energies) — priority pick, high-value slot. Renown 2 unlocks Research Console (1 Void Sample/week from 3 Voidstorm WQs). Each rank = 2,500 rep. Warband-wide" },
-            { id: "r2", text: "Silvermoon Court — target Renown 9", desc: "Renown 9: Champion head ilvl 246. Warband-wide. Choose Soiree sub-faction allegiance carefully — it affects Blood Knights, Farstriders, Magisters, and Shades of the Row standings simultaneously" },
-            { id: "r3", text: "Hara'ti — target Renown 8", desc: "Renown 8: Champion belt (ilvl 246, upgradeable) via quest from Naynar in The Den. Warband-wide" },
-            { id: "r4", text: "Amani-Tribe — target Renown 9", desc: "Renown 9: Champion necklace ilvl 246 — two stat choices: Haste/Crit or Mastery/Vers. Warband-wide. Lower priority — neck has no primary stats, secondary stat optimisation only" }
-        ]}
-    ];
+const defaultData = [
+{ title: "Fresh Level 90 Checklist", id: "fresh90", tasks: [
+{ id: "f90_1", text: "Buy Singularity reputation contract", desc: "Renown 7 - Quest for trinket (Crucible of Erratic Energies) **Priority" },
+{ id: "f90_2", text: "Silvermoon Weeklies", desc: "Pickup first before heading out to do any activities - Rewards crafting spark" },
+{ id: "f90_3", text: "Player Housing", desc: "Quick easy weekly quest - Rewards crest bundles" },
+{ id: "f90_4", text: "World Boss", desc: "Quick easy weekly for chance of Champion gear ilvl250" },
+{ id: "f90_5", text: "World Quests", desc: "Adventurer gear (ilvl 220-230), quick useful for early gearing" },
+{ id: "f90_6", text: "Prey - Normal & Hard", desc: "x2 Adv gear chests + Adventurer crests / x2 Vet gear chests + Veteran crests / Renown 4 - Unlocks Nightmare (Rewards x2 chests per mode, crests thereafter) **Priority" },
+{ id: "f90_7", text: "Delves - Claim Key Shards", desc: "Claim 200 free coffer key shards from the Delve Vendor - This can go over cap, one time only / Unlock Tier 8 and spend Coffer Keys on Bountiful for Champion Gear / Unlock Rank 4 'Gilded Jackpot'" },
+{ id: "f90_8", text: "Voidstorm Weeklies (Stormarion Assault)", desc: "Singularity Renown 7 progression (Champion Trinket)" },
+{ id: "f90_9", text: "Voidstorm Weeklies (Decimus)", desc: "Decimus Storyline - To start working on the Elemental Voidcores, unlocked with 6 Voidcores" },
+{ id: "f90_10", text: "Eversong Weeklies (Saltheril's Soiree)", desc: "Silvermoon Renown 9 (Champion Head) - Sink all favors into one rep **Blood Knights for Transmog**" }
+]},
+{ title: "Reputation", id: "rep", tasks: [
+{ id: "r1", text: "Singularity — target Renown 7", desc: "Renown 7: Champion trinket ilvl 246 (Crucible of Erratic Energies) — priority pick, high-value slot. Renown 2 unlocks Research Console (1 Void Sample/week from 3 Voidstorm WQs). Each rank = 2,500 rep. Warband-wide" },
+{ id: "r2", text: "Silvermoon Court — target Renown 9", desc: "Renown 9: Champion head ilvl 246. Warband-wide. Choose Soiree sub-faction allegiance carefully — it affects Blood Knights, Farstriders, Magisters, and Shades of the Row standings simultaneously" },
+{ id: "r3", text: "Hara'ti — target Renown 8", desc: "Renown 8: Champion belt (ilvl 246, upgradeable) via quest from Naynar in The Den. Warband-wide" },
+{ id: "r4", text: "Amani-Tribe — target Renown 9", desc: "Renown 9: Champion necklace ilvl 246 — two stat choices: Haste/Crit or Mastery/Vers. Warband-wide. Lower priority — neck has no primary stats, secondary stat optimisation only" }
+]},
+{ title: "Crafting", id: "craft", tasks: [
+{ id: "c1", text: "First profession patron weekly", desc: "Complete 3 Patron Crafting Orders — weekly quest rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops from orders as Glimmers of Knowledge (quality-dependent). ~19 KP total across all 4 weekly sources" },
+{ id: "c2", text: "Second profession patron weekly", desc: "Complete 3 Patron Crafting Orders — weekly quest rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops from orders as Glimmers of Knowledge (quality-dependent). ~19 KP total across all 4 weekly sources" },
+{ id: "c3", text: "First profession treatise", desc: "Craft or buy from AH — consume for 5 KP (one per profession per week). Scribes with Calm Hands spec get +1 bonus KP. Tradeable and Warband-bound" },
+{ id: "c4", text: "Second profession treatise", desc: "Craft or buy from AH — consume for 5 KP (one per profession per week). Tradeable and Warband-bound — an Inscription alt can craft and mail them to your main" }
+]},
+{ title: "World Weeklies and Quests", id: "world", tasks: [
+{ id: "w0", text: "Buy Rep Contract from Auction House", desc: "Maximise Reputation gains during activities" },
+{ id: "w1", text: "Campaign", desc: "Complete any new story chapter(s) — unlocks zone content, Renown, and faction progress" },
+{ id: "w2", text: "Lady Liadrin — Spark of Radiance quest", desc: "Pick up from Lady Liadrin in Silvermoon each reset — choose one of four weekly quests. Rewards Apex Cache (Coffer Key Shards, Voidlight Marl, Veteran Dawncrest, gold) + chance at Spark of Radiance. Second Spark available from Lor'themar's World Tour. Do not skip either!"
+},
+{ id: "w3", text: "Silvermoon weeklies", desc: "Weekly Dungeon quest from Halduron Brightwing (1,000 rep with chosen faction). Housing weekly from Vaeli outside the bank. Skip PvP and Pet Battle quests" },
+{ id: "w4", text: "World Boss", desc: "Guaranteed Warbound ilvl 250 Champion gear (2/6). Rotates weekly: Lu'ashal, Cragpine, Thorm'belan, Predaxas. Do on alts too" },
+{ id: "w5", text: "Singularity (Decimus / Voidforge)", desc: "Collect 3x Elementary Voidcore Shards from raids, Bountiful Delves, or M+ to progress the Voidforge with Decimus. Full Nebulous & Ascendant Voidcore system (targeted loot + item upgrades) unlocks in patch 12.0.5" }
+]},
+{ title: "Prey", id: "prey", tasks: [
+{ id: "p1", text: "Prey - Nightmare x3 (Weekly Quest)", desc: "Nightmare unlocks at Rank 4 on Preyseeker's Journey (Journeys tab — not faction Renown). Weekly quest 'A Nightmarish Task' from Astalor in Murder Row. Rewards: Champion gear, 20 Hero Dawncrest (uncapped), 1x Beacon of Hope (summons Nullaeus in Delves). Fills Great Vault World slot" }
+]},
+{ title: "Delves", id: "delve", tasks: [
+{ id: "d1", text: "Bountiful Delves — Tier 11+ with Coffer Keys & Beacon of Hope from Prey weekly", desc: "Use Restored Coffer Keys on T11 — Trovehunter's Bounty Map guarantees a Hero gear piece. T11 Gilded Stashes give Hero Dawncrest; Delver's Journey Rank 4 adds Myth Dawncrest. Gear quality caps at T8 BUT T11 fills Great Vault Delve slot for Hero slot" },
+{ id: "d2", text: "Nullaeus ??", desc: "30 Hero Dawncrest + 30 Myth Dawncrest (both uncapped - ONE-TIME per season - 5 Hero and Myth thereafter) + title 'the Ominous'. Killing ?? first grants both rewards and skips the need to kill ? separately" }
+]},
+{ title: "Faction Weeklies", id: "faction", tasks: [
+{ id: "f1", text: "Singularity — Stormarion Assault (Voidstorm)", desc: "Quest: Stand Your Ground. Defend Stormarion Citadel (SW Voidstorm, every 30 mins). Rewards: Pinnacle Cache (gold, 100 Coffer Key Shards, Voidlight Marl, 20 Veteran Dawncrest) + 2,000 Singularity rep. First 2 caches/week include Veteran gear; first 4 include a Restored Coffer Key" },
+{ id: "f2", text: "Silvermoon Court — Saltheril's Soiree (Eversong Woods)", desc: "Requires short unlock chain. Fortify the Runestones: Pinnacle Cache + 150 Brimming Arcana + 2,000 Silvermoon Court rep. Favor of the Court: 3x Saltheril's Favor tokens (subfaction weeklies for extra rep + Arcana)" },
+{ id: "f3", text: "Hara'ti — Legends of the Haranir (Harandar)", desc: "Quest: Lost Legends — pick a relic scenario weekly. Rewards: 1,000 Hara'ti rep + Pinnacle Cache (gear, Spark of Radiance chance) + housing decor based on relic chosen" },
+{ id: "f4", text: "Amani-Tribe — The Abundance (Zul'Aman / all zones)", desc: "Earn 20,000 Abundance points for weekly quest. Rewards: 1,000 Amani Tribe rep + Pinnacle Cache. Use up to 8x Shards of Dundun/week to earn Unalloyed Abundance currency — spend on mounts and profession knowledge items" }
+]},
+{ title: "Optional Weeklies", id: "optional", tasks: [
+{ id: "ow1", text: "Special Assignments", desc: "Complete 3 World Quests in a zone to unlock — rewards rep with chosen faction + zone currency" },
+]}
+];
 
-    // Groups excluded from total progress: Fresh Level 90 (one-time setup), Optional Weeklies, Reputation
-    const PROGRESS_EXCLUDED_IDS = new Set(["fresh90", "optional", "rep"]);
+// Groups excluded from total progress: Fresh Level 90 (one-time setup), Reputation
+const PROGRESS_EXCLUDED_IDS = new Set(["fresh90", "rep"]);
 
-    /* ── TOAST ── */
-    let toastTimer = null;
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.textContent = msg;
-        t.classList.add('show');
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
-    }
+/* ── TOAST ── */
+let toastTimer = null;
+function showToast(msg) {
+const t = document.getElementById('toast');
+t.textContent = msg;
+t.classList.add('show');
+clearTimeout(toastTimer);
+toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
 
-    /* ── MODAL ── */
-    function openNewGroupModal() {
-        document.getElementById('group-modal').classList.add('open');
-        setTimeout(() => document.getElementById('group-name-input').focus(), 100);
-    }
-    function closeGroupModal() {
-        document.getElementById('group-modal').classList.remove('open');
-        document.getElementById('group-name-input').value = '';
-    }
-    function confirmNewGroup() {
-        const n = document.getElementById('group-name-input').value.trim();
-        if (!n) { document.getElementById('group-name-input').focus(); return; }
-        const g = { title: n, id: "g_" + Date.now(), tasks: [] };
-        const container = document.getElementById('task-groups-container');
-        updateEmptyState();
-        container.appendChild(createGroupUI(g));
-        initSortableGroup(container.lastElementChild.querySelector('.sortable-list'));
-        saveState();
-        closeGroupModal();
-        showToast(`Group "${n}" created`);
-    }
-    document.getElementById('group-modal').addEventListener('click', function(e) {
-        if (e.target === this) closeGroupModal();
-    });
-    document.getElementById('group-name-input').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') confirmNewGroup();
-        if (e.key === 'Escape') closeGroupModal();
-    });
+/* ── MODAL ── */
+function openNewGroupModal() {
+document.getElementById('group-modal').classList.add('open');
+setTimeout(() => document.getElementById('group-name-input').focus(), 100);
+}
+function closeGroupModal() {
+document.getElementById('group-modal').classList.remove('open');
+document.getElementById('group-name-input').value = '';
+}
+function confirmNewGroup() {
+const n = document.getElementById('group-name-input').value.trim();
+if (!n) { document.getElementById('group-name-input').focus(); return; }
+const g = { title: n, id: "g_" + Date.now(), tasks: [] };
+const container = document.getElementById('task-groups-container');
+updateEmptyState();
+container.appendChild(createGroupUI(g));
+initSortableGroup(container.lastElementChild.querySelector('.sortable-list'));
+saveState();
+closeGroupModal();
+showToast(`Group "${n}" created`);
+}
+document.getElementById('group-modal').addEventListener('click', function(e) {
+if (e.target === this) closeGroupModal();
+});
+document.getElementById('group-name-input').addEventListener('keydown', function(e) {
+if (e.key === 'Enter') confirmNewGroup();
+if (e.key === 'Escape') closeGroupModal();
+});
 
-    /* ── CHARACTER DATA ── */
-    async function fetchCharacterData() {
-        try {
-            const response = await fetch('https://raider.io/api/v1/characters/profile?region=eu&realm=silvermoon&name=huskysham&fields=mythic_plus_scores_by_season%3Acurrent');
-            if (!response.ok) throw new Error('API error');
-            const data = await response.json();
-            if (data.thumbnail_url) document.getElementById('char-portrait').src = data.thumbnail_url;
-            if (data.mythic_plus_scores_by_season && data.mythic_plus_scores_by_season.length) {
-                document.getElementById('mplus-score').innerText = Math.round(data.mythic_plus_scores_by_season[0].scores.all);
-            }
-        } catch (e) {
-            document.getElementById('mplus-score').innerText = 'N/A';
-            console.warn("Raider.IO API unavailable:", e);
-        }
-    }
+/* ── CHARACTER DATA ── */
+async function fetchCharacterData() {
+try {
+const response = await fetch('https://raider.io/api/v1/characters/profile?region=eu&realm=silvermoon&name=huskysham&fields=mythic_plus_scores_by_season%3Acurrent');
+if (!response.ok) throw new Error('API error');
+const data = await response.json();
+if (data.thumbnail_url) document.getElementById('char-portrait').src = data.thumbnail_url;
+if (data.mythic_plus_scores_by_season && data.mythic_plus_scores_by_season.length) {
+document.getElementById('mplus-score').innerText = Math.round(data.mythic_plus_scores_by_season[0].scores.all);
+}
+} catch (e) {
+document.getElementById('mplus-score').innerText = 'N/A';
+console.warn("Raider.IO API unavailable:", e);
+}
+}
 
-    /* ── ROW / GROUP CREATION ── */
-    function createTaskRow(id, text, desc, checked = false) {
-        const tr = document.createElement('tr');
-        tr.dataset.id = id;
-        if (checked) tr.classList.add('row-done');
-        tr.innerHTML = `
-            <td class="col-left">
-                <div style="display:flex; align-items:center; gap:15px;">
-                    <span class="drag-icon" aria-hidden="true">⠿</span>
-                    <input type="checkbox" class="prog-task" aria-label="Mark task complete" ${checked ? 'checked' : ''}>
-                </div>
-            </td>
-            <td><span class="action-text">${escapeHTML(text)}</span><span class="desc-text">${escapeHTML(desc)}</span></td>
-            <td style="width:50px; text-align:center;">
-                <button class="remove-task-btn" aria-label="Remove task" title="Remove task">×</button>
-            </td>
-        `;
-        tr.querySelector('input').addEventListener('change', () => { sync(); saveState(); });
-        tr.querySelector('.remove-task-btn').addEventListener('click', () => removeTask(tr));
-        return tr;
-    }
+/* ── ROW / GROUP CREATION ── */
+function createTaskRow(id, text, desc, checked = false) {
+const tr = document.createElement('tr');
+tr.dataset.id = id;
+if (checked) tr.classList.add('row-done');
+tr.innerHTML = `
+<td class="col-left">
+<div style="display:flex; align-items:center; gap:15px;">
+<span class="drag-icon" aria-hidden="true">⠿</span>
+<input type="checkbox" class="prog-task" aria-label="Mark task complete" ${checked ? 'checked' : ''}>
+</div>
+</td>
+<td><span class="action-text">${escapeHTML(text)}</span><span class="desc-text">${escapeHTML(desc)}</span></td>
+<td style="width:50px; text-align:center;">
+<button class="remove-task-btn" aria-label="Remove task" title="Remove task">×</button>
+</td>
+`;
+tr.querySelector('input').addEventListener('change', () => { sync(); saveState(); });
+tr.querySelector('.remove-task-btn').addEventListener('click', () => removeTask(tr));
+return tr;
+}
 
-    function createAddTaskRow(groupId) {
-        const tr = document.createElement('tr');
-        tr.className = 'add-task-row';
-        tr.dataset.addRow = groupId;
-        tr.innerHTML = `
-            <td colspan="3" style="padding: 10px 15px;">
-                <div class="add-task-inputs">
-                    <input type="text" class="new-task-name" placeholder="Task name…" maxlength="120" />
-                    <input type="text" class="new-task-desc" placeholder="Description (optional)…" maxlength="200" />
-                    <button class="add-task-confirm-btn">Add</button>
-                    <button class="add-task-cancel-btn">Cancel</button>
-                </div>
-            </td>
-        `;
-        tr.querySelector('.add-task-confirm-btn').addEventListener('click', () => confirmAddTask(tr, groupId));
-        tr.querySelector('.add-task-cancel-btn').addEventListener('click', () => hideAddTaskRow(tr));
-        tr.querySelector('.new-task-name').addEventListener('keydown', e => {
-            if (e.key === 'Enter') confirmAddTask(tr, groupId);
-            if (e.key === 'Escape') hideAddTaskRow(tr);
-        });
-        tr.querySelector('.new-task-desc').addEventListener('keydown', e => {
-            if (e.key === 'Enter') confirmAddTask(tr, groupId);
-            if (e.key === 'Escape') hideAddTaskRow(tr);
-        });
-        return tr;
-    }
+function createAddTaskRow(groupId) {
+const tr = document.createElement('tr');
+tr.className = 'add-task-row';
+tr.dataset.addRow = groupId;
+tr.innerHTML = `
+<td colspan="3" style="padding: 10px 15px;">
+<div class="add-task-inputs">
+<input type="text" class="new-task-name" placeholder="Task name…" maxlength="120" />
+<input type="text" class="new-task-desc" placeholder="Description (optional)…" maxlength="200" />
+<button class="add-task-confirm-btn">Add</button>
+<button class="add-task-cancel-btn">Cancel</button>
+</div>
+</td>
+`;
+tr.querySelector('.add-task-confirm-btn').addEventListener('click', () => confirmAddTask(tr, groupId));
+tr.querySelector('.add-task-cancel-btn').addEventListener('click', () => hideAddTaskRow(tr));
+tr.querySelector('.new-task-name').addEventListener('keydown', e => {
+if (e.key === 'Enter') confirmAddTask(tr, groupId);
+if (e.key === 'Escape') hideAddTaskRow(tr);
+});
+tr.querySelector('.new-task-desc').addEventListener('keydown', e => {
+if (e.key === 'Enter') confirmAddTask(tr, groupId);
+if (e.key === 'Escape') hideAddTaskRow(tr);
+});
+return tr;
+}
 
-    function confirmAddTask(addRow, groupId) {
-        const name = addRow.querySelector('.new-task-name').value.trim();
-        if (!name) { addRow.querySelector('.new-task-name').focus(); return; }
-        const desc = addRow.querySelector('.new-task-desc').value.trim();
-        const tbody = addRow.closest('tbody');
-        tbody.insertBefore(createTaskRow("c_" + Date.now(), name, desc), addRow);
-        addRow.querySelector('.new-task-name').value = '';
-        addRow.querySelector('.new-task-desc').value = '';
-        addRow.querySelector('.new-task-name').focus();
-        sync(); saveState();
-    }
+function confirmAddTask(addRow, groupId) {
+const name = addRow.querySelector('.new-task-name').value.trim();
+if (!name) { addRow.querySelector('.new-task-name').focus(); return; }
+const desc = addRow.querySelector('.new-task-desc').value.trim();
+const tbody = addRow.closest('tbody');
+tbody.insertBefore(createTaskRow("c_" + Date.now(), name, desc), addRow);
+addRow.querySelector('.new-task-name').value = '';
+addRow.querySelector('.new-task-desc').value = '';
+addRow.querySelector('.new-task-name').focus();
+sync(); saveState();
+}
 
-    function hideAddTaskRow(addRow) {
-        addRow.classList.remove('visible');
-        addRow.querySelector('.new-task-name').value = '';
-        addRow.querySelector('.new-task-desc').value = '';
-    }
+function hideAddTaskRow(addRow) {
+addRow.classList.remove('visible');
+addRow.querySelector('.new-task-name').value = '';
+addRow.querySelector('.new-task-desc').value = '';
+}
 
-    function createGroupUI(group) {
-        const wrapper = document.createDocumentFragment();
+function createGroupUI(group) {
+const wrapper = document.createDocumentFragment();
 
-        if (group.title.toLowerCase() === "crafting") {
-            const sectionHeader = document.createElement('div');
-            sectionHeader.className = "section-big-title";
-            sectionHeader.innerText = "Absolute End-Game Weekly Checklist";
-            wrapper.appendChild(sectionHeader);
-        }
+if (group.title.toLowerCase() === "crafting") {
+const sectionHeader = document.createElement('div');
+sectionHeader.className = "section-big-title";
+sectionHeader.innerText = "Absolute End-Game Weekly Checklist";
+wrapper.appendChild(sectionHeader);
+}
 
-        const div = document.createElement('div');
-        div.className = "group-wrapper";
-        div.innerHTML = `
-            <div class="group-header-flex">
-                <span class="group-drag-handle" aria-hidden="true">⠿</span>
-                <div class="category-header">${escapeHTML(group.title)}</div>
-                <button class="remove-group-btn" aria-label="Remove group">Remove Group</button>
-            </div>
-            <table><tbody class="sortable-list" data-group="${group.id}"></tbody></table>
-            <button class="btn-add-task" aria-label="Add task to group">+ Task</button>
-        `;
-        const tbody = div.querySelector('tbody');
-        group.tasks.forEach(t => tbody.appendChild(createTaskRow(t.id, t.text, t.desc, t.checked)));
-        tbody.appendChild(createAddTaskRow(group.id));
+const div = document.createElement('div');
+div.className = "group-wrapper";
+div.innerHTML = `
+<div class="group-header-flex">
+<span class="group-drag-handle" aria-hidden="true">⠿</span>
+<input type="checkbox" class="select-all-group" title="Select/Deselect All Tasks" style="margin-right: -5px;">
+<div class="category-header">${escapeHTML(group.title)}</div>
+<button class="remove-group-btn" aria-label="Remove group">Remove Group</button>
+</div>
+<table><tbody class="sortable-list" data-group="${group.id}"></tbody></table>
+<button class="btn-add-task" aria-label="Add task to group">+ Task</button>
+`;
+const tbody = div.querySelector('tbody');
+group.tasks.forEach(t => tbody.appendChild(createTaskRow(t.id, t.text, t.desc, t.checked)));
+tbody.appendChild(createAddTaskRow(group.id));
 
-        div.querySelector('.btn-add-task').addEventListener('click', () => {
-            const addRow = tbody.querySelector('.add-task-row');
-            addRow.classList.add('visible');
-            addRow.querySelector('.new-task-name').focus();
-        });
+div.querySelector('.btn-add-task').addEventListener('click', () => {
+const addRow = tbody.querySelector('.add-task-row');
+addRow.classList.add('visible');
+addRow.querySelector('.new-task-name').focus();
+});
 
-        div.querySelector('.remove-group-btn').addEventListener('click', () => {
-            if (confirm(`Delete group "${group.title}"?`)) {
-                if (group.title.toLowerCase() === "crafting" && div.previousElementSibling?.className === "section-big-title") {
-                    div.previousElementSibling.remove();
-                }
-                div.remove();
-                sync(); saveState();
-                updateEmptyState();
-                showToast("Group removed");
-            }
-        });
+div.querySelector('.remove-group-btn').addEventListener('click', () => {
+if (confirm(`Delete group "${group.title}"?`)) {
+if (group.title.toLowerCase() === "crafting" && div.previousElementSibling?.className === "section-big-title") {
+div.previousElementSibling.remove();
+}
+div.remove();
+sync(); saveState();
+updateEmptyState();
+showToast("Group removed");
+}
+});
 
-        wrapper.appendChild(div);
-        return wrapper;
-    }
+div.querySelector('.select-all-group').addEventListener('change', function() {
+const isChecked = this.checked;
+div.querySelectorAll('.prog-task').forEach(cb => cb.checked = isChecked);
+sync(); saveState();
+});
 
-    /* ── CORE LOGIC ── */
-    function sync() {
-        const groups = document.querySelectorAll('.group-wrapper');
-        let total = 0;
-        let checked = 0;
+wrapper.appendChild(div);
+return wrapper;
+}
 
-        groups.forEach(gw => {
-            const groupId = gw.querySelector('.sortable-list')?.dataset.group;
-            const countsForProgress = !PROGRESS_EXCLUDED_IDS.has(groupId);
+/* ── CORE LOGIC ── */
+function sync() {
+const groups = document.querySelectorAll('.group-wrapper');
+let total = 0;
+let checked = 0;
 
-            gw.querySelectorAll('.prog-task').forEach(cb => {
-                const tr = cb.closest('tr');
-                if (cb.checked) tr.classList.add('row-done');
-                else tr.classList.remove('row-done');
+groups.forEach(gw => {
+const groupId = gw.querySelector('.sortable-list')?.dataset.group;
+const countsForProgress = !PROGRESS_EXCLUDED_IDS.has(groupId);
 
-                if (countsForProgress) {
-                    total++;
-                    if (cb.checked) checked++;
-                }
-            });
-        });
+gw.querySelectorAll('.prog-task').forEach(cb => {
+const tr = cb.closest('tr');
+if (cb.checked) tr.classList.add('row-done');
+else tr.classList.remove('row-done');
 
-        const perc = total === 0 ? 0 : Math.round((checked / total) * 100);
-        document.getElementById('percent-text').innerText = perc + '%';
-        document.getElementById('bar-fill').style.width = perc + '%';
-    }
+if (countsForProgress) {
+total++;
+if (cb.checked) checked++;
+}
+});
+});
 
-    function removeTask(tr) {
-        tr.style.opacity = '0';
-        tr.style.transform = 'translateX(20px)';
-        setTimeout(() => { tr.remove(); sync(); saveState(); }, 200);
-    }
+const perc = total === 0 ? 0 : Math.round((checked / total) * 100);
+document.getElementById('percent-text').innerText = perc + '%';
+document.getElementById('bar-fill').style.width = perc + '%';
+}
 
-    function updateEmptyState() {
-        const container = document.getElementById('task-groups-container');
-        if (container.querySelectorAll('.group-wrapper').length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <span>🗺️</span>
-                    <h3>Your list is empty</h3>
-                    <p>Create a group to start tracking your weekly progress.</p>
-                </div>`;
-        } else {
-            const es = container.querySelector('.empty-state');
-            if (es) es.remove();
-        }
-    }
+function removeTask(tr) {
+tr.style.opacity = '0';
+tr.style.transform = 'translateX(20px)';
+setTimeout(() => { tr.remove(); sync(); saveState(); }, 200);
+}
 
-    function saveState() {
-        const data = [];
-        document.querySelectorAll('.group-wrapper').forEach(gw => {
-            const tasks = [];
-            gw.querySelectorAll('tbody tr[data-id]').forEach(tr => {
-                tasks.push({
-                    id: tr.dataset.id,
-                    text: tr.querySelector('.action-text').innerText,
-                    desc: tr.querySelector('.desc-text').innerText,
-                    checked: tr.querySelector('.prog-task').checked
-                });
-            });
-            data.push({
-                title: gw.querySelector('.category-header').innerText,
-                id: gw.querySelector('.sortable-list').dataset.group,
-                tasks: tasks
-            });
-        });
-        localStorage.setItem('huskysham_v2', JSON.stringify(data));
-    }
+function updateEmptyState() {
+const container = document.getElementById('task-groups-container');
+if (container.querySelectorAll('.group-wrapper').length === 0) {
+container.innerHTML = `
+<div class="empty-state">
+<span>🗺️</span>
+<h3>Your list is empty</h3>
+<p>Create a group to start tracking your weekly progress.</p>
+</div>`;
+} else {
+const es = container.querySelector('.empty-state');
+if (es) es.remove();
+}
+}
 
-    function loadState() {
-        const container = document.getElementById('task-groups-container');
-        container.innerHTML = '';
-        const saved = localStorage.getItem('huskysham_v2');
-        const data = saved ? JSON.parse(saved) : defaultData;
-        data.forEach(g => container.appendChild(createGroupUI(g)));
-        document.querySelectorAll('.sortable-list').forEach(initSortableGroup);
-        initSortableContainer(container);
-        updateEmptyState();
-        sync();
-    }
+function saveState() {
+const data = [];
+document.querySelectorAll('.group-wrapper').forEach(gw => {
+const tasks = [];
+gw.querySelectorAll('tbody tr[data-id]').forEach(tr => {
+tasks.push({
+id: tr.dataset.id,
+text: tr.querySelector('.action-text').innerText,
+desc: tr.querySelector('.desc-text').innerText,
+checked: tr.querySelector('.prog-task').checked
+});
+});
+data.push({
+title: gw.querySelector('.category-header').innerText,
+id: gw.querySelector('.sortable-list').dataset.group,
+tasks: tasks
+});
+});
+localStorage.setItem('huskysham_v2', JSON.stringify(data));
+}
 
-    // Clears ALL checkboxes across every group with no exceptions
-    function weeklyReset() {
-        if (confirm("Reset all checkboxes for a new week?")) {
-            document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false);
-            sync(); saveState();
-            showToast("Progress cleared for the week!");
-        }
-    }
+function loadState() {
+const container = document.getElementById('task-groups-container');
+container.innerHTML = '';
+const saved = localStorage.getItem('huskysham_v2');
+const data = saved ? JSON.parse(saved) : defaultData;
+data.forEach(g => container.appendChild(createGroupUI(g)));
+document.querySelectorAll('.sortable-list').forEach(initSortableGroup);
+initSortableContainer(container);
+updateEmptyState();
+sync();
+}
 
-    function resetToDefault() {
-        if (confirm("Restore the default layout and tasks? This will wipe your customizations.")) {
-            localStorage.removeItem('huskysham_v2');
-            loadState();
-            showToast("Restored to default");
-        }
-    }
+// Clears checkboxes, excluding 'Fresh Level 90 Checklist' and 'Reputation'
+function weeklyReset() {
+if (confirm("Reset weekly checkboxes? (Excludes Fresh 90 and Reputation groups)")) {
+document.querySelectorAll('.group-wrapper').forEach(gw => {
+const groupId = gw.querySelector('.sortable-list')?.dataset.group;
+// If the group is NOT one of the excluded ones, clear its checkboxes
+if (!PROGRESS_EXCLUDED_IDS.has(groupId)) {
+gw.querySelectorAll('.prog-task').forEach(cb => cb.checked = false);
+gw.querySelectorAll('.select-all-group').forEach(cb => cb.checked = false);
+}
+});
+sync(); saveState();
+showToast("Weekly progress cleared!");
+}
+}
 
-    function exportData() {
-        const data = localStorage.getItem('huskysham_v2') || JSON.stringify(defaultData);
-        const blob = new Blob([data], {type: 'application/json'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Midnight_Gearing_${new Date().toISOString().slice(0,10)}.json`;
-        a.click();
-        showToast("Data exported as JSON");
-    }
+function resetToDefault() {
+if (confirm("Restore the default layout and tasks? This will wipe your customizations.")) {
+localStorage.removeItem('huskysham_v2');
+loadState();
+showToast("Restored to default");
+}
+}
 
-    function importData() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.json';
-        input.onchange = e => {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onload = readerEvent => {
-                try {
-                    const content = JSON.parse(readerEvent.target.result);
-                    localStorage.setItem('huskysham_v2', JSON.stringify(content));
-                    loadState();
-                    showToast("Import successful!");
-                } catch (err) {
-                    alert("Error parsing file.");
-                }
-            }
-            reader.readAsText(file);
-        }
-        input.click();
-    }
+function exportData() {
+const data = localStorage.getItem('huskysham_v2') || JSON.stringify(defaultData);
+const blob = new Blob([data], {type: 'application/json'});
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = `Midnight_Gearing_${new Date().toISOString().slice(0,10)}.json`;
+a.click();
+showToast("Data exported as JSON");
+}
 
-    function initSortableGroup(el) {
-        new Sortable(el, {
-            animation: 150, handle: '.drag-icon', ghostClass: 'sortable-ghost',
-            onEnd: () => { saveState(); }
-        });
-    }
+function importData() {
+const input = document.createElement('input');
+input.type = 'file';
+input.accept = '.json';
+input.onchange = e => {
+const file = e.target.files[0];
+const reader = new FileReader();
+reader.onload = readerEvent => {
+try {
+const content = JSON.parse(readerEvent.target.result);
+localStorage.setItem('huskysham_v2', JSON.stringify(content));
+loadState();
+showToast("Import successful!");
+} catch (err) {
+alert("Error parsing file.");
+}
+}
+reader.readAsText(file);
+}
+input.click();
+}
 
-    function initSortableContainer(el) {
-        new Sortable(el, {
-            animation: 150, handle: '.group-drag-handle', ghostClass: 'sortable-ghost',
-            onEnd: () => { saveState(); loadState(); }
-        });
-    }
+function initSortableGroup(el) {
+new Sortable(el, {
+animation: 150, handle: '.drag-icon', ghostClass: 'sortable-ghost',
+onEnd: () => { saveState(); }
+});
+}
 
-    function escapeHTML(str) {
-        const p = document.createElement('p');
-        p.textContent = str;
-        return p.innerHTML;
-    }
+function initSortableContainer(el) {
+new Sortable(el, {
+animation: 150, handle: '.group-drag-handle', ghostClass: 'sortable-ghost',
+onEnd: () => { saveState(); loadState(); }
+});
+}
 
-    window.onload = () => { loadState(); fetchCharacterData(); };
+function escapeHTML(str) {
+const p = document.createElement('p');
+p.textContent = str;
+return p.innerHTML;
+}
+
+window.onload = () => { loadState(); fetchCharacterData(); };
 </script>
 </body>
 </html>
