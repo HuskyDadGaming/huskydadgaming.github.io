@@ -224,6 +224,21 @@
         }
         .btn-add-task:hover { border-color: var(--void-highlight); }
 
+        /* ── Section Title for End-Game ── */
+        .section-big-title {
+            color: var(--gold);
+            font-size: 1.1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 40px 0 20px 0;
+            padding: 10px;
+            border-bottom: 2px solid var(--gold);
+            display: block;
+            text-shadow: 0 0 10px rgba(255, 204, 51, 0.3);
+            text-align: center;
+        }
+
         /* ── Empty state ── */
         .empty-state {
             text-align: center; padding: 50px 20px; color: var(--dim);
@@ -334,6 +349,18 @@
         DEFAULT DATA
     ────────────────────────────────────────── */
     const defaultData = [
+        { title: "Fresh Level 90 Checklist", id: "fresh90", tasks: [
+            { id: "f90_1", text: "Buy Singularity reputation contract", desc: "Renown 7 - Quest for trinket (Crucible of Erratic Energies) **Priority" },
+            { id: "f90_2", text: "Silvermoon Weeklies", desc: "Pickup first before heading out to do any activities - Rewards crafting spark" },
+            { id: "f90_3", text: "Player Housing", desc: "Quick easy weekly quest - Rewards crest bundles" },
+            { id: "f90_4", text: "World Boss", desc: "Quick easy weekly for chance of Champion gear ilvl250" },
+            { id: "f90_5", text: "World Quests", desc: "Easy gear - Adventurer only (Good source for gold as well)" },
+            { id: "f90_6", text: "Prey - Normal & Hard", desc: "x2 Adv gear chests + Adventurer crests / x2 Vet gear chests + Veteran crests / Renown 4 - Unlocks Nightmare (Rewards x2 chests per mode, crests thereafter) **Priority" },
+            { id: "f90_7", text: "Delves - Claim Key Shards", desc: "Claim 200 free coffer key shards from the Delve Vendor - This can go over cap, one time only / Unlock Tier 8 and spend Coffer Keys on Bountiful for Champion Gear / Unlock Rank 4 'Gilded Jackpot'" },
+            { id: "f90_8", text: "Voidstorm Weeklies (Stormarion Assault)", desc: "Singularity Renown 7 progression (Champion Trinket)" },
+            { id: "f90_9", text: "Voidstorm Weeklies (Decimus)", desc: "Decimus Storyline - To start working on the Elemental Voidcores, unlocked with 6 Voidcores" },
+            { id: "f90_10", text: "Eversong Weeklies (Saltheril’s Soiree)", desc: "Silvermoon Renown 9 (Champion Head) - Sink all favors into one rep **Blood Knights for Transmog**" }
+        ]},
         { title: "Crafting", id: "craft", tasks: [
             { id: "c1", text: "First profession patron weekly", desc: "Complete 3 Patron Crafting Orders — weekly quest rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops from orders as Glimmers of Knowledge (quality-dependent). ~19 KP total across all 4 weekly sources" },
             { id: "c2", text: "Second profession patron weekly", desc: "Complete 3 Patron Crafting Orders — weekly quest rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops from orders as Glimmers of Knowledge (quality-dependent). ~19 KP total across all 4 weekly sources" },
@@ -341,9 +368,9 @@
             { id: "c4", text: "Second profession treatise", desc: "Craft or buy from AH — consume for 5 KP (one per profession per week). Tradeable and Warband-bound — an Inscription alt can craft and mail them to your main" }
         ]},
         { title: "World Weeklies and Quests", id: "world", tasks: [
-            { id: "w0", text: "Buy Rep Contract from Auction House", desc: "Maximise Reputation gains during activities" },
-            { id: "w1", text: "Campaign", desc: "Complete any new story chapter(s) — unlocks zone content, Renown, and faction progress" },
-            { id: "w2", text: "Lady Liadrin — Spark of Radiance quest", desc: "Pick up from Lady Liadrin in Silvermoon each reset — choose one of four weekly quests. Rewards Apex Cache (Coffer Key Shards, Voidlight Marl, Veteran Dawncrest, gold) + chance at Spark of Radiance. Second Spark available from Lor'themar's World Tour. Do not skip either!" },
+            { id: "w0", text: "Buy Rep Contract from AH", desc: "Maximize Reputation gains" },
+            { id: "w1", text: "Lady Liadrin — Spark of Radiance quest", desc: "Pick up from Lady Liadrin in Silvermoon each reset — choose one of four weekly quests. Rewards Apex Cache (Coffer Key Shards, Voidlight Marl, Veteran Dawncrest, gold) + chance at Spark of Radiance. Second Spark available from Lor'themar's World Tour. Do not skip either!" },
+            { id: "w2", text: "Campaign", desc: "Complete any new story chapter(s) — unlocks zone content, Renown, and faction progress" },
             { id: "w3", text: "Silvermoon weeklies", desc: "Weekly Dungeon quest from Halduron Brightwing (1,000 rep with chosen faction). Housing weekly from Vaeli outside the bank. Skip PvP and Pet Battle quests" },
             { id: "w4", text: "World Boss", desc: "Guaranteed Warbound ilvl 250 Champion gear (2/6). Rotates weekly: Lu'ashal, Cragpine, Thorm'belan, Predaxas. Do on alts too" },
             { id: "w5", text: "Singularity (Decimus / Voidforge)", desc: "Collect 3x Elementary Voidcore Shards from raids, Bountiful Delves, or M+ to progress the Voidforge with Decimus. Full Nebulous & Ascendant Voidcore system (targeted loot + item upgrades) unlocks in patch 12.0.5" }
@@ -352,8 +379,9 @@
             { id: "p1", text: "Prey - Nightmare x3 (Weekly Quest)", desc: "Nightmare unlocks at Rank 4 on Preyseeker's Journey (Journeys tab — not faction Renown). Weekly quest 'A Nightmarish Task' from Astalor in Murder Row. Rewards: Champion gear, 20 Hero Dawncrest (uncapped), 1x Beacon of Hope (summons Nullaeus in Delves). Fills Great Vault World slot" }
         ]},
         { title: "Delves", id: "delve", tasks: [
-            { id: "d1", text: "Bountiful Delves — Tier 11+ with Coffer Keys & Beacon of Hope from Prey weekly", desc: "Use Restored Coffer Keys on T11 — Trovehunter's Bounty Map guarantees a Hero gear piece. T11 Gilded Stashes give Hero Dawncrest; Delver's Journey Rank 4 adds Myth Dawncrest. Gear quality caps at T8 but T11 fills Great Vault Delve slot for Hero slot" },
-            { id: "d2", text: "Nullaeus ??", desc: "30 Hero Dawncrest + 30 Myth Dawncrest (both uncapped - ONE-TIME per season - 5 Hero and Myth thereafter) + title 'the Ominous'. Killing ?? first grants both rewards and skips the need to kill ? separately" }
+            { id: "d1", text: "Bountiful Delves — Tier 8+ with Coffer Keys", desc: "Use Restored Coffer Keys on T8+ — Trovehunter's Bounty Map guarantees a Hero gear piece. T11 Gilded Stashes give Hero Dawncrest; Delver's Journey Rank 4 adds Myth Dawncrest. Gear quality caps at T8. Fills Great Vault Delve slot" },
+            { id: "d2", text: "Nullaeus ? (ONE-TIME per season)", desc: "30 Hero Dawncrest (uncapped) + cosmetic helm 'Nullaeus Domaneye'. Summon via Beacon of Hope at any Restoration Stone in a Delve" },
+            { id: "d3", text: "Nullaeus ?? (ONE-TIME per season)", desc: "30 Hero Dawncrest + 30 Myth Dawncrest (both uncapped) + title 'the Ominous'. Killing ?? first grants both rewards and skips the need to kill ? separately" }
         ]},
         { title: "Faction Weeklies", id: "faction", tasks: [
             { id: "f1", text: "Singularity — Stormarion Assault (Voidstorm)", desc: "Quest: Stand Your Ground. Defend Stormarion Citadel (SW Voidstorm, every 30 mins). Rewards: Pinnacle Cache (gold, 100 Coffer Key Shards, Voidlight Marl, 20 Veteran Dawncrest) + 2,000 Singularity rep. First 2 caches/week include Veteran gear; first 4 include a Restored Coffer Key" },
@@ -408,9 +436,11 @@
         closeGroupModal();
         showToast(`Group "${n}" created`);
     }
+    // Close modal on overlay click
     document.getElementById('group-modal').addEventListener('click', function(e) {
         if (e.target === this) closeGroupModal();
     });
+    // Enter key in modal
     document.getElementById('group-name-input').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') confirmNewGroup();
         if (e.key === 'Escape') closeGroupModal();
@@ -504,9 +534,19 @@
     }
 
     function createGroupUI(group) {
-        const wrapper = document.createElement('div');
-        wrapper.className = "group-wrapper";
-        wrapper.innerHTML = `
+        const wrapper = document.createDocumentFragment();
+
+        // Specific trigger to add the End-Game Title before "Crafting"
+        if (group.title.toLowerCase() === "crafting") {
+            const sectionHeader = document.createElement('div');
+            sectionHeader.className = "section-big-title";
+            sectionHeader.innerText = "Absolute End-Game Weekly Checklist";
+            wrapper.appendChild(sectionHeader);
+        }
+
+        const div = document.createElement('div');
+        div.className = "group-wrapper";
+        div.innerHTML = `
             <div class="group-header-flex">
                 <span class="group-drag-handle" aria-hidden="true">⠿</span>
                 <div class="category-header">${escapeHTML(group.title)}</div>
@@ -515,25 +555,30 @@
             <table><tbody class="sortable-list" data-group="${group.id}"></tbody></table>
             <button class="btn-add-task" aria-label="Add task to group">+ Task</button>
         `;
-        const tbody = wrapper.querySelector('tbody');
+        const tbody = div.querySelector('tbody');
         group.tasks.forEach(t => tbody.appendChild(createTaskRow(t.id, t.text, t.desc, t.checked)));
         tbody.appendChild(createAddTaskRow(group.id));
 
-        wrapper.querySelector('.btn-add-task').addEventListener('click', () => {
+        div.querySelector('.btn-add-task').addEventListener('click', () => {
             const addRow = tbody.querySelector('.add-task-row');
             addRow.classList.add('visible');
             addRow.querySelector('.new-task-name').focus();
         });
 
-        wrapper.querySelector('.remove-group-btn').addEventListener('click', () => {
+        div.querySelector('.remove-group-btn').addEventListener('click', () => {
             if (confirm(`Delete group "${group.title}"?`)) {
-                wrapper.remove();
+                // If it's crafting, we should remove the section title too if it exists
+                if (group.title.toLowerCase() === "crafting" && div.previousElementSibling?.className === "section-big-title") {
+                    div.previousElementSibling.remove();
+                }
+                div.remove();
                 sync(); saveState();
                 updateEmptyState();
                 showToast("Group removed");
             }
         });
 
+        wrapper.appendChild(div);
         return wrapper;
     }
 
@@ -541,29 +586,31 @@
         CORE LOGIC
     ────────────────────────────────────────── */
     function sync() {
-        const allWrappers = document.querySelectorAll('.group-wrapper');
-        let totalCount = 0;
-        let checkedCount = 0;
+        const groups = document.querySelectorAll('.group-wrapper');
+        let total = 0;
+        let checked = 0;
 
-        allWrappers.forEach(gw => {
-            const title = gw.querySelector('.category-header').innerText.trim().toLowerCase();
+        groups.forEach(gw => {
+            const title = gw.querySelector('.category-header').innerText.toLowerCase();
             const tasks = gw.querySelectorAll('.prog-task');
-            const isExcluded = (title === "optional weeklies" || title === "reputation");
+            
+            const skipProgress = title.includes("fresh level 90") || 
+                               title.includes("optional weeklies") || 
+                               title.includes("reputation");
 
             tasks.forEach(cb => {
-                const row = cb.closest('tr');
-                if (cb.checked) row.classList.add('row-done');
-                else row.classList.remove('row-done');
+                const tr = cb.closest('tr');
+                if (cb.checked) tr.classList.add('row-done');
+                else tr.classList.remove('row-done');
 
-                // Only count toward progress if group is NOT excluded
-                if (!isExcluded) {
-                    totalCount++;
-                    if (cb.checked) checkedCount++;
+                if (!skipProgress) {
+                    total++;
+                    if (cb.checked) checked++;
                 }
             });
         });
 
-        const perc = totalCount ? Math.round((checkedCount / totalCount) * 100) : 0;
+        const perc = total === 0 ? 0 : Math.round((checked / total) * 100);
         document.getElementById('percent-text').innerText = perc + '%';
         document.getElementById('bar-fill').style.width = perc + '%';
     }
@@ -579,7 +626,7 @@
 
     function updateEmptyState() {
         const container = document.getElementById('task-groups-container');
-        if (container.children.length === 0) {
+        if (container.querySelectorAll('.group-wrapper').length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
                     <span>🗺️</span>
@@ -593,10 +640,10 @@
     }
 
     function saveState() {
-        const groups = [];
+        const data = [];
         document.querySelectorAll('.group-wrapper').forEach(gw => {
             const tasks = [];
-            gw.querySelectorAll('tr[data-id]').forEach(tr => {
+            gw.querySelectorAll('tbody tr[data-id]').forEach(tr => {
                 tasks.push({
                     id: tr.dataset.id,
                     text: tr.querySelector('.action-text').innerText,
@@ -604,13 +651,13 @@
                     checked: tr.querySelector('.prog-task').checked
                 });
             });
-            groups.push({
+            data.push({
                 title: gw.querySelector('.category-header').innerText,
                 id: gw.querySelector('.sortable-list').dataset.group,
                 tasks: tasks
             });
         });
-        localStorage.setItem('huskysham_v2', JSON.stringify(groups));
+        localStorage.setItem('huskysham_v2', JSON.stringify(data));
     }
 
     function loadState() {
@@ -619,6 +666,7 @@
         const saved = localStorage.getItem('huskysham_v2');
         const data = saved ? JSON.parse(saved) : defaultData;
         data.forEach(g => container.appendChild(createGroupUI(g)));
+        
         document.querySelectorAll('.sortable-list').forEach(initSortableGroup);
         initSortableContainer(container);
         updateEmptyState();
@@ -643,7 +691,7 @@
 
     function exportData() {
         const data = localStorage.getItem('huskysham_v2') || JSON.stringify(defaultData);
-        const blob = new Blob([data], { type: 'application/json' });
+        const blob = new Blob([data], {type: 'application/json'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -668,9 +716,9 @@
                 } catch (err) {
                     alert("Error parsing file.");
                 }
-            };
+            }
             reader.readAsText(file);
-        };
+        }
         input.click();
     }
 
@@ -684,7 +732,11 @@
     function initSortableContainer(el) {
         new Sortable(el, {
             animation: 150, handle: '.group-drag-handle', ghostClass: 'sortable-ghost',
-            onEnd: () => { saveState(); }
+            onEnd: () => { 
+                // Re-rendering on end to preserve the special title placement if groups are moved
+                saveState(); 
+                loadState(); 
+            }
         });
     }
 
