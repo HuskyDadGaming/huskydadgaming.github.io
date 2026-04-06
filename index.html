@@ -359,7 +359,7 @@
             { id: "f90_7", text: "Delves - Claim Key Shards", desc: "Claim 200 free coffer key shards from the Delve Vendor - This can go over cap, one time only / Unlock Tier 8 and spend Coffer Keys on Bountiful for Champion Gear / Unlock Rank 4 'Gilded Jackpot'" },
             { id: "f90_8", text: "Voidstorm Weeklies (Stormarion Assault)", desc: "Singularity Renown 7 progression (Champion Trinket)" },
             { id: "f90_9", text: "Voidstorm Weeklies (Decimus)", desc: "Decimus Storyline - To start working on the Elemental Voidcores, unlocked with 6 Voidcores" },
-            { id: "f90_10", text: "Eversong Weeklies (Saltheril’s Soiree)", desc: "Silvermoon Renown 9 (Champion Head) - Sink all favors into one rep **Blood Knights for Transmog**" }
+            { id: "f90_10", text: "Eversong Weeklies (Saltheril's Soiree)", desc: "Silvermoon Renown 9 (Champion Head) - Sink all favors into one rep **Blood Knights for Transmog**" }
         ]},
         { title: "Crafting", id: "craft", tasks: [
             { id: "c1", text: "First profession patron weekly", desc: "Complete 3 Patron Crafting Orders — weekly quest rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops from orders as Glimmers of Knowledge (quality-dependent). ~19 KP total across all 4 weekly sources" },
@@ -399,6 +399,12 @@
             { id: "r4", text: "Amani-Tribe — target Renown 9", desc: "Renown 9: Champion necklace ilvl 246 — two stat choices: Haste/Crit or Mastery/Vers. Warband-wide. Lower priority — neck has no primary stats, secondary stat optimisation only" }
         ]}
     ];
+
+    // Groups that count toward total progress (by id)
+    const PROGRESS_GROUP_IDS = new Set(["craft", "world", "prey", "delve", "faction"]);
+
+    // Groups that are protected from the weekly clear (by id)
+    const CLEAR_PROTECTED_IDS = new Set(["fresh90", "rep"]);
 
     /* ──────────────────────────────────────────
         TOAST
@@ -590,19 +596,16 @@
         let checked = 0;
 
         groups.forEach(gw => {
-            const title = gw.querySelector('.category-header').innerText.toLowerCase();
+            const groupId = gw.querySelector('.sortable-list')?.dataset.group;
             const tasks = gw.querySelectorAll('.prog-task');
-            
-            const skipProgress = title.includes("fresh level 90") || 
-                               title.includes("optional weeklies") || 
-                               title.includes("reputation");
+            const countsForProgress = PROGRESS_GROUP_IDS.has(groupId);
 
             tasks.forEach(cb => {
                 const tr = cb.closest('tr');
                 if (cb.checked) tr.classList.add('row-done');
                 else tr.classList.remove('row-done');
 
-                if (!skipProgress) {
+                if (countsForProgress) {
                     total++;
                     if (cb.checked) checked++;
                 }
@@ -673,8 +676,13 @@
     }
 
     function weeklyReset() {
-        if (confirm("Reset all checkboxes for a new week?")) {
-            document.querySelectorAll('.prog-task').forEach(cb => cb.checked = false);
+        if (confirm("Reset all checkboxes for a new week?\n\n(Fresh Level 90 Checklist and Reputation will not be cleared)")) {
+            document.querySelectorAll('.group-wrapper').forEach(gw => {
+                const groupId = gw.querySelector('.sortable-list')?.dataset.group;
+                if (!CLEAR_PROTECTED_IDS.has(groupId)) {
+                    gw.querySelectorAll('.prog-task').forEach(cb => cb.checked = false);
+                }
+            });
             sync(); saveState();
             showToast("Progress cleared for the week!");
         }
