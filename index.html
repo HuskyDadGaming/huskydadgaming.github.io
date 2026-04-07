@@ -131,9 +131,10 @@ body{background:linear-gradient(-45deg,#050308,#130026,#000c1a,#1a0033);backgrou
 /* CHAR GROUPS */
 .char-group-wrapper{margin:0 0 14px 0}
 .char-group-header-flex{display:flex;align-items:center;gap:9px;margin-bottom:7px}
-.char-category-header{color:var(--blue);font-size:0.78rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:6px;flex:1 1 0;min-width:0;flex-wrap:wrap}
+.char-category-header{color:var(--blue);font-size:0.78rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:4px;flex:1 1 0;min-width:0;overflow:hidden}
 .char-category-header::after{content:none}
-.group-chevron{color:var(--dim);font-size:0.75rem;transition:transform 0.25s ease;flex-shrink:0;margin-left:auto;align-self:center}
+.group-title-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex-shrink:1}
+.group-chevron{color:var(--dim);font-size:0.75rem;transition:transform 0.25s ease;flex-shrink:0;margin-left:2px;align-self:center}
 .group-progress-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:4px}
 .group-progress-bar-bg{width:70px;height:5px;background:#000;border-radius:3px;border:1px solid #1a1a1a;overflow:hidden}
 .group-progress-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--void-highlight),var(--blue));border-radius:3px;transition:width 0.4s ease}
@@ -162,7 +163,7 @@ body{background:linear-gradient(-45deg,#050308,#130026,#000c1a,#1a0033);backgrou
 .group-drag-handle{color:var(--dim);cursor:grab;font-size:1.1rem;user-select:none}
 .remove-group-btn{color:var(--dim);background:rgba(255,255,255,0.04);border:1px solid var(--border);cursor:pointer;font-size:0.58rem;text-transform:uppercase;padding:3px 7px;border-radius:4px;font-weight:bold;transition:color 0.2s,border-color 0.2s}
 .remove-group-btn:hover{color:var(--danger);border-color:var(--danger)}
-.category-header{color:var(--blue);font-size:0.88rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:6px;flex:1 1 0;min-width:0;flex-wrap:wrap}
+.category-header{color:var(--blue);font-size:0.88rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:4px;flex:1 1 0;min-width:0;overflow:hidden}
 .category-header::after{content:none}
 
 /* TABLES */
@@ -280,14 +281,17 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
   .char-chevron{order:12;flex-shrink:0}
 
   /* ── GROUP HEADERS: single tight row on mobile ── */
-  .group-header-flex,.char-group-header-flex{gap:5px;flex-wrap:nowrap;align-items:center}
+  .group-header-flex,.char-group-header-flex{gap:4px;flex-wrap:nowrap;align-items:center}
+  .category-header{font-size:0.72rem;gap:3px}
+  .char-category-header{font-size:0.68rem;gap:3px}
 
   /* Shrink the progress bar on mobile to save space */
-  .group-progress-bar-bg{width:36px}
-  .group-progress-pct{font-size:0.58rem;min-width:22px}
+  .group-progress-bar-bg{width:32px}
+  .group-progress-pct{font-size:0.56rem;min-width:20px}
+  .group-progress-wrap{gap:3px;margin-left:2px}
 
   /* Remove button smaller on mobile */
-  .remove-group-btn{font-size:0.52rem;padding:2px 5px}
+  .remove-group-btn{font-size:0.5rem;padding:2px 4px;letter-spacing:0}
 }
 </style>
 </head>
@@ -614,7 +618,7 @@ function buildGroup(group, listRef, onSync, onSave, compact){
   const gid_safe=group.id.replace(/[^a-zA-Z0-9_]/g,'_');
   const hf=document.createElement('div');
   hf.className=compact?'char-group-header-flex':'group-header-flex';
-  hf.innerHTML=`<span class="${compact?'drag-icon':'group-drag-handle'}" style="cursor:grab;color:var(--void-glow);font-size:0.95rem;flex-shrink:0">⠿</span><input type="checkbox" class="sel-all" title="Select/Deselect All" style="margin:0;flex-shrink:0"><div class="${compact?'char-category-header':'category-header'}">${esc(group.title)}<span class="group-chevron">▼</span></div><div class="group-progress-wrap"><div class="group-progress-bar-bg"><div class="group-progress-bar-fill" id="gpbar_${gid_safe}"></div></div><span class="group-progress-pct" id="gppct_${gid_safe}">0%</span></div><button class="remove-group-btn">Remove</button>`;
+  hf.innerHTML=`<span class="${compact?'drag-icon':'group-drag-handle'}" style="cursor:grab;color:var(--void-glow);font-size:0.95rem;flex-shrink:0">⠿</span><input type="checkbox" class="sel-all" title="Select/Deselect All" style="margin:0;flex-shrink:0"><div class="${compact?'char-category-header':'category-header'}"><span class="group-title-text">${esc(group.title)}</span><span class="group-chevron">▼</span></div><div class="group-progress-wrap"><div class="group-progress-bar-bg"><div class="group-progress-bar-fill" id="gpbar_${gid_safe}"></div></div><span class="group-progress-pct" id="gppct_${gid_safe}">0%</span></div><button class="remove-group-btn">Remove</button>`;
   wrap.appendChild(hf);
 
   // Grab bar elements directly from hf (works before and after DOM insertion)
@@ -1134,7 +1138,7 @@ function weeklyReset(){
   }));
   collapseAll(APP.realms, APP.shared);
   saveRealms(); saveShared();
-  renderRealms(); renderShared();
+  renderRealms(); renderShared(); window.scrollTo(0,0);
   showToast('Weekly progress cleared!');
 }
 
@@ -1173,7 +1177,7 @@ function resetToDefault(){
   APP.shared=clone(SHARED_DEFAULT);
   collapseAll(APP.realms, APP.shared);
   saveRealms(); saveShared();
-  renderRealms(); renderShared();
+  renderRealms(); renderShared(); window.scrollTo(0,0);
   showToast('Restored to default');
 }
 
