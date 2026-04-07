@@ -131,10 +131,10 @@ body{background:linear-gradient(-45deg,#050308,#130026,#000c1a,#1a0033);backgrou
 /* CHAR GROUPS */
 .char-group-wrapper{margin:0 0 14px 0}
 .char-group-header-flex{display:flex;align-items:center;gap:9px;margin-bottom:7px}
-.char-category-header{color:var(--blue);font-size:0.78rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:8px;flex-grow:1}
-.char-category-header::after{content:"";flex:1;height:1px;background:linear-gradient(to right,var(--void-highlight),transparent);opacity:0.45;margin-left:7px}
+.char-category-header{color:var(--blue);font-size:0.78rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:6px;flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.char-category-header::after{content:none}
 .group-chevron{color:var(--dim);font-size:0.75rem;transition:transform 0.25s ease;flex-shrink:0;margin-left:2px}
-.group-progress-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.group-progress-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:4px}
 .group-progress-bar-bg{width:70px;height:5px;background:#000;border-radius:3px;border:1px solid #1a1a1a;overflow:hidden}
 .group-progress-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--void-highlight),var(--blue));border-radius:3px;transition:width 0.4s ease}
 .group-progress-pct{font-size:0.62rem;font-weight:900;color:var(--blue);min-width:26px;text-align:right}
@@ -162,8 +162,8 @@ body{background:linear-gradient(-45deg,#050308,#130026,#000c1a,#1a0033);backgrou
 .group-drag-handle{color:var(--dim);cursor:grab;font-size:1.1rem;user-select:none}
 .remove-group-btn{color:var(--dim);background:rgba(255,255,255,0.04);border:1px solid var(--border);cursor:pointer;font-size:0.58rem;text-transform:uppercase;padding:3px 7px;border-radius:4px;font-weight:bold;transition:color 0.2s,border-color 0.2s}
 .remove-group-btn:hover{color:var(--danger);border-color:var(--danger)}
-.category-header{color:var(--blue);font-size:0.88rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:10px;flex-grow:1}
-.category-header::after{content:"";flex:1;height:1px;background:linear-gradient(to right,var(--void-highlight),transparent);opacity:0.55;margin-left:10px}
+.category-header{color:var(--blue);font-size:0.88rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:6px;flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.category-header::after{content:none}
 
 /* TABLES */
 table{width:100%;border-collapse:collapse;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:6px}
@@ -279,31 +279,15 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
   .char-header .sm-btn[id^="rmchar"]{order:11;flex-shrink:0}
   .char-chevron{order:12;flex-shrink:0}
 
-  /* ── GROUP HEADERS: two-row layout on mobile ──
-     Row 1: drag ⠿ · checkbox · title text (full width, nowrap)
-     Row 2: progress bar + % + chevron + Remove button             */
-  .group-header-flex,.char-group-header-flex{flex-wrap:wrap;gap:6px;align-items:center}
+  /* ── GROUP HEADERS: single tight row on mobile ── */
+  .group-header-flex,.char-group-header-flex{gap:5px;flex-wrap:nowrap;align-items:center}
 
-  /* Title div takes full remaining width on row 1, never wraps text */
-  .category-header,.char-category-header{
-    flex:1 1 auto;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    min-width:0;
-    gap:4px;
-  }
+  /* Shrink the progress bar on mobile to save space */
+  .group-progress-bar-bg{width:36px}
+  .group-progress-pct{font-size:0.58rem;min-width:22px}
 
-  /* Progress bar + chevron sit inside the category-header div — keep them visible */
-  .group-progress-wrap{flex-shrink:0}
-  .group-progress-bar-bg{width:50px}
-
-  /* Remove button drops to its own full-width row below */
-  .remove-group-btn{
-    order:10;
-    margin-left:auto;
-    flex-shrink:0;
-  }
+  /* Remove button smaller on mobile */
+  .remove-group-btn{font-size:0.52rem;padding:2px 5px}
 }
 </style>
 </head>
@@ -630,7 +614,7 @@ function buildGroup(group, listRef, onSync, onSave, compact){
   const gid_safe=group.id.replace(/[^a-zA-Z0-9_]/g,'_');
   const hf=document.createElement('div');
   hf.className=compact?'char-group-header-flex':'group-header-flex';
-  hf.innerHTML=`<span class="${compact?'drag-icon':'group-drag-handle'}" style="cursor:grab;color:var(--void-glow);font-size:0.95rem">⠿</span><input type="checkbox" class="sel-all" title="Select/Deselect All" style="margin:0"><div class="${compact?'char-category-header':'category-header'}" style="gap:6px">${esc(group.title)}<div class="group-progress-wrap"><div class="group-progress-bar-bg"><div class="group-progress-bar-fill" id="gpbar_${gid_safe}"></div></div><span class="group-progress-pct" id="gppct_${gid_safe}">0%</span></div><span class="group-chevron">▼</span></div><button class="remove-group-btn">Remove</button>`;
+  hf.innerHTML=`<span class="${compact?'drag-icon':'group-drag-handle'}" style="cursor:grab;color:var(--void-glow);font-size:0.95rem;flex-shrink:0">⠿</span><input type="checkbox" class="sel-all" title="Select/Deselect All" style="margin:0;flex-shrink:0"><div class="${compact?'char-category-header':'category-header'}">${esc(group.title)}<span class="group-chevron">▼</span></div><div class="group-progress-wrap"><div class="group-progress-bar-bg"><div class="group-progress-bar-fill" id="gpbar_${gid_safe}"></div></div><span class="group-progress-pct" id="gppct_${gid_safe}">0%</span></div><button class="remove-group-btn">Remove</button>`;
   wrap.appendChild(hf);
 
   // Grab bar elements directly from hf (works before and after DOM insertion)
@@ -1196,7 +1180,7 @@ function resetToDefault(){
 /* ══════════════════════════════════════════════════════
    INIT
 ══════════════════════════════════════════════════════ */
-window.onload=()=>{ renderRealms(); renderShared(); };
+window.onload=()=>{ renderRealms(); renderShared(); window.scrollTo(0,0); };
 </script>
 </body>
 </html>
