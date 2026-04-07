@@ -131,9 +131,9 @@ body{background:linear-gradient(-45deg,#050308,#130026,#000c1a,#1a0033);backgrou
 /* CHAR GROUPS */
 .char-group-wrapper{margin:0 0 14px 0}
 .char-group-header-flex{display:flex;align-items:center;gap:9px;margin-bottom:7px}
-.char-category-header{color:var(--blue);font-size:0.78rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:6px;flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.char-category-header{color:var(--blue);font-size:0.78rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:6px;flex:1 1 0;min-width:0;flex-wrap:wrap}
 .char-category-header::after{content:none}
-.group-chevron{color:var(--dim);font-size:0.75rem;transition:transform 0.25s ease;flex-shrink:0;margin-left:2px}
+.group-chevron{color:var(--dim);font-size:0.75rem;transition:transform 0.25s ease;flex-shrink:0;margin-left:auto;align-self:center}
 .group-progress-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:4px}
 .group-progress-bar-bg{width:70px;height:5px;background:#000;border-radius:3px;border:1px solid #1a1a1a;overflow:hidden}
 .group-progress-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--void-highlight),var(--blue));border-radius:3px;transition:width 0.4s ease}
@@ -162,7 +162,7 @@ body{background:linear-gradient(-45deg,#050308,#130026,#000c1a,#1a0033);backgrou
 .group-drag-handle{color:var(--dim);cursor:grab;font-size:1.1rem;user-select:none}
 .remove-group-btn{color:var(--dim);background:rgba(255,255,255,0.04);border:1px solid var(--border);cursor:pointer;font-size:0.58rem;text-transform:uppercase;padding:3px 7px;border-radius:4px;font-weight:bold;transition:color 0.2s,border-color 0.2s}
 .remove-group-btn:hover{color:var(--danger);border-color:var(--danger)}
-.category-header{color:var(--blue);font-size:0.88rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:6px;flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.category-header{color:var(--blue);font-size:0.88rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:6px;flex:1 1 0;min-width:0;flex-wrap:wrap}
 .category-header::after{content:none}
 
 /* TABLES */
