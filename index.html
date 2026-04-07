@@ -316,7 +316,7 @@ border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacin
 
 <div class="section-divider"><div class="category-header">Gearing Tracks</div></div>
 <div class="track-card">
-<div class="track-item"><div style="color:var(--green)">ADVENTURER</div><div>220-230</div></div>
+<div class="track-item"><div style="color:var(--green)">ADVENTURER</div><div>220-237</div></div>
 <div class="track-item"><div style="color:var(--blue)">VETERAN</div><div>233-243</div></div>
 <div class="track-item"><div style="color:var(--accent)">CHAMPION</div><div>246-256</div></div>
 <div class="track-item"><div style="color:var(--gold)">HERO</div><div>259-269</div></div>
@@ -353,15 +353,22 @@ border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacin
 <script>
 const defaultData = [
 { title: "Fresh Level 90 Checklist", id: "fresh90", tasks: [
-{ id: "f90_1", text: "Buy Singularity reputation contract", desc: "Renown 7 - Quest for trinket (Crucible of Erratic Energies) **Priority" },
-{ id: "f90_2", text: "Silvermoon Weeklies", desc: "Pickup first before heading out to do any activities - Rewards crafting spark" },
-{ id: "f90_3", text: "Player Housing", desc: "Quick easy weekly quest - Rewards crest bundles" },
-{ id: "f90_4", text: "World Boss", desc: "Quick easy weekly for chance of Champion gear ilvl250" },
-{ id: "f90_5", text: "World Quests", desc: "Adventurer gear (ilvl 220-230), quick useful for early gearing" },
-{ id: "f90_6", text: "Prey - Normal & Hard", desc: "x2 Adv gear chests + Adventurer crests / x2 Vet gear chests + Veteran crests / Renown 4 - Unlocks Nightmare (Rewards x2 chests per mode, crests thereafter) **Priority" },
-{ id: "f90_7", text: "Delves - Claim Key Shards", desc: "Claim 200 free coffer key shards from the Delve Vendor - This can go over cap, one time only / Unlock Tier 8 and spend Coffer Keys on Bountiful for Champion Gear / Unlock Rank 4 'Gilded Jackpot'" },
-{ id: "f90_8", text: "Voidstorm Weeklies (Stormarion Assault)", desc: "Singularity Renown 7 progression (Champion Trinket)" },
-{ id: "f90_9", text: "Voidstorm Weeklies (Decimus)", desc: "Decimus Storyline - To start working on the Elemental Voidcores, unlocked with 6 Voidcores" },
+{ id: "f90_0a", text: "✅ STEP 1 — Complete the Main Campaign (all 17 chapters)", desc: "REQUIRED before any endgame unlocks. World Quests, Prey, faction weeklies, and Silvermoon hub features are ALL locked until this is done. Finishing grants the 'Midnight' achievement and unlocks Adventure Mode for every alt on your account. If you dinged 90 mid-campaign, go back and finish it" },
+{ id: "f90_0b", text: "✅ STEP 2 — Set Hearthstone to Silvermoon City", desc: "Silvermoon is your endgame hub: Great Vault (bank), Upgrade Vendor Cuzolth (48.3, 61.7), Matrix Catalyst (Sanctum of Light 40.6, 64.6), Lady Liadrin (Spark quest), Halduron (dungeon weekly), and the Arcantina portal are all here. Set it now and save travel time every session" },
+{ id: "f90_0c", text: "✅ STEP 3 — Confirm Arcantina Hub is Unlocked", desc: "Rewarded as part of the Arator's Journey campaign branch (Key to the Arcantina). This hub is the portal to all major weekly content areas. If you skipped Arator's Journey during leveling, pick up the unlock quest in Silvermoon" },
+{ id: "f90_0d", text: "✅ STEP 4 — Unlock Prey: Speak to Astalor in Murder Row", desc: "After campaign completion, visit Magister Astalor Bloodsworn in the Murder Row district of Silvermoon City to activate the Prey system. This is NOT automatic — you must talk to him. Prey is one of your primary weekly gear sources" },
+{ id: "f90_1", text: "✅ STEP 5 — Buy Singularity Reputation Contract (AH)", desc: "Buy before doing any activities so rep gains stack immediately. Singularity Renown 7 rewards the Crucible of Erratic Energies trinket (Champion ilvl 246) — one of the highest-value early gear pieces. **Priority**" },
+{ id: "f90_2", text: "✅ STEP 6 — Pick Up All Silvermoon Weeklies First", desc: "Before leaving Silvermoon each week: Lady Liadrin (Spark of Radiance quest), Halduron Brightwing (dungeon weekly for 1,000 rep), Vaeli outside the bank (Housing weekly). Picking these up first lets you complete them passively while doing other content" },
+{ id: "f90_3a", text: "✅ STEP 7 — Run Normal Dungeons (until ilvl 220+)", desc: "Queue immediately after hitting 90. Normal dungeons drop ilvl 213 base gear (upgradeable to 237). Run each dungeon 2–3 times to fill weak slots. No enrage timers — fresh players are fine. Target: ilvl 220+ before moving to Heroic. Also fills Great Vault dungeon slots" },
+{ id: "f90_3b", text: "✅ STEP 8 — Run Heroic Dungeons (until ilvl 235+)", desc: "Once ilvl 220+, switch to Heroic. Drops ilvl 226 base gear (upgradeable to 250 with Veteran Dawncrests). Run each Heroic dungeon 2–3 times. Target: ilvl 235–240, which is the Mythic 0 readiness threshold. Fills Great Vault dungeon slots" },
+{ id: "f90_3c", text: "✅ STEP 9 — Mythic 0 World Tour (all 8 dungeons)", desc: "Once ilvl 235+, run every Mythic 0 dungeon at least once. M0 drops ilvl 239 base gear (upgradeable to 256 with Champion crests). Run each dungeon once minimum — this is your fast highway from fresh 90 to pre-raid readiness. Fills Great Vault dungeon slots" },
+{ id: "f90_4", text: "✅ STEP 10 — World Boss", desc: "Quick weekly for a guaranteed Warbound ilvl 250 Champion gear piece (2/6). Rotates weekly: Lu'ashal, Cragpine, Thorm'belan, Predaxas. Do on alts too once unlocked" },
+{ id: "f90_5", text: "✅ STEP 11 — World Quests", desc: "Adventurer gear (ilvl 220–237). Quick and useful for filling early gear gaps while working toward Heroic/M0. Check for gear WQs in weak slots only — not worth detours for ones giving non-gear rewards yet" },
+{ id: "f90_6", text: "✅ STEP 12 — Prey: Normal then Hard", desc: "Normal (×2/week): Adventurer gear + Adventurer crests. Hard (×4/week): Veteran gear + Veteran crests. Push to Hard difficulty ASAP — substantially better rewards. Speak to Astalor to track hunts. Preyseeker's Journey Rank 4 unlocks Nightmare (Champion gear + Hero Dawncrest — endgame tier)" },
+{ id: "f90_7", text: "✅ STEP 13 — Delves: Claim Free Key Shards + Progress Tiers", desc: "Claim 200 free Coffer Key Shards from the Delve Vendor (one-time only, can go over cap). Push Delve tiers progressively — T7 gives ilvl ~224, T8 is the big breakpoint (Champion gear + fills Great Vault at Hero track). Unlock Delver's Journey Rank 4 for Gilded Jackpot" },
+{ id: "f90_3", text: "✅ STEP 14 — Player Housing Weekly", desc: "Quick easy weekly quest from Vaeli outside the Silvermoon bank. Rewards crest bundles. Never skip — it's 5 minutes of work for free currency" },
+{ id: "f90_8", text: "✅ STEP 15 — Voidstorm Weeklies: Stormarion Assault", desc: "Quest: Stand Your Ground in Stormarion Citadel (SW Voidstorm, every 30 mins). Earns 2,000 Singularity rep per completion toward Renown 7 (Champion trinket). First 4 caches/week include a Restored Coffer Key" },
+{ id: "f90_9", text: "✅ STEP 16 — Voidstorm Weeklies: Decimus Storyline", desc: "Start the Decimus storyline to begin collecting Elemental Voidcores. The full Voidforge system (Nebulous & Ascendant Voidcores for targeted loot + item upgrades) unlocks in patch 12.0.5 — but start earning Voidcores now. Requires 6 Voidcores to unlock" },
 ]},
 { title: "Reputation", id: "rep", tasks: [
 { id: "r1", text: "Singularity — target Renown 7", desc: "Renown 7: Champion trinket ilvl 246 (Crucible of Erratic Energies) — priority pick, high-value slot. Renown 2 unlocks Research Console (1 Void Sample/week from 3 Voidstorm WQs). Each rank = 2,500 rep. Warband-wide" },
@@ -376,19 +383,24 @@ const defaultData = [
 { id: "c4", text: "Second profession treatise", desc: "Craft or buy from AH — consume for 5 KP (one per profession per week). Tradeable and Warband-bound — an Inscription alt can craft and mail them to your main" }
 ]},
 { title: "World Weeklies and Quests", id: "world", tasks: [
+{ id: "w_gv", text: "Claim Great Vault (Weekly Reset — Do First!)", desc: "Located in the Silvermoon bank (neutral side). Choose your best item from up to 9 unlocked options (Dungeons, World, Raids tracks). Vault ilvl scales with your best key/delve/boss of the prior week. This is your single most reliable weekly upgrade — never miss it" },
 { id: "w0", text: "Buy Rep Contract from Auction House", desc: "Maximise Reputation gains during activities" },
 { id: "w1", text: "Campaign", desc: "Complete any new story chapter(s) — unlocks zone content, Renown, and faction progress" },
 { id: "w2", text: "Lady Liadrin — Spark of Radiance quest", desc: "Pick up from Lady Liadrin in Silvermoon each reset — choose one of four weekly quests. Rewards Apex Cache (Coffer Key Shards, Voidlight Marl, Veteran Dawncrest, gold) + chance at Spark of Radiance. Second Spark available from Lor'themar's World Tour. Do not skip either!"
 },
 { id: "w3", text: "Silvermoon weeklies", desc: "Weekly Dungeon quest from Halduron Brightwing (1,000 rep with chosen faction). Housing weekly from Vaeli outside the bank. Skip PvP and Pet Battle quests" },
 { id: "w4", text: "World Boss", desc: "Guaranteed Warbound ilvl 250 Champion gear (2/6). Rotates weekly: Lu'ashal, Cragpine, Thorm'belan, Predaxas. Do on alts too" },
-{ id: "w5", text: "Singularity (Decimus / Voidforge)", desc: "Collect 3x Elementary Voidcore Shards from raids, Bountiful Delves, or M+ to progress the Voidforge with Decimus. Full Nebulous & Ascendant Voidcore system (targeted loot + item upgrades) unlocks in patch 12.0.5" }
+{ id: "w5", text: "Singularity (Decimus / Voidforge)", desc: "Collect 3x Elementary Voidcore Shards from raids, Bountiful Delves, or M+ to progress the Voidforge with Decimus. Full Nebulous & Ascendant Voidcore system (targeted loot + item upgrades) unlocks in patch 12.0.5" },
+{ id: "w_mplus", text: "Mythic+ Dungeons — aim for 8 runs", desc: "1 dungeon = 1st Vault slot. 4 dungeons = 2nd slot. 8 dungeons = 3rd slot. Vault ilvl is based on your highest (+1 slot), 4th highest (+2 slot), and 8th highest (+3 slot) key. Push the highest key you can cleanly finish — ideally +7 to +10 for Hero-track Vault rewards. Also earns Dawncrest for upgrades" },
+{ id: "w_catalyst", text: "Matrix Catalyst — Spend Charge (if available)", desc: "Located in Silvermoon City (Sanctum of Light 40.6, 64.6). 1 charge every 2 weeks automatically. Converts any eligible non-tier armor piece into your class Tier Set piece (same ilvl). Priority: use on your highest ilvl armor slot you need for your 4-piece bonus. Getting your 4-set unlocks Catalyst Unbound — extra charges then drop from bosses/content" },
+{ id: "w_lfr", text: "LFR — Queue for Tier Set pieces (until 4-set complete)", desc: "LFR drops Veteran-track gear but is your fastest path to the 4-piece Tier Set bonus. The 4-piece is a major DPS/HPS jump AND unlocks Catalyst Unbound achievement, allowing bonus catalyst charges to drop from endgame content. Skip once you have all 4 pieces" },
+{ id: "w_upgrade", text: "Spend Dawncrests at Upgrade Vendor", desc: "Cuzolth (Item Upgrade Vendor) is at 48.3, 61.7 in Silvermoon City. Never sit on capped crests — upgrade your weakest gear slot first. Priority order: Weapon → Trinkets → Chest/Head/Legs → Shoulders/Hands/Feet → Cloak/Bracers/Belt → Rings/Neck" }
 ]},
 { title: "Prey", id: "prey", tasks: [
 { id: "p1", text: "Prey - Nightmare x3 (Weekly Quest)", desc: "Nightmare unlocks at Rank 4 on Preyseeker's Journey (Journeys tab — not faction Renown). Weekly quest 'A Nightmarish Task' from Astalor in Murder Row. Rewards: Champion gear, 20 Hero Dawncrest (uncapped), 1x Beacon of Hope (summons Nullaeus in Delves). Fills Great Vault World slot" }
 ]},
 { title: "Delves", id: "delve", tasks: [
-{ id: "d1", text: "Bountiful Delves — Tier 11+ with Coffer Keys & Beacon of Hope from Prey weekly", desc: "Use Restored Coffer Keys on T11 — Trovehunter's Bounty Map guarantees a Hero gear piece. T11 Gilded Stashes give Hero Dawncrest; Delver's Journey Rank 4 adds Myth Dawncrest. Gear quality caps at T8 BUT T11 fills Great Vault Delve slot for Hero slot" },
+{ id: "d1", text: "Bountiful Delves — Tier 11+ with Coffer Keys & Beacon of Hope from Prey weekly", desc: "End-of-run chest gear caps at T8 (Champion track). T8+ Delves fill the Great Vault World slot at Hero track. T11 Gilded Stashes (via Delver's Journey Rank 4) give Hero + Myth Dawncrest. Use Restored Coffer Keys on T11 — Trovehunter's Bounty Map guarantees a Hero gear piece." },
 { id: "d2", text: "Nullaeus ??", desc: "30 Hero Dawncrest + 30 Myth Dawncrest (both uncapped - ONE-TIME per season - 5 Hero and Myth thereafter) + title 'the Ominous'. Killing ?? first grants both rewards and skips the need to kill ? separately" }
 ]},
 { title: "Faction Weeklies", id: "faction", tasks: [
@@ -398,7 +410,8 @@ const defaultData = [
 { id: "f4", text: "Amani-Tribe — The Abundance (Zul'Aman / all zones)", desc: "Earn 20,000 Abundance points for weekly quest. Rewards: 1,000 Amani Tribe rep + Pinnacle Cache. Use up to 8x Shards of Dundun/week to earn Unalloyed Abundance currency — spend on mounts and profession knowledge items" }
 ]},
 { title: "Optional Weeklies", id: "optional", tasks: [
-{ id: "ow1", text: "Special Assignments", desc: "Complete 3 World Quests in a zone to unlock — rewards rep with chosen faction + zone currency" },
+{ id: "ow1", text: "Special Assignments", desc: "Complete 3 World Quests in a zone to unlock — rewards a Pinnacle Cache (gear, crests, Coffer Key Shards) + rep with the associated zone faction" },
+{ id: "ow2", text: "Timewalking (when active)", desc: "Pick up the Timewalking dungeon quest from the hub in Orgrimmar/Stormwind. The associated Timewalking raid quest (e.g. Firelands for Cataclysm TW) rewards Hero-track loot. TW dungeons count as Heroic dungeons for Great Vault dungeon slot progress — do 8 if active this week" }
 ]}
 ];
 
