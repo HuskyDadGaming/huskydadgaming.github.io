@@ -198,8 +198,15 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
 .track-item{padding:8px 4px}
 .track-item .track-name{font-weight:800;font-size:0.8rem;letter-spacing:0.5px;display:block;margin-bottom:3px}
 .track-item .track-range{font-size:0.75rem;color:var(--dim);display:block}
-.priority-table th{text-align:left;color:var(--gold);font-size:0.7rem;text-transform:uppercase;padding:12px;border-bottom:2px solid var(--border)}
-.priority-table td:first-child{font-weight:700;color:#fff;width:190px;border-right:1px solid var(--border);vertical-align:middle}
+.priority-table thead{display:none}
+.priority-table,.priority-table tbody,.priority-table tr,.priority-table td{display:block;width:100%;box-sizing:border-box}
+.priority-table tr{border-bottom:2px solid var(--border)}
+.priority-table td:first-child{
+  background:rgba(138,43,226,0.14);color:#fff;font-weight:900;
+  font-size:0.9rem;padding:12px 15px;border-right:none!important;
+  border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:1px
+}
+.priority-table td:last-child{padding:14px 15px}
 
 /* EMPTY STATE */
 .empty-realm-state{text-align:center;padding:22px;color:var(--dim);border:2px dashed var(--border);border-radius:8px;font-size:0.82rem;margin-bottom:10px}
@@ -225,18 +232,6 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
   .track-item{padding:6px 2px}
   .track-item .track-name{font-size:0.55rem;letter-spacing:0}
   .track-item .track-range{font-size:0.6rem}
-
-  /* Priority table: collapse to single-column stacked cards */
-  .priority-table thead{display:none}
-  .priority-table,.priority-table tbody,.priority-table tr,.priority-table td{display:block;width:100%;box-sizing:border-box}
-  .priority-table tr{border-bottom:2px solid var(--border)}
-  .priority-table td:first-child{
-    background:rgba(138,43,226,0.14);color:#fff;font-weight:900;
-    font-size:0.86rem;padding:10px 12px;border-right:none!important;
-    border-bottom:1px solid var(--border);text-transform:uppercase;
-    letter-spacing:1px;width:100%!important
-  }
-  .priority-table td:last-child{padding:12px;width:100%!important}
 
   /* Task add inputs */
   .add-task-inputs{flex-direction:column}
