@@ -184,10 +184,12 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
 
 /* TRACK + PRIORITY */
 .section-divider{margin:0 0 12px 0}
-.track-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:18px;display:flex;flex-wrap:wrap;justify-content:space-around;gap:14px;text-align:center;margin-bottom:22px;box-shadow:0 4px 12px rgba(0,0,0,0.5)}
-.track-item{flex:1;min-width:75px}
+.track-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:18px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px;text-align:center;margin-bottom:22px;box-shadow:0 4px 12px rgba(0,0,0,0.5)}
+.track-item{padding:8px 4px}
+.track-item .track-name{font-weight:800;font-size:0.8rem;letter-spacing:0.5px;display:block;margin-bottom:3px}
+.track-item .track-range{font-size:0.75rem;color:var(--dim);display:block}
 .priority-table th{text-align:left;color:var(--gold);font-size:0.7rem;text-transform:uppercase;padding:12px;border-bottom:2px solid var(--border)}
-.priority-table td:first-child{font-weight:700;color:#fff;width:190px;border-right:1px solid var(--border)}
+.priority-table td:first-child{font-weight:700;color:#fff;width:190px;border-right:1px solid var(--border);vertical-align:middle}
 
 /* EMPTY STATE */
 .empty-realm-state{text-align:center;padding:22px;color:var(--dim);border:2px dashed var(--border);border-radius:8px;font-size:0.82rem;margin-bottom:10px}
@@ -208,15 +210,36 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
 .modal-actions .btn-ctrl{flex:1}
 
 @media(max-width:600px){
+  /* Gearing tracks: 2 columns on small screens, MYTH centred in last row */
+  .track-card{grid-template-columns:repeat(2,1fr)}
+  .track-item:last-child{grid-column:1 / -1}
+
+  /* Priority table: collapse to single-column stacked cards */
   .priority-table thead{display:none}
-  .priority-table,.priority-table tbody,.priority-table tr,.priority-table td{display:block;width:100%}
+  .priority-table,.priority-table tbody,.priority-table tr,.priority-table td{display:block;width:100%;box-sizing:border-box}
   .priority-table tr{border-bottom:2px solid var(--border)}
-  .priority-table td:first-child{background:rgba(138,43,226,0.14);color:#fff;font-weight:900;font-size:0.86rem;padding:10px 12px;border-right:none!important;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:1px}
-  .priority-table td:last-child{padding:12px}
+  .priority-table td:first-child{
+    background:rgba(138,43,226,0.14);color:#fff;font-weight:900;
+    font-size:0.86rem;padding:10px 12px;border-right:none!important;
+    border-bottom:1px solid var(--border);text-transform:uppercase;
+    letter-spacing:1px;width:100%!important
+  }
+  .priority-table td:last-child{padding:12px;width:100%!important}
+
+  /* Task add inputs */
   .add-task-inputs{flex-direction:column}
   .add-task-inputs input{min-width:unset;width:100%;box-sizing:border-box}
+
+  /* Mini bar */
   .char-mini-bar-wrap{min-width:68px}
   .char-mini-bar-bg{width:68px}
+
+  /* Top controls */
+  .top-controls .btn-ctrl{min-width:100px}
+
+  /* Realm header wrapping */
+  .realm-meta{gap:5px}
+  .realm-actions{flex-wrap:wrap}
 }
 </style>
 </head>
@@ -240,11 +263,11 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
 
 <div class="section-divider"><div class="category-header">Gearing Tracks</div></div>
 <div class="track-card">
-  <div class="track-item"><div style="color:var(--green)">ADVENTURER</div><div>220–237</div></div>
-  <div class="track-item"><div style="color:var(--blue)">VETERAN</div><div>233–243</div></div>
-  <div class="track-item"><div style="color:var(--accent)">CHAMPION</div><div>246–256</div></div>
-  <div class="track-item"><div style="color:var(--gold)">HERO</div><div>259–269</div></div>
-  <div class="track-item"><div style="color:#ff4500">MYTH</div><div>272–289</div></div>
+  <div class="track-item"><span class="track-name" style="color:var(--green)">ADVENTURER</span><span class="track-range">220–237</span></div>
+  <div class="track-item"><span class="track-name" style="color:var(--blue)">VETERAN</span><span class="track-range">233–243</span></div>
+  <div class="track-item"><span class="track-name" style="color:var(--accent)">CHAMPION</span><span class="track-range">246–256</span></div>
+  <div class="track-item"><span class="track-name" style="color:var(--gold)">HERO</span><span class="track-range">259–269</span></div>
+  <div class="track-item"><span class="track-name" style="color:#ff4500">MYTH</span><span class="track-range">272–289</span></div>
 </div>
 
 <div class="section-divider"><div class="category-header">Gearing Priority</div></div>
