@@ -8,755 +8,1037 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <style>
 :root {
---bg: #050308;
---surface: #0a0812;
---card-bg: #120c1d;
---border: #2d243d;
---accent: #8a2be2;
---gold: #ffcc33;
---blue: #33ccff;
---green: #39ff14;
---text: #e0dced;
---dim: #8b869c;
---btn-bg: #1e152e;
---danger: #ff4d4d;
---void-core: #130026;
---void-glow: #3d0073;
---void-highlight: #7c00e6;
+  --bg:#050308; --surface:#0a0812; --card-bg:#120c1d; --border:#2d243d;
+  --accent:#8a2be2; --gold:#ffcc33; --blue:#33ccff; --green:#39ff14;
+  --text:#e0dced; --dim:#8b869c; --btn-bg:#1e152e; --danger:#ff4d4d;
+  --void-core:#130026; --void-glow:#3d0073; --void-highlight:#7c00e6;
 }
+@keyframes voidSwirl{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes voidPulse{0%,100%{text-shadow:0 0 5px var(--void-highlight),0 0 10px var(--void-highlight)}50%{text-shadow:0 0 10px var(--void-highlight),0 0 22px var(--void-highlight)}}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+@keyframes dropDown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 
-@keyframes voidSwirl {
-0% { background-position: 0% 50%; }
-50% { background-position: 100% 50%; }
-100% { background-position: 0% 50%; }
+body{background:linear-gradient(-45deg,#050308,#130026,#000c1a,#1a0033);background-size:400% 400%;animation:voidSwirl 15s ease infinite;color:var(--text);font-family:'Segoe UI',Tahoma,sans-serif;margin:0;padding:0;display:flex;justify-content:center;min-height:100vh}
+.container{width:100%;max-width:960px;padding:20px 15px;box-sizing:border-box}
+
+/* PAGE TITLE */
+.page-title{text-align:center;color:var(--gold);font-size:1.4rem;font-weight:900;text-transform:uppercase;letter-spacing:3px;margin:0 0 22px 0;text-shadow:0 0 20px rgba(255,204,51,0.4)}
+
+/* TOP CONTROLS */
+.top-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;justify-content:center}
+.top-controls .btn-ctrl{flex:1;min-width:120px;max-width:200px}
+
+/* BTN BASE */
+.btn-ctrl{background:var(--btn-bg);color:#fff;border:1px solid var(--border);padding:10px 14px;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.7rem;text-transform:uppercase;transition:background 0.2s,border-color 0.2s;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;white-space:nowrap}
+.btn-ctrl:hover{background:#2a1a42;border-color:var(--void-highlight)}
+.btn-primary{background:var(--void-highlight)!important;border-color:var(--void-highlight)!important}
+.btn-primary:hover{background:#9900ff!important}
+
+/* REALM CABINET */
+.realm-cabinet{margin-bottom:14px;border-radius:14px;border:2px solid var(--void-highlight);background:linear-gradient(145deg,#0d001a,#160030);box-shadow:0 0 24px rgba(124,0,230,0.22),inset 0 0 20px rgba(0,0,0,0.55);overflow:hidden;animation:slideIn 0.25s ease}
+
+.realm-header{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;user-select:none;transition:background 0.2s}
+.realm-header:hover{background:rgba(124,0,230,0.1)}
+
+.realm-drag-handle{color:var(--void-glow);cursor:grab;font-size:1.2rem;flex-shrink:0}
+.realm-drag-handle:active{cursor:grabbing}
+.realm-icon{font-size:1.2rem;flex-shrink:0}
+.realm-name{font-weight:900;font-size:1.1rem;color:var(--gold);text-transform:uppercase;letter-spacing:2px;flex-grow:1;text-shadow:0 0 10px rgba(255,204,51,0.28)}
+
+.realm-meta{display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.realm-char-count{background:rgba(255,204,51,0.1);border:1px solid rgba(255,204,51,0.3);color:var(--gold);font-size:0.62rem;font-weight:800;padding:2px 8px;border-radius:10px;text-transform:uppercase;white-space:nowrap}
+.realm-chevron{color:var(--dim);font-size:0.85rem;transition:transform 0.3s ease;flex-shrink:0}
+.realm-cabinet.open .realm-chevron{transform:rotate(180deg)}
+
+.realm-actions{display:flex;gap:5px}
+.sm-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--dim);cursor:pointer;font-size:0.6rem;text-transform:uppercase;padding:4px 9px;border-radius:4px;font-weight:bold;transition:color 0.2s,border-color 0.2s,background 0.2s;white-space:nowrap}
+.sm-btn:hover{color:var(--blue);border-color:var(--blue);background:rgba(51,204,255,0.07)}
+.sm-btn.danger:hover{color:var(--danger);border-color:var(--danger);background:rgba(255,77,77,0.07)}
+
+.realm-body{display:none;padding:0 14px 14px}
+.realm-cabinet.open .realm-body{display:block;animation:dropDown 0.2s ease}
+
+/* CHARACTER DRAWER */
+.char-drawer{border-radius:10px;border:1px solid var(--border);background:rgba(18,12,29,0.82);margin-bottom:9px;overflow:visible;animation:slideIn 0.2s ease}
+.char-drawer.sortable-ghost{opacity:0.35;background:rgba(124,0,230,0.15)}
+
+.char-header{display:flex;align-items:center;gap:11px;padding:11px 14px;cursor:pointer;user-select:none;transition:background 0.2s;border-radius:10px 10px 0 0}
+.char-header:hover{background:rgba(124,0,230,0.07)}
+
+.char-drag-handle{color:var(--void-glow);cursor:grab;font-size:1rem;flex-shrink:0}
+.char-drag-handle:active{cursor:grabbing}
+
+.char-portrait-sm{width:42px;height:42px;border-radius:50%;border:2px solid var(--blue);box-shadow:0 0 10px rgba(51,204,255,0.35);background:#000;overflow:hidden;flex-shrink:0}
+.char-portrait-sm img{width:100%;height:100%;object-fit:cover}
+
+.char-header-info{flex-grow:1;min-width:0}
+.char-header-name{font-weight:900;font-size:0.9rem;color:#fff;letter-spacing:1px;display:block;animation:voidPulse 3s infinite;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.char-header-sub{display:flex;align-items:center;gap:7px;margin-top:3px;flex-wrap:wrap}
+.char-class-badge{font-size:0.62rem;color:var(--dim);text-transform:uppercase;font-weight:700}
+.char-mplus-badge{background:rgba(255,204,51,0.1);border:1px solid rgba(255,204,51,0.35);color:var(--gold);font-size:0.58rem;font-weight:800;padding:1px 6px;border-radius:4px;white-space:nowrap}
+
+.char-mini-bar-wrap{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:3px;min-width:85px}
+.char-mini-pct{font-size:0.68rem;font-weight:900;color:var(--blue)}
+.char-mini-bar-bg{width:85px;height:5px;background:#000;border-radius:3px;border:1px solid #1a1a1a;overflow:hidden}
+.char-mini-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--void-highlight),var(--blue));transition:width 0.5s ease;border-radius:3px}
+
+.char-chevron{color:var(--dim);font-size:0.82rem;transition:transform 0.3s;flex-shrink:0}
+.char-drawer.open .char-chevron{transform:rotate(180deg)}
+
+.char-body{display:none;padding:0 14px 14px;border-top:1px solid rgba(45,36,61,0.45);border-radius:0 0 10px 10px;overflow:hidden}
+.char-drawer.open .char-body{display:block;animation:dropDown 0.2s ease}
+
+/* CHAR STICKY PROGRESS BAR — fixed, floats at top of viewport */
+#char-fixed-bar{
+  display:none;
+  position:fixed;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:960px;
+  z-index:200;
+  background:rgba(10,5,20,0.97);
+  backdrop-filter:blur(14px);
+  border-bottom:2px solid var(--void-highlight);
+  padding:10px 20px 11px;
+  box-shadow:0 4px 24px rgba(61,0,115,0.65);
+  box-sizing:border-box;
+  animation:dropDown 0.2s ease;
 }
+#char-fixed-bar.visible{display:block;}
+.char-fixed-inner{display:flex;align-items:center;gap:12px;}
+.char-fixed-portrait{width:30px;height:30px;border-radius:50%;border:2px solid var(--blue);overflow:hidden;flex-shrink:0;background:#000;box-shadow:0 0 8px rgba(51,204,255,0.35);}
+.char-fixed-portrait img{width:100%;height:100%;object-fit:cover;}
+.char-fixed-name{font-weight:900;font-size:0.8rem;color:#fff;letter-spacing:1px;text-transform:uppercase;flex-shrink:0;white-space:nowrap;animation:voidPulse 3s infinite;}
+.char-fixed-class{font-size:0.6rem;color:var(--dim);text-transform:uppercase;font-weight:700;flex-shrink:0;white-space:nowrap;}
+.char-fixed-bg{flex:1;background:#000;height:8px;border-radius:4px;border:1px solid #1a1a1a;overflow:hidden;}
+.char-fixed-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--void-highlight),var(--blue),var(--void-highlight));transition:width 0.5s ease;border-radius:4px;}
+.char-fixed-pct{font-size:0.85rem;font-weight:900;color:var(--blue);flex-shrink:0;min-width:38px;text-align:right;}
 
-@keyframes voidPulse {
-0% { text-shadow: 0 0 5px var(--void-highlight), 0 0 10px var(--void-highlight); }
-50% { text-shadow: 0 0 10px var(--void-highlight), 0 0 20px var(--void-highlight); }
-100% { text-shadow: 0 0 5px var(--void-highlight), 0 0 10px var(--void-highlight); }
-}
+/* CHAR FULL PROGRESS BAR */
+.char-full-progress{margin:13px 0 14px}
+.char-full-progress-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:5px}
+.char-progress-label{font-size:0.68rem;font-weight:800;text-transform:uppercase;color:var(--dim);letter-spacing:1px}
+.char-progress-pct{font-size:1.05rem;font-weight:900;color:var(--blue)}
+.char-bar-bg{background:#000;height:11px;border-radius:6px;border:1px solid #1a1a1a;overflow:hidden}
+.char-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--void-highlight),var(--blue),var(--void-highlight));transition:width 0.6s ease;border-radius:6px}
 
-@keyframes fadeInDown {
-from { opacity: 0; transform: translateY(-8px); }
-to { opacity: 1; transform: translateY(0); }
-}
+.char-links-row{display:flex;gap:6px;margin-bottom:13px;flex-wrap:wrap}
+.char-links-row .btn-ctrl{flex:1;min-width:65px;font-size:0.58rem;padding:7px 4px}
 
-@keyframes slideIn {
-from { opacity: 0; transform: translateX(-10px); }
-to { opacity: 1; transform: translateX(0); }
-}
+/* CHAR GROUPS */
+.char-group-wrapper{margin:0 0 14px 0}
+.char-group-header-flex{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.char-category-header{color:var(--blue);font-size:0.78rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:8px;flex-grow:1}
+.char-category-header::after{content:"";flex:1;height:1px;background:linear-gradient(to right,var(--void-highlight),transparent);opacity:0.45;margin-left:7px}
 
-body {
-background: linear-gradient(-45deg, #050308, #130026, #000c1a, #1a0033);
-background-size: 400% 400%;
-animation: voidSwirl 15s ease infinite;
-color: var(--text);
-font-family: 'Segoe UI', Tahoma, sans-serif;
-margin: 0; padding: 0;
-display: flex; justify-content: center; min-height: 100vh;
-}
+.char-add-group-btn{width:100%;font-size:0.62rem;background:var(--btn-bg);color:var(--dim);border:1px dashed var(--border);padding:6px;border-radius:6px;cursor:pointer;text-transform:uppercase;font-weight:bold;transition:border-color 0.2s,color 0.2s;margin-top:4px}
+.char-add-group-btn:hover{border-color:var(--void-highlight);color:var(--text)}
 
-.container { width: 100%; max-width: 900px; padding: 20px 15px; box-sizing: border-box; }
+/* REFRESH M+ BUTTON */
+.refresh-rio-btn{background:none;border:none;color:var(--dim);cursor:pointer;font-size:0.85rem;padding:1px 4px;border-radius:3px;line-height:1;transition:color 0.2s,transform 0.2s;flex-shrink:0;}
+.refresh-rio-btn:hover{color:var(--blue);}
+.refresh-rio-btn.spinning{animation:spin 0.7s linear infinite;color:var(--blue);}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-.char-profile-card {
-background: linear-gradient(145deg, #0d001a, #130026);
-padding: 20px; border-radius: 12px; border: 2px solid var(--void-highlight);
-margin-bottom: 20px; box-shadow: 0 0 20px 5px var(--void-glow), inset 0 0 15px rgba(0,0,0,0.8);
-}
+/* SECTION BIG TITLE */
+.section-big-title{color:var(--gold);font-size:0.85rem;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin:15px 0 9px 0;padding:7px 0;border-bottom:1px solid rgba(255,204,51,0.25);text-shadow:0 0 8px rgba(255,204,51,0.22)}
 
-.char-flex { display: flex; align-items: center; gap: 15px; flex-wrap: nowrap; }
+/* SHARED GROUP WRAPPERS */
+.group-wrapper{margin:0 0 18px 0;filter:drop-shadow(0 4px 8px rgba(61,0,115,0.22));animation:slideIn 0.25s ease}
+.group-header-flex{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.group-drag-handle{color:var(--dim);cursor:grab;font-size:1.1rem;user-select:none}
+.remove-group-btn{color:var(--dim);background:rgba(255,255,255,0.04);border:1px solid var(--border);cursor:pointer;font-size:0.58rem;text-transform:uppercase;padding:3px 7px;border-radius:4px;font-weight:bold;transition:color 0.2s,border-color 0.2s}
+.remove-group-btn:hover{color:var(--danger);border-color:var(--danger)}
+.category-header{color:var(--blue);font-size:0.88rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:10px;flex-grow:1}
+.category-header::after{content:"";flex:1;height:1px;background:linear-gradient(to right,var(--void-highlight),transparent);opacity:0.55;margin-left:10px}
 
-.portrait-frame {
-width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--blue);
-box-shadow: 0 0 15px rgba(51, 204, 255, 0.6); background: #000; overflow: hidden; flex-shrink: 0;
-}
-.char-portrait { width: 100%; height: 100%; object-fit: cover; }
+/* TABLES */
+table{width:100%;border-collapse:collapse;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:6px}
+.row-done td{opacity:0.38;background:rgba(57,255,20,0.03)!important}
+.row-done .action-text{text-decoration:line-through;color:var(--green)}
+td{padding:10px 13px;border-bottom:1px solid rgba(45,36,61,0.38);vertical-align:middle}
+.col-left{width:60px;white-space:nowrap}
+.drag-icon{color:var(--void-glow);cursor:grab;font-size:1rem;text-align:center}
+input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--void-highlight)}
+.action-text{font-weight:600;color:#fff;display:block;font-size:0.88rem}
+.desc-text{font-size:0.7rem;color:var(--dim);display:block;margin-top:2px}
 
-.char-name { font-weight: 900; font-size: 1.2rem; color: #fff; letter-spacing: 1px; display: block; animation: voidPulse 3s infinite; }
-.char-details { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; flex-wrap: wrap; }
-.char-realm { color: var(--blue); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+.remove-task-btn{background:none;border:none;color:var(--dim);cursor:pointer;font-size:1.1rem;padding:6px 8px;border-radius:5px;transition:color 0.2s,background 0.2s;display:flex;align-items:center;justify-content:center;min-width:30px;min-height:30px}
+.remove-task-btn:hover{color:var(--danger);background:rgba(255,77,77,0.1)}
 
-.mplus-badge {
-background: rgba(255, 204, 51, 0.1); border: 1px solid var(--gold); color: var(--gold);
-padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; display: flex; align-items: center; gap: 5px;
-}
+.add-task-row{display:none}
+.add-task-row.visible{display:table-row;animation:slideIn 0.2s ease}
+.add-task-inputs{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.add-task-inputs input{background:#0a0812;border:1px solid var(--void-highlight);color:var(--text);padding:6px 9px;border-radius:5px;font-size:0.76rem;font-family:inherit;flex:1;min-width:85px}
+.add-task-inputs input:focus{outline:none}
+.add-task-inputs input::placeholder{color:var(--dim)}
+.add-task-confirm-btn{background:var(--void-highlight);border:none;color:#fff;cursor:pointer;padding:6px 11px;border-radius:5px;font-size:0.76rem;font-weight:700;white-space:nowrap}
+.add-task-cancel-btn{background:none;border:1px solid var(--border);color:var(--dim);cursor:pointer;padding:6px 8px;border-radius:5px;font-size:0.76rem}
+.btn-add-task{margin:3px 0 0;font-size:0.6rem;background:var(--btn-bg);color:var(--dim);border:1px solid var(--border);padding:4px 9px;border-radius:4px;cursor:pointer;text-transform:uppercase;font-weight:bold;transition:border-color 0.2s,color 0.2s}
+.btn-add-task:hover{border-color:var(--void-highlight);color:var(--text)}
 
-.progress-box {
-background: rgba(18, 12, 29, 0.95); padding: 25px; border-radius: 12px; border: 1px solid var(--border);
-margin-bottom: 30px; position: sticky; top: 10px; z-index: 100; backdrop-filter: blur(10px);
-box-shadow: 0 15px 40px -10px rgba(61, 0, 115, 0.6);
-}
+.sortable-ghost{opacity:0.28;background:rgba(124,0,230,0.18);border-radius:8px}
 
-.bar-bg { background: #000; height: 16px; border-radius: 8px; margin-top: 5px; border: 1px solid #1a1a1a; overflow: hidden; }
-#bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--void-highlight), var(--blue), var(--void-highlight)); transition: width 0.6s ease; }
+/* TRACK + PRIORITY */
+.section-divider{margin:0 0 12px 0}
+.track-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:18px;display:flex;flex-wrap:wrap;justify-content:space-around;gap:14px;text-align:center;margin-bottom:22px;box-shadow:0 4px 12px rgba(0,0,0,0.5)}
+.track-item{flex:1;min-width:75px}
+.priority-table th{text-align:left;color:var(--gold);font-size:0.7rem;text-transform:uppercase;padding:12px;border-bottom:2px solid var(--border)}
+.priority-table td:first-child{font-weight:700;color:#fff;width:190px;border-right:1px solid var(--border)}
 
-.external-links {
-display: flex !important;
-margin-top: 12px;
-gap: 8px;
-}
-.external-links .btn-ctrl {
-flex: 1;
-padding: 10px 5px;
-font-size: 0.65rem;
-white-space: nowrap;
-}
-.progress-controls {
-display: grid !important;
-grid-template-columns: repeat(5, 1fr);
-margin-top: 12px;
-gap: 8px;
-}
-.progress-controls .btn-ctrl {
-padding: 10px 4px;
-font-size: 0.6rem;
-white-space: nowrap;
-gap: 4px;
-}
-@media screen and (max-width: 520px) {
-.progress-controls {
-grid-template-columns: repeat(3, 1fr);
-}
-}
+/* EMPTY STATE */
+.empty-realm-state{text-align:center;padding:22px;color:var(--dim);border:2px dashed var(--border);border-radius:8px;font-size:0.82rem;margin-bottom:10px}
 
-.btn-ctrl {
-background: var(--btn-bg); color: #fff; border: 1px solid var(--border);
-padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer;
-font-size: 0.75rem; text-transform: uppercase; transition: background 0.2s, border-color 0.2s;
-display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
-}
-.btn-ctrl:hover { background: #2a1a42; border-color: var(--void-highlight); }
+/* TOAST */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1e152e;border:1px solid var(--void-highlight);color:var(--text);padding:11px 22px;border-radius:8px;font-size:0.82rem;font-weight:600;z-index:9999;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.35s;opacity:0;pointer-events:none;white-space:nowrap;box-shadow:0 0 20px rgba(124,0,230,0.4)}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
-#toast {
-position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-background: #1e152e; border: 1px solid var(--void-highlight); color: var(--text);
-padding: 12px 24px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
-z-index: 9999; transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s;
-opacity: 0; pointer-events: none; white-space: nowrap;
-box-shadow: 0 0 20px rgba(124,0,230,0.4);
-}
-#toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(5,3,8,0.88);backdrop-filter:blur(6px);z-index:500;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex;animation:fadeInDown 0.2s ease}
+.modal-box{background:#120c1d;border:1px solid var(--void-highlight);border-radius:14px;padding:24px;width:90%;max-width:420px;box-shadow:0 0 40px rgba(124,0,230,0.5)}
+.modal-box h3{margin:0 0 14px;font-size:0.98rem;text-transform:uppercase;color:var(--blue);letter-spacing:1px}
+.modal-label{font-size:0.68rem;color:var(--dim);text-transform:uppercase;font-weight:700;margin-bottom:4px;display:block}
+.modal-input{width:100%;box-sizing:border-box;background:#0a0812;border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:7px;font-size:0.86rem;margin-bottom:10px;font-family:inherit;transition:border-color 0.2s}
+.modal-input:focus{outline:none;border-color:var(--void-highlight)}
+.modal-actions{display:flex;gap:8px;margin-top:4px}
+.modal-actions .btn-ctrl{flex:1}
 
-.modal-overlay {
-display: none; position: fixed; inset: 0; background: rgba(5,3,8,0.85);
-backdrop-filter: blur(6px); z-index: 500; align-items: center; justify-content: center;
-}
-.modal-overlay.open { display: flex; animation: fadeInDown 0.2s ease; }
-.modal-box {
-background: #120c1d; border: 1px solid var(--void-highlight); border-radius: 14px;
-padding: 28px; width: 90%; max-width: 420px;
-box-shadow: 0 0 40px rgba(124,0,230,0.5);
-}
-.modal-box h3 { margin: 0 0 18px 0; font-size: 1rem; text-transform: uppercase; color: var(--blue); letter-spacing: 1px; }
-.modal-input {
-width: 100%; box-sizing: border-box; background: #0a0812; border: 1px solid var(--border);
-color: var(--text); padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 12px;
-font-family: inherit; transition: border-color 0.2s;
-}
-.modal-input:focus { outline: none; border-color: var(--void-highlight); }
-.modal-actions { display: flex; gap: 10px; margin-top: 6px; }
-.modal-actions .btn-ctrl { flex: 1; }
-.btn-primary { background: var(--void-highlight) !important; border-color: var(--void-highlight) !important; }
-.btn-primary:hover { background: #9900ff !important; }
-
-.group-wrapper { margin: 0 0 30px 0; filter: drop-shadow(0 5px 10px rgba(61, 0, 115, 0.3)); animation: slideIn 0.25s ease; }
-.group-header-flex { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-.category-header { color: var(--blue); font-size: 0.9rem; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 10px; flex-grow: 1; }
-.category-header::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--void-highlight), transparent); opacity: 0.6; margin-left: 10px; }
-
-.group-drag-handle { color: var(--dim); cursor: grab; font-size: 1.1rem; user-select: none; }
-.remove-group-btn { color: var(--dim); background: rgba(255,255,255,0.05); border: 1px solid var(--border); cursor: pointer; font-size: 0.6rem; text-transform: uppercase; padding: 4px 8px;
-border-radius: 4px; font-weight: bold; transition: color 0.2s, border-color 0.2s; }
-.remove-group-btn:hover { color: var(--danger); border-color: var(--danger); }
-
-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
-.row-done td { opacity: 0.4; background: rgba(57, 255, 20, 0.03) !important; }
-.row-done .action-text { text-decoration: line-through; color: var(--green); }
-
-td { padding: 12px 15px; border-bottom: 1px solid rgba(45, 36, 61, 0.4); vertical-align: middle; }
-.col-left { width: 70px; white-space: nowrap; }
-.drag-icon { color: var(--void-glow); cursor: grab; font-size: 1.1rem; text-align: center; }
-input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--void-highlight); }
-
-.action-text { font-weight: 600; color: #fff; display: block; font-size: 0.95rem; }
-.desc-text { font-size: 0.75rem; color: var(--dim); display: block; margin-top: 2px; }
-
-.remove-task-btn {
-background: none; border: none; color: var(--dim); cursor: pointer;
-font-size: 1.2rem; padding: 8px 10px; border-radius: 6px; transition: color 0.2s, background 0.2s;
-display: flex; align-items: center; justify-content: center; min-width: 36px; min-height: 36px;
-}
-.remove-task-btn:hover { color: var(--danger); background: rgba(255,77,77,0.1); }
-
-.add-task-row { display: none; }
-.add-task-row.visible { display: table-row; animation: slideIn 0.2s ease; }
-.add-task-inputs { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.add-task-inputs input {
-background: #0a0812; border: 1px solid var(--void-highlight); color: var(--text);
-padding: 7px 10px; border-radius: 6px; font-size: 0.8rem; font-family: inherit;
-flex: 1; min-width: 100px;
-}
-.add-task-inputs input:focus { outline: none; }
-.add-task-inputs input::placeholder { color: var(--dim); }
-.add-task-confirm-btn {
-background: var(--void-highlight); border: none; color: #fff; cursor: pointer;
-padding: 7px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; white-space: nowrap;
-}
-.add-task-cancel-btn {
-background: none; border: 1px solid var(--border); color: var(--dim); cursor: pointer;
-padding: 7px 10px; border-radius: 6px; font-size: 0.8rem;
-}
-.btn-add-task {
-margin: 5px auto 0 0; width: 85px; font-size: 0.65rem; background: var(--btn-bg);
-color: var(--text); border: 1px solid var(--border); padding: 6px; border-radius: 4px;
-cursor: pointer; text-transform: uppercase; font-weight: bold; transition: border-color 0.2s;
-}
-.btn-add-task:hover { border-color: var(--void-highlight); }
-
-.section-big-title {
-color: var(--gold);
-font-size: 1.1rem;
-font-weight: 900;
-text-transform: uppercase;
-letter-spacing: 2px;
-margin: 40px 0 20px 0;
-padding: 10px;
-border-bottom: 2px solid var(--gold);
-display: block;
-text-shadow: 0 0 10px rgba(255, 204, 51, 0.3);
-text-align: center;
-}
-
-.empty-state {
-text-align: center; padding: 50px 20px; color: var(--dim);
-border: 2px dashed var(--border); border-radius: 12px; margin-bottom: 30px;
-}
-.empty-state p { font-size: 0.9rem; margin: 8px 0 0 0; }
-.empty-state span { font-size: 2.5rem; display: block; margin-bottom: 10px; }
-
-.section-divider { margin: 0 0 20px 0; }
-.track-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-wrap: wrap; justify-content: space-around; gap: 15px;
-text-align: center; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-.track-item { flex: 1; min-width: 100px; }
-
-.priority-table th { text-align: left; color: var(--gold); font-size: 0.75rem; text-transform: uppercase; padding: 15px; border-bottom: 2px solid var(--border); }
-.priority-table td:first-child { font-weight: 700; color: #fff; width: 230px; border-right: 1px solid var(--border); }
-
-@media screen and (max-width: 600px) {
-.priority-table thead { display: none; }
-.priority-table, .priority-table tbody, .priority-table tr, .priority-table td { display: block; width: 100%; }
-.priority-table tr { border-bottom: 2px solid var(--border); }
-.priority-table td:first-child {
-background: rgba(138, 43, 226, 0.15); color: #fff; font-weight: 900;
-font-size: 0.9rem; padding: 12px 15px; border-right: none !important;
-border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 1px;
-}
-.priority-table td:last-child { padding: 15px; }
-.add-task-inputs { flex-direction: column; }
-.add-task-inputs input { min-width: unset; width: 100%; }
+@media(max-width:600px){
+  .priority-table thead{display:none}
+  .priority-table,.priority-table tbody,.priority-table tr,.priority-table td{display:block;width:100%}
+  .priority-table tr{border-bottom:2px solid var(--border)}
+  .priority-table td:first-child{background:rgba(138,43,226,0.14);color:#fff;font-weight:900;font-size:0.86rem;padding:10px 12px;border-right:none!important;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:1px}
+  .priority-table td:last-child{padding:12px}
+  .add-task-inputs{flex-direction:column}
+  .add-task-inputs input{min-width:unset;width:100%;box-sizing:border-box}
+  .char-mini-bar-wrap{min-width:68px}
+  .char-mini-bar-bg{width:68px}
 }
 </style>
 </head>
 <body>
 <div class="container">
 
-<div class="char-profile-card">
-<div class="char-flex">
-<div class="portrait-frame"><img class="char-portrait" id="portrait-huskysham" src="https://render.worldofwarcraft.com/eu/icons/512/classicon_shaman.jpg" alt="Portrait"></div>
-<div style="flex-grow: 1; min-width: 0;">
-<span class="char-name">HUSKYSHAM</span>
-<div class="char-details">
-<span class="char-realm">EU - Silvermoon</span>
-<div class="mplus-badge">🏆 M+ SCORE: <span id="mplus-huskysham">--</span></div>
-</div>
-<div class="external-links">
-<a href="https://worldofwarcraft.blizzard.com/en-gb/character/eu/silvermoon/huskysham" target="_blank" class="btn-ctrl">🛡️ ARMORY</a>
-<a href="https://raider.io/characters/eu/silvermoon/Huskysham" target="_blank" class="btn-ctrl">📈 RIO</a>
-<a href="https://www.warcraftlogs.com/character/eu/silvermoon/huskysham" target="_blank" class="btn-ctrl">📜 LOGS</a>
-</div>
-</div>
-</div>
+<div class="page-title">⚔️ Midnight — Gearing Master List</div>
+
+<div class="top-controls">
+  <button class="btn-ctrl" onclick="openModal('realm-modal')">🌐 Add Realm</button>
+  <button class="btn-ctrl" onclick="exportData()">💾 Export</button>
+  <button class="btn-ctrl" onclick="importData()">📂 Import</button>
+  <button class="btn-ctrl" onclick="resetToDefault()">↩️ Reset</button>
+  <button class="btn-ctrl" onclick="weeklyReset()">🧹 Weekly Clear</button>
 </div>
 
-<div class="char-profile-card">
-<div class="char-flex">
-<div class="portrait-frame"><img class="char-portrait" id="portrait-huskydk" src="https://render.worldofwarcraft.com/eu/icons/512/classicon_deathknight.jpg" alt="Portrait"></div>
-<div style="flex-grow: 1; min-width: 0;">
-<span class="char-name">HUSKYDK</span>
-<div class="char-details">
-<span class="char-realm">EU - Silvermoon</span>
-<div class="mplus-badge">🏆 M+ SCORE: <span id="mplus-huskydk">--</span></div>
-</div>
-<div class="external-links">
-<a href="https://worldofwarcraft.blizzard.com/en-gb/character/eu/silvermoon/huskydk" target="_blank" class="btn-ctrl">🛡️ ARMORY</a>
-<a href="https://raider.io/characters/eu/silvermoon/huskydk" target="_blank" class="btn-ctrl">📈 RIO</a>
-<a href="https://www.warcraftlogs.com/character/eu/silvermoon/huskydk" target="_blank" class="btn-ctrl">📜 LOGS</a>
-</div>
-</div>
-</div>
-</div>
+<div id="realms-container"></div>
 
-<div class="progress-box">
-<div style="display:flex; justify-content:space-between; align-items: flex-end; font-weight: 900; margin-bottom: 8px;">
-<span style="font-size: 1.1rem;">TOTAL PROGRESS</span>
-<span id="percent-text" style="color: var(--blue); font-size: 1.8rem;">0%</span>
-</div>
-<div class="bar-bg"><div id="bar-fill"></div></div>
-<div class="progress-controls">
-<button class="btn-ctrl" onclick="openNewGroupModal()">📁 NEW GROUP</button>
-<button class="btn-ctrl" onclick="exportData()">💾 EXPORT</button>
-<button class="btn-ctrl" onclick="importData()">📂 IMPORT</button>
-<button class="btn-ctrl" onclick="resetToDefault()">↩️ RESET</button>
-<button class="btn-ctrl" onclick="weeklyReset()">🧹 CLEAR</button>
-</div>
-</div>
-
-<div id="task-groups-container"></div>
+<!-- SHARED SECTIONS -->
+<div id="shared-groups-container"></div>
 
 <div class="section-divider"><div class="category-header">Gearing Tracks</div></div>
 <div class="track-card">
-<div class="track-item"><div style="color:var(--green)">ADVENTURER</div><div>220-237</div></div>
-<div class="track-item"><div style="color:var(--blue)">VETERAN</div><div>233-243</div></div>
-<div class="track-item"><div style="color:var(--accent)">CHAMPION</div><div>246-256</div></div>
-<div class="track-item"><div style="color:var(--gold)">HERO</div><div>259-269</div></div>
-<div class="track-item"><div style="color:#ff4500">MYTH</div><div>272-289</div></div>
+  <div class="track-item"><div style="color:var(--green)">ADVENTURER</div><div>220–237</div></div>
+  <div class="track-item"><div style="color:var(--blue)">VETERAN</div><div>233–243</div></div>
+  <div class="track-item"><div style="color:var(--accent)">CHAMPION</div><div>246–256</div></div>
+  <div class="track-item"><div style="color:var(--gold)">HERO</div><div>259–269</div></div>
+  <div class="track-item"><div style="color:#ff4500">MYTH</div><div>272–289</div></div>
 </div>
 
 <div class="section-divider"><div class="category-header">Gearing Priority</div></div>
-<table class="priority-table">
-<thead><tr><th>Slot</th><th>Priority Reasoning</th></tr></thead>
-<tbody>
-<tr><td>Weapon</td><td class="desc-text">Largest source of Attack Power/Spell Power. Usually the best use of your first Spark</td></tr>
-<tr><td>Trinkets</td><td class="desc-text">These often provide unique effects or massive stat procs that outweigh raw ilvl</td></tr>
-<tr><td>Chest / Head / Legs</td><td class="desc-text">These have the largest "stat budget" for Stamina and Primary stats</td></tr>
-<tr><td>Shoulders / Hands / Feet</td><td class="desc-text">Moderate stat gains; often the best slots for your Tier Set pieces</td></tr>
-<tr><td>Cloak / Bracers / Belt</td><td class="desc-text">Smallest stat pools. Upgrade these only when everything else is capped</td></tr>
-<tr><td>Rings / Neck</td><td class="desc-text">No primary stats (Intellect/Strength/Agility). Only upgrade these for Secondary Stat optimization</td></tr>
-</tbody>
+<table class="priority-table" style="margin-bottom:40px">
+  <thead><tr><th>Slot</th><th>Priority Reasoning</th></tr></thead>
+  <tbody>
+    <tr><td>Weapon</td><td class="desc-text">Largest source of Attack Power/Spell Power. Usually the best use of your first Spark</td></tr>
+    <tr><td>Trinkets</td><td class="desc-text">Often provide unique effects or massive stat procs that outweigh raw ilvl</td></tr>
+    <tr><td>Chest / Head / Legs</td><td class="desc-text">Largest stat budget for Stamina and Primary stats</td></tr>
+    <tr><td>Shoulders / Hands / Feet</td><td class="desc-text">Moderate gains; often the best slots for your Tier Set pieces</td></tr>
+    <tr><td>Cloak / Bracers / Belt</td><td class="desc-text">Smallest stat pools. Upgrade only when everything else is capped</td></tr>
+    <tr><td>Rings / Neck</td><td class="desc-text">No primary stats. Upgrade for Secondary Stat optimisation only</td></tr>
+  </tbody>
 </table>
-</div>
 
+</div>
 <div id="toast"></div>
 
-<div class="modal-overlay" id="group-modal">
-<div class="modal-box">
-<h3>📁 New Group</h3>
-<input class="modal-input" id="group-name-input" type="text" placeholder="Group name (e.g. Raids, PvP)" maxlength="60" />
-<div class="modal-actions">
-<button class="btn-ctrl" onclick="closeGroupModal()">Cancel</button>
-<button class="btn-ctrl btn-primary" onclick="confirmNewGroup()">Create</button>
+<!-- SINGLE SHARED FIXED PROGRESS BAR -->
+<div id="char-fixed-bar">
+  <div class="char-fixed-inner">
+    <div class="char-fixed-portrait"><img id="fixed-bar-portrait" src="" alt=""></div>
+    <span class="char-fixed-name" id="fixed-bar-name"></span>
+    <span class="char-fixed-class" id="fixed-bar-class"></span>
+    <div class="char-fixed-bg"><div class="char-fixed-fill" id="fixed-bar-fill"></div></div>
+    <span class="char-fixed-pct" id="fixed-bar-pct">0%</span>
+  </div>
 </div>
+
+<!-- REALM MODAL -->
+<div class="modal-overlay" id="realm-modal">
+  <div class="modal-box">
+    <h3>🌐 Add Realm</h3>
+    <span class="modal-label">Realm Name</span>
+    <input class="modal-input" id="realm-name-input" type="text" placeholder="e.g. Silvermoon" maxlength="40"/>
+    <span class="modal-label">Region</span>
+    <input class="modal-input" id="realm-region-input" type="text" placeholder="e.g. EU" maxlength="10"/>
+    <div class="modal-actions">
+      <button class="btn-ctrl" onclick="closeModal('realm-modal')">Cancel</button>
+      <button class="btn-ctrl btn-primary" onclick="confirmAddRealm()">Create</button>
+    </div>
+  </div>
 </div>
+
+<!-- CHARACTER MODAL -->
+<div class="modal-overlay" id="char-modal">
+  <div class="modal-box">
+    <h3>👤 Add Character</h3>
+    <span class="modal-label">Character Name</span>
+    <input class="modal-input" id="char-name-input" type="text" placeholder="e.g. Huskysham" maxlength="30"/>
+    <span class="modal-label">Class</span>
+    <input class="modal-input" id="char-class-input" type="text" placeholder="e.g. Shaman" maxlength="30"/>
+    <input type="hidden" id="char-realm-target" value=""/>
+    <div class="modal-actions">
+      <button class="btn-ctrl" onclick="closeModal('char-modal')">Cancel</button>
+      <button class="btn-ctrl btn-primary" onclick="confirmAddChar()">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD GROUP MODAL -->
+<div class="modal-overlay" id="chargroup-modal">
+  <div class="modal-box">
+    <h3>📁 Add Task Group</h3>
+    <span class="modal-label">Group Name</span>
+    <input class="modal-input" id="chargroup-name-input" type="text" placeholder="e.g. Crafting" maxlength="50"/>
+    <input type="hidden" id="chargroup-target-char" value=""/>
+    <input type="hidden" id="chargroup-target-realm" value=""/>
+    <div class="modal-actions">
+      <button class="btn-ctrl" onclick="closeModal('chargroup-modal')">Cancel</button>
+      <button class="btn-ctrl btn-primary" onclick="confirmAddCharGroup()">Create</button>
+    </div>
+  </div>
 </div>
 
 <script>
-const defaultData = [
-{ title: "Fresh Level 90 Checklist", id: "fresh90", tasks: [
-{ id: "f90_0a", text: "Complete the Main Campaign (all 17 chapters)", desc: "REQUIRED before any endgame unlocks. World Quests, Prey, faction weeklies, and Silvermoon hub features are ALL locked until this is done. Finishing grants the 'Midnight' achievement and unlocks Adventure Mode for every alt on your account. If you dinged 90 mid-campaign, go back and finish it" },
-{ id: "f90_0b", text: "Set Hearthstone to Silvermoon City", desc: "Silvermoon is your endgame hub: Great Vault (bank), Upgrade Vendor Cuzolth (48.3, 61.7), Matrix Catalyst (Sanctum of Light 40.6, 64.6), Lady Liadrin (Spark quest), Halduron (dungeon weekly), and the Arcantina portal are all here. Set it now and save travel time every session" },
-{ id: "f90_0c", text: "Confirm Arcantina Hub is Unlocked", desc: "Rewarded as part of the Arator's Journey campaign branch (Key to the Arcantina). This hub is the portal to all major weekly content areas. If you skipped Arator's Journey during leveling, pick up the unlock quest in Silvermoon" },
-{ id: "f90_0d", text: "Unlock Prey: Speak to Astalor in Murder Row", desc: "After campaign completion, visit Magister Astalor Bloodsworn in the Murder Row district of Silvermoon City to activate the Prey system. This is NOT automatic — you must talk to him. Prey is one of your primary weekly gear sources" },
-{ id: "f90_1", text: "Buy Singularity Reputation Contract (AH)", desc: "Buy before doing any activities so rep gains stack immediately. Singularity Renown 7 rewards the Crucible of Erratic Energies trinket (Champion ilvl 246) — one of the highest-value early gear pieces. **Priority**" },
-{ id: "f90_2", text: "Pick Up All Silvermoon Weeklies First", desc: "Before leaving Silvermoon each week: Lady Liadrin (Spark of Radiance quest), Halduron Brightwing (dungeon weekly for 1,000 rep), Vaeli outside the bank (Housing weekly). Picking these up first lets you complete them passively while doing other content" },
-{ id: "f90_3a", text: "Run Normal Dungeons (until ilvl 220+)", desc: "Queue immediately after hitting 90. Normal dungeons drop ilvl 213 base gear (upgradeable to 237). Run each dungeon 2–3 times to fill weak slots. No enrage timers — fresh players are fine. Target: ilvl 220+ before moving to Heroic. Also fills Great Vault dungeon slots" },
-{ id: "f90_3b", text: "Run Heroic Dungeons (until ilvl 235+)", desc: "Once ilvl 220+, switch to Heroic. Drops ilvl 226 base gear (upgradeable to 250 with Veteran Dawncrests). Run each Heroic dungeon 2–3 times. Target: ilvl 235–240, which is the Mythic 0 readiness threshold. Fills Great Vault dungeon slots" },
-{ id: "f90_3c", text: "Mythic 0 World Tour (all 8 dungeons)", desc: "Once ilvl 235+, run every Mythic 0 dungeon at least once. M0 drops ilvl 239 base gear (upgradeable to 256 with Champion crests). Run each dungeon once minimum — this is your fast highway from fresh 90 to pre-raid readiness. Fills Great Vault dungeon slots" },
-{ id: "f90_4", text: "World Boss", desc: "Quick weekly for a guaranteed Warbound ilvl 250 Champion gear piece (2/6). Rotates weekly: Lu'ashal, Cragpine, Thorm'belan, Predaxas. Do on alts too once unlocked" },
-{ id: "f90_5", text: "World Quests", desc: "Adventurer gear (ilvl 220–237). Quick and useful for filling early gear gaps while working toward Heroic/M0. Check for gear WQs in weak slots only — not worth detours for ones giving non-gear rewards yet" },
-{ id: "f90_6", text: "Prey: Normal then Hard", desc: "Normal (×2/week): Adventurer gear + Adventurer crests. Hard (×4/week): Veteran gear + Veteran crests. Push to Hard difficulty ASAP — substantially better rewards. Speak to Astalor to track hunts. Preyseeker's Journey Rank 4 unlocks Nightmare (Champion gear + Hero Dawncrest — endgame tier)" },
-{ id: "f90_7", text: "Delves: Claim Free Key Shards + Progress Tiers", desc: "Claim 200 free Coffer Key Shards from the Delve Vendor (one-time only, can go over cap). Push Delve tiers progressively — T7 gives ilvl ~224, T8 is the big breakpoint (Champion gear + fills Great Vault at Hero track). Unlock Delver's Journey Rank 4 for Gilded Jackpot" },
-{ id: "f90_3", text: "Player Housing Weekly", desc: "Quick easy weekly quest from Vaeli outside the Silvermoon bank. Rewards crest bundles. Never skip — it's 5 minutes of work for free currency" },
-{ id: "f90_8", text: "Voidstorm Weeklies: Stormarion Assault", desc: "Quest: Stand Your Ground in Stormarion Citadel (SW Voidstorm, every 30 mins). Earns 2,000 Singularity rep per completion toward Renown 7 (Champion trinket). First 4 caches/week include a Restored Coffer Key" },
-{ id: "f90_9", text: "Voidstorm Weeklies: Decimus Storyline", desc: "Start the Decimus storyline to begin collecting Elemental Voidcores. The full Voidforge system (Nebulous & Ascendant Voidcores for targeted loot + item upgrades) unlocks in patch 12.0.5 — but start earning Voidcores now. Requires 6 Voidcores to unlock" },
-]},
-{ title: "Reputation", id: "rep", tasks: [
-{ id: "r1", text: "Singularity — target Renown 7", desc: "Renown 7: Champion trinket ilvl 246 (Crucible of Erratic Energies) — priority pick, high-value slot. Renown 2 unlocks Research Console (1 Void Sample/week from 3 Voidstorm WQs). Each rank = 2,500 rep. Warband-wide" },
-{ id: "r2", text: "Silvermoon Court — target Renown 9", desc: "Renown 9: Champion head ilvl 246. Warband-wide. Choose Soiree sub-faction allegiance carefully — it affects Blood Knights, Farstriders, Magisters, and Shades of the Row standings simultaneously" },
-{ id: "r3", text: "Hara'ti — target Renown 8", desc: "Renown 8: Champion belt (ilvl 246, upgradeable) via quest from Naynar in The Den. Warband-wide" },
-{ id: "r4", text: "Amani-Tribe — target Renown 9", desc: "Renown 9: Champion necklace ilvl 246 — two stat choices: Haste/Crit or Mastery/Vers. Warband-wide. Lower priority — neck has no primary stats, secondary stat optimisation only" }
-]},
-{ title: "Crafting", id: "craft", tasks: [
-{ id: "c1", text: "First profession patron weekly", desc: "Complete 3 Patron Crafting Orders — weekly quest rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops from orders as Glimmers of Knowledge (quality-dependent). ~19 KP total across all 4 weekly sources" },
-{ id: "c2", text: "Second profession patron weekly", desc: "Complete 3 Patron Crafting Orders — weekly quest rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops from orders as Glimmers of Knowledge (quality-dependent). ~19 KP total across all 4 weekly sources" },
-{ id: "c3", text: "First profession treatise", desc: "Craft or buy from AH — consume for 5 KP (one per profession per week). Scribes with Calm Hands spec get +1 bonus KP. Tradeable and Warband-bound" },
-{ id: "c4", text: "Second profession treatise", desc: "Craft or buy from AH — consume for 5 KP (one per profession per week). Tradeable and Warband-bound — an Inscription alt can craft and mail them to your main" }
-]},
-{ title: "World Weeklies and Quests", id: "world", tasks: [
-{ id: "w_gv", text: "Claim Great Vault (Weekly Reset — Do First!)", desc: "Located in the Silvermoon bank (neutral side). Choose your best item from up to 9 unlocked options (Dungeons, World, Raids tracks). Vault ilvl scales with your best key/delve/boss of the prior week. This is your single most reliable weekly upgrade — never miss it" },
-{ id: "w0", text: "Buy Rep Contract from Auction House", desc: "Maximise Reputation gains during activities" },
-{ id: "w1", text: "Campaign", desc: "Complete any new story chapter(s) — unlocks zone content, Renown, and faction progress" },
-{ id: "w2", text: "Lady Liadrin — Spark of Radiance quest", desc: "Pick up from Lady Liadrin in Silvermoon each reset — choose one of four weekly quests. Rewards Apex Cache (Coffer Key Shards, Voidlight Marl, Veteran Dawncrest, gold) + chance at Spark of Radiance. Second Spark available from Lor'themar's World Tour. Do not skip either!"
-},
-{ id: "w3", text: "Silvermoon weeklies", desc: "Weekly Dungeon quest from Halduron Brightwing (1,000 rep with chosen faction). Housing weekly from Vaeli outside the bank. Skip PvP and Pet Battle quests" },
-{ id: "w4", text: "World Boss", desc: "Guaranteed Warbound ilvl 250 Champion gear (2/6). Rotates weekly: Lu'ashal, Cragpine, Thorm'belan, Predaxas. Do on alts too" },
-{ id: "w5", text: "Singularity (Decimus / Voidforge)", desc: "Collect 3x Elementary Voidcore Shards from raids, Bountiful Delves, or M+ to progress the Voidforge with Decimus. Full Nebulous & Ascendant Voidcore system (targeted loot + item upgrades) unlocks in patch 12.0.5" },
-{ id: "w_mplus", text: "Mythic+ Dungeons — aim for 8 runs", desc: "1 dungeon = 1st Vault slot. 4 dungeons = 2nd slot. 8 dungeons = 3rd slot. Vault ilvl is based on your highest (+1 slot), 4th highest (+2 slot), and 8th highest (+3 slot) key. Push the highest key you can cleanly finish — ideally +7 to +10 for Hero-track Vault rewards. Also earns Dawncrest for upgrades" },
-{ id: "w_catalyst", text: "Matrix Catalyst — Spend Charge (if available)", desc: "Located in Silvermoon City (Sanctum of Light 40.6, 64.6). 1 charge every 2 weeks automatically. Converts any eligible non-tier armor piece into your class Tier Set piece (same ilvl). Priority: use on your highest ilvl armor slot you need for your 4-piece bonus. Getting your 4-set unlocks Catalyst Unbound — extra charges then drop from bosses/content" },
-{ id: "w_lfr", text: "LFR — Queue for Tier Set pieces (until 4-set complete)", desc: "LFR drops Veteran-track gear but is your fastest path to the 4-piece Tier Set bonus. The 4-piece is a major DPS/HPS jump AND unlocks Catalyst Unbound achievement, allowing bonus catalyst charges to drop from endgame content. Skip once you have all 4 pieces" },
-{ id: "w_upgrade", text: "Spend Dawncrests at Upgrade Vendor", desc: "Cuzolth (Item Upgrade Vendor) is at 48.3, 61.7 in Silvermoon City. Never sit on capped crests — upgrade your weakest gear slot first. Priority order: Weapon → Trinkets → Chest/Head/Legs → Shoulders/Hands/Feet → Cloak/Bracers/Belt → Rings/Neck" }
-]},
-{ title: "Prey", id: "prey", tasks: [
-{ id: "p1", text: "Prey - Nightmare x3 (Weekly Quest)", desc: "Nightmare unlocks at Rank 4 on Preyseeker's Journey (Journeys tab — not faction Renown). Weekly quest 'A Nightmarish Task' from Astalor in Murder Row. Rewards: Champion gear, 20 Hero Dawncrest (uncapped), 1x Beacon of Hope (summons Nullaeus in Delves). Fills Great Vault World slot" }
-]},
-{ title: "Delves", id: "delve", tasks: [
-{ id: "d1", text: "Bountiful Delves — Tier 11+ with Coffer Keys & Beacon of Hope from Prey weekly", desc: "End-of-run chest gear caps at T8 (Champion track). T8+ Delves fill the Great Vault World slot at Hero track. T11 Gilded Stashes (via Delver's Journey Rank 4) give Hero + Myth Dawncrest. Use Restored Coffer Keys on T11 — Trovehunter's Bounty Map guarantees a Hero gear piece." },
-{ id: "d2", text: "Nullaeus ??", desc: "30 Hero Dawncrest + 30 Myth Dawncrest (both uncapped - ONE-TIME per season - 5 Hero and Myth thereafter) + title 'the Ominous'. Killing ?? first grants both rewards and skips the need to kill ? separately" }
-]},
-{ title: "Faction Weeklies", id: "faction", tasks: [
-{ id: "f1", text: "Singularity — Stormarion Assault (Voidstorm)", desc: "Quest: Stand Your Ground. Defend Stormarion Citadel (SW Voidstorm, every 30 mins). Rewards: Pinnacle Cache (gold, 100 Coffer Key Shards, Voidlight Marl, 20 Veteran Dawncrest) + 2,000 Singularity rep. First 2 caches/week include Veteran gear; first 4 include a Restored Coffer Key" },
-{ id: "f2", text: "Silvermoon Court — Saltheril's Soiree (Eversong Woods)", desc: "Requires short unlock chain. Fortify the Runestones: Pinnacle Cache + 150 Brimming Arcana + 2,000 Silvermoon Court rep. Favor of the Court: 3x Saltheril's Favor tokens (subfaction weeklies for extra rep + Arcana)" },
-{ id: "f3", text: "Hara'ti — Legends of the Haranir (Harandar)", desc: "Quest: Lost Legends — pick a relic scenario weekly. Rewards: 1,000 Hara'ti rep + Pinnacle Cache (gear, Spark of Radiance chance) + housing decor based on relic chosen" },
-{ id: "f4", text: "Amani-Tribe — The Abundance (Zul'Aman / all zones)", desc: "Earn 20,000 Abundance points for weekly quest. Rewards: 1,000 Amani Tribe rep + Pinnacle Cache. Use up to 8x Shards of Dundun/week to earn Unalloyed Abundance currency — spend on mounts and profession knowledge items" }
-]},
-{ title: "Optional Weeklies", id: "optional", tasks: [
-{ id: "ow1", text: "Special Assignments", desc: "Complete 3 World Quests in a zone to unlock — rewards a Pinnacle Cache (gear, crests, Coffer Key Shards) + rep with the associated zone faction" },
-{ id: "ow2", text: "Timewalking (when active)", desc: "Pick up the Timewalking dungeon quest from the hub in Orgrimmar/Stormwind. The associated Timewalking raid quest (e.g. Firelands for Cataclysm TW) rewards Hero-track loot. TW dungeons count as Heroic dungeons for Great Vault dungeon slot progress — do 8 if active this week" }
-]}
+/* ══════════════════════════════════════════════════════
+   DATA TEMPLATES
+══════════════════════════════════════════════════════ */
+function makeCharGroups() {
+  return [
+    { id:'hdr_endgame', title:'Absolute End-Game Weekly Checklist', isHeader:true },
+    { id:'world', title:'World Weeklies and Quests', tasks:[
+      {id:'w_gv',text:'Claim Great Vault (Do First!)',desc:'Located in the Silvermoon bank (neutral side). Choose your best item from up to 9 unlocked options (Dungeons, World, Raids tracks). Vault ilvl scales with your best key/delve/boss of the prior week — never miss it',checked:false},
+      {id:'w0',text:'Buy Rep Contract from Auction House',desc:'Maximise Reputation gains during activities',checked:false},
+      {id:'w1',text:'Campaign',desc:'Complete any new story chapter(s) — unlocks zone content, Renown, and faction progress',checked:false},
+      {id:'w2',text:'Lady Liadrin — Spark of Radiance quest',desc:'Pick up from Lady Liadrin in Silvermoon each reset. Rewards Apex Cache (Coffer Key Shards, Voidlight Marl, Veteran Dawncrest, gold) + chance at Spark of Radiance. Second Spark from Lor\'themar\'s World Tour. Do not skip either!',checked:false},
+      {id:'w3',text:'Silvermoon Weeklies',desc:'Weekly Dungeon quest from Halduron Brightwing (1,000 rep). Housing weekly from Vaeli outside the bank. Skip PvP and Pet Battle quests',checked:false},
+      {id:'w4',text:'World Boss',desc:'Guaranteed Warbound ilvl 250 Champion gear (2/6). Rotates weekly: Lu\'ashal, Cragpine, Thorm\'belan, Predaxas. Do on alts too',checked:false},
+      {id:'w5',text:'Singularity (Decimus / Voidforge)',desc:'Collect 3x Elementary Voidcore Shards from Bountiful Delves or M+ to progress the Voidforge with Decimus. Full Nebulous & Ascendant Voidcore system unlocks in patch 12.0.5',checked:false},
+      {id:'w_mplus',text:'Mythic+ Dungeons — aim for 8 runs',desc:'1 dungeon = 1st Vault slot. 4 = 2nd slot. 8 = 3rd slot. Vault ilvl based on your highest/4th/8th key. Push highest you can cleanly finish — ideally +7 to +10 for Hero-track Vault rewards. Earns Dawncrest for upgrades',checked:false},
+      {id:'w_catalyst',text:'Matrix Catalyst — Spend Charge (if available)',desc:'Silvermoon City, Sanctum of Light (40.6, 64.6). 1 charge every 2 weeks automatically. Converts non-tier armor into your class Tier Set piece (same ilvl). Getting your 4-set unlocks Catalyst Unbound — extra charges drop from content thereafter',checked:false},
+      {id:'w_lfr',text:'LFR — Queue for Tier Set (until 4-set complete)',desc:'LFR drops Veteran-track gear but is your fastest path to the 4-piece Tier Set bonus. 4-piece is a major DPS/HPS jump AND unlocks Catalyst Unbound achievement. Skip once you have all 4 pieces',checked:false},
+      {id:'w_upgrade',text:'Spend Dawncrests at Upgrade Vendor',desc:'Cuzolth at 48.3, 61.7 in Silvermoon City. Never sit on capped crests. Priority: Weapon → Trinkets → Chest/Head/Legs → Shoulders/Hands/Feet → Cloak/Bracers/Belt → Rings/Neck',checked:false}
+    ]},
+    { id:'prey', title:'Prey', tasks:[
+      {id:'p1',text:'Prey - Nightmare x3 (Weekly Quest)',desc:'Nightmare unlocks at Preyseeker\'s Journey Rank 4. Quest \'A Nightmarish Task\' from Astalor in Murder Row. Rewards: Champion gear, 20 Hero Dawncrest (uncapped), 1x Beacon of Hope (summons Nullaeus in Delves). Fills Great Vault World slot',checked:false}
+    ]},
+    { id:'delve', title:'Delves', tasks:[
+      {id:'d1',text:'Bountiful Delves — T11+ with Coffer Keys & Beacon of Hope',desc:'End-of-run chest gear caps at T8 (Champion track). T8+ fills Great Vault World slot at Hero track. T11 Gilded Stashes (Delver\'s Journey Rank 4) give Hero + Myth Dawncrest. Use Restored Coffer Keys on T11 — Trovehunter\'s Bounty Map guarantees a Hero piece',checked:false},
+      {id:'d2',text:'Nullaeus ??',desc:'30 Hero Dawncrest + 30 Myth Dawncrest (uncapped ONE-TIME per season; 5 each thereafter) + title \'the Ominous\'. Killing ?? first grants both rewards and skips needing to kill ? separately',checked:false}
+    ]},
+    { id:'craft', title:'Crafting', tasks:[
+      {id:'c1',text:'First profession patron weekly',desc:'Complete 3 Patron Crafting Orders — rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops as Glimmers of Knowledge (quality-dependent). ~19 KP total across all 4 weekly sources',checked:false},
+      {id:'c2',text:'Second profession patron weekly',desc:'Complete 3 Patron Crafting Orders — rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops as Glimmers of Knowledge',checked:false},
+      {id:'c3',text:'First profession treatise',desc:'Craft or buy from AH — consume for 5 KP (one per profession per week). Scribes with Calm Hands spec get +1 bonus KP. Tradeable and Warband-bound',checked:false},
+      {id:'c4',text:'Second profession treatise',desc:'Craft or buy from AH — 5 KP (one per profession per week). An Inscription alt can craft and mail them to your main',checked:false}
+    ]},
+    { id:'faction', title:'Faction Weeklies', tasks:[
+      {id:'f1',text:'Singularity — Stormarion Assault (Voidstorm)',desc:'Quest: Stand Your Ground. Defend Stormarion Citadel (SW Voidstorm, every 30 mins). Rewards: Pinnacle Cache (gold, 100 Coffer Key Shards, Voidlight Marl, 20 Veteran Dawncrest) + 2,000 Singularity rep. First 2 caches/week include Veteran gear; first 4 include a Restored Coffer Key',checked:false},
+      {id:'f2',text:'Silvermoon Court — Saltheril\'s Soiree (Eversong Woods)',desc:'Requires short unlock chain. Fortify the Runestones: Pinnacle Cache + 150 Brimming Arcana + 2,000 Silvermoon Court rep. Favor of the Court: 3x Saltheril\'s Favor tokens (subfaction weeklies for extra rep + Arcana)',checked:false},
+      {id:'f3',text:'Hara\'ti — Legends of the Haranir (Harandar)',desc:'Quest: Lost Legends — pick a relic scenario weekly. Rewards: 1,000 Hara\'ti rep + Pinnacle Cache (gear, Spark of Radiance chance) + housing decor',checked:false},
+      {id:'f4',text:'Amani-Tribe — The Abundance (Zul\'Aman / all zones)',desc:'Earn 20,000 Abundance points for weekly quest. Rewards: 1,000 Amani Tribe rep + Pinnacle Cache. Use up to 8x Shards of Dundun/week to earn Unalloyed Abundance currency — spend on mounts and profession knowledge items',checked:false}
+    ]},
+    { id:'optional', title:'Optional Weeklies', tasks:[
+      {id:'ow1',text:'Special Assignments',desc:'Complete 3 World Quests in a zone to unlock — rewards a Pinnacle Cache (gear, crests, Coffer Key Shards) + rep with the associated zone faction',checked:false},
+      {id:'ow2',text:'Timewalking (when active)',desc:'Pick up the Timewalking dungeon quest from the hub in Orgrimmar/Stormwind. The associated Timewalking raid quest rewards Hero-track loot. TW dungeons count as Heroic dungeons for Great Vault dungeon slot progress — do 8 if active this week',checked:false}
+    ]}
+  ];
+}
+
+const SHARED_DEFAULT = [
+  { id:'fresh90', title:'Fresh Level 90 Checklist', tasks:[
+    {id:'f1',text:'Complete the Main Campaign (all 17 chapters)',desc:'REQUIRED before any endgame unlocks. World Quests, Prey, faction weeklies, and Silvermoon hub features are ALL locked until this is done. Finishing grants the \'Midnight\' achievement and unlocks Adventure Mode for every alt on your account',checked:false},
+    {id:'f2',text:'Set Hearthstone to Silvermoon City',desc:'Silvermoon is your endgame hub: Great Vault (bank), Upgrade Vendor Cuzolth (48.3, 61.7), Matrix Catalyst (Sanctum of Light 40.6, 64.6), Lady Liadrin (Spark quest), Halduron (dungeon weekly), and the Arcantina portal',checked:false},
+    {id:'f3',text:'Confirm Arcantina Hub is Unlocked',desc:'Rewarded as part of the Arator\'s Journey campaign branch (Key to the Arcantina). This hub is the portal to all major weekly content areas. If you skipped Arator\'s Journey, pick up the unlock quest in Silvermoon',checked:false},
+    {id:'f4',text:'Unlock Prey: Speak to Astalor in Murder Row',desc:'After campaign completion, visit Magister Astalor Bloodsworn in the Murder Row district of Silvermoon City to activate the Prey system. This is NOT automatic — you must talk to him',checked:false},
+    {id:'f5',text:'Buy Singularity Reputation Contract (AH)',desc:'Buy before doing any activities so rep gains stack immediately. Singularity Renown 7 rewards the Crucible of Erratic Energies trinket (Champion ilvl 246) — one of the highest-value early gear pieces. **Priority**',checked:false},
+    {id:'f6',text:'Pick Up All Silvermoon Weeklies First',desc:'Before leaving Silvermoon each week: Lady Liadrin (Spark of Radiance quest), Halduron Brightwing (dungeon weekly for 1,000 rep), Vaeli outside the bank (Housing weekly). Picking these up first lets you complete them passively while doing other content',checked:false},
+    {id:'f7',text:'Run Normal Dungeons (until ilvl 220+)',desc:'Queue immediately after hitting 90. Normal dungeons drop ilvl 213 base gear (upgradeable to 237). Run each dungeon 2–3 times to fill weak slots. No enrage timers — fresh players are fine. Target: ilvl 220+ before moving to Heroic',checked:false},
+    {id:'f8',text:'Run Heroic Dungeons (until ilvl 235+)',desc:'Once ilvl 220+, switch to Heroic. Drops ilvl 226 base gear (upgradeable to 250 with Veteran Dawncrests). Run each Heroic dungeon 2–3 times. Target: ilvl 235–240, which is the Mythic 0 readiness threshold',checked:false},
+    {id:'f9',text:'Mythic 0 World Tour (all 8 dungeons)',desc:'Once ilvl 235+, run every Mythic 0 dungeon at least once. M0 drops ilvl 239 base gear (upgradeable to 256 with Champion crests). Your fast highway from fresh 90 to pre-raid readiness. Fills Great Vault dungeon slots',checked:false},
+    {id:'f10',text:'World Boss',desc:'Quick weekly for a guaranteed Warbound ilvl 250 Champion gear piece (2/6). Rotates weekly: Lu\'ashal, Cragpine, Thorm\'belan, Predaxas. Do on alts too once unlocked',checked:false},
+    {id:'f11',text:'World Quests',desc:'Adventurer gear (ilvl 220–237). Quick and useful for filling early gear gaps while working toward Heroic/M0. Check for gear WQs in weak slots only — not worth detours for non-gear rewards yet',checked:false},
+    {id:'f12',text:'Prey: Normal then Hard',desc:'Normal (×2/week): Adventurer gear + Adventurer crests. Hard (×4/week): Veteran gear + Veteran crests. Push to Hard difficulty ASAP. Preyseeker\'s Journey Rank 4 unlocks Nightmare (Champion gear + Hero Dawncrest)',checked:false},
+    {id:'f13',text:'Delves: Claim Free Key Shards + Progress Tiers',desc:'Claim 200 free Coffer Key Shards from the Delve Vendor (one-time only, can go over cap). Push Delve tiers progressively — T7 gives ilvl ~224, T8 is the big breakpoint. Unlock Delver\'s Journey Rank 4 for Gilded Jackpot',checked:false},
+    {id:'f14',text:'Player Housing Weekly',desc:'Quick easy weekly quest from Vaeli outside the Silvermoon bank. Rewards crest bundles. Never skip — 5 minutes for free currency',checked:false},
+    {id:'f15',text:'Voidstorm Weeklies: Stormarion Assault',desc:'Quest: Stand Your Ground in Stormarion Citadel (SW Voidstorm, every 30 mins). Earns 2,000 Singularity rep per completion toward Renown 7 (Champion trinket). First 4 caches/week include a Restored Coffer Key',checked:false},
+    {id:'f16',text:'Voidstorm Weeklies: Decimus Storyline',desc:'Start the Decimus storyline to begin collecting Elemental Voidcores. The full Voidforge system unlocks in patch 12.0.5 — start earning Voidcores now. Requires 6 Voidcores to unlock',checked:false}
+  ]},
+  { id:'rep', title:'Reputation', tasks:[
+    {id:'r1',text:'Singularity — target Renown 7',desc:'Renown 7: Champion trinket ilvl 246 (Crucible of Erratic Energies) — priority pick, high-value slot. Renown 2 unlocks Research Console (1 Void Sample/week from 3 Voidstorm WQs). Each rank = 2,500 rep. Warband-wide',checked:false},
+    {id:'r2',text:'Silvermoon Court — target Renown 9',desc:'Renown 9: Champion head ilvl 246. Warband-wide. Choose Soiree sub-faction allegiance carefully — affects Blood Knights, Farstriders, Magisters, and Shades of the Row standings simultaneously',checked:false},
+    {id:'r3',text:'Hara\'ti — target Renown 8',desc:'Renown 8: Champion belt (ilvl 246, upgradeable) via quest from Naynar in The Den. Warband-wide',checked:false},
+    {id:'r4',text:'Amani-Tribe — target Renown 9',desc:'Renown 9: Champion necklace ilvl 246 — two stat choices: Haste/Crit or Mastery/Vers. Warband-wide. Lower priority — neck has no primary stats, secondary stat optimisation only',checked:false}
+  ]}
 ];
 
-// Groups excluded from total progress: Fresh Level 90 (one-time setup), Reputation
-const PROGRESS_EXCLUDED_IDS = new Set(["fresh90", "rep"]);
+const DEFAULT_REALMS = [
+  { id:'realm_silvermoon', name:'Silvermoon', region:'EU', open:true,
+    characters:[
+      { id:'char_huskysham', name:'Huskysham', charClass:'Shaman', open:false, groups: makeCharGroups() },
+      { id:'char_huskydk',   name:'Huskydk',   charClass:'Death Knight', open:false, groups: makeCharGroups() }
+    ]
+  }
+];
 
-/* ── TOAST ── */
-let toastTimer = null;
-function showToast(msg) {
-const t = document.getElementById('toast');
-t.textContent = msg;
-t.classList.add('show');
-clearTimeout(toastTimer);
-toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
-}
+/* ══════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════ */
+const SK_REALMS = 'midV3_realms', SK_SHARED = 'midV3_shared';
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function loadRealms(){ try{ const s=localStorage.getItem(SK_REALMS); return s?JSON.parse(s):clone(DEFAULT_REALMS); }catch(e){ return clone(DEFAULT_REALMS); } }
+function loadShared(){ try{ const s=localStorage.getItem(SK_SHARED); return s?JSON.parse(s):clone(SHARED_DEFAULT); }catch(e){ return clone(SHARED_DEFAULT); } }
+function saveRealms(){ localStorage.setItem(SK_REALMS, JSON.stringify(APP.realms)); }
+function saveShared(){ localStorage.setItem(SK_SHARED, JSON.stringify(APP.shared)); }
+const APP = { realms: loadRealms(), shared: loadShared() };
 
-/* ── MODAL ── */
-function openNewGroupModal() {
-document.getElementById('group-modal').classList.add('open');
-setTimeout(() => document.getElementById('group-name-input').focus(), 100);
-}
-function closeGroupModal() {
-document.getElementById('group-modal').classList.remove('open');
-document.getElementById('group-name-input').value = '';
-}
-function confirmNewGroup() {
-const n = document.getElementById('group-name-input').value.trim();
-if (!n) { document.getElementById('group-name-input').focus(); return; }
-const g = { title: n, id: "g_" + Date.now(), tasks: [] };
-const container = document.getElementById('task-groups-container');
-updateEmptyState();
-container.appendChild(createGroupUI(g));
-initSortableGroup(container.lastElementChild.querySelector('.sortable-list'));
-saveState();
-closeGroupModal();
-showToast(`Group "${n}" created`);
-}
-document.getElementById('group-modal').addEventListener('click', function(e) {
-if (e.target === this) closeGroupModal();
-});
-document.getElementById('group-name-input').addEventListener('keydown', function(e) {
-if (e.key === 'Enter') confirmNewGroup();
-if (e.key === 'Escape') closeGroupModal();
-});
+/* ══════════════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════════════ */
+let _tt=null;
+function showToast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),2800); }
 
-/* ── CHARACTER DATA ── */
-async function fetchCharacterData(name, realm, mplusId, portraitId) {
-try {
-const response = await fetch(`https://raider.io/api/v1/characters/profile?region=eu&realm=${realm}&name=${name}&fields=mythic_plus_scores_by_season%3Acurrent`);
-if (!response.ok) throw new Error('API error');
-const data = await response.json();
-if (data.thumbnail_url) document.getElementById(portraitId).src = data.thumbnail_url;
-if (data.mythic_plus_scores_by_season && data.mythic_plus_scores_by_season.length) {
-document.getElementById(mplusId).innerText = Math.round(data.mythic_plus_scores_by_season[0].scores.all);
-}
-} catch (e) {
-document.getElementById(mplusId).innerText = 'N/A';
-console.warn(`Raider.IO API unavailable for ${name}:`, e);
-}
-}
+/* ══════════════════════════════════════════════════════
+   MODALS
+══════════════════════════════════════════════════════ */
+function openModal(id){ document.getElementById(id).classList.add('open'); setTimeout(()=>{ const f=document.querySelector('#'+id+' .modal-input'); if(f)f.focus(); },80); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); document.querySelectorAll('#'+id+' .modal-input').forEach(i=>i.value=''); }
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m)closeModal(m.id); }));
 
-/* ── ROW / GROUP CREATION ── */
-function createTaskRow(id, text, desc, checked = false) {
-const tr = document.createElement('tr');
-tr.dataset.id = id;
-if (checked) tr.classList.add('row-done');
-tr.innerHTML = `
-<td class="col-left">
-<div style="display:flex; align-items:center; gap:15px;">
-<span class="drag-icon" aria-hidden="true">⠿</span>
-<input type="checkbox" class="prog-task" aria-label="Mark task complete" ${checked ? 'checked' : ''}>
-</div>
-</td>
-<td><span class="action-text">${escapeHTML(text)}</span><span class="desc-text">${escapeHTML(desc)}</span></td>
-<td style="width:50px; text-align:center;">
-<button class="remove-task-btn" aria-label="Remove task" title="Remove task">×</button>
-</td>
-`;
-tr.querySelector('input').addEventListener('change', () => { sync(); saveState(); });
-tr.querySelector('.remove-task-btn').addEventListener('click', () => removeTask(tr));
-return tr;
+/* ══════════════════════════════════════════════════════
+   RAIDER.IO
+══════════════════════════════════════════════════════ */
+async function fetchRIO(char, realmName){
+  // IDs are looked up lazily inside the async body so the drawer is in the DOM by then
+  try{
+    const r=await fetch(`https://raider.io/api/v1/characters/profile?region=eu&realm=${encodeURIComponent(realmName)}&name=${encodeURIComponent(char.name)}&fields=mythic_plus_scores_by_season%3Acurrent`);
+    if(!r.ok)throw 0;
+    const d=await r.json();
+    const imgEl   = document.getElementById('port_'+char.id);
+    const badgeEl = document.getElementById('mplus_'+char.id);
+    if(d.thumbnail_url){
+      if(imgEl) imgEl.src=d.thumbnail_url;
+      if(FIXED_BAR_CHAR_ID===char.id){
+        const fp=document.getElementById('fixed-bar-portrait');
+        if(fp) fp.src=d.thumbnail_url;
+      }
+    }
+    if(d.mythic_plus_scores_by_season?.length){
+      const score=Math.round(d.mythic_plus_scores_by_season[0].scores.all);
+      if(badgeEl) badgeEl.textContent=score;
+    }
+  }catch(e){
+    const badgeEl=document.getElementById('mplus_'+char.id);
+    if(badgeEl) badgeEl.textContent='N/A';
+  }
 }
 
-function createAddTaskRow(groupId) {
-const tr = document.createElement('tr');
-tr.className = 'add-task-row';
-tr.dataset.addRow = groupId;
-tr.innerHTML = `
-<td colspan="3" style="padding: 10px 15px;">
-<div class="add-task-inputs">
-<input type="text" class="new-task-name" placeholder="Task name…" maxlength="120" />
-<input type="text" class="new-task-desc" placeholder="Description (optional)…" maxlength="200" />
-<button class="add-task-confirm-btn">Add</button>
-<button class="add-task-cancel-btn">Cancel</button>
-</div>
-</td>
-`;
-tr.querySelector('.add-task-confirm-btn').addEventListener('click', () => confirmAddTask(tr, groupId));
-tr.querySelector('.add-task-cancel-btn').addEventListener('click', () => hideAddTaskRow(tr));
-tr.querySelector('.new-task-name').addEventListener('keydown', e => {
-if (e.key === 'Enter') confirmAddTask(tr, groupId);
-if (e.key === 'Escape') hideAddTaskRow(tr);
-});
-tr.querySelector('.new-task-desc').addEventListener('keydown', e => {
-if (e.key === 'Enter') confirmAddTask(tr, groupId);
-if (e.key === 'Escape') hideAddTaskRow(tr);
-});
-return tr;
+/* ══════════════════════════════════════════════════════
+   ESCAPE HTML
+══════════════════════════════════════════════════════ */
+function esc(s){ const p=document.createElement('p'); p.textContent=s; return p.innerHTML; }
+
+/* ══════════════════════════════════════════════════════
+   CLASS → ICON
+══════════════════════════════════════════════════════ */
+function classIcon(c){
+  const m={'death knight':'deathknight','demon hunter':'demonhunter',evoker:'evoker',druid:'druid',hunter:'hunter',mage:'mage',monk:'monk',paladin:'paladin',priest:'priest',rogue:'rogue',shaman:'shaman',warlock:'warlock',warrior:'warrior'};
+  return m[(c||'').toLowerCase()]||'warrior';
 }
 
-function confirmAddTask(addRow, groupId) {
-const name = addRow.querySelector('.new-task-name').value.trim();
-if (!name) { addRow.querySelector('.new-task-name').focus(); return; }
-const desc = addRow.querySelector('.new-task-desc').value.trim();
-const tbody = addRow.closest('tbody');
-tbody.insertBefore(createTaskRow("c_" + Date.now(), name, desc), addRow);
-addRow.querySelector('.new-task-name').value = '';
-addRow.querySelector('.new-task-desc').value = '';
-addRow.querySelector('.new-task-name').focus();
-sync(); saveState();
+/* ══════════════════════════════════════════════════════
+   TASK ROW
+══════════════════════════════════════════════════════ */
+function mkTaskRow(task, onCheck, onDelete){
+  const tr=document.createElement('tr');
+  tr.dataset.id=task.id;
+  if(task.checked)tr.classList.add('row-done');
+  tr.innerHTML=`<td class="col-left"><div style="display:flex;align-items:center;gap:11px"><span class="drag-icon">⠿</span><input type="checkbox" class="prog-task"${task.checked?' checked':''}></div></td><td><span class="action-text">${esc(task.text)}</span><span class="desc-text">${esc(task.desc||'')}</span></td><td style="width:40px;text-align:center"><button class="remove-task-btn" title="Remove">×</button></td>`;
+  tr.querySelector('.prog-task').addEventListener('change',function(){
+    task.checked=this.checked;
+    tr.classList.toggle('row-done',this.checked);
+    onCheck();
+  });
+  tr.querySelector('.remove-task-btn').addEventListener('click',()=>{
+    tr.style.opacity='0'; tr.style.transform='translateX(16px)';
+    setTimeout(()=>{ tr.remove(); onDelete(); },170);
+  });
+  return tr;
 }
 
-function hideAddTaskRow(addRow) {
-addRow.classList.remove('visible');
-addRow.querySelector('.new-task-name').value = '';
-addRow.querySelector('.new-task-desc').value = '';
+function mkAddRow(onAdd){
+  const tr=document.createElement('tr');
+  tr.className='add-task-row';
+  tr.innerHTML=`<td colspan="3" style="padding:8px 12px"><div class="add-task-inputs"><input type="text" class="new-task-name" placeholder="Task name…" maxlength="120"><input type="text" class="new-task-desc" placeholder="Description (optional)…" maxlength="220"><button class="add-task-confirm-btn">Add</button><button class="add-task-cancel-btn">Cancel</button></div></td>`;
+  const confirm=()=>{
+    const nm=tr.querySelector('.new-task-name').value.trim();
+    if(!nm){tr.querySelector('.new-task-name').focus();return;}
+    const ds=tr.querySelector('.new-task-desc').value.trim();
+    onAdd({id:'t_'+Date.now(),text:nm,desc:ds,checked:false});
+    tr.querySelector('.new-task-name').value='';
+    tr.querySelector('.new-task-desc').value='';
+    tr.querySelector('.new-task-name').focus();
+  };
+  const cancel=()=>{ tr.classList.remove('visible'); tr.querySelector('.new-task-name').value=''; tr.querySelector('.new-task-desc').value=''; };
+  tr.querySelector('.add-task-confirm-btn').addEventListener('click',confirm);
+  tr.querySelector('.add-task-cancel-btn').addEventListener('click',cancel);
+  tr.querySelector('.new-task-name').addEventListener('keydown',e=>{ if(e.key==='Enter')confirm(); if(e.key==='Escape')cancel(); });
+  tr.querySelector('.new-task-desc').addEventListener('keydown',e=>{ if(e.key==='Enter')confirm(); if(e.key==='Escape')cancel(); });
+  return tr;
 }
 
-function createGroupUI(group) {
-const wrapper = document.createDocumentFragment();
+/* ══════════════════════════════════════════════════════
+   BUILD TASK GROUP
+══════════════════════════════════════════════════════ */
+function buildGroup(group, listRef, onSync, onSave, compact){
+  const wrap=document.createElement('div');
+  wrap.className=compact?'char-group-wrapper':'group-wrapper';
+  wrap.dataset.gid=group.id;
 
-if (group.title.toLowerCase() === "crafting") {
-const sectionHeader = document.createElement('div');
-sectionHeader.className = "section-big-title";
-sectionHeader.innerText = "Absolute End-Game Weekly Checklist";
-wrapper.appendChild(sectionHeader);
-}
+  const hf=document.createElement('div');
+  hf.className=compact?'char-group-header-flex':'group-header-flex';
+  hf.innerHTML=`<span class="${compact?'drag-icon':'group-drag-handle'}" style="cursor:grab;color:var(--void-glow);font-size:0.95rem">⠿</span><input type="checkbox" class="sel-all" title="Select/Deselect All" style="margin:0"><div class="${compact?'char-category-header':'category-header'}">${esc(group.title)}</div><button class="remove-group-btn">Remove</button>`;
+  wrap.appendChild(hf);
 
-const div = document.createElement('div');
-div.className = "group-wrapper";
-div.innerHTML = `
-<div class="group-header-flex">
-<span class="group-drag-handle" aria-hidden="true">⠿</span>
-<input type="checkbox" class="select-all-group" title="Select/Deselect All Tasks" style="margin-right: -5px;">
-<div class="category-header">${escapeHTML(group.title)}</div>
-<button class="remove-group-btn" aria-label="Remove group">Remove Group</button>
-</div>
-<table><tbody class="sortable-list" data-group="${group.id}"></tbody></table>
-<button class="btn-add-task" aria-label="Add task to group">+ Task</button>
-`;
-const tbody = div.querySelector('tbody');
-group.tasks.forEach(t => tbody.appendChild(createTaskRow(t.id, t.text, t.desc, t.checked)));
-tbody.appendChild(createAddTaskRow(group.id));
+  if(!group.tasks)group.tasks=[];
+  const table=document.createElement('table');
+  const tbody=document.createElement('tbody');
+  tbody.className='sortable-list';
+  tbody.dataset.gid=group.id;
 
-div.querySelector('.btn-add-task').addEventListener('click', () => {
-const addRow = tbody.querySelector('.add-task-row');
-addRow.classList.add('visible');
-addRow.querySelector('.new-task-name').focus();
-});
+  const addRow=mkAddRow(task=>{
+    group.tasks.push(task);
+    const tr=mkTaskRow(task,()=>{onSync();onSave();},()=>{ group.tasks=group.tasks.filter(t=>t.id!==task.id); onSync(); onSave(); });
+    tbody.insertBefore(tr,addRow);
+    onSync(); onSave();
+  });
 
-div.querySelector('.remove-group-btn').addEventListener('click', () => {
-if (confirm(`Delete group "${group.title}"?`)) {
-if (group.title.toLowerCase() === "crafting" && div.previousElementSibling?.className === "section-big-title") {
-div.previousElementSibling.remove();
-}
-div.remove();
-sync(); saveState();
-updateEmptyState();
-showToast("Group removed");
-}
-});
+  group.tasks.forEach(task=>{
+    const tr=mkTaskRow(task,()=>{onSync();onSave();},()=>{ group.tasks=group.tasks.filter(t=>t.id!==task.id); onSync(); onSave(); });
+    tbody.appendChild(tr);
+  });
+  tbody.appendChild(addRow);
+  table.appendChild(tbody);
+  wrap.appendChild(table);
 
-div.querySelector('.select-all-group').addEventListener('change', function() {
-const isChecked = this.checked;
-div.querySelectorAll('.prog-task').forEach(cb => cb.checked = isChecked);
-sync(); saveState();
-});
+  const ab=document.createElement('button');
+  ab.className='btn-add-task'; ab.textContent='+ Task';
+  ab.addEventListener('click',()=>{ addRow.classList.add('visible'); addRow.querySelector('.new-task-name').focus(); });
+  wrap.appendChild(ab);
 
-wrapper.appendChild(div);
-return wrapper;
-}
+  hf.querySelector('.sel-all').addEventListener('change',function(){
+    group.tasks.forEach(t=>t.checked=this.checked);
+    tbody.querySelectorAll('.prog-task').forEach(cb=>{
+      cb.checked=this.checked;
+      cb.closest('tr').classList.toggle('row-done',this.checked);
+    });
+    onSync(); onSave();
+  });
 
-/* ── CORE LOGIC ── */
-function sync() {
-const groups = document.querySelectorAll('.group-wrapper');
-let total = 0;
-let checked = 0;
+  hf.querySelector('.remove-group-btn').addEventListener('click',()=>{
+    if(confirm(`Delete group "${group.title}"?`)){
+      const idx=listRef.findIndex(g=>g.id===group.id);
+      if(idx>-1)listRef.splice(idx,1);
+      wrap.remove(); onSync(); onSave();
+    }
+  });
 
-groups.forEach(gw => {
-const groupId = gw.querySelector('.sortable-list')?.dataset.group;
-const countsForProgress = !PROGRESS_EXCLUDED_IDS.has(groupId);
+  new Sortable(tbody,{
+    animation:130, handle:'.drag-icon', ghostClass:'sortable-ghost',
+    onEnd:()=>{
+      const ord=[];
+      tbody.querySelectorAll('tr[data-id]').forEach(tr=>{ const t=group.tasks.find(t=>t.id===tr.dataset.id); if(t)ord.push(t); });
+      group.tasks=ord; onSave();
+    }
+  });
 
-gw.querySelectorAll('.prog-task').forEach(cb => {
-const tr = cb.closest('tr');
-if (cb.checked) tr.classList.add('row-done');
-else tr.classList.remove('row-done');
-
-if (countsForProgress) {
-total++;
-if (cb.checked) checked++;
-}
-});
-});
-
-const perc = total === 0 ? 0 : Math.round((checked / total) * 100);
-document.getElementById('percent-text').innerText = perc + '%';
-document.getElementById('bar-fill').style.width = perc + '%';
+  return wrap;
 }
 
-function removeTask(tr) {
-tr.style.opacity = '0';
-tr.style.transform = 'translateX(20px)';
-setTimeout(() => { tr.remove(); sync(); saveState(); }, 200);
+/* ══════════════════════════════════════════════════════
+   SYNC CHARACTER PROGRESS
+══════════════════════════════════════════════════════ */
+const EXCL=new Set(['fresh90','rep']);
+function syncChar(char){
+  let tot=0,chk=0;
+  (char.groups||[]).forEach(g=>{
+    if(g.isHeader||EXCL.has(g.id))return;
+    (g.tasks||[]).forEach(t=>{ tot++; if(t.checked)chk++; });
+  });
+  const pct=tot===0?0:Math.round(chk/tot*100);
+  const lbl=pct+'%';
+  // Mini bar (in collapsed header)
+  const mp=document.getElementById('mini_pct_'+char.id);
+  const mb=document.getElementById('mini_bar_'+char.id);
+  if(mp)mp.textContent=lbl;
+  if(mb)mb.style.width=pct+'%';
+  // Full bar (inside open body)
+  const fp=document.getElementById('full_pct_'+char.id);
+  const fb=document.getElementById('full_bar_'+char.id);
+  if(fp)fp.textContent=lbl;
+  if(fb)fb.style.width=pct+'%';
+  // Fixed floating bar — update if this char is the active one
+  if(FIXED_BAR_CHAR_ID===char.id){
+    updateFixedBar(char, pct, lbl);
+  }
 }
 
-function updateEmptyState() {
-const container = document.getElementById('task-groups-container');
-if (container.querySelectorAll('.group-wrapper').length === 0) {
-container.innerHTML = `
-<div class="empty-state">
-<span>🗺️</span>
-<h3>Your list is empty</h3>
-<p>Create a group to start tracking your weekly progress.</p>
-</div>`;
-} else {
-const es = container.querySelector('.empty-state');
-if (es) es.remove();
-}
+let FIXED_BAR_CHAR_ID=null;
+
+function updateFixedBar(char, pct, lbl){
+  const bar=document.getElementById('char-fixed-bar');
+  if(!bar)return;
+  document.getElementById('fixed-bar-name').textContent=char.name.toUpperCase();
+  document.getElementById('fixed-bar-class').textContent=char.charClass;
+  document.getElementById('fixed-bar-fill').style.width=(pct||0)+'%';
+  document.getElementById('fixed-bar-pct').textContent=lbl||'0%';
+  // Sync portrait from the char's portrait element
+  const mainPort=document.getElementById('port_'+char.id);
+  const fixedPort=document.getElementById('fixed-bar-portrait');
+  if(mainPort&&fixedPort&&mainPort.src&&mainPort.src!==fixedPort.src){
+    fixedPort.src=mainPort.src;
+  }
 }
 
-function saveState() {
-const data = [];
-document.querySelectorAll('.group-wrapper').forEach(gw => {
-const tasks = [];
-gw.querySelectorAll('tbody tr[data-id]').forEach(tr => {
-tasks.push({
-id: tr.dataset.id,
-text: tr.querySelector('.action-text').innerText,
-desc: tr.querySelector('.desc-text').innerText,
-checked: tr.querySelector('.prog-task').checked
-});
-});
-data.push({
-title: gw.querySelector('.category-header').innerText,
-id: gw.querySelector('.sortable-list').dataset.group,
-tasks: tasks
-});
-});
-localStorage.setItem('huskysham_v2', JSON.stringify(data));
+/* ══════════════════════════════════════════════════════
+   BUILD CHARACTER DRAWER
+══════════════════════════════════════════════════════ */
+function buildCharDrawer(char, realm){
+  const drawer=document.createElement('div');
+  drawer.className='char-drawer'+(char.open?' open':'');
+  drawer.dataset.cid=char.id;
+
+  /* Header */
+  const hdr=document.createElement('div');
+  hdr.className='char-header';
+  hdr.innerHTML=`
+    <span class="char-drag-handle">⠿</span>
+    <div class="char-portrait-sm"><img id="port_${char.id}" src="https://render.worldofwarcraft.com/eu/icons/512/classicon_${classIcon(char.charClass)}.jpg" alt=""></div>
+    <div class="char-header-info">
+      <span class="char-header-name">${esc(char.name.toUpperCase())}</span>
+      <div class="char-header-sub">
+        <span class="char-class-badge">${esc(char.charClass)}</span>
+        <span class="char-mplus-badge">🏆 M+ <span id="mplus_${char.id}">--</span></span>
+        <button class="refresh-rio-btn" id="refreshrio_${char.id}" title="Refresh M+ Score" onclick="event.stopPropagation()">↻</button>
+      </div>
+    </div>
+    <div class="char-mini-bar-wrap">
+      <span class="char-mini-pct" id="mini_pct_${char.id}">0%</span>
+      <div class="char-mini-bar-bg"><div class="char-mini-bar-fill" id="mini_bar_${char.id}"></div></div>
+    </div>
+    <button class="sm-btn danger" style="flex-shrink:0" id="rmchar_${char.id}">Remove</button>
+    <span class="char-chevron">▼</span>`;
+
+  hdr.addEventListener('click',e=>{
+    if(e.target.id==='rmchar_'+char.id)return;
+    char.open=!char.open;
+    drawer.classList.toggle('open',char.open);
+    saveRealms();
+    // Hide fixed bar if this char is collapsing
+    if(!char.open&&FIXED_BAR_CHAR_ID===char.id){
+      FIXED_BAR_CHAR_ID=null;
+      const fb=document.getElementById('char-fixed-bar');
+      if(fb)fb.classList.remove('visible');
+    }
+  });
+
+  hdr.querySelector('#refreshrio_'+char.id).addEventListener('click',e=>{
+    e.stopPropagation();
+    const btn=e.currentTarget;
+    btn.classList.add('spinning');
+    btn.disabled=true;
+    fetchRIO(char, realm.name).finally(()=>{
+      btn.classList.remove('spinning');
+      btn.disabled=false;
+    });
+    showToast('Refreshing M+ score…');
+  });
+
+  hdr.querySelector('#rmchar_'+char.id).addEventListener('click',e=>{
+    e.stopPropagation();
+    if(confirm(`Remove "${char.name}"?`)){
+      realm.characters=realm.characters.filter(c=>c.id!==char.id);
+      if(drawer._obs)drawer._obs.disconnect();
+      if(FIXED_BAR_CHAR_ID===char.id){
+        FIXED_BAR_CHAR_ID=null;
+        const fb=document.getElementById('char-fixed-bar');
+        if(fb)fb.classList.remove('visible');
+      }
+      drawer.remove(); saveRealms();
+      showToast(char.name+' removed');
+    }
+  });
+  drawer.appendChild(hdr);
+
+  /* Sentinel: IntersectionObserver watches this to know when header scrolls off-screen */
+  const sentinel=document.createElement('div');
+  sentinel.dataset.sentinel=char.id;
+  sentinel.style.cssText='height:1px;width:100%;pointer-events:none;';
+  drawer.appendChild(sentinel);
+
+  /* Body */
+  const body=document.createElement('div');
+  body.className='char-body';
+
+  /* Full progress bar */
+  const pb=document.createElement('div');
+  pb.className='char-full-progress';
+  pb.innerHTML=`<div class="char-full-progress-header"><span class="char-progress-label">Weekly Progress</span><span class="char-progress-pct" id="full_pct_${char.id}">0%</span></div><div class="char-bar-bg"><div class="char-bar-fill" id="full_bar_${char.id}"></div></div>`;
+  body.appendChild(pb);
+
+  /* Links — Armory, RIO, WCL */
+  const rl=realm.name.toLowerCase(), cn=char.name.toLowerCase();
+  const rg=(realm.region||'EU').toLowerCase();
+  const links=document.createElement('div');
+  links.className='char-links-row';
+  links.innerHTML=`
+    <a href="https://worldofwarcraft.blizzard.com/en-gb/character/${rg}/${rl}/${cn}" target="_blank" class="btn-ctrl">🛡️ ARMORY</a>
+    <a href="https://raider.io/characters/${rg}/${rl}/${char.name}" target="_blank" class="btn-ctrl">📈 RIO</a>
+    <a href="https://www.warcraftlogs.com/character/${rg}/${rl}/${cn}" target="_blank" class="btn-ctrl">📜 LOGS</a>`;
+  body.appendChild(links);
+
+  /* Groups */
+  if(!char.groups)char.groups=makeCharGroups();
+  const gc=document.createElement('div');
+  gc.dataset.charGroups=char.id;
+
+  const onSync=()=>syncChar(char);
+  const onSave=()=>saveRealms();
+
+  char.groups.forEach(g=>{
+    if(g.isHeader){
+      const h=document.createElement('div');
+      h.className='section-big-title';
+      h.textContent=g.title;
+      gc.appendChild(h);
+      return;
+    }
+    gc.appendChild(buildGroup(g, char.groups, onSync, onSave, true));
+  });
+
+  body.appendChild(gc);
+
+  /* Add group button */
+  const agb=document.createElement('button');
+  agb.className='char-add-group-btn';
+  agb.textContent='+ Add Task Group';
+  agb.addEventListener('click',()=>{
+    document.getElementById('chargroup-target-char').value=char.id;
+    document.getElementById('chargroup-target-realm').value=realm.id;
+    openModal('chargroup-modal');
+  });
+  body.appendChild(agb);
+
+  /* Sortable groups */
+  new Sortable(gc,{
+    animation:130, handle:'.drag-icon', ghostClass:'sortable-ghost',
+    filter:'.section-big-title',
+    onEnd:()=>{
+      const ord=[];
+      Array.from(gc.children).forEach(el=>{
+        if(el.classList.contains('section-big-title')){ ord.push({id:'hdr_endgame',title:el.textContent,isHeader:true}); return; }
+        const gid=el.dataset.gid;
+        const g=char.groups.find(g=>g.id===gid);
+        if(g)ord.push(g);
+      });
+      char.groups=ord; saveRealms();
+    }
+  });
+
+  drawer.appendChild(body);
+
+  /* Fetch RIO data — pass char reference so we can update fixed bar portrait too */
+  // Defer fetch until after drawer is in the DOM (setTimeout lets the caller append first)
+  setTimeout(()=>{ fetchRIO(char, realm.name); },0);
+
+  setTimeout(()=>syncChar(char),0);
+
+  /* IntersectionObserver: show fixed bar when char header scrolls out of view
+     AND the drawer is open. Hide when header is visible again or drawer closes. */
+  setTimeout(()=>{
+    const charHdr=drawer.querySelector('.char-header');
+    if(!charHdr||typeof IntersectionObserver==='undefined')return;
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(!char.open)return; // drawer closed — never show
+        const fixedBar=document.getElementById('char-fixed-bar');
+        if(!fixedBar)return;
+        if(!entry.isIntersecting){
+          // Header scrolled off screen — show fixed bar for this char
+          FIXED_BAR_CHAR_ID=char.id;
+          let tot=0,chk=0;
+          (char.groups||[]).forEach(g=>{
+            if(g.isHeader||EXCL.has(g.id))return;
+            (g.tasks||[]).forEach(t=>{ tot++; if(t.checked)chk++; });
+          });
+          const pct=tot===0?0:Math.round(chk/tot*100);
+          updateFixedBar(char,pct,pct+'%');
+          fixedBar.classList.add('visible');
+        } else {
+          // Header back in view — hide fixed bar only if it's ours
+          if(FIXED_BAR_CHAR_ID===char.id){
+            FIXED_BAR_CHAR_ID=null;
+            document.getElementById('char-fixed-bar').classList.remove('visible');
+          }
+        }
+      });
+    },{threshold:0, rootMargin:'-1px 0px 0px 0px'});
+    obs.observe(charHdr);
+    // Store observer so we can disconnect it when char is removed
+    drawer._obs=obs;
+  },0);
+
+  return drawer;
 }
 
-function loadState() {
-const container = document.getElementById('task-groups-container');
-container.innerHTML = '';
-const saved = localStorage.getItem('huskysham_v2');
-const data = saved ? JSON.parse(saved) : defaultData;
-data.forEach(g => container.appendChild(createGroupUI(g)));
-document.querySelectorAll('.sortable-list').forEach(initSortableGroup);
-initSortableContainer(container);
-updateEmptyState();
-sync();
+/* ══════════════════════════════════════════════════════
+   BUILD REALM CABINET
+══════════════════════════════════════════════════════ */
+function buildRealm(realm){
+  const cab=document.createElement('div');
+  cab.className='realm-cabinet'+(realm.open?' open':'');
+  cab.dataset.rid=realm.id;
+
+  /* Header */
+  const hdr=document.createElement('div');
+  hdr.className='realm-header';
+  hdr.innerHTML=`
+    <span class="realm-drag-handle">⠿</span>
+    <span class="realm-icon">🌐</span>
+    <span class="realm-name">${esc(realm.name)}</span>
+    <div class="realm-meta">
+      <span class="realm-char-count" id="cc_${realm.id}">${realm.characters.length} char${realm.characters.length!==1?'s':''}</span>
+      <div class="realm-actions">
+        <button class="sm-btn" id="addcharbtn_${realm.id}">+ Character</button>
+        <button class="sm-btn danger" id="rmrealmbtn_${realm.id}">Remove Realm</button>
+      </div>
+      <span class="realm-chevron">▼</span>
+    </div>`;
+
+  hdr.addEventListener('click',e=>{
+    if(e.target.closest('.realm-actions'))return;
+    realm.open=!realm.open;
+    cab.classList.toggle('open',realm.open);
+    saveRealms();
+  });
+
+  hdr.querySelector('#addcharbtn_'+realm.id).addEventListener('click',e=>{
+    e.stopPropagation();
+    document.getElementById('char-realm-target').value=realm.id;
+    openModal('char-modal');
+  });
+
+  hdr.querySelector('#rmrealmbtn_'+realm.id).addEventListener('click',e=>{
+    e.stopPropagation();
+    if(confirm(`Remove realm "${realm.name}" and all its characters?`)){
+      APP.realms=APP.realms.filter(r=>r.id!==realm.id);
+      cab.remove(); saveRealms();
+      showToast('Realm "'+realm.name+'" removed');
+    }
+  });
+
+  cab.appendChild(hdr);
+
+  /* Body */
+  const body=document.createElement('div');
+  body.className='realm-body';
+
+  const cc=document.createElement('div');
+  cc.dataset.charsOf=realm.id;
+
+  if(realm.characters.length===0){
+    const em=document.createElement('div');
+    em.className='empty-realm-state';
+    em.textContent='No characters yet — click + Character to add one';
+    cc.appendChild(em);
+  }
+
+  realm.characters.forEach(c=>cc.appendChild(buildCharDrawer(c,realm)));
+  body.appendChild(cc);
+  cab.appendChild(body);
+
+  /* Sortable characters */
+  new Sortable(cc,{
+    animation:130, handle:'.char-drag-handle', ghostClass:'sortable-ghost',
+    onEnd:()=>{
+      const ord=[];
+      cc.querySelectorAll('.char-drawer').forEach(el=>{ const c=realm.characters.find(c=>c.id===el.dataset.cid); if(c)ord.push(c); });
+      realm.characters=ord; saveRealms();
+    }
+  });
+
+  return cab;
 }
 
-// Clears checkboxes, excluding 'Fresh Level 90 Checklist' and 'Reputation'
-function weeklyReset() {
-if (confirm("Reset weekly checkboxes? (Excludes Fresh 90 and Reputation groups)")) {
-document.querySelectorAll('.group-wrapper').forEach(gw => {
-const groupId = gw.querySelector('.sortable-list')?.dataset.group;
-// If the group is NOT one of the excluded ones, clear its checkboxes
-if (!PROGRESS_EXCLUDED_IDS.has(groupId)) {
-gw.querySelectorAll('.prog-task').forEach(cb => cb.checked = false);
-gw.querySelectorAll('.select-all-group').forEach(cb => cb.checked = false);
-}
-});
-sync(); saveState();
-showToast("Weekly progress cleared!");
-}
-}
-
-function resetToDefault() {
-if (confirm("Restore the default layout and tasks? This will wipe your customizations.")) {
-localStorage.removeItem('huskysham_v2');
-loadState();
-showToast("Restored to default");
-}
+/* ══════════════════════════════════════════════════════
+   RENDER REALMS
+══════════════════════════════════════════════════════ */
+function renderRealms(){
+  const con=document.getElementById('realms-container');
+  con.innerHTML='';
+  APP.realms.forEach(r=>con.appendChild(buildRealm(r)));
+  new Sortable(con,{
+    animation:140, handle:'.realm-drag-handle', ghostClass:'sortable-ghost',
+    onEnd:()=>{
+      const ord=[];
+      con.querySelectorAll('.realm-cabinet').forEach(el=>{ const r=APP.realms.find(r=>r.id===el.dataset.rid); if(r)ord.push(r); });
+      APP.realms=ord; saveRealms();
+    }
+  });
 }
 
-function exportData() {
-const data = localStorage.getItem('huskysham_v2') || JSON.stringify(defaultData);
-const blob = new Blob([data], {type: 'application/json'});
-const url = URL.createObjectURL(blob);
-const a = document.createElement('a');
-a.href = url;
-a.download = `Midnight_Gearing_${new Date().toISOString().slice(0,10)}.json`;
-a.click();
-showToast("Data exported as JSON");
+/* ══════════════════════════════════════════════════════
+   RENDER SHARED GROUPS
+══════════════════════════════════════════════════════ */
+function renderShared(){
+  const con=document.getElementById('shared-groups-container');
+  con.innerHTML='';
+  APP.shared.forEach(g=>{
+    con.appendChild(buildGroup(g, APP.shared, ()=>{}, saveShared, false));
+  });
+  new Sortable(con,{
+    animation:130, handle:'.group-drag-handle', ghostClass:'sortable-ghost',
+    onEnd:()=>{
+      const ord=[];
+      con.querySelectorAll('.group-wrapper').forEach(el=>{ const g=APP.shared.find(g=>g.id===el.dataset.gid); if(g)ord.push(g); });
+      APP.shared=ord; saveShared();
+    }
+  });
 }
 
-function importData() {
-const input = document.createElement('input');
-input.type = 'file';
-input.accept = '.json';
-input.onchange = e => {
-const file = e.target.files[0];
-const reader = new FileReader();
-reader.onload = readerEvent => {
-try {
-const content = JSON.parse(readerEvent.target.result);
-localStorage.setItem('huskysham_v2', JSON.stringify(content));
-loadState();
-showToast("Import successful!");
-} catch (err) {
-alert("Error parsing file.");
-}
-}
-reader.readAsText(file);
-}
-input.click();
+/* ══════════════════════════════════════════════════════
+   MODAL CONFIRMATIONS
+══════════════════════════════════════════════════════ */
+function confirmAddRealm(){
+  const name=document.getElementById('realm-name-input').value.trim();
+  if(!name){document.getElementById('realm-name-input').focus();return;}
+  const region=document.getElementById('realm-region-input').value.trim()||'EU';
+  const realm={id:'realm_'+Date.now(),name,region,open:true,characters:[]};
+  APP.realms.push(realm); saveRealms();
+  const con=document.getElementById('realms-container');
+  con.appendChild(buildRealm(realm));
+  closeModal('realm-modal');
+  showToast('Realm "'+name+'" created');
 }
 
-function initSortableGroup(el) {
-new Sortable(el, {
-animation: 150, handle: '.drag-icon', ghostClass: 'sortable-ghost',
-onEnd: () => { saveState(); }
-});
+function confirmAddChar(){
+  const name=document.getElementById('char-name-input').value.trim();
+  if(!name){document.getElementById('char-name-input').focus();return;}
+  const charClass=document.getElementById('char-class-input').value.trim()||'Warrior';
+  const realmId=document.getElementById('char-realm-target').value;
+  const realm=APP.realms.find(r=>r.id===realmId);
+  if(!realm)return;
+  const char={id:'char_'+Date.now(),name,charClass,open:false,groups:makeCharGroups()};
+  realm.characters.push(char); saveRealms();
+  // Rebuild just this realm cabinet
+  const old=document.querySelector(`.realm-cabinet[data-rid="${realmId}"]`);
+  if(old){ const nw=buildRealm(realm); old.replaceWith(nw); }
+  closeModal('char-modal');
+  showToast(name+' added to '+realm.name);
 }
 
-function initSortableContainer(el) {
-new Sortable(el, {
-animation: 150, handle: '.group-drag-handle', ghostClass: 'sortable-ghost',
-onEnd: () => { saveState(); loadState(); }
-});
+function confirmAddCharGroup(){
+  const name=document.getElementById('chargroup-name-input').value.trim();
+  if(!name){document.getElementById('chargroup-name-input').focus();return;}
+  const charId=document.getElementById('chargroup-target-char').value;
+  const realmId=document.getElementById('chargroup-target-realm').value;
+  const realm=APP.realms.find(r=>r.id===realmId);
+  if(!realm)return;
+  const char=realm.characters.find(c=>c.id===charId);
+  if(!char)return;
+  if(!char.groups)char.groups=makeCharGroups();
+  char.groups.push({id:'cg_'+Date.now(),title:name,tasks:[]});
+  saveRealms();
+  const old=document.querySelector(`.char-drawer[data-cid="${charId}"]`);
+  if(old){ char.open=true; const nw=buildCharDrawer(char,realm); old.replaceWith(nw); }
+  closeModal('chargroup-modal');
+  showToast('Group "'+name+'" added');
 }
 
-function escapeHTML(str) {
-const p = document.createElement('p');
-p.textContent = str;
-return p.innerHTML;
+/* Enter key bindings */
+['realm-name-input','realm-region-input'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{ if(e.key==='Enter')confirmAddRealm(); }));
+['char-name-input','char-class-input'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{ if(e.key==='Enter')confirmAddChar(); }));
+document.getElementById('chargroup-name-input').addEventListener('keydown',e=>{ if(e.key==='Enter')confirmAddCharGroup(); });
+
+/* ══════════════════════════════════════════════════════
+   WEEKLY RESET / EXPORT / IMPORT / DEFAULT
+══════════════════════════════════════════════════════ */
+function weeklyReset(){
+  if(!confirm('Clear all weekly checkboxes across every character?\n(Fresh 90 Checklist and Reputation are never cleared)'))return;
+  APP.realms.forEach(realm=>realm.characters.forEach(char=>{
+    (char.groups||[]).forEach(g=>{
+      if(g.isHeader||EXCL.has(g.id))return;
+      (g.tasks||[]).forEach(t=>t.checked=false);
+    });
+  }));
+  saveRealms();
+  renderRealms();
+  showToast('Weekly progress cleared!');
 }
 
-window.onload = () => { 
-loadState(); 
-fetchCharacterData('huskysham', 'silvermoon', 'mplus-huskysham', 'portrait-huskysham'); 
-fetchCharacterData('huskydk', 'silvermoon', 'mplus-huskydk', 'portrait-huskydk'); 
-};
+function exportData(){
+  const blob=new Blob([JSON.stringify({realms:APP.realms,shared:APP.shared},null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='Midnight_Gearing_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  showToast('Data exported');
+}
+
+function importData(){
+  const input=document.createElement('input');
+  input.type='file'; input.accept='.json';
+  input.onchange=e=>{
+    const r=new FileReader();
+    r.onload=ev=>{
+      try{
+        const c=JSON.parse(ev.target.result);
+        if(c.realms)APP.realms=c.realms;
+        if(c.shared)APP.shared=c.shared;
+        saveRealms(); saveShared();
+        renderRealms(); renderShared();
+        showToast('Import successful!');
+      }catch(e){ alert('Error reading file.'); }
+    };
+    r.readAsText(e.target.files[0]);
+  };
+  input.click();
+}
+
+function resetToDefault(){
+  if(!confirm('Restore all defaults? This will wipe all customisations.'))return;
+  APP.realms=clone(DEFAULT_REALMS);
+  APP.shared=clone(SHARED_DEFAULT);
+  saveRealms(); saveShared();
+  renderRealms(); renderShared();
+  showToast('Restored to default');
+}
+
+/* ══════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════ */
+window.onload=()=>{ renderRealms(); renderShared(); };
 </script>
 </body>
 </html>
