@@ -210,9 +210,11 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
 .modal-actions .btn-ctrl{flex:1}
 
 @media(max-width:600px){
-  /* Gearing tracks: 2 columns on small screens, MYTH centred in last row */
-  .track-card{grid-template-columns:repeat(2,1fr)}
-  .track-item:last-child{grid-column:1 / -1}
+  /* Gearing tracks: keep all 5 on one row, shrink text to fit */
+  .track-card{grid-template-columns:repeat(5,1fr);padding:12px 6px;gap:4px}
+  .track-item{padding:6px 2px}
+  .track-item .track-name{font-size:0.55rem;letter-spacing:0}
+  .track-item .track-range{font-size:0.6rem}
 
   /* Priority table: collapse to single-column stacked cards */
   .priority-table thead{display:none}
@@ -417,7 +419,7 @@ const SHARED_DEFAULT = [
 ];
 
 const DEFAULT_REALMS = [
-  { id:'realm_silvermoon', name:'Silvermoon', region:'EU', open:true,
+  { id:'realm_silvermoon', name:'Silvermoon', region:'EU', open:false,
     characters:[
       { id:'char_huskysham', name:'Huskysham', charClass:'Shaman', open:false, groups: makeCharGroups() },
       { id:'char_huskydk',   name:'Huskydk',   charClass:'Death Knight', open:false, groups: makeCharGroups() }
@@ -430,7 +432,15 @@ const DEFAULT_REALMS = [
 ══════════════════════════════════════════════════════ */
 const SK_REALMS = 'midV3_realms', SK_SHARED = 'midV3_shared';
 function clone(o){ return JSON.parse(JSON.stringify(o)); }
-function loadRealms(){ try{ const s=localStorage.getItem(SK_REALMS); return s?JSON.parse(s):clone(DEFAULT_REALMS); }catch(e){ return clone(DEFAULT_REALMS); } }
+function loadRealms(){
+  try{
+    const s=localStorage.getItem(SK_REALMS);
+    const data=s?JSON.parse(s):clone(DEFAULT_REALMS);
+    // Always start collapsed on page load
+    data.forEach(r=>{ r.open=false; (r.characters||[]).forEach(c=>c.open=false); });
+    return data;
+  }catch(e){ return clone(DEFAULT_REALMS); }
+}
 function loadShared(){ try{ const s=localStorage.getItem(SK_SHARED); return s?JSON.parse(s):clone(SHARED_DEFAULT); }catch(e){ return clone(SHARED_DEFAULT); } }
 function saveRealms(){ localStorage.setItem(SK_REALMS, JSON.stringify(APP.realms)); }
 function saveShared(){ localStorage.setItem(SK_SHARED, JSON.stringify(APP.shared)); }
