@@ -278,6 +278,32 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
   /* Remove button and chevron also go into the full-width second row */
   .char-header .sm-btn[id^="rmchar"]{order:11;flex-shrink:0}
   .char-chevron{order:12;flex-shrink:0}
+
+  /* ── GROUP HEADERS: two-row layout on mobile ──
+     Row 1: drag ⠿ · checkbox · title text (full width, nowrap)
+     Row 2: progress bar + % + chevron + Remove button             */
+  .group-header-flex,.char-group-header-flex{flex-wrap:wrap;gap:6px;align-items:center}
+
+  /* Title div takes full remaining width on row 1, never wraps text */
+  .category-header,.char-category-header{
+    flex:1 1 auto;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    min-width:0;
+    gap:4px;
+  }
+
+  /* Progress bar + chevron sit inside the category-header div — keep them visible */
+  .group-progress-wrap{flex-shrink:0}
+  .group-progress-bar-bg{width:50px}
+
+  /* Remove button drops to its own full-width row below */
+  .remove-group-btn{
+    order:10;
+    margin-left:auto;
+    flex-shrink:0;
+  }
 }
 </style>
 </head>
