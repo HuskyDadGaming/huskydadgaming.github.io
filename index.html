@@ -72,10 +72,10 @@ body{background:linear-gradient(-45deg,#050308,#130026,#000c1a,#1a0033);backgrou
 .char-portrait-sm{width:42px;height:42px;border-radius:50%;border:2px solid var(--blue);box-shadow:0 0 10px rgba(51,204,255,0.35);background:#000;overflow:hidden;flex-shrink:0}
 .char-portrait-sm img{width:100%;height:100%;object-fit:cover}
 
-.char-header-info{flex-grow:1;min-width:0;overflow:visible}
-.char-header-name{font-weight:900;font-size:0.9rem;color:#fff;letter-spacing:1px;display:block;animation:voidPulse 3s infinite;white-space:normal;word-break:break-word}
+.char-header-info{flex-grow:1;min-width:0}
+.char-header-name{font-weight:900;font-size:0.9rem;color:#fff;letter-spacing:1px;display:block;animation:voidPulse 3s infinite;white-space:nowrap}
 .char-header-sub{display:flex;align-items:center;gap:7px;margin-top:3px;flex-wrap:wrap}
-.char-class-badge{font-size:0.62rem;color:var(--dim);text-transform:uppercase;font-weight:700}
+.char-class-badge{font-size:0.62rem;color:var(--dim);text-transform:uppercase;font-weight:700;white-space:nowrap}
 .char-mplus-badge{background:rgba(255,204,51,0.1);border:1px solid rgba(255,204,51,0.35);color:var(--gold);font-size:0.58rem;font-weight:800;padding:1px 6px;border-radius:4px;white-space:nowrap}
 
 .char-mini-bar-wrap{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:3px;min-width:85px}
@@ -232,16 +232,47 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
   .add-task-inputs{flex-direction:column}
   .add-task-inputs input{min-width:unset;width:100%;box-sizing:border-box}
 
-  /* Mini bar */
-  .char-mini-bar-wrap{min-width:68px}
-  .char-mini-bar-bg{width:68px}
-
   /* Top controls */
   .top-controls .btn-ctrl{min-width:100px}
 
   /* Realm header wrapping */
   .realm-meta{gap:5px}
   .realm-actions{flex-wrap:wrap}
+
+  /* ── CHARACTER HEADER: two-row layout on mobile ──
+     Row 1: drag handle · portrait · name+class+badges
+     Row 2 (full width): mini progress bar · remove · chevron        */
+  .char-header{flex-wrap:wrap;gap:8px;padding:10px 12px}
+
+  /* Portrait stays left, shrinks nothing */
+  .char-header .char-drag-handle{align-self:center}
+
+  /* Name+info block takes all remaining space in row 1 */
+  .char-header-info{flex:1 1 0;min-width:0}
+
+  /* Name: nowrap so it never breaks mid-word; just let it be as wide as it needs */
+  .char-header-name{font-size:0.88rem;white-space:nowrap}
+
+  /* Sub row (class badge, M+ badge, refresh) stays on one line */
+  .char-header-sub{flex-wrap:nowrap;gap:5px;overflow:visible}
+  .char-class-badge{white-space:nowrap}
+
+  /* Mini bar row: push to its own full-width row below portrait+name */
+  .char-mini-bar-wrap{
+    order:10;          /* push after all row-1 items */
+    flex:1 1 100%;     /* take full width on its own row */
+    flex-direction:row;
+    align-items:center;
+    gap:8px;
+    min-width:unset;
+    margin-top:2px;
+  }
+  .char-mini-bar-bg{flex:1;width:auto}
+  .char-mini-pct{min-width:30px;text-align:right;font-size:0.72rem}
+
+  /* Remove button and chevron also go into the full-width second row */
+  .char-header .sm-btn[id^="rmchar"]{order:11;flex-shrink:0}
+  .char-chevron{order:12;flex-shrink:0}
 }
 </style>
 </head>
