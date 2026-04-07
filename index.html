@@ -477,12 +477,26 @@ function loadRealms(){
   try{
     const s=localStorage.getItem(SK_REALMS);
     const data=s?JSON.parse(s):clone(DEFAULT_REALMS);
-    // Always start collapsed on page load
-    data.forEach(r=>{ r.open=false; (r.characters||[]).forEach(c=>c.open=false); });
+    // Always start fully collapsed on page load
+    data.forEach(r=>{
+      r.open=false;
+      (r.characters||[]).forEach(c=>{
+        c.open=false;
+        (c.groups||[]).forEach(g=>{ if(!g.isHeader) g.collapsed=true; });
+      });
+    });
     return data;
   }catch(e){ return clone(DEFAULT_REALMS); }
 }
-function loadShared(){ try{ const s=localStorage.getItem(SK_SHARED); return s?JSON.parse(s):clone(SHARED_DEFAULT); }catch(e){ return clone(SHARED_DEFAULT); } }
+function loadShared(){
+  try{
+    const s=localStorage.getItem(SK_SHARED);
+    const data=s?JSON.parse(s):clone(SHARED_DEFAULT);
+    // Always start collapsed on page load
+    data.forEach(g=>{ g.collapsed=true; });
+    return data;
+  }catch(e){ return clone(SHARED_DEFAULT); }
+}
 function saveRealms(){ localStorage.setItem(SK_REALMS, JSON.stringify(APP.realms)); }
 function saveShared(){ localStorage.setItem(SK_SHARED, JSON.stringify(APP.shared)); }
 const APP = { realms: loadRealms(), shared: loadShared() };
@@ -598,15 +612,16 @@ function buildGroup(group, listRef, onSync, onSave, compact){
   hf.innerHTML=`<span class="${compact?'drag-icon':'group-drag-handle'}" style="cursor:grab;color:var(--void-glow);font-size:0.95rem">⠿</span><input type="checkbox" class="sel-all" title="Select/Deselect All" style="margin:0"><div class="${compact?'char-category-header':'category-header'}" style="gap:6px">${esc(group.title)}<div class="group-progress-wrap"><div class="group-progress-bar-bg"><div class="group-progress-bar-fill" id="gpbar_${gid_safe}"></div></div><span class="group-progress-pct" id="gppct_${gid_safe}">0%</span></div><span class="group-chevron">▼</span></div><button class="remove-group-btn">Remove</button>`;
   wrap.appendChild(hf);
 
-  // Sync this group's own progress bar
+  // Grab bar elements directly from hf (works before and after DOM insertion)
+  const _gpbar=hf.querySelector('.group-progress-bar-fill');
+  const _gppct=hf.querySelector('.group-progress-pct');
+
   function syncGroupBar(){
     const tot=(group.tasks||[]).length;
     const chk=(group.tasks||[]).filter(t=>t.checked).length;
     const pct=tot===0?0:Math.round(chk/tot*100);
-    const barEl=document.getElementById('gpbar_'+gid_safe);
-    const pctEl=document.getElementById('gppct_'+gid_safe);
-    if(barEl)barEl.style.width=pct+'%';
-    if(pctEl)pctEl.textContent=pct+'%';
+    if(_gpbar)_gpbar.style.width=pct+'%';
+    if(_gppct)_gppct.textContent=pct+'%';
   }
   syncGroupBar();
 
@@ -1087,6 +1102,23 @@ document.getElementById('chargroup-name-input').addEventListener('keydown',e=>{ 
 /* ══════════════════════════════════════════════════════
    WEEKLY RESET / EXPORT / IMPORT / DEFAULT
 ══════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════
+   COLLAPSE ALL
+══════════════════════════════════════════════════════ */
+function collapseAll(data_realms, data_shared){
+  // Collapse realms and characters
+  (data_realms||[]).forEach(r=>{
+    r.open=false;
+    (r.characters||[]).forEach(c=>{
+      c.open=false;
+      (c.groups||[]).forEach(g=>{ if(!g.isHeader) g.collapsed=true; });
+    });
+  });
+  // Collapse shared groups
+  (data_shared||[]).forEach(g=>{ g.collapsed=true; });
+}
+
 function weeklyReset(){
   if(!confirm('Clear all weekly checkboxes across every character?\n(Fresh 90 Checklist and Reputation are never cleared)'))return;
   APP.realms.forEach(realm=>realm.characters.forEach(char=>{
@@ -1095,8 +1127,9 @@ function weeklyReset(){
       (g.tasks||[]).forEach(t=>t.checked=false);
     });
   }));
-  saveRealms();
-  renderRealms();
+  collapseAll(APP.realms, APP.shared);
+  saveRealms(); saveShared();
+  renderRealms(); renderShared();
   showToast('Weekly progress cleared!');
 }
 
@@ -1133,6 +1166,7 @@ function resetToDefault(){
   if(!confirm('Restore all defaults? This will wipe all customisations.'))return;
   APP.realms=clone(DEFAULT_REALMS);
   APP.shared=clone(SHARED_DEFAULT);
+  collapseAll(APP.realms, APP.shared);
   saveRealms(); saveShared();
   renderRealms(); renderShared();
   showToast('Restored to default');
