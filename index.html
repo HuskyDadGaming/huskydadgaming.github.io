@@ -133,6 +133,16 @@ body{background:linear-gradient(-45deg,#050308,#130026,#000c1a,#1a0033);backgrou
 .char-group-header-flex{display:flex;align-items:center;gap:9px;margin-bottom:7px}
 .char-category-header{color:var(--blue);font-size:0.78rem;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:8px;flex-grow:1}
 .char-category-header::after{content:"";flex:1;height:1px;background:linear-gradient(to right,var(--void-highlight),transparent);opacity:0.45;margin-left:7px}
+.group-chevron{color:var(--dim);font-size:0.75rem;transition:transform 0.25s ease;flex-shrink:0;margin-left:2px}
+.group-progress-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.group-progress-bar-bg{width:70px;height:5px;background:#000;border-radius:3px;border:1px solid #1a1a1a;overflow:hidden}
+.group-progress-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--void-highlight),var(--blue));border-radius:3px;transition:width 0.4s ease}
+.group-progress-pct{font-size:0.62rem;font-weight:900;color:var(--blue);min-width:26px;text-align:right}
+.group-wrapper.collapsed .group-chevron,.char-group-wrapper.collapsed .group-chevron{transform:rotate(-90deg)}
+.group-collapsible{overflow:hidden;transition:opacity 0.2s ease}
+.group-wrapper.collapsed .group-collapsible,.char-group-wrapper.collapsed .group-collapsible{display:none}
+.category-header,.char-category-header{cursor:pointer}
+.category-header:hover,.char-category-header:hover{color:var(--blue);opacity:0.85}
 
 .char-add-group-btn{width:100%;font-size:0.62rem;background:var(--btn-bg);color:var(--dim);border:1px dashed var(--border);padding:6px;border-radius:6px;cursor:pointer;text-transform:uppercase;font-weight:bold;transition:border-color 0.2s,color 0.2s;margin-top:4px}
 .char-add-group-btn:hover{border-color:var(--void-highlight);color:var(--text)}
@@ -579,11 +589,30 @@ function buildGroup(group, listRef, onSync, onSave, compact){
   const wrap=document.createElement('div');
   wrap.className=compact?'char-group-wrapper':'group-wrapper';
   wrap.dataset.gid=group.id;
+  if(group.collapsed)wrap.classList.add('collapsed');
 
+  // Header row
+  const gid_safe=group.id.replace(/[^a-zA-Z0-9_]/g,'_');
   const hf=document.createElement('div');
   hf.className=compact?'char-group-header-flex':'group-header-flex';
-  hf.innerHTML=`<span class="${compact?'drag-icon':'group-drag-handle'}" style="cursor:grab;color:var(--void-glow);font-size:0.95rem">⠿</span><input type="checkbox" class="sel-all" title="Select/Deselect All" style="margin:0"><div class="${compact?'char-category-header':'category-header'}">${esc(group.title)}</div><button class="remove-group-btn">Remove</button>`;
+  hf.innerHTML=`<span class="${compact?'drag-icon':'group-drag-handle'}" style="cursor:grab;color:var(--void-glow);font-size:0.95rem">⠿</span><input type="checkbox" class="sel-all" title="Select/Deselect All" style="margin:0"><div class="${compact?'char-category-header':'category-header'}" style="gap:6px">${esc(group.title)}<div class="group-progress-wrap"><div class="group-progress-bar-bg"><div class="group-progress-bar-fill" id="gpbar_${gid_safe}"></div></div><span class="group-progress-pct" id="gppct_${gid_safe}">0%</span></div><span class="group-chevron">▼</span></div><button class="remove-group-btn">Remove</button>`;
   wrap.appendChild(hf);
+
+  // Sync this group's own progress bar
+  function syncGroupBar(){
+    const tot=(group.tasks||[]).length;
+    const chk=(group.tasks||[]).filter(t=>t.checked).length;
+    const pct=tot===0?0:Math.round(chk/tot*100);
+    const barEl=document.getElementById('gpbar_'+gid_safe);
+    const pctEl=document.getElementById('gppct_'+gid_safe);
+    if(barEl)barEl.style.width=pct+'%';
+    if(pctEl)pctEl.textContent=pct+'%';
+  }
+  syncGroupBar();
+
+  // Collapsible content wrapper
+  const collapsible=document.createElement('div');
+  collapsible.className='group-collapsible';
 
   if(!group.tasks)group.tasks=[];
   const table=document.createElement('table');
@@ -593,23 +622,33 @@ function buildGroup(group, listRef, onSync, onSave, compact){
 
   const addRow=mkAddRow(task=>{
     group.tasks.push(task);
-    const tr=mkTaskRow(task,()=>{onSync();onSave();},()=>{ group.tasks=group.tasks.filter(t=>t.id!==task.id); onSync(); onSave(); });
+    const tr=mkTaskRow(task,()=>{syncGroupBar();onSync();onSave();},()=>{ group.tasks=group.tasks.filter(t=>t.id!==task.id); syncGroupBar();onSync(); onSave(); });
     tbody.insertBefore(tr,addRow);
-    onSync(); onSave();
+    syncGroupBar(); onSync(); onSave();
   });
 
   group.tasks.forEach(task=>{
-    const tr=mkTaskRow(task,()=>{onSync();onSave();},()=>{ group.tasks=group.tasks.filter(t=>t.id!==task.id); onSync(); onSave(); });
+    const tr=mkTaskRow(task,()=>{syncGroupBar();onSync();onSave();},()=>{ group.tasks=group.tasks.filter(t=>t.id!==task.id); syncGroupBar();onSync(); onSave(); });
     tbody.appendChild(tr);
   });
   tbody.appendChild(addRow);
   table.appendChild(tbody);
-  wrap.appendChild(table);
+  collapsible.appendChild(table);
 
   const ab=document.createElement('button');
   ab.className='btn-add-task'; ab.textContent='+ Task';
   ab.addEventListener('click',()=>{ addRow.classList.add('visible'); addRow.querySelector('.new-task-name').focus(); });
-  wrap.appendChild(ab);
+  collapsible.appendChild(ab);
+  wrap.appendChild(collapsible);
+
+  // Toggle collapse on category header click
+  const catHdr=hf.querySelector('.category-header,.char-category-header');
+  catHdr.addEventListener('click',e=>{
+    // Don't trigger if user is clicking the chevron icon itself (already inside catHdr but fine)
+    group.collapsed=!group.collapsed;
+    wrap.classList.toggle('collapsed',group.collapsed);
+    onSave();
+  });
 
   hf.querySelector('.sel-all').addEventListener('change',function(){
     group.tasks.forEach(t=>t.checked=this.checked);
@@ -617,7 +656,7 @@ function buildGroup(group, listRef, onSync, onSave, compact){
       cb.checked=this.checked;
       cb.closest('tr').classList.toggle('row-done',this.checked);
     });
-    onSync(); onSave();
+    syncGroupBar(); onSync(); onSave();
   });
 
   hf.querySelector('.remove-group-btn').addEventListener('click',()=>{
