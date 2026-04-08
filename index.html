@@ -1116,26 +1116,28 @@ async function confirmAddRealm(){
     return;
   }
 
-  // Validate realm exists by checking a known Blizzard API endpoint
   msgEl.style.color='var(--dim)';
   msgEl.textContent='Validating realm…';
   btn.disabled=true; btn.textContent='Checking…';
 
   try{
-    // Probe RIO: valid realm + bogus char → 400 "Could not find requested character"
-    // Invalid realm → 400 with a realm-related error (no mention of "character")
-    const r=await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(name)}&name=zzzzprobechar&fields=`);
+    // RIO probe: sends a bogus character name against the realm.
+    // Valid realm   → HTTP 400, statusCode:400, message contains "could not find"
+    // Invalid realm → HTTP 400, statusCode:400, message contains "invalid" or "realm"
+    const r=await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(name)}&name=zzzprobexyz&fields=`);
     const d=await r.json();
-    const msg=(d.message||'').toLowerCase();
-    // If RIO mentions "character" in the error, the realm is valid (just char not found)
-    const realmValid=msg.includes('character');
-    if(!realmValid){
+    const msg=(d.message||d.error||'').toLowerCase();
+    // If the message mentions "could not find" it means the realm was recognised
+    // but the dummy character doesn't exist — realm is valid
+    if(!msg.includes('could not find')){
       msgEl.style.color='var(--danger)';
-      msgEl.textContent=`❌ Realm "${name}" not found in ${region.toUpperCase()}`;
+      msgEl.textContent=`❌ "${name}" is not a valid realm in ${region.toUpperCase()}`;
       btn.disabled=false; btn.textContent='Create';
       return;
     }
+    msgEl.textContent='';
   }catch(e){
+    // Network/CORS error — allow with warning
     msgEl.style.color='var(--gold)';
     msgEl.textContent='⚠️ Could not verify — adding anyway';
   }
@@ -1166,7 +1168,6 @@ async function confirmAddChar(){
     return;
   }
 
-  // Validate character exists on Raider.IO
   msgEl.style.color='var(--dim)';
   msgEl.textContent='Validating character…';
   btn.disabled=true; btn.textContent='Checking…';
@@ -1176,18 +1177,19 @@ async function confirmAddChar(){
     const region=(realm.region||'EU').toLowerCase();
     const r=await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(realm.name)}&name=${encodeURIComponent(name)}&fields=`);
     const d=await r.json();
-    if(!r.ok){
-      // HTTP 400/404 — character not found
+    const msg=(d.message||d.error||'').toLowerCase();
+    // RIO returns "could not find" when a character doesn't exist on a valid realm
+    if(msg.includes('could not find')){
       msgEl.style.color='var(--danger)';
       msgEl.textContent=`❌ "${name}" not found on ${realm.name} (${realm.region})`;
       btn.disabled=false; btn.textContent='Create';
       return;
     }
-    // 200 — character exists, use class from RIO if available
+    // Character found — use class from RIO if available
     if(d.class) charClass=d.class;
     msgEl.textContent='';
   }catch(e){
-    // Network error — allow with warning
+    // Network/CORS error — allow with warning
     msgEl.style.color='var(--gold)';
     msgEl.textContent='⚠️ Could not verify — adding anyway';
   }
