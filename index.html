@@ -1184,7 +1184,17 @@ function resetToDefault(){
 /* ══════════════════════════════════════════════════════
    INIT
 ══════════════════════════════════════════════════════ */
-window.onload=()=>{ renderRealms(); renderShared(); window.scrollTo(0,0); };
+// Disable browser scroll restoration so it doesn't fight us
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+
+window.onload=()=>{
+  renderRealms();
+  renderShared();
+  // Belt-and-braces: scroll immediately, then again after paint to beat browser restoration
+  window.scrollTo(0,0);
+  requestAnimationFrame(()=>{ window.scrollTo(0,0); });
+  setTimeout(()=>{ window.scrollTo(0,0); },100);
+};
 </script>
 </body>
 </html>
