@@ -57,6 +57,8 @@ body{background:linear-gradient(-45deg,#050308,#130026,#000c1a,#1a0033);backgrou
 .sm-btn.danger:hover{color:var(--danger);border-color:var(--danger);background:rgba(255,77,77,0.07)}
 
 .realm-body{display:none;padding:0 14px 14px}
+.realm-mobile-remove-btn{display:block;width:100%;margin-top:10px;padding:8px;background:rgba(255,77,77,0.08);border:1px solid var(--danger);color:var(--danger);border-radius:6px;cursor:pointer;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:background 0.2s}
+.realm-mobile-remove-btn:hover{background:rgba(255,77,77,0.2)}
 .realm-cabinet.open .realm-body{display:block;animation:dropDown 0.2s ease}
 
 /* CHARACTER DRAWER */
@@ -241,19 +243,16 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
   /* Top controls */
   .top-controls .btn-ctrl{min-width:100px}
 
-  /* Realm header wrapping */
-  /* Realm header: compress everything to fit on one line */
-  .realm-header{padding:12px 10px;gap:6px}
-  .realm-name{font-size:0.85rem;letter-spacing:1px}
-  .realm-meta{gap:4px;flex-wrap:nowrap}
-  .realm-char-count{font-size:0.55rem;padding:2px 5px}
+  /* Realm header: everything on one row */
+  .realm-header{padding:10px 8px;gap:4px}
+  .realm-name{font-size:0.7rem;letter-spacing:0.5px}
+  .realm-icon{font-size:0.9rem}
+  .realm-meta{gap:3px;flex-wrap:nowrap}
+  .realm-char-count{font-size:0.5rem;padding:1px 4px}
   .realm-actions{gap:3px;flex-wrap:nowrap}
-  /* Hide 'Remove Realm' on mobile — accessible via long-hold or desktop */
-  .realm-actions .sm-btn[id^="rmrealmbtn"]{display:none}
-  /* Shrink + Character button */
-  .realm-actions .sm-btn[id^="addcharbtn"]{font-size:0.55rem;padding:3px 6px}
-  .realm-chevron{font-size:0.75rem}
-  .realm-icon{font-size:1rem}
+  .realm-actions .sm-btn{font-size:0.48rem;padding:2px 4px;letter-spacing:0}
+  .realm-chevron{font-size:0.7rem}
+
 
   /* ── CHARACTER HEADER: two-row layout on mobile ──
      Row 1: drag handle · portrait · name+class+badges
@@ -411,7 +410,7 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
 ══════════════════════════════════════════════════════ */
 function makeCharGroups() {
   return [
-    { id:'hdr_endgame', title:'End-Game Weekly Checklist', isHeader:true },
+    { id:'hdr_endgame', title:'Absolute End-Game Weekly Checklist', isHeader:true },
     { id:'world', title:'World Weeklies & Quests', tasks:[
       {id:'w_gv',text:'Claim Great Vault (Do First!)',desc:'Located in the Silvermoon bank (neutral side). Choose your best item from up to 9 unlocked options (Dungeons, World, Raids tracks). Vault ilvl scales with your best key/delve/boss of the prior week — never miss it',checked:false},
       {id:'w0',text:'Buy Rep Contract from Auction House',desc:'Maximise Reputation gains during activities',checked:false},
@@ -1013,6 +1012,21 @@ function buildRealm(realm){
 
   realm.characters.forEach(c=>cc.appendChild(buildCharDrawer(c,realm)));
   body.appendChild(cc);
+
+  /* Mobile-friendly Remove Realm button inside the body */
+  const mobileRemoveBtn=document.createElement('button');
+  mobileRemoveBtn.className='realm-mobile-remove-btn';
+  mobileRemoveBtn.textContent='🗑️ Remove Realm';
+  mobileRemoveBtn.addEventListener('click',e=>{
+    e.stopPropagation();
+    if(confirm(`Remove realm "${realm.name}" and all its characters?`)){
+      APP.realms=APP.realms.filter(r=>r.id!==realm.id);
+      cab.remove(); saveRealms();
+      showToast('Realm "'+realm.name+'" removed');
+    }
+  });
+  body.appendChild(mobileRemoveBtn);
+
   cab.appendChild(body);
 
   /* Sortable characters */
