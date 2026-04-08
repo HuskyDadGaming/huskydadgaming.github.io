@@ -1107,6 +1107,15 @@ async function confirmAddRealm(){
   const msgEl=document.getElementById('realm-validate-msg');
   const btn=document.getElementById('realm-create-btn');
 
+  // Duplicate realm check (same name + region, case-insensitive)
+  if(APP.realms.some(r=>r.name.toLowerCase()===name.toLowerCase()&&r.region.toLowerCase()===region)){
+    msgEl.style.color='var(--danger)';
+    msgEl.textContent=`❌ "${name}" (${region.toUpperCase()}) is already in your list`;
+    btn.disabled=false; btn.textContent='Create';
+    document.getElementById('realm-name-input').focus();
+    return;
+  }
+
   // Validate realm exists by checking a known Blizzard API endpoint
   msgEl.style.color='var(--dim)';
   msgEl.textContent='Validating realm…';
@@ -1149,10 +1158,11 @@ async function confirmAddChar(){
   const msgEl=document.getElementById('char-validate-msg');
   const btn=document.getElementById('char-create-btn');
 
-  // Duplicate check
+  // Duplicate check (case-insensitive)
   if(realm.characters.some(c=>c.name.toLowerCase()===name.toLowerCase())){
     msgEl.style.color='var(--danger)';
     msgEl.textContent=`❌ "${name}" already exists in ${realm.name}`;
+    btn.disabled=false; btn.textContent='Create';
     document.getElementById('char-name-input').focus();
     return;
   }
