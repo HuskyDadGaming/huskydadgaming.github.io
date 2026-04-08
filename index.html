@@ -288,12 +288,12 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
   .char-header .sm-btn[id^="rmchar"]{order:11;flex-shrink:0}
   .char-chevron{order:12;flex-shrink:0}
 
-  /* ── TASK ROWS: tighter on mobile ── */
-  td{padding:8px 9px}
-  .col-left{width:46px}
-  .action-text{font-size:0.78rem}
-  .desc-text{font-size:0.65rem}
-  .remove-task-btn{min-width:26px;min-height:26px;font-size:1rem;padding:4px 6px}
+  /* ── TASK ROWS: tighter on mobile, title max 2 lines ── */
+  td{padding:7px 8px}
+  .col-left{width:44px}
+  .action-text{font-size:0.72rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .desc-text{font-size:0.62rem}
+  .remove-task-btn{min-width:24px;min-height:24px;font-size:0.95rem;padding:3px 5px}
 
   /* ── GROUP HEADERS: single tight row on mobile ── */
   .group-header-flex,.char-group-header-flex{gap:4px;flex-wrap:nowrap;align-items:center}
