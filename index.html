@@ -1122,23 +1122,22 @@ async function confirmAddRealm(){
   btn.disabled=true; btn.textContent='Checking…';
 
   try{
-    // Use RIO's realm list or a test lookup — check realm exists by searching for a known NPC
-    const r=await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(name)}&name=test&fields=`);
+    // Probe RIO: valid realm + bogus char → 400 "Could not find requested character"
+    // Invalid realm → 400 with a realm-related error (no mention of "character")
+    const r=await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(name)}&name=zzzzprobechar&fields=`);
     const d=await r.json();
-    // RIO returns statusCode 400 with "could not find character" for valid realms,
-    // but "Invalid realm" / similar for bad realm names
-    const err=(d.message||d.error||'').toLowerCase();
-    const realmInvalid=err.includes('invalid realm')||err.includes('realm not found')||err.includes('no realm');
-    if(realmInvalid){
+    const msg=(d.message||'').toLowerCase();
+    // If RIO mentions "character" in the error, the realm is valid (just char not found)
+    const realmValid=msg.includes('character');
+    if(!realmValid){
       msgEl.style.color='var(--danger)';
       msgEl.textContent=`❌ Realm "${name}" not found in ${region.toUpperCase()}`;
       btn.disabled=false; btn.textContent='Create';
       return;
     }
   }catch(e){
-    // Network error — allow creation with a warning
     msgEl.style.color='var(--gold)';
-    msgEl.textContent='⚠️ Could not verify realm — adding anyway';
+    msgEl.textContent='⚠️ Could not verify — adding anyway';
   }
 
   const realm={id:'realm_'+Date.now(),name,region:region.toUpperCase(),open:true,characters:[]};
@@ -1172,33 +1171,25 @@ async function confirmAddChar(){
   msgEl.textContent='Validating character…';
   btn.disabled=true; btn.textContent='Checking…';
 
-  let charClass='Warrior';
+  let charClass=document.getElementById('char-class-input').value.trim()||'Warrior';
   try{
     const region=(realm.region||'EU').toLowerCase();
     const r=await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(realm.name)}&name=${encodeURIComponent(name)}&fields=`);
     const d=await r.json();
-    if(d.statusCode===400||d.error){
-      const err=(d.message||d.error||'').toLowerCase();
-      if(err.includes('could not find character')||err.includes('not found')){
-        msgEl.style.color='var(--danger)';
-        msgEl.textContent=`❌ "${name}" not found on ${realm.name} (${realm.region})`;
-        btn.disabled=false; btn.textContent='Create';
-        return;
-      }
+    if(!r.ok){
+      // HTTP 400/404 — character not found
+      msgEl.style.color='var(--danger)';
+      msgEl.textContent=`❌ "${name}" not found on ${realm.name} (${realm.region})`;
+      btn.disabled=false; btn.textContent='Create';
+      return;
     }
-    // Character found — use class from RIO if available
+    // 200 — character exists, use class from RIO if available
     if(d.class) charClass=d.class;
-    else {
-      const inp=document.getElementById('char-class-input').value.trim();
-      if(inp) charClass=inp;
-    }
     msgEl.textContent='';
   }catch(e){
-    // Network error — allow with warning, use manually entered class
+    // Network error — allow with warning
     msgEl.style.color='var(--gold)';
     msgEl.textContent='⚠️ Could not verify — adding anyway';
-    const inp=document.getElementById('char-class-input').value.trim();
-    if(inp) charClass=inp;
   }
 
   const char={id:'char_'+Date.now(),name,charClass,open:false,groups:makeCharGroups()};
