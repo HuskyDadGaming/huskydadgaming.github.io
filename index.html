@@ -372,9 +372,10 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
     <input class="modal-input" id="realm-name-input" type="text" placeholder="e.g. Silvermoon" maxlength="40"/>
     <span class="modal-label">Region</span>
     <input class="modal-input" id="realm-region-input" type="text" placeholder="e.g. EU" maxlength="10"/>
+    <div id="realm-validate-msg" style="font-size:0.72rem;min-height:18px;margin-bottom:6px;color:var(--danger);"></div>
     <div class="modal-actions">
       <button class="btn-ctrl" onclick="closeModal('realm-modal')">Cancel</button>
-      <button class="btn-ctrl btn-primary" onclick="confirmAddRealm()">Create</button>
+      <button class="btn-ctrl btn-primary" id="realm-create-btn" onclick="confirmAddRealm()">Create</button>
     </div>
   </div>
 </div>
@@ -388,9 +389,10 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
     <span class="modal-label">Class</span>
     <input class="modal-input" id="char-class-input" type="text" placeholder="e.g. Shaman" maxlength="30"/>
     <input type="hidden" id="char-realm-target" value=""/>
+    <div id="char-validate-msg" style="font-size:0.72rem;min-height:18px;margin-bottom:6px;color:var(--danger);"></div>
     <div class="modal-actions">
       <button class="btn-ctrl" onclick="closeModal('char-modal')">Cancel</button>
-      <button class="btn-ctrl btn-primary" onclick="confirmAddChar()">Create</button>
+      <button class="btn-ctrl btn-primary" id="char-create-btn" onclick="confirmAddChar()">Create</button>
     </div>
   </div>
 </div>
@@ -537,7 +539,14 @@ function showToast(m){ const t=document.getElementById('toast'); t.textContent=m
    MODALS
 ══════════════════════════════════════════════════════ */
 function openModal(id){ document.getElementById(id).classList.add('open'); setTimeout(()=>{ const f=document.querySelector('#'+id+' .modal-input'); if(f)f.focus(); },80); }
-function closeModal(id){ document.getElementById(id).classList.remove('open'); document.querySelectorAll('#'+id+' .modal-input').forEach(i=>i.value=''); }
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  document.querySelectorAll('#'+id+' .modal-input').forEach(i=>i.value='');
+  const msg=document.getElementById(id.replace('-modal','-validate-msg'));
+  if(msg)msg.textContent='';
+  const btn=document.getElementById(id.replace('-modal','-create-btn'));
+  if(btn){btn.disabled=false;btn.textContent='Create';}
+}
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m)closeModal(m.id); }));
 
 /* ══════════════════════════════════════════════════════
@@ -1091,11 +1100,39 @@ function renderShared(){
 /* ══════════════════════════════════════════════════════
    MODAL CONFIRMATIONS
 ══════════════════════════════════════════════════════ */
-function confirmAddRealm(){
+async function confirmAddRealm(){
   const name=document.getElementById('realm-name-input').value.trim();
   if(!name){document.getElementById('realm-name-input').focus();return;}
-  const region=document.getElementById('realm-region-input').value.trim()||'EU';
-  const realm={id:'realm_'+Date.now(),name,region,open:true,characters:[]};
+  const region=(document.getElementById('realm-region-input').value.trim()||'EU').toLowerCase();
+  const msgEl=document.getElementById('realm-validate-msg');
+  const btn=document.getElementById('realm-create-btn');
+
+  // Validate realm exists by checking a known Blizzard API endpoint
+  msgEl.style.color='var(--dim)';
+  msgEl.textContent='Validating realm…';
+  btn.disabled=true; btn.textContent='Checking…';
+
+  try{
+    // Use RIO's realm list or a test lookup — check realm exists by searching for a known NPC
+    const r=await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(name)}&name=test&fields=`);
+    const d=await r.json();
+    // RIO returns statusCode 400 with "could not find character" for valid realms,
+    // but "Invalid realm" / similar for bad realm names
+    const err=(d.message||d.error||'').toLowerCase();
+    const realmInvalid=err.includes('invalid realm')||err.includes('realm not found')||err.includes('no realm');
+    if(realmInvalid){
+      msgEl.style.color='var(--danger)';
+      msgEl.textContent=`❌ Realm "${name}" not found in ${region.toUpperCase()}`;
+      btn.disabled=false; btn.textContent='Create';
+      return;
+    }
+  }catch(e){
+    // Network error — allow creation with a warning
+    msgEl.style.color='var(--gold)';
+    msgEl.textContent='⚠️ Could not verify realm — adding anyway';
+  }
+
+  const realm={id:'realm_'+Date.now(),name,region:region.toUpperCase(),open:true,characters:[]};
   APP.realms.push(realm); saveRealms();
   const con=document.getElementById('realms-container');
   con.appendChild(buildRealm(realm));
@@ -1103,24 +1140,61 @@ function confirmAddRealm(){
   showToast('Realm "'+name+'" created');
 }
 
-function confirmAddChar(){
+async function confirmAddChar(){
   const name=document.getElementById('char-name-input').value.trim();
   if(!name){document.getElementById('char-name-input').focus();return;}
-  const charClass=document.getElementById('char-class-input').value.trim()||'Warrior';
   const realmId=document.getElementById('char-realm-target').value;
   const realm=APP.realms.find(r=>r.id===realmId);
   if(!realm)return;
-  // Prevent duplicate character names in the same realm (case-insensitive)
+  const msgEl=document.getElementById('char-validate-msg');
+  const btn=document.getElementById('char-create-btn');
+
+  // Duplicate check
   if(realm.characters.some(c=>c.name.toLowerCase()===name.toLowerCase())){
-    showToast(`"${name}" already exists in ${realm.name}`);
+    msgEl.style.color='var(--danger)';
+    msgEl.textContent=`❌ "${name}" already exists in ${realm.name}`;
     document.getElementById('char-name-input').focus();
     return;
   }
+
+  // Validate character exists on Raider.IO
+  msgEl.style.color='var(--dim)';
+  msgEl.textContent='Validating character…';
+  btn.disabled=true; btn.textContent='Checking…';
+
+  let charClass='Warrior';
+  try{
+    const region=(realm.region||'EU').toLowerCase();
+    const r=await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(realm.name)}&name=${encodeURIComponent(name)}&fields=`);
+    const d=await r.json();
+    if(d.statusCode===400||d.error){
+      const err=(d.message||d.error||'').toLowerCase();
+      if(err.includes('could not find character')||err.includes('not found')){
+        msgEl.style.color='var(--danger)';
+        msgEl.textContent=`❌ "${name}" not found on ${realm.name} (${realm.region})`;
+        btn.disabled=false; btn.textContent='Create';
+        return;
+      }
+    }
+    // Character found — use class from RIO if available
+    if(d.class) charClass=d.class;
+    else {
+      const inp=document.getElementById('char-class-input').value.trim();
+      if(inp) charClass=inp;
+    }
+    msgEl.textContent='';
+  }catch(e){
+    // Network error — allow with warning, use manually entered class
+    msgEl.style.color='var(--gold)';
+    msgEl.textContent='⚠️ Could not verify — adding anyway';
+    const inp=document.getElementById('char-class-input').value.trim();
+    if(inp) charClass=inp;
+  }
+
   const char={id:'char_'+Date.now(),name,charClass,open:false,groups:makeCharGroups()};
   realm.characters.push(char);
-  realm.open=true; // keep realm open when adding a character
+  realm.open=true;
   saveRealms();
-  // Rebuild just this realm cabinet
   const old=document.querySelector(`.realm-cabinet[data-rid="${realmId}"]`);
   if(old){ const nw=buildRealm(realm); old.replaceWith(nw); }
   closeModal('char-modal');
