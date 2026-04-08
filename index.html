@@ -415,9 +415,11 @@ input[type="checkbox"]{width:16px;height:16px;cursor:pointer;accent-color:var(--
    DATA TEMPLATES
 ══════════════════════════════════════════════════════ */
 function makeCharGroups() {
+  // All groups start collapsed when a new character is created
+  const c=true;
   return [
     { id:'hdr_endgame', title:'End-Game Weekly Checklist', isHeader:true },
-    { id:'world', title:'World Weeklies & Quests', tasks:[
+    { id:'world', title:'World Weeklies & Quests', collapsed:true, tasks:[
       {id:'w_gv',text:'Claim Great Vault (Do First!)',desc:'Located in the Silvermoon bank (neutral side). Choose your best item from up to 9 unlocked options (Dungeons, World, Raids tracks). Vault ilvl scales with your best key/delve/boss of the prior week — never miss it',checked:false},
       {id:'w0',text:'Buy Rep Contract from Auction House',desc:'Maximise Reputation gains during activities',checked:false},
       {id:'w1',text:'Campaign',desc:'Complete any new story chapter(s) — unlocks zone content, Renown, and faction progress',checked:false},
@@ -430,26 +432,26 @@ function makeCharGroups() {
       {id:'w_lfr',text:'LFR — Queue for Tier Set (until 4-set complete)',desc:'LFR drops Veteran-track gear but is your fastest path to the 4-piece Tier Set bonus. 4-piece is a major DPS/HPS jump AND unlocks Catalyst Unbound achievement. Skip once you have all 4 pieces',checked:false},
       {id:'w_upgrade',text:'Spend Dawncrests at Upgrade Vendor',desc:'Cuzolth at 48.3, 61.7 in Silvermoon City. Never sit on capped crests. Priority: Weapon → Trinkets → Chest/Head/Legs → Shoulders/Hands/Feet → Cloak/Bracers/Belt → Rings/Neck',checked:false}
     ]},
-    { id:'prey', title:'Prey', tasks:[
+    { id:'prey', title:'Prey', collapsed:true, tasks:[
       {id:'p1',text:'Prey - Nightmare x3 (Weekly Quest)',desc:'Nightmare unlocks at Preyseeker\'s Journey Rank 4. Quest \'A Nightmarish Task\' from Astalor in Murder Row. Rewards: Champion gear, 20 Hero Dawncrest (uncapped), 1x Beacon of Hope (summons Nullaeus in Delves). Fills Great Vault World slot',checked:false}
     ]},
-    { id:'delve', title:'Delves', tasks:[
+    { id:'delve', title:'Delves', collapsed:true, tasks:[
       {id:'d1',text:'Bountiful Delves — T11+ with Coffer Keys & Beacon of Hope',desc:'End-of-run chest gear caps at T8 (Champion track). T8+ fills Great Vault World slot at Hero track. T11 Gilded Stashes (Delver\'s Journey Rank 4) give Hero + Myth Dawncrest. Use Restored Coffer Keys on T11 — Trovehunter\'s Bounty Map guarantees a Hero piece',checked:false},
       {id:'d2',text:'Nullaeus ??',desc:'30 Hero Dawncrest + 30 Myth Dawncrest (uncapped ONE-TIME per season; 5 each thereafter) + title \'the Ominous\'. Killing ?? first grants both rewards and skips needing to kill ? separately',checked:false}
     ]},
-    { id:'craft', title:'Crafting', tasks:[
+    { id:'craft', title:'Crafting', collapsed:true, tasks:[
       {id:'c1',text:'First profession patron weekly',desc:'Complete 3 Patron Crafting Orders — rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops as Glimmers of Knowledge (quality-dependent). ~19 KP total across all 4 weekly sources',checked:false},
       {id:'c2',text:'Second profession patron weekly',desc:'Complete 3 Patron Crafting Orders — rewards 2 KP + Artisan Moxie + skill reagents. Extra KP drops as Glimmers of Knowledge',checked:false},
       {id:'c3',text:'First profession treatise',desc:'Craft or buy from AH — consume for 5 KP (one per profession per week). Scribes with Calm Hands spec get +1 bonus KP. Tradeable and Warband-bound',checked:false},
       {id:'c4',text:'Second profession treatise',desc:'Craft or buy from AH — 5 KP (one per profession per week). An Inscription alt can craft and mail them to your main',checked:false}
     ]},
-    { id:'faction', title:'Faction Weeklies', tasks:[
+    { id:'faction', title:'Faction Weeklies', collapsed:true, tasks:[
       {id:'f1',text:'Singularity — Stormarion Assault (Voidstorm)',desc:'Quest: Stand Your Ground. Defend Stormarion Citadel (SW Voidstorm, every 30 mins). Rewards: Pinnacle Cache (gold, 100 Coffer Key Shards, Voidlight Marl, 20 Veteran Dawncrest) + 2,000 Singularity rep. First 2 caches/week include Veteran gear; first 4 include a Restored Coffer Key',checked:false},
       {id:'f2',text:'Silvermoon Court — Saltheril\'s Soiree (Eversong Woods)',desc:'Requires short unlock chain. Fortify the Runestones: Pinnacle Cache + 150 Brimming Arcana + 2,000 Silvermoon Court rep. Favor of the Court: 3x Saltheril\'s Favor tokens (subfaction weeklies for extra rep + Arcana)',checked:false},
       {id:'f3',text:'Hara\'ti — Legends of the Haranir (Harandar)',desc:'Quest: Lost Legends — pick a relic scenario weekly. Rewards: 1,000 Hara\'ti rep + Pinnacle Cache (gear, Spark of Radiance chance) + housing decor',checked:false},
       {id:'f4',text:'Amani-Tribe — The Abundance (Zul\'Aman / all zones)',desc:'Earn 20,000 Abundance points for weekly quest. Rewards: 1,000 Amani Tribe rep + Pinnacle Cache. Use up to 8x Shards of Dundun/week to earn Unalloyed Abundance currency — spend on mounts and profession knowledge items',checked:false}
     ]},
-    { id:'optional', title:'Optional Weeklies', tasks:[
+    { id:'optional', title:'Optional Weeklies', collapsed:true, tasks:[
       {id:'ow1',text:'Special Assignments',desc:'Complete 3 World Quests in a zone to unlock — rewards a Pinnacle Cache (gear, crests, Coffer Key Shards) + rep with the associated zone faction',checked:false},
       {id:'ow2',text:'Timewalking (when active)',desc:'Pick up the Timewalking dungeon quest from the hub in Orgrimmar/Stormwind. The associated Timewalking raid quest rewards Hero-track loot. TW dungeons count as Heroic dungeons for Great Vault dungeon slot progress — do 8 if active this week',checked:false}
     ]}
@@ -982,6 +984,22 @@ function buildRealm(realm){
     if(e.target.closest('.realm-actions'))return;
     realm.open=!realm.open;
     cab.classList.toggle('open',realm.open);
+    // When collapsing a realm, collapse all characters and their groups too
+    if(!realm.open){
+      realm.characters.forEach(c=>{
+        c.open=false;
+        (c.groups||[]).forEach(g=>{ if(!g.isHeader) g.collapsed=true; });
+      });
+      // Also hide the fixed bar if it belongs to a char in this realm
+      if(FIXED_BAR_CHAR_ID && realm.characters.some(c=>c.id===FIXED_BAR_CHAR_ID)){
+        FIXED_BAR_CHAR_ID=null;
+        const fb=document.getElementById('char-fixed-bar');
+        if(fb)fb.classList.remove('visible');
+      }
+      // Re-render this cabinet so drawers reflect collapsed state
+      const nw=buildRealm(realm);
+      cab.replaceWith(nw);
+    }
     saveRealms();
   });
 
