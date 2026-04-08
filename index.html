@@ -1110,6 +1110,12 @@ function confirmAddChar(){
   const realmId=document.getElementById('char-realm-target').value;
   const realm=APP.realms.find(r=>r.id===realmId);
   if(!realm)return;
+  // Prevent duplicate character names in the same realm (case-insensitive)
+  if(realm.characters.some(c=>c.name.toLowerCase()===name.toLowerCase())){
+    showToast(`"${name}" already exists in ${realm.name}`);
+    document.getElementById('char-name-input').focus();
+    return;
+  }
   const char={id:'char_'+Date.now(),name,charClass,open:false,groups:makeCharGroups()};
   realm.characters.push(char);
   realm.open=true; // keep realm open when adding a character
