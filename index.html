@@ -437,6 +437,11 @@ function makeCharGroups() {
     { id:'prey', title:'Prey', collapsed:true, tasks:[
       {id:'p1',text:'Prey - Nightmare x3 (Weekly Quest)',desc:'Nightmare unlocks at Preyseeker\'s Journey Rank 4. Quest \'A Nightmarish Task\' from Astalor in Murder Row. Rewards: Champion gear, 20 Hero Dawncrest (uncapped), 1x Beacon of Hope (summons Nullaeus in Delves). Fills Great Vault World slot',checked:false}
     ]},
+    { id:'raid', title:'Raid', collapsed:true, tasks:[
+      {id:'r_lfr',text:'LFR — All Wings',desc:'Veteran-track gear. Fastest path to Tier Set pieces — prioritise until your 4-piece is complete. 4-set is a major DPS/HPS boost and unlocks Catalyst Unbound. Can skip once 4-piece is secured',checked:false},
+      {id:'r_normal',text:'Normal Raid',desc:'Hero-track gear drops. Good weekly gear source and fills Great Vault Raid slot. Bring a group or use Group Finder. Run all available bosses for maximum loot chances',checked:false},
+      {id:'r_heroic',text:'Heroic Raid',desc:'Myth-track gear drops. Highest non-Mythic raid loot. Fills Great Vault Raid slot at the highest bracket. Push as far as your group can cleanly clear each week',checked:false}
+    ]},
     { id:'delve', title:'Delves', collapsed:true, tasks:[
       {id:'d1',text:'Bountiful Delves — T11+ with Coffer Keys & Beacon of Hope',desc:'End-of-run chest gear caps at T8 (Champion track). T8+ fills Great Vault World slot at Hero track. T11 Gilded Stashes (Delver\'s Journey Rank 4) give Hero + Myth Dawncrest. Use Restored Coffer Keys on T11 — Trovehunter\'s Bounty Map guarantees a Hero piece',checked:false},
       {id:'d2',text:'Nullaeus ??',desc:'30 Hero Dawncrest + 30 Myth Dawncrest (uncapped ONE-TIME per season; 5 each thereafter) + title \'the Ominous\'. Killing ?? first grants both rewards and skips needing to kill ? separately',checked:false}
@@ -466,6 +471,7 @@ const SHARED_DEFAULT = [
     {id:'f2',text:'Set Hearthstone to Silvermoon City',desc:'Silvermoon is your endgame hub: Great Vault (bank), Upgrade Vendor Cuzolth (48.3, 61.7), Matrix Catalyst (Sanctum of Light 40.6, 64.6), Lady Liadrin (Spark quest), Halduron (dungeon weekly), and the Arcantina portal',checked:false},
     {id:'f3',text:'Confirm Arcantina Hub is Unlocked',desc:'Rewarded as part of the Arator\'s Journey campaign branch (Key to the Arcantina). This hub is the portal to all major weekly content areas. If you skipped Arator\'s Journey, pick up the unlock quest in Silvermoon',checked:false},
     {id:'f4',text:'Unlock Prey: Speak to Astalor in Murder Row',desc:'After campaign completion, visit Magister Astalor Bloodsworn in the Murder Row district of Silvermoon City to activate the Prey system. This is NOT automatic — you must talk to him',checked:false},
+    {id:'f4b',text:'Unlock Saltheril\'s Soiree (Silvermoon Court weekly)',desc:'Complete the short unlock quest chain in Eversong Woods to access the Soiree weekly. Without this, the Silvermoon Court faction weekly will not be available. Pick up the starter quest in Silvermoon City after completing the main campaign',checked:false},
     {id:'f5',text:'Buy Singularity Reputation Contract (AH)',desc:'Buy before doing any activities so rep gains stack immediately. Singularity Renown 7 rewards the Crucible of Erratic Energies trinket (Champion ilvl 246) — one of the highest-value early gear pieces. **Priority**',checked:false},
     {id:'f6',text:'Pick Up All Silvermoon Weeklies First',desc:'Before leaving Silvermoon each week: Lady Liadrin (Spark of Radiance quest), Halduron Brightwing (dungeon weekly for 1,000 rep), Vaeli outside the bank (Housing weekly). Picking these up first lets you complete them passively while doing other content',checked:false},
     {id:'f7',text:'Run Normal Dungeons (until ilvl 220+)',desc:'Queue immediately after hitting 90. Normal dungeons drop ilvl 213 base gear (upgradeable to 237). Run each dungeon 2–3 times to fill weak slots. No enrage timers — fresh players are fine. Target: ilvl 220+ before moving to Heroic',checked:false},
@@ -475,8 +481,7 @@ const SHARED_DEFAULT = [
     {id:'f11',text:'World Quests',desc:'Adventurer gear (ilvl 220–237). Quick and useful for filling early gear gaps while working toward Heroic/M0. Check for gear WQs in weak slots only — not worth detours for non-gear rewards yet',checked:false},
     {id:'f12',text:'Prey: Normal then Hard',desc:'Normal (×2/week): Adventurer gear + Adventurer crests. Hard (×4/week): Veteran gear + Veteran crests. Push to Hard difficulty ASAP. Preyseeker\'s Journey Rank 4 unlocks Nightmare (Champion gear + Hero Dawncrest)',checked:false},
     {id:'f13',text:'Delves: Claim Free Key Shards + Progress Tiers',desc:'Claim 200 free Coffer Key Shards from the Delve Vendor (one-time only, can go over cap). Push Delve tiers progressively — T7 gives ilvl ~224, T8 is the big breakpoint. Unlock Delver\'s Journey Rank 4 for Gilded Jackpot',checked:false},
-    {id:'f14',text:'Player Housing Weekly',desc:'Quick easy weekly quest from Vaeli outside the Silvermoon bank. Rewards crest bundles. Never skip — 5 minutes for free currency',checked:false},
-    {id:'f15',text:'Voidstorm Weeklies: Stormarion Assault',desc:'Quest: Stand Your Ground in Stormarion Citadel (SW Voidstorm, every 30 mins). Earns 2,000 Singularity rep per completion toward Renown 7 (Champion trinket). First 4 caches/week include a Restored Coffer Key',checked:false},
+    {id:'f15',text:'Voidstorm Weeklies: Stormarion Assault (ilvl 235+)',desc:'Quest: Stand Your Ground in Stormarion Citadel (SW Voidstorm, every 30 mins). Earns 2,000 Singularity rep per completion toward Renown 7 (Champion trinket). First 4 caches/week include a Restored Coffer Key. Recommended ilvl 235+ before attempting.',checked:false},
     {id:'f16',text:'Voidstorm Weeklies: Decimus Storyline',desc:'Start the Decimus storyline to begin collecting Elemental Voidcores. The full Voidforge system unlocks in patch 12.0.5 — start earning Voidcores now. Requires 6 Voidcores to unlock',checked:false}
   ]},
   { id:'rep', title:'Reputation', tasks:[
@@ -1103,15 +1108,14 @@ function renderShared(){
 async function confirmAddRealm(){
   const name=document.getElementById('realm-name-input').value.trim();
   if(!name){document.getElementById('realm-name-input').focus();return;}
-  const region=(document.getElementById('realm-region-input').value.trim()||'EU').toLowerCase();
+  const region=(document.getElementById('realm-region-input').value.trim()||'EU').toUpperCase();
   const msgEl=document.getElementById('realm-validate-msg');
   const btn=document.getElementById('realm-create-btn');
 
   // Duplicate realm check (same name + region, case-insensitive)
-  if(APP.realms.some(r=>r.name.toLowerCase()===name.toLowerCase()&&r.region.toLowerCase()===region)){
+  if(APP.realms.some(r=>r.name.toLowerCase()===name.toLowerCase()&&r.region.toLowerCase()===region.toLowerCase())){
     msgEl.style.color='var(--danger)';
-    msgEl.textContent=`❌ "${name}" (${region.toUpperCase()}) is already in your list`;
-    btn.disabled=false; btn.textContent='Create';
+    msgEl.textContent=`❌ "${name}" (${region}) is already in your list`;
     document.getElementById('realm-name-input').focus();
     return;
   }
@@ -1121,28 +1125,24 @@ async function confirmAddRealm(){
   btn.disabled=true; btn.textContent='Checking…';
 
   try{
-    // RIO probe: sends a bogus character name against the realm.
-    // Valid realm   → HTTP 400, statusCode:400, message contains "could not find"
-    // Invalid realm → HTTP 400, statusCode:400, message contains "invalid" or "realm"
-    const r=await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(name)}&name=zzzprobexyz&fields=`);
+    const r=await fetch(`https://raider.io/api/v1/characters/profile?region=${region.toLowerCase()}&realm=${encodeURIComponent(name)}&name=zzzprobexyz&fields=`);
     const d=await r.json();
     const msg=(d.message||d.error||'').toLowerCase();
-    // If the message mentions "could not find" it means the realm was recognised
-    // but the dummy character doesn't exist — realm is valid
     if(!msg.includes('could not find')){
       msgEl.style.color='var(--danger)';
-      msgEl.textContent=`❌ "${name}" is not a valid realm in ${region.toUpperCase()}`;
+      msgEl.textContent=`❌ "${name}" is not a valid realm in ${region}`;
       btn.disabled=false; btn.textContent='Create';
       return;
     }
     msgEl.textContent='';
   }catch(e){
-    // Network/CORS error — allow with warning
-    msgEl.style.color='var(--gold)';
-    msgEl.textContent='⚠️ Could not verify — adding anyway';
+    msgEl.style.color='var(--danger)';
+    msgEl.textContent='❌ Could not validate — make sure you are online and hosting over HTTPS';
+    btn.disabled=false; btn.textContent='Create';
+    return;
   }
 
-  const realm={id:'realm_'+Date.now(),name,region:region.toUpperCase(),open:true,characters:[]};
+  const realm={id:'realm_'+Date.now(),name,region,open:true,characters:[]};
   APP.realms.push(realm); saveRealms();
   const con=document.getElementById('realms-container');
   con.appendChild(buildRealm(realm));
@@ -1163,7 +1163,6 @@ async function confirmAddChar(){
   if(realm.characters.some(c=>c.name.toLowerCase()===name.toLowerCase())){
     msgEl.style.color='var(--danger)';
     msgEl.textContent=`❌ "${name}" already exists in ${realm.name}`;
-    btn.disabled=false; btn.textContent='Create';
     document.getElementById('char-name-input').focus();
     return;
   }
@@ -1178,20 +1177,19 @@ async function confirmAddChar(){
     const r=await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(realm.name)}&name=${encodeURIComponent(name)}&fields=`);
     const d=await r.json();
     const msg=(d.message||d.error||'').toLowerCase();
-    // RIO returns "could not find" when a character doesn't exist on a valid realm
     if(msg.includes('could not find')){
       msgEl.style.color='var(--danger)';
       msgEl.textContent=`❌ "${name}" not found on ${realm.name} (${realm.region})`;
       btn.disabled=false; btn.textContent='Create';
       return;
     }
-    // Character found — use class from RIO if available
     if(d.class) charClass=d.class;
     msgEl.textContent='';
   }catch(e){
-    // Network/CORS error — allow with warning
-    msgEl.style.color='var(--gold)';
-    msgEl.textContent='⚠️ Could not verify — adding anyway';
+    msgEl.style.color='var(--danger)';
+    msgEl.textContent='❌ Could not validate — make sure you are online and hosting over HTTPS';
+    btn.disabled=false; btn.textContent='Create';
+    return;
   }
 
   const char={id:'char_'+Date.now(),name,charClass,open:false,groups:makeCharGroups()};
