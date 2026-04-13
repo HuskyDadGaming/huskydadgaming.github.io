@@ -1128,7 +1128,9 @@ async function confirmAddRealm(){
     const r=await fetch(`https://raider.io/api/v1/characters/profile?region=${region.toLowerCase()}&realm=${encodeURIComponent(name)}&name=zzzprobexyz&fields=`);
     const d=await r.json();
     const msg=(d.message||d.error||'').toLowerCase();
-    if(!msg.includes('could not find')){
+    // Valid realm = RIO knows the realm but can't find the dummy char
+    // Either "could not find" or "not found" in the message means realm is valid
+    if(!msg.includes('not found')){
       msgEl.style.color='var(--danger)';
       msgEl.textContent=`❌ "${name}" is not a valid realm in ${region}`;
       btn.disabled=false; btn.textContent='Create';
