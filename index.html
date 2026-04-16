@@ -427,7 +427,7 @@ function makeCharGroups() {
       {id:'w1',text:'Campaign',desc:'Complete any new story chapter(s) — unlocks zone content, Renown, and faction progress',checked:false},
       {id:'w2',text:'Lady Liadrin — Spark of Radiance quest',desc:'Pick up from Lady Liadrin in Silvermoon each reset. Rewards Apex Cache (Coffer Key Shards, Voidlight Marl, Veteran Dawncrest, gold) + chance at Spark of Radiance. Second Spark from Lor\'themar\'s World Tour. Do not skip either!',checked:false},
       {id:'w3',text:'Silvermoon Weeklies',desc:'Weekly Dungeon quest from Halduron Brightwing (1,000 rep). Housing weekly from Vaeli outside the bank. Skip PvP and Pet Battle quests',checked:false},
-      {id:'w4',text:'World Boss',desc:'Guaranteed Warbound ilvl 250 Champion gear (2/6). Rotates weekly: Lu\'ashal, Cragpine, Thorm\'belan, Predaxas. Do on alts too',checked:false},
+      {id:'w4',text:'World Boss',desc:'Guaranteed Warbound ilvl 253 Champion gear (3/6). Rotates weekly: Lu\'ashal, Cragpine, Thorm\'belan, Predaxas. Do on alts too',checked:false},
       {id:'w5',text:'Singularity (Decimus / Voidforge)',desc:'Collect 3x Elementary Voidcore Shards from Bountiful Delves or M+ to progress the Voidforge with Decimus. Full Nebulous & Ascendant Voidcore system unlocks in patch 12.0.5',checked:false},
       {id:'w_mplus',text:'Mythic+ Dungeons — aim for 8 runs',desc:'1 dungeon = 1st Vault slot. 4 = 2nd slot. 8 = 3rd slot. Vault ilvl based on your highest/4th/8th key. Push highest you can cleanly finish — ideally +7 to +10 for Hero-track Vault rewards. Earns Dawncrest for upgrades',checked:false},
       {id:'w_catalyst',text:'Matrix Catalyst — Spend Charge (if available)',desc:'Silvermoon City, Sanctum of Light (40.6, 64.6). 1 charge every 2 weeks automatically. Converts non-tier armor into your class Tier Set piece (same ilvl). Getting your 4-set unlocks Catalyst Unbound — extra charges drop from content thereafter',checked:false},
@@ -475,7 +475,7 @@ const SHARED_DEFAULT = [
     {id:'f5',text:'Buy Singularity Reputation Contract (AH)',desc:'Buy before doing any activities so rep gains stack immediately. Singularity Renown 7 rewards the Crucible of Erratic Energies trinket (Champion ilvl 246) — one of the highest-value early gear pieces. **Priority**',checked:false},
     {id:'f16',text:'Voidstorm Weeklies: Decimus Storyline',desc:'Start the Decimus storyline to begin collecting Elemental Voidcores. The full Voidforge system unlocks in patch 12.0.5 — start earning Voidcores now. Requires 6 Voidcores to unlock',checked:false},
     {id:'f6',text:'Pick Up All Silvermoon Weeklies First',desc:'Before leaving Silvermoon each week: Lady Liadrin (Spark of Radiance quest), Halduron Brightwing (dungeon weekly for 1,000 rep), Vaeli outside the bank (Housing weekly). Picking these up first lets you complete them passively while doing other content',checked:false},
-    {id:'f10',text:'World Boss',desc:'Quick weekly for a guaranteed Warbound ilvl 250 Champion gear piece (2/6). Rotates weekly: Lu\'ashal, Cragpine, Thorm\'belan, Predaxas. Do on alts too once unlocked',checked:false},
+    {id:'f10',text:'World Boss',desc:'Quick weekly for a guaranteed Warbound ilvl 253 Champion gear piece (3/6). Rotates weekly: Lu\'ashal, Cragpine, Thorm\'belan, Predaxas. Do on alts too once unlocked',checked:false},
     {id:'f11',text:'World Quests',desc:'Adventurer gear (ilvl 220–237). Quick and useful for filling early gear gaps while working toward Heroic/M0. Check for gear WQs in weak slots only — not worth detours for non-gear rewards yet',checked:false},
     {id:'f13',text:'Delves: Claim Free Key Shards + Progress Tiers',desc:'Claim 200 free Coffer Key Shards from the Delve Vendor (one-time only, can go over cap). Push Delve tiers progressively — T7 gives ilvl ~224, T8 is the big breakpoint. Unlock Delver\'s Journey Rank 4 for Gilded Jackpot',checked:false},
     {id:'f7',text:'Run Normal Dungeons (until ilvl 220+)',desc:'Queue immediately after hitting 90. Normal dungeons drop ilvl 213 base gear (upgradeable to 237). Run each dungeon 2–3 times to fill weak slots. No enrage timers — fresh players are fine. Target: ilvl 220+ before moving to Heroic',checked:false},
@@ -494,9 +494,8 @@ const SHARED_DEFAULT = [
 const DEFAULT_REALMS = [
   { id:'realm_silvermoon', name:'Silvermoon', region:'EU', open:false,
     characters:[
-      { id:'char_huskysham',    name:'Huskysham',    charClass:'Shaman',       open:false, groups: makeCharGroups() },
-      { id:'char_huskydk',      name:'Huskydk',      charClass:'Death Knight', open:false, groups: makeCharGroups() },
-      { id:'char_dumbledoom',   name:'Dumbledoom',   charClass:'Warlock',      open:false, groups: makeCharGroups() }
+      { id:'char_huskysham', name:'Huskysham', charClass:'Shaman', open:false, groups: makeCharGroups() },
+      { id:'char_huskydk',   name:'Huskydk',   charClass:'Death Knight', open:false, groups: makeCharGroups() }
     ]
   }
 ];
