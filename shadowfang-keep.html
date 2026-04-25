@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shadowfang Keep — AzerothCore Loot Guide</title>
+    <title>Shadowfang Keep — KCraft Loot Guide</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <style>
         body { background: #1a1a1a; color: #ddd; padding-bottom: 3rem; }
@@ -78,6 +78,7 @@
         .class-select:focus { outline: none; border-color: #ffd100; }
         .stats-list { font-size: 0.8rem; color: #aaa; }
         .stats-list .stat { margin-right: 8px; white-space: nowrap; }
+        .slot-text { color: #bbb; font-size: 0.85rem; }
         .empty-loot { color: #777; font-style: italic; font-size: 0.9rem; }
         .role-only-message {
             color: #777; font-style: italic; font-size: 0.9rem; display: none;
@@ -89,7 +90,7 @@
 
 <nav class="navbar navbar-dark">
     <div class="container">
-        <a class="navbar-brand" href="index.html">⚔️ AzerothCore Loot Guide</a>
+        <a class="navbar-brand" href="index.html">⚔️ KCraft Loot Guide</a>
         <span class="navbar-text small">Generated from server DB</span>
     </div>
 </nav>
@@ -163,7 +164,7 @@
                 <tbody>
                     <tr class="item-row" data-roles="ranged melee" data-classes="hunter rogue shaman druid">
                         <td><span style="color:#0070dd; font-weight:600;">Rugged Spaulders</span></td>
-                        <td><span class="text-muted small">Shoulder (Leather)</span></td>
+                        <td><span class="slot-text">Shoulder (Leather)</span></td>
                         <td><span class="stats-list"><span class="stat">+64 Armor</span><span class="stat">+8 Agility</span></span></td>
                         <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
                         <td><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
@@ -201,25 +202,25 @@
                 <tbody>
                     <tr class="item-row" data-roles="ranged heal" data-classes="priest mage warlock">
                         <td><span style="color:#0070dd; font-weight:600;">Bloody Apron</span></td>
-                        <td><span class="text-muted small">Chest (Cloth)</span></td>
+                        <td><span class="slot-text">Chest (Cloth)</span></td>
                         <td><span class="stats-list"><span class="stat">+41 Armor</span><span class="stat">+12 Stamina</span></span></td>
                         <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
                         <td><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span></td>
                         <td class="text-end">23</td>
                         <td class="text-end">45.0%</td>
                     </tr>
-                    <tr class="item-row" data-roles="melee tank" data-classes="warrior paladin hunter rogue dk mage warlock">
+                    <tr class="item-row" data-roles="tank melee" data-classes="warrior paladin hunter rogue dk mage warlock">
                         <td><span style="color:#0070dd; font-weight:600;">Butcher's Slicer</span></td>
-                        <td><span class="text-muted small">Sword (1H)</span></td>
+                        <td><span class="slot-text">Sword (1H)</span></td>
                         <td><span class="stats-list"><span class="stat">+4 Strength</span><span class="stat">+3 Stamina</span></span></td>
                         <td><span class="role-pill" style="background:#3a5a8a;color:#7eb0e8;" title="Tank">🛡</span><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
                         <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span></td>
                         <td class="text-end">23</td>
                         <td class="text-end">45.0%</td>
                     </tr>
-                    <tr class="item-row" data-roles="melee tank" data-classes="warrior paladin hunter rogue dk shaman">
+                    <tr class="item-row" data-roles="tank melee" data-classes="warrior paladin hunter rogue dk shaman">
                         <td><span style="color:#0070dd; font-weight:600;">Butcher's Cleaver</span></td>
-                        <td><span class="text-muted small">Axe (1H)</span></td>
+                        <td><span class="slot-text">Axe (1H)</span></td>
                         <td><span class="stats-list"><span class="stat">+5 Strength</span><span class="stat">+2 Agility</span></span></td>
                         <td><span class="role-pill" style="background:#3a5a8a;color:#7eb0e8;" title="Tank">🛡</span><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
                         <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span></td>
@@ -255,18 +256,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="item-row" data-roles="melee tank" data-classes="warrior paladin rogue priest dk shaman druid">
+                    <tr class="item-row" data-roles="tank melee" data-classes="warrior paladin rogue priest dk shaman druid">
                         <td><span style="color:#0070dd; font-weight:600;">Baron's Scepter</span></td>
-                        <td><span class="text-muted small">Mace (1H)</span></td>
+                        <td><span class="slot-text">Mace (1H)</span></td>
                         <td><span class="stats-list"><span class="stat">+8 Strength</span></span></td>
                         <td><span class="role-pill" style="background:#3a5a8a;color:#7eb0e8;" title="Tank">🛡</span><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
                         <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
                         <td class="text-end">25</td>
                         <td class="text-end">70%</td>
                     </tr>
-                    <tr class="item-row" data-roles="melee tank" data-classes="warrior paladin hunter rogue priest dk shaman mage warlock druid">
+                    <tr class="item-row" data-roles="tank melee" data-classes="warrior paladin hunter rogue priest dk shaman mage warlock druid">
                         <td><span style="color:#0070dd; font-weight:600;">Silverlaine's Family Seal</span></td>
-                        <td><span class="text-muted small">Finger</span></td>
+                        <td><span class="slot-text">Finger</span></td>
                         <td><span class="stats-list"><span class="stat">+7 Strength</span><span class="stat">+3 Stamina</span></span></td>
                         <td><span class="role-pill" style="background:#3a5a8a;color:#7eb0e8;" title="Tank">🛡</span><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
                         <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
@@ -302,9 +303,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="item-row" data-roles="melee tank" data-classes="warrior paladin hunter dk shaman">
+                    <tr class="item-row" data-roles="tank melee" data-classes="warrior paladin hunter dk shaman">
                         <td><span style="color:#0070dd; font-weight:600;">Arced War Axe</span></td>
-                        <td><span class="text-muted small">Axe (2H)</span></td>
+                        <td><span class="slot-text">Axe (2H)</span></td>
                         <td><span class="stats-list"><span class="stat">+10 Strength</span><span class="stat">+9 Stamina</span></span></td>
                         <td><span class="role-pill" style="background:#3a5a8a;color:#7eb0e8;" title="Tank">🛡</span><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
                         <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span></td>
@@ -313,7 +314,7 @@
                     </tr>
                     <tr class="item-row" data-roles="tank heal" data-classes="warrior paladin shaman">
                         <td><span style="color:#0070dd; font-weight:600;">Commander's Crest</span></td>
-                        <td><span class="text-muted small">Shield (Shield)</span></td>
+                        <td><span class="slot-text">Shield</span></td>
                         <td><span class="stats-list"><span class="stat">+623 Armor</span><span class="stat">+3 Dodge</span><span class="stat">+3 Stamina</span><span class="stat">+6 Strength</span></span></td>
                         <td><span class="role-pill" style="background:#3a5a8a;color:#7eb0e8;" title="Tank">🛡</span><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span></td>
                         <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span></td>
@@ -351,7 +352,7 @@
                 <tbody>
                     <tr class="item-row" data-roles="ranged heal" data-classes="hunter rogue shaman druid">
                         <td><span style="color:#0070dd; font-weight:600;">Girdle of the Blindwatcher</span></td>
-                        <td><span class="text-muted small">Waist (Leather)</span></td>
+                        <td><span class="slot-text">Waist (Leather)</span></td>
                         <td><span class="stats-list"><span class="stat">+54 Armor</span><span class="stat">+7 Stamina</span><span class="stat">+8 Intellect</span></span></td>
                         <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
                         <td><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
@@ -360,7 +361,7 @@
                     </tr>
                     <tr class="item-row" data-roles="ranged heal" data-classes="warrior hunter priest shaman mage warlock druid">
                         <td><span style="color:#0070dd; font-weight:600;">Odo's Ley Staff</span></td>
-                        <td><span class="text-muted small">Staff</span></td>
+                        <td><span class="slot-text">Staff</span></td>
                         <td><span class="stats-list"><span class="stat">+12 Spirit</span><span class="stat">+5 Stamina</span></span></td>
                         <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
                         <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
@@ -398,16 +399,16 @@
                 <tbody>
                     <tr class="item-row" data-roles="ranged heal" data-classes="priest mage warlock">
                         <td><span style="color:#0070dd; font-weight:600;">Fenrus' Hide</span></td>
-                        <td><span class="text-muted small">Back (Cloth)</span></td>
+                        <td><span class="slot-text">Back (Cloth)</span></td>
                         <td><span class="stats-list"><span class="stat">+22 Armor</span><span class="stat">+6 Agility</span><span class="stat">+5 Stamina</span></span></td>
                         <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
                         <td><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span></td>
                         <td class="text-end">26</td>
                         <td class="text-end">70%</td>
                     </tr>
-                    <tr class="item-row" data-roles="melee tank" data-classes="hunter rogue shaman druid">
+                    <tr class="item-row" data-roles="tank melee" data-classes="hunter rogue shaman druid">
                         <td><span style="color:#0070dd; font-weight:600;">Black Wolf Bracers</span></td>
-                        <td><span class="text-muted small">Wrist (Leather)</span></td>
+                        <td><span class="slot-text">Wrist (Leather)</span></td>
                         <td><span class="stats-list"><span class="stat">+42 Armor</span><span class="stat">+8 Stamina</span></span></td>
                         <td><span class="role-pill" style="background:#3a5a8a;color:#7eb0e8;" title="Tank">🛡</span><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
                         <td><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
@@ -445,7 +446,7 @@
                 <tbody>
                     <tr class="item-row" data-roles="ranged heal" data-classes="priest mage warlock">
                         <td><span style="color:#0070dd; font-weight:600;">Feline Mantle</span></td>
-                        <td><span class="text-muted small">Shoulder (Cloth)</span></td>
+                        <td><span class="slot-text">Shoulder (Cloth)</span></td>
                         <td><span class="stats-list"><span class="stat">+33 Armor</span><span class="stat">+9 Intellect</span><span class="stat">+5 Spirit</span></span></td>
                         <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
                         <td><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span></td>
@@ -454,7 +455,7 @@
                     </tr>
                     <tr class="item-row" data-roles="ranged heal" data-classes="priest mage warlock">
                         <td><span style="color:#0070dd; font-weight:600;">Wolfmaster Cape</span></td>
-                        <td><span class="text-muted small">Back (Cloth)</span></td>
+                        <td><span class="slot-text">Back (Cloth)</span></td>
                         <td><span class="stats-list"><span class="stat">+22 Armor</span><span class="stat">+6 Dodge</span><span class="stat">+5 Agility</span></span></td>
                         <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
                         <td><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span></td>
@@ -490,9 +491,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="item-row" data-roles="melee tank" data-classes="warrior paladin hunter dk">
+                    <tr class="item-row" data-roles="tank melee" data-classes="warrior paladin hunter dk">
                         <td><span style="color:#0070dd; font-weight:600;">Haunting Blade</span></td>
-                        <td><span class="text-muted small">Sword (2H)</span></td>
+                        <td><span class="slot-text">Sword (2H)</span></td>
                         <td><span class="stats-list"><span class="text-muted small">—</span></span></td>
                         <td><span class="role-pill" style="background:#3a5a8a;color:#7eb0e8;" title="Tank">🛡</span><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
                         <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span></td>
@@ -501,7 +502,7 @@
                     </tr>
                     <tr class="item-row" data-roles="melee" data-classes="warrior paladin hunter shaman">
                         <td><span style="color:#0070dd; font-weight:600;">Phantom Armor</span></td>
-                        <td><span class="text-muted small">Chest (Mail)</span></td>
+                        <td><span class="slot-text">Chest (Mail)</span></td>
                         <td><span class="stats-list"><span class="stat">+201 Armor</span><span class="stat">+5 Crit</span><span class="stat">+11 Stamina</span><span class="stat">+3 Strength</span></span></td>
                         <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
                         <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span></td>
@@ -539,7 +540,7 @@
                 <tbody>
                     <tr class="item-row" data-roles="ranged heal" data-classes="priest mage warlock">
                         <td><span style="color:#0070dd; font-weight:600;">Belt of Arugal</span></td>
-                        <td><span class="text-muted small">Waist (Cloth)</span></td>
+                        <td><span class="slot-text">Waist (Cloth)</span></td>
                         <td><span class="stats-list"><span class="stat">+26 Armor</span><span class="stat">+10 Intellect</span><span class="stat">+3 Spirit</span></span></td>
                         <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
                         <td><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span></td>
@@ -548,16 +549,16 @@
                     </tr>
                     <tr class="item-row" data-roles="ranged heal" data-classes="priest mage warlock">
                         <td><span style="color:#0070dd; font-weight:600;">Robes of Arugal</span></td>
-                        <td><span class="text-muted small">Chest (Cloth)</span></td>
+                        <td><span class="slot-text">Chest (Cloth)</span></td>
                         <td><span class="stats-list"><span class="stat">+46 Armor</span><span class="stat">+3 Spirit</span><span class="stat">+9 Intellect</span><span class="stat">+5 Stamina</span></span></td>
                         <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
                         <td><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span></td>
                         <td class="text-end">29</td>
                         <td class="text-end">40.0%</td>
                     </tr>
-                    <tr class="item-row" data-roles="ranged melee heal" data-classes="warrior hunter rogue priest shaman mage warlock druid">
+                    <tr class="item-row" data-roles="ranged heal melee" data-classes="warrior hunter rogue priest shaman mage warlock druid">
                         <td><span style="color:#0070dd; font-weight:600;">Meteor Shard</span></td>
-                        <td><span class="text-muted small">Dagger</span></td>
+                        <td><span class="slot-text">Dagger</span></td>
                         <td><span class="stats-list"><span class="text-muted small">—</span></span></td>
                         <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
                         <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
@@ -572,7 +573,7 @@
     </div>
 
     <div class="footer-note">
-        <p><strong>Loot data sourced directly from your AzerothCore database.</strong> Drop rates reflect <code>creature_loot_template.Chance</code> values from your server install. <em>Always</em> drops indicate ≥95% drop chance.</p>
+        <p><strong>Loot data sourced directly from your KCraft database.</strong> Drop rates reflect <code>creature_loot_template.Chance</code> values from your server install. <em>Always</em> drops indicate ≥95% drop chance.</p>
         <p><strong>Role &amp; class tagging</strong> is inferred from armor type, weapon type, stats, and explicit class restrictions. Filters combine — e.g. selecting "Healer" and "Druid" shows Resto-friendly drops only.</p>
         <p>Filter: equippable gear only (21 items shown, 35 non-gear filtered out).</p>
     </div>
