@@ -54,6 +54,7 @@
         }
         .dungeon-meta {
             display: flex; gap: 6px; flex-wrap: wrap; font-size: 0.78rem;
+            margin-top: 8px;
         }
         .dungeon-meta .pill {
             padding: 2px 8px; border-radius: 3px;
@@ -62,8 +63,20 @@
         .dungeon-meta .pill.alliance { background: #18324a; color: #6bbfff; }
         .dungeon-meta .pill.horde { background: #4a1818; color: #ff6b6b; }
         .dungeon-meta .pill.both { background: #3a3a3a; color: #ddd; }
+        .lvl-row {
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        .lvl-line {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.78rem;
+        }
+        .lvl-label { color: #777; min-width: 92px; }
+        .lvl-value { color: #aaa; font-weight: 500; }
+        .lvl-value.mob { color: #ffd100; }
+        .lvl-value.mob.unknown { color: #555; font-style: italic; font-weight: 400; }
         .status-tag {
-            font-size: 0.7rem; color: #1eff00; margin-left: 4px; font-weight: 600;
+            font-size: 0.7rem; color: #1eff00; margin-left: 4px;
+            font-weight: 600; display: inline-block; margin-top: 6px;
         }
         .status-tag.todo { color: #777; }
         .footer-note {
@@ -97,171 +110,342 @@
         <div class="dungeon-grid">
             <div class="dungeon-card available">
                 <a href="ragefire-chasm.html">Ragefire Chasm</a>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob">Lvl 13–16</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 13–18</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill horde">Horde</span>
-                    <span class="pill">Lvl 13–18</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
             </div>
             <div class="dungeon-card available">
                 <a href="wailing-caverns.html">Wailing Caverns</a>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob">Lvl 17–20</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 17–24</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill horde">Horde</span>
-                    <span class="pill">Lvl 17–24</span>
                     <span class="pill">9 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
             </div>
             <div class="dungeon-card available">
                 <a href="the-deadmines.html">The Deadmines</a>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob">Lvl 17–20</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 17–26</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill alliance">Alliance</span>
-                    <span class="pill">Lvl 17–26</span>
                     <span class="pill">8 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
             </div>
             <div class="dungeon-card available">
                 <a href="shadowfang-keep.html">Shadowfang Keep</a>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob">Lvl 18–21</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 22–30</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 22–30</span>
                     <span class="pill">9 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
             </div>
             <div class="dungeon-card available">
                 <a href="the-stockade.html">The Stockade</a>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob">Lvl 23–25</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 24–32</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill alliance">Alliance</span>
-                    <span class="pill">Lvl 23–30</span>
                     <span class="pill">6 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
             </div>
             <div class="dungeon-card available">
                 <a href="blackfathom-deeps.html">Blackfathom Deeps</a>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob">Lvl 22–24</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 24–32</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 24–32</span>
                     <span class="pill">7 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
             </div>
             <div class="dungeon-card available">
                 <a href="gnomeregan.html">Gnomeregan</a>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob">Lvl 24–28</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 29–38</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill alliance">Alliance</span>
-                    <span class="pill">Lvl 29–38</span>
                     <span class="pill">8 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Razorfen Kraul</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 29–38</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 29–38</span>
                     <span class="pill">6 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Scarlet Monastery</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 26–45</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 26–45</span>
                     <span class="pill">12 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Razorfen Downs</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 37–46</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 37–46</span>
                     <span class="pill">7 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Uldaman</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 41–51</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 41–51</span>
                     <span class="pill">8 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Zul'Farrak</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 44–54</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 44–54</span>
                     <span class="pill">9 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Maraudon</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 46–55</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 46–55</span>
                     <span class="pill">7 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Sunken Temple</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 50–60</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 50–60</span>
                     <span class="pill">11 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Blackrock Depths</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 52–60</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 52–60</span>
                     <span class="pill">16 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Dire Maul</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 55–60</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 55–60</span>
                     <span class="pill">14 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Lower Blackrock Spire</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 55–60</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 55–60</span>
                     <span class="pill">10 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Scholomance</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 58–60</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 58–60</span>
                     <span class="pill">11 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Stratholme</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 58–60</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 58–60</span>
                     <span class="pill">14 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
@@ -277,126 +461,252 @@
         <div class="dungeon-grid">
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Hellfire Ramparts</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 60–62</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 60–62</span>
                     <span class="pill">3 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">The Blood Furnace</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 61–63</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 61–63</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">The Slave Pens</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 62–64</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 62–64</span>
                     <span class="pill">3 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">The Underbog</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 63–65</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 63–65</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Mana-Tombs</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 64–66</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 64–66</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Auchenai Crypts</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 65–67</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 65–67</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Sethekk Halls</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 67–70</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 67–70</span>
                     <span class="pill">2 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Old Hillsbrad</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 66–68</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 66–68</span>
                     <span class="pill">3 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">The Steamvault</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 70</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 70</span>
                     <span class="pill">3 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Shadow Labyrinth</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 70</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 70</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">The Mechanar</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 70</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 70</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">The Botanica</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 70</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 70</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">The Arcatraz</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 70</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 70</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Magisters' Terrace</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 70</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 70</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
@@ -412,144 +722,288 @@
         <div class="dungeon-grid">
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Utgarde Keep</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 68–72</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 68–72</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">The Nexus</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 70–73</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 70–73</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Azjol-Nerub</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 72–74</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 72–74</span>
                     <span class="pill">3 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Ahn'kahet</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 73–75</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 73–75</span>
                     <span class="pill">5 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Drak'Tharon Keep</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 73–76</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 73–76</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Violet Hold</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 73–76</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 73–76</span>
                     <span class="pill">7 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Gundrak</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 73–75</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 73–75</span>
                     <span class="pill">5 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Halls of Stone</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 77–80</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 77–80</span>
                     <span class="pill">3 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Halls of Lightning</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 80</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 80</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Utgarde Pinnacle</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 80</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 80</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">The Oculus</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 80</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 80</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Culling of Stratholme</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 80</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 80</span>
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Trial of the Champion</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 80</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 80</span>
                     <span class="pill">3 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">The Forge of Souls</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 80</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 80</span>
                     <span class="pill">2 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Pit of Saron</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 80</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 80</span>
                     <span class="pill">3 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Halls of Reflection</span>
+                <div class="lvl-row">
+                    <div class="lvl-line">
+                        <span class="lvl-label">Mob levels:</span>
+                        <span class="lvl-value mob unknown">not yet recorded</span>
+                    </div>
+                    <div class="lvl-line">
+                        <span class="lvl-label">Recommended:</span>
+                        <span class="lvl-value">Lvl 80</span>
+                    </div>
+                </div>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
-                    <span class="pill">Lvl 80</span>
                     <span class="pill">3 bosses</span>
                 </div>
                 <span class="status-tag todo">🚧 Coming soon</span>
@@ -558,6 +1012,7 @@
     </div>
 
     <div class="footer-note">
+        <p><strong>Two level numbers:</strong> <em>Mob levels</em> are the actual creature levels in the dungeon, pulled from our server's database. <em>Recommended</em> is the player level bracket where you'll get full XP and appropriate gear drops — usually a few levels wider than the mob range.</p>
         <p><strong>About this guide:</strong> Loot data is pulled directly from our KCraft database (<code>creature_loot_template</code> + <code>item_template</code>). Drop chances are real values from the server install, not generic Wowhead estimates. Each dungeon page filters out trade goods, vendor trash, quest items, and bags — leaving only equippable gear.</p>
         <p><strong>Filters:</strong> Each dungeon page includes role filtering (Tank/Healer/Melee/Ranged) and class filtering (all 10 WotLK classes). Combine them to find exactly what you're looking for — e.g. "Healer Druid gear" shows Resto-friendly leather and staff drops.</p>
     </div>
