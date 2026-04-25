@@ -14,27 +14,18 @@
         .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
         .hero {
             background: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
-            padding: 2.5rem 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            border: 1px solid #3a3a3a;
+            padding: 2.5rem 1.5rem; border-radius: 8px;
+            margin-bottom: 2rem; border: 1px solid #3a3a3a;
         }
         .hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
         .hero p { color: #aaa; font-size: 1rem; margin-bottom: 0; }
         .progress-pill {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 4px;
-            background: #2d2d2d;
-            color: #aaa;
-            font-size: 0.85rem;
-            margin-top: 1rem;
+            display: inline-block; padding: 4px 10px; border-radius: 4px;
+            background: #2d2d2d; color: #aaa; font-size: 0.85rem; margin-top: 1rem;
         }
         .expansion-section { margin-bottom: 2.5rem; }
         .expansion-header {
-            border-left: 4px solid;
-            padding-left: 12px;
-            margin-bottom: 1rem;
+            border-left: 4px solid; padding-left: 12px; margin-bottom: 1rem;
         }
         .expansion-header h2 { margin-bottom: 4px; }
         .expansion-header p { color: #888; font-size: 0.9rem; margin-bottom: 0; }
@@ -44,65 +35,39 @@
             gap: 1rem;
         }
         .dungeon-card {
-            background: #232323;
-            border: 1px solid #3a3a3a;
-            border-radius: 6px;
-            padding: 1rem;
-            transition: all 0.15s;
+            background: #232323; border: 1px solid #3a3a3a;
+            border-radius: 6px; padding: 1rem; transition: all 0.15s;
         }
-        .dungeon-card.available {
-            border-color: #4ea8de33;
-        }
+        .dungeon-card.available { border-color: #4ea8de33; }
         .dungeon-card.available:hover {
-            border-color: #4ea8de;
-            background: #2a2a2a;
-            transform: translateY(-1px);
+            border-color: #4ea8de; background: #2a2a2a; transform: translateY(-1px);
         }
-        .dungeon-card.coming-soon {
-            opacity: 0.55;
-        }
+        .dungeon-card.coming-soon { opacity: 0.55; }
         .dungeon-card a {
-            color: #ffd100;
-            font-weight: 600;
-            font-size: 1rem;
-            display: block;
-            margin-bottom: 0.5rem;
+            color: #ffd100; font-weight: 600; font-size: 1rem;
+            display: block; margin-bottom: 0.5rem;
         }
         .dungeon-card .name-disabled {
-            color: #777;
-            font-weight: 600;
-            font-size: 1rem;
-            display: block;
-            margin-bottom: 0.5rem;
+            color: #777; font-weight: 600; font-size: 1rem;
+            display: block; margin-bottom: 0.5rem;
         }
         .dungeon-meta {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            font-size: 0.78rem;
+            display: flex; gap: 6px; flex-wrap: wrap; font-size: 0.78rem;
         }
         .dungeon-meta .pill {
-            padding: 2px 8px;
-            border-radius: 3px;
-            background: #2d2d2d;
-            color: #aaa;
+            padding: 2px 8px; border-radius: 3px;
+            background: #2d2d2d; color: #aaa;
         }
         .dungeon-meta .pill.alliance { background: #18324a; color: #6bbfff; }
         .dungeon-meta .pill.horde { background: #4a1818; color: #ff6b6b; }
         .dungeon-meta .pill.both { background: #3a3a3a; color: #ddd; }
         .status-tag {
-            font-size: 0.7rem;
-            color: #1eff00;
-            margin-left: 4px;
-            font-weight: 600;
+            font-size: 0.7rem; color: #1eff00; margin-left: 4px; font-weight: 600;
         }
         .status-tag.todo { color: #777; }
         .footer-note {
-            color: #888;
-            margin-top: 2rem;
-            font-size: 0.85rem;
-            border-top: 1px solid #3a3a3a;
-            padding-top: 1rem;
+            color: #888; margin-top: 2rem; font-size: 0.85rem;
+            border-top: 1px solid #3a3a3a; padding-top: 1rem;
         }
     </style>
 </head>
@@ -120,13 +85,13 @@
     <div class="hero">
         <h1>AzerothCore Loot Guide</h1>
         <p>Per-dungeon loot tables generated directly from our server's database. Every drop chance, every stat — straight from the source. Filter by role and class to find what's actually worth running.</p>
-        <div class="progress-pill">3 of 49 dungeons available · more added as we run them</div>
+        <div class="progress-pill">4 of 49 dungeons available · more added as we run them</div>
     </div>
 
     <div class="expansion-section">
         <div class="expansion-header" style="border-color: #ffd100;">
             <h2>World of Warcraft</h2>
-            <p>The original Azeroth dungeons · 3/19 available</p>
+            <p>The original Azeroth dungeons · 4/19 available</p>
         </div>
         <div class="dungeon-grid">
             <div class="dungeon-card available">
@@ -156,14 +121,14 @@
                 </div>
                 <span class="status-tag">✅ Available</span>
             </div>
-            <div class="dungeon-card coming-soon">
-                <span class="name-disabled">Shadowfang Keep</span>
+            <div class="dungeon-card available">
+                <a href="shadowfang-keep.html">Shadowfang Keep</a>
                 <div class="dungeon-meta">
                     <span class="pill both">Both</span>
                     <span class="pill">Lvl 22–30</span>
-                    <span class="pill">8 bosses</span>
+                    <span class="pill">9 bosses</span>
                 </div>
-                <span class="status-tag todo">🚧 Coming soon</span>
+                <span class="status-tag">✅ Available</span>
             </div>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">The Stockade</span>
