@@ -120,8 +120,9 @@
             .boss-card h3 { font-size: 1.05rem; }
 
             /* ---------------------------------------------------------------
-               Boss item tables become CARD LAYOUT on phone — every row stacks
-               vertically with labels, so no column data is hidden.
+               Boss item tables become CARD LAYOUT on phone — every column
+               becomes a labeled section stacked vertically. Label on top,
+               content full-width below.
                Column order: 1=Item 2=Slot 3=Stats 4=Roles 5=Classes 6=iLvl 7=Drop
                --------------------------------------------------------------- */
             .boss-card table,
@@ -135,24 +136,21 @@
             .boss-card table tr.item-row {
                 background: #232323; border: 1px solid #2d2d2d;
                 border-radius: 6px;
-                padding: 0.55rem 0.75rem;
+                padding: 0.65rem 0.85rem;
                 margin-bottom: 0.5rem;
             }
-            /* Each cell becomes a 2-column grid: fixed-width label on left,
-               content cluster on right (right-aligned). This keeps stats and
-               class pills tightly grouped instead of spread across the row. */
+            /* Label-then-value layout: each cell is a block, with the label
+               appearing above the content. Compact items (Slot, iLvl, Drop)
+               sit inline; wide items (Stats, Roles, Classes) stack. */
             .boss-card table tr.item-row td {
-                padding: 3px 0; border: 0;
-                font-size: 0.82rem; line-height: 1.4;
-                display: grid;
-                grid-template-columns: 70px 1fr;
-                gap: 8px;
-                align-items: baseline;
+                padding: 4px 0; border: 0;
+                font-size: 0.85rem; line-height: 1.5;
             }
-            /* Label: small grey caps in the left grid column */
             .boss-card table tr.item-row td::before {
+                display: block;
                 color: #777; font-size: 0.7rem; text-transform: uppercase;
                 letter-spacing: 0.5px;
+                margin-bottom: 2px;
             }
             .boss-card table tr.item-row td:nth-child(2)::before { content: 'Slot'; }
             .boss-card table tr.item-row td:nth-child(3)::before { content: 'Stats'; }
@@ -161,32 +159,44 @@
             .boss-card table tr.item-row td:nth-child(6)::before { content: 'iLvl'; }
             .boss-card table tr.item-row td:nth-child(7)::before { content: 'Drop'; }
 
-            /* Right column — value content, right-aligned, wraps if needed */
-            .boss-card table tr.item-row td > * {
-                text-align: right;
-            }
-            /* Stats list children render on a single line, wrap as needed */
-            .boss-card .stats-list { line-height: 1.6; }
+            /* Stats list: each stat as inline-block on the same line (wrapping
+               if needed), with comma-style spacing */
+            .boss-card .stats-list { line-height: 1.7; }
             .boss-card .stat {
                 display: inline-block; white-space: nowrap;
-                margin-left: 6px;
+                margin-right: 14px;
             }
-            .boss-card .stat:first-child { margin-left: 0; }
-            /* Role/class pills cluster tight on the right */
+            .boss-card .stat:last-child { margin-right: 0; }
+
+            /* Role/class pills cluster compactly under their label */
             .boss-card .role-pill, .boss-card .class-pill {
-                margin: 0 1px; vertical-align: middle;
+                margin: 0 2px 2px 0; vertical-align: middle;
             }
 
-            /* Item name cell — full-width header, no label, no grid */
+            /* Item name cell — full-width header, no label */
             .boss-card table tr.item-row td:nth-child(1) {
-                display: block;
                 font-size: 0.95rem; font-weight: 600;
                 margin-bottom: 6px; padding: 0 0 6px 0;
                 border-bottom: 1px solid #2d2d2d;
             }
             .boss-card table tr.item-row td:nth-child(1)::before { content: none; }
 
-            .slot-text { font-size: 0.82rem; color: #ddd; }
+            /* Compact rows: iLvl and Drop. Single-value cells with the label
+               inline on the left (less vertical bulk). */
+            .boss-card table tr.item-row td:nth-child(6),
+            .boss-card table tr.item-row td:nth-child(7) {
+                display: flex; gap: 12px;
+                align-items: baseline;
+                font-size: 0.82rem;
+            }
+            .boss-card table tr.item-row td:nth-child(6)::before,
+            .boss-card table tr.item-row td:nth-child(7)::before {
+                display: inline-block; margin-bottom: 0;
+                min-width: 64px;
+            }
+
+            .slot-text { font-size: 0.85rem; color: #ddd; }
+            .empty-loot { padding: 4px 0; color: #777; }
 
             /* Class colour legend — compact */
             .legend { font-size: 0.7rem; line-height: 1.7; }
@@ -198,9 +208,6 @@
             .navbar-brand { font-size: 0.85rem; }
             h1 { font-size: 1.3rem; }
             .role-btn { font-size: 0.72rem; padding: 4px 7px; }
-            .boss-card table tr.item-row td {
-                grid-template-columns: 60px 1fr;
-            }
         }
     </style>
 </head>

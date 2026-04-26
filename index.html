@@ -259,7 +259,8 @@
 
             /* ---------------------------------------------------------------
                Find Loot results table becomes CARD LAYOUT on phone — every
-               row stacks vertically with labels, no column data is hidden.
+               column is a labeled section. Compact items inline; wide
+               items stack with label on top.
                Column order: 1=Item 2=Slot 3=Stats 4=Roles 5=Classes
                              6=iLvl 7=Req 8=Source 9=Drop
                --------------------------------------------------------------- */
@@ -274,22 +275,19 @@
             .finder-table tbody tr {
                 background: #232323; border: 1px solid #2d2d2d;
                 border-radius: 6px;
-                padding: 0.55rem 0.75rem;
+                padding: 0.65rem 0.85rem;
                 margin-bottom: 0.5rem;
             }
-            /* Each cell becomes a 2-column grid: fixed-width label on left,
-               content cluster on right (right-aligned). */
+            /* Default: stacked label-then-value */
             .finder-table tbody tr td {
-                padding: 3px 0; border: 0;
-                font-size: 0.82rem; line-height: 1.4;
-                display: grid;
-                grid-template-columns: 70px 1fr;
-                gap: 8px;
-                align-items: baseline;
+                padding: 4px 0; border: 0;
+                font-size: 0.85rem; line-height: 1.5;
             }
             .finder-table tbody tr td::before {
+                display: block;
                 color: #777; font-size: 0.7rem; text-transform: uppercase;
                 letter-spacing: 0.5px;
+                margin-bottom: 2px;
             }
             .finder-table tbody tr td:nth-child(2)::before { content: 'Slot'; }
             .finder-table tbody tr td:nth-child(3)::before { content: 'Stats'; }
@@ -300,22 +298,40 @@
             .finder-table tbody tr td:nth-child(8)::before { content: 'Source'; }
             .finder-table tbody tr td:nth-child(9)::before { content: 'Drop'; }
 
-            /* Right column content, right-aligned with wrapping */
-            .finder-table tbody tr td > * { text-align: right; }
-            .finder-table .stat { display: inline-block; white-space: nowrap; margin-left: 6px; }
-            .finder-table .stat:first-child { margin-left: 0; }
+            /* Stats list: inline with spacing */
+            .finder-table .stat {
+                display: inline-block; white-space: nowrap;
+                margin-right: 14px;
+            }
+            .finder-table .stat:last-child { margin-right: 0; }
             .finder-table .role-pill, .finder-table .class-pill {
-                margin: 0 1px; vertical-align: middle;
+                margin: 0 2px 2px 0; vertical-align: middle;
             }
 
             /* Item name cell — full-width header */
             .finder-table tbody tr td:nth-child(1) {
-                display: block;
                 font-size: 0.95rem; font-weight: 600;
                 margin-bottom: 6px; padding: 0 0 6px 0;
                 border-bottom: 1px solid #2d2d2d;
             }
             .finder-table tbody tr td:nth-child(1)::before { content: none; }
+
+            /* Compact rows: Slot, iLvl, Req, Drop — label inline on left */
+            .finder-table tbody tr td:nth-child(2),
+            .finder-table tbody tr td:nth-child(6),
+            .finder-table tbody tr td:nth-child(7),
+            .finder-table tbody tr td:nth-child(9) {
+                display: flex; gap: 12px;
+                align-items: baseline;
+                font-size: 0.82rem;
+            }
+            .finder-table tbody tr td:nth-child(2)::before,
+            .finder-table tbody tr td:nth-child(6)::before,
+            .finder-table tbody tr td:nth-child(7)::before,
+            .finder-table tbody tr td:nth-child(9)::before {
+                display: inline-block; margin-bottom: 0;
+                min-width: 64px;
+            }
         }
 
         @media (max-width: 400px) {
