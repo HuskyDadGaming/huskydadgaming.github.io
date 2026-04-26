@@ -1655,9 +1655,36 @@
         btn.addEventListener('click', () => {
             document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            state.role = btn.dataset.role; applyFilters();
+            state.role = btn.dataset.role;
+            syncClassDropdown(state.role);
+            applyFilters();
         });
     });
+
+    // Restrict the class dropdown to classes capable of the active role.
+    // If the currently-selected class can no longer fill the new role,
+    // reset it to "Any class".
+    const ROLE_CLASSES = {
+        '':       ['warrior','paladin','hunter','rogue','priest','dk','shaman','mage','warlock','druid'],
+        'tank':   ['warrior','paladin','dk','druid','shaman'],
+        'heal':   ['priest','paladin','druid','shaman'],
+        'melee':  ['warrior','paladin','dk','rogue','druid','shaman'],
+        'ranged': ['hunter','mage','warlock','priest','druid','shaman','paladin'],
+    };
+    function syncClassDropdown(role) {
+        const allowed = new Set(ROLE_CLASSES[role] || ROLE_CLASSES['']);
+        const sel = document.getElementById('f-class');
+        Array.from(sel.options).forEach(opt => {
+            // Always keep the empty "Any class" option
+            if (!opt.value) { opt.hidden = false; return; }
+            opt.hidden = !allowed.has(opt.value);
+        });
+        // If current selection is now hidden, reset to empty
+        if (sel.value && !allowed.has(sel.value)) {
+            sel.value = '';
+            state.class = '';
+        }
+    }
 
     document.getElementById('f-reset').addEventListener('click', () => {
         state.search = state.slot = state.class = state.role = '';
@@ -1671,6 +1698,7 @@
         document.getElementById('f-lvl-max').value = '';
         document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
         document.querySelector('.role-btn[data-role=""]').classList.add('active');
+        syncClassDropdown('');
         applyFilters();
     });
 

@@ -704,6 +704,29 @@
     const rowItemCache = new Map();
     rows.forEach(row => rowItemCache.set(row, rowToItem(row)));
 
+    // Restrict the class dropdown to classes capable of the active role.
+    // 'all' role = all classes shown; otherwise only role-capable classes.
+    const ROLE_CLASSES = {
+        'all':    ['warrior','paladin','hunter','rogue','priest','dk','shaman','mage','warlock','druid'],
+        'tank':   ['warrior','paladin','dk','druid','shaman'],
+        'heal':   ['priest','paladin','druid','shaman'],
+        'melee':  ['warrior','paladin','dk','rogue','druid','shaman'],
+        'ranged': ['hunter','mage','warlock','priest','druid','shaman','paladin'],
+    };
+    function syncClassDropdown(role) {
+        const allowed = new Set(ROLE_CLASSES[role] || ROLE_CLASSES['all']);
+        Array.from(classSelect.options).forEach(opt => {
+            // Always keep the "All classes" option (value="all")
+            if (opt.value === 'all') { opt.hidden = false; return; }
+            opt.hidden = !allowed.has(opt.value);
+        });
+        // If current selection is now hidden, reset to "all"
+        if (classSelect.value !== 'all' && !allowed.has(classSelect.value)) {
+            classSelect.value = 'all';
+            activeClass = 'all';
+        }
+    }
+
     function applyFilters() {
         rows.forEach(row => {
             const it = rowItemCache.get(row);
@@ -765,6 +788,7 @@
             roleButtons.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             activeRole = btn.dataset.role;
+            syncClassDropdown(activeRole);
             applyFilters();
         });
     });
