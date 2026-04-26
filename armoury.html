@@ -170,6 +170,57 @@
         .timestamp {
             color: #666; font-size: 0.75rem; text-align: right; margin-top: 1rem;
         }
+
+        /* In-game style item tooltip */
+        #armoury-tooltip {
+            position: fixed; z-index: 9999;
+            background: #000000; color: #ffffff;
+            border: 1px solid #444; border-radius: 3px;
+            padding: 8px 12px;
+            font-size: 0.82rem; line-height: 1.4;
+            min-width: 180px; max-width: 280px;
+            pointer-events: none;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.08s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        }
+        #armoury-tooltip.visible { opacity: 1; visibility: visible; }
+        #armoury-tooltip .tt-name {
+            font-size: 0.95rem; font-weight: 600; margin-bottom: 2px;
+        }
+        #armoury-tooltip .tt-bind {
+            color: #ffffff; font-size: 0.78rem;
+        }
+        #armoury-tooltip .tt-slot-row {
+            display: flex; justify-content: space-between;
+            margin-top: 4px;
+        }
+        #armoury-tooltip .tt-slot-row .tt-slot { color: #ffffff; }
+        #armoury-tooltip .tt-slot-row .tt-armor-type { color: #ffffff; }
+        #armoury-tooltip .tt-stat { color: #ffffff; }
+        #armoury-tooltip .tt-bonus { color: #1eff00; }
+        #armoury-tooltip .tt-durability { color: #ffffff; margin-top: 4px; }
+        #armoury-tooltip .tt-required { color: #ffffff; margin-top: 4px; }
+        #armoury-tooltip .tt-sell {
+            margin-top: 4px;
+            display: flex; gap: 6px; align-items: center;
+        }
+        #armoury-tooltip .tt-sell-label { color: #ffffff; }
+        #armoury-tooltip .tt-coin {
+            display: inline-flex; align-items: center; gap: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+        #armoury-tooltip .tt-coin-icon {
+            display: inline-block; width: 11px; height: 11px;
+            border-radius: 50%; border: 1px solid rgba(0,0,0,0.4);
+        }
+        #armoury-tooltip .tt-coin-gold .tt-coin-icon   { background: #ffd700; }
+        #armoury-tooltip .tt-coin-silver .tt-coin-icon { background: #c8c8c8; }
+        #armoury-tooltip .tt-coin-copper .tt-coin-icon { background: #c97a36; }
+        #armoury-tooltip .tt-id {
+            color: #555; font-size: 0.7rem; margin-top: 4px;
+            border-top: 1px solid #1f1f1f; padding-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -221,6 +272,9 @@
     </div>
 
 </div>
+
+<!-- Custom item tooltip, populated by JS on hover -->
+<div id="armoury-tooltip" role="tooltip" aria-hidden="true"></div>
 
 <script>
 (function() {
@@ -427,34 +481,135 @@
         }[c]));
     }
 
-    // Build a multi-line text tooltip for native title="..." attribute.
-    // Browser shows after ~1s hover with no styling but full content visible.
-    function buildTooltip(it, slotLabel) {
-        const lines = [];
-        lines.push(it.name);
-        const meta = [];
-        if (it.qualityName && it.qualityName !== 'Common') meta.push(it.qualityName);
-        if (it.invType) meta.push(it.invType);
-        if (it.reqLevel) meta.push(`Lvl ${it.reqLevel}`);
-        if (meta.length) lines.push(meta.join(' · '));
-        if (it.stats && it.stats.length) {
-            lines.push('');
-            it.stats.forEach(s => lines.push(s));
+    // Build rich HTML for the in-game style custom tooltip.
+    function buildTooltipHTML(it) {
+        const parts = [];
+        // Name with quality colour
+        parts.push(`<div class="tt-name" style="color:${it.color}">${escape(it.name)}</div>`);
+
+        // Soulbound / BoE / quest line
+        if (it.bondingName) {
+            parts.push(`<div class="tt-bind">${escape(it.bondingName)}</div>`);
         }
+
+        // Slot ↔ armor type row
+        const slot = it.invType || '';
+        // The API doesn't currently send armor type separately, but item.invType
+        // for armor pieces just gives slot ("Head", "Chest", etc.). The armor type
+        // (Cloth/Leather/Mail/Plate) needs to come from item subclass — for now
+        // we leave the right column blank if not known.
+        const armorType = it.armorType || '';
+        if (slot || armorType) {
+            parts.push(`<div class="tt-slot-row">
+                <span class="tt-slot">${escape(slot)}</span>
+                <span class="tt-armor-type">${escape(armorType)}</span>
+            </div>`);
+        }
+
+        // Damage line for weapons (if present)
+        if (it.damage) {
+            parts.push(`<div class="tt-stat">${escape(it.damage)}</div>`);
+        }
+
+        // Stats
+        (it.stats || []).forEach(s => {
+            // Damage and Armor are part of the base stats; bonuses are green
+            const isBonus = /^[+]/.test(s);
+            const cls = isBonus ? 'tt-stat tt-bonus' : 'tt-stat';
+            parts.push(`<div class="${cls}">${escape(s)}</div>`);
+        });
+
+        // Durability
         if (it.maxDurability) {
-            lines.push('');
-            lines.push(`Durability ${it.durability}/${it.maxDurability}`);
+            parts.push(`<div class="tt-durability">Durability ${it.durability} / ${it.maxDurability}</div>`);
         }
-        if (it.count > 1) {
-            lines.push('');
-            lines.push(`Stack: ${it.count}`);
+
+        // Required level
+        if (it.reqLevel) {
+            parts.push(`<div class="tt-required">Requires Level ${it.reqLevel}</div>`);
         }
+
+        // Sell price with coin indicators
+        if (it.sellPrice && it.sellPrice > 0) {
+            const coins = [];
+            if (it.sellGold > 0) coins.push(
+                `<span class="tt-coin tt-coin-gold">${it.sellGold}<span class="tt-coin-icon"></span></span>`
+            );
+            if (it.sellSilver > 0 || it.sellGold > 0) coins.push(
+                `<span class="tt-coin tt-coin-silver">${it.sellSilver}<span class="tt-coin-icon"></span></span>`
+            );
+            coins.push(
+                `<span class="tt-coin tt-coin-copper">${it.sellCopper}<span class="tt-coin-icon"></span></span>`
+            );
+            parts.push(`<div class="tt-sell">
+                <span class="tt-sell-label">Sell Price:</span>
+                ${coins.join('')}
+            </div>`);
+        }
+
+        // Item ID footer
         if (it.id) {
-            lines.push('');
-            lines.push(`Item ID: ${it.id}`);
+            parts.push(`<div class="tt-id">Item ID: ${it.id}</div>`);
         }
-        return lines.join('\n');
+
+        return parts.join('');
     }
+
+    // ----- Tooltip hover handling -----
+    const tooltipEl = document.getElementById('armoury-tooltip');
+    let tooltipShownFor = null;
+
+    function showTooltip(it, ev) {
+        tooltipEl.innerHTML = buildTooltipHTML(it);
+        tooltipEl.classList.add('visible');
+        tooltipEl.setAttribute('aria-hidden', 'false');
+        positionTooltip(ev);
+    }
+    function hideTooltip() {
+        tooltipEl.classList.remove('visible');
+        tooltipEl.setAttribute('aria-hidden', 'true');
+        tooltipShownFor = null;
+    }
+    function positionTooltip(ev) {
+        // Offset by 14px right + below the cursor; clamp to viewport.
+        const pad = 14;
+        const tw = tooltipEl.offsetWidth;
+        const th = tooltipEl.offsetHeight;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        let x = ev.clientX + pad;
+        let y = ev.clientY + pad;
+        if (x + tw + 8 > vw) x = ev.clientX - tw - pad;
+        if (y + th + 8 > vh) y = ev.clientY - th - pad;
+        if (x < 4) x = 4;
+        if (y < 4) y = 4;
+        tooltipEl.style.left = x + 'px';
+        tooltipEl.style.top  = y + 'px';
+    }
+
+    // Delegated listeners on document.body — they survive re-renders.
+    document.body.addEventListener('mouseover', (ev) => {
+        const row = ev.target.closest('.item-row[data-item-id]');
+        if (!row) return;
+        if (tooltipShownFor === row) return;
+        tooltipShownFor = row;
+        try {
+            const data = JSON.parse(row.dataset.itemJson || 'null');
+            if (data) showTooltip(data, ev);
+        } catch (e) { /* malformed JSON — ignore */ }
+    });
+    document.body.addEventListener('mousemove', (ev) => {
+        if (!tooltipShownFor) return;
+        positionTooltip(ev);
+    });
+    document.body.addEventListener('mouseout', (ev) => {
+        if (!tooltipShownFor) return;
+        // Only hide when leaving the row entirely
+        const leaving = ev.target.closest('.item-row[data-item-id]');
+        if (leaving === tooltipShownFor && !leaving.contains(ev.relatedTarget)) {
+            hideTooltip();
+        }
+    });
 
     function renderItem(it, slotLabel) {
         if (!it) {
@@ -468,8 +623,10 @@
         ).join('');
         const count = (it.count > 1) ? `<span class="item-count">×${it.count}</span>` : '';
         const req = it.reqLevel ? `<span class="req-level">Lvl ${it.reqLevel}</span>` : '';
-        const tooltip = escape(buildTooltip(it, slotLabel));
-        return `<div class="item-row" title="${tooltip}">
+        // Stash full item data on the row so the global hover handler can use it
+        // (HTML-escape the JSON for safe attribute embedding).
+        const itemJson = JSON.stringify(it).replace(/"/g, '&quot;');
+        return `<div class="item-row" data-item-id="${it.id || ''}" data-item-json="${itemJson}">
             <span class="slot-label">${escape(slotLabel || it.invType || '')}</span>
             <div class="item-info">
                 <div class="item-name" style="color:${it.color}">${escape(it.name)}</div>
