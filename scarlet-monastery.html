@@ -942,11 +942,16 @@
                 opt.textContent = `${opt.dataset.baseLabel} (${countForClass('all', role)})`;
                 return;
             }
-            opt.hidden = !allowed.has(opt.value);
-            opt.textContent = `${opt.dataset.baseLabel} (${countForClass(opt.value, role)})`;
+            const n = countForClass(opt.value, role);
+            // Hide if (a) class can't fill this role, OR (b) no items match
+            opt.hidden = !allowed.has(opt.value) || n === 0;
+            opt.textContent = `${opt.dataset.baseLabel} (${n})`;
         });
         // If current selection is now hidden, reset to "all"
-        if (classSelect.value !== 'all' && !allowed.has(classSelect.value)) {
+        if (classSelect.value !== 'all' && (
+            !allowed.has(classSelect.value) ||
+            countForClass(classSelect.value, role) === 0
+        )) {
             classSelect.value = 'all';
             activeClass = 'all';
         }

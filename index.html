@@ -1524,6 +1524,11 @@
 
         renderRows(filtered);
         updateRoleCounts();
+        // Re-evaluate the class dropdown whenever ANY filter changes so counts
+        // and zero-result options stay in sync.
+        if (typeof syncClassDropdown === 'function') {
+            syncClassDropdown(state.role);
+        }
     }
 
     // Compute the effective roles to display on a row, taking into account
@@ -1671,16 +1676,67 @@
         'melee':  ['warrior','paladin','dk','rogue','druid','shaman'],
         'ranged': ['hunter','mage','warlock','priest','druid','shaman','paladin'],
     };
+    // Snapshot the original "Warrior", "Paladin" labels (no count yet) so
+    // we can append "(n)" dynamically as filters change.
+    (function captureClassLabels() {
+        const sel = document.getElementById('f-class');
+        Array.from(sel.options).forEach(opt => {
+            opt.dataset.baseLabel = opt.textContent.replace(/\s*\(\d+\)\s*$/, '');
+        });
+    })();
+
+    // Count how many items would match for a given class within the active
+    // filters (everything except class itself). Used to populate option labels.
+    function countForClassInFinder(cls, role) {
+        const s = state.search.toLowerCase();
+        const lvlMin = state.lvlMin ? parseInt(state.lvlMin, 10) : null;
+        const lvlMax = state.lvlMax ? parseInt(state.lvlMax, 10) : null;
+        const qualityMin = state.quality ? parseInt(state.quality, 10) : null;
+        let n = 0;
+        for (const it of items) {
+            if (s && !it.name.toLowerCase().includes(s) && !it.bossName.toLowerCase().includes(s)) continue;
+            if (state.slot && it.slotFilter !== state.slot) continue;
+            if (state.dungeon && String(it.mapId) !== state.dungeon) continue;
+            if (qualityMin !== null && (qualityMin === 4 ? it.quality !== 4 : it.quality < qualityMin)) continue;
+            if (lvlMin !== null && it.req < lvlMin) continue;
+            if (lvlMax !== null && it.req > lvlMax) continue;
+            // Class proficiency
+            if (cls && !it.classes.includes(cls)) continue;
+            // Armor floor when class set + no role
+            if (cls && !role && !passesClassArmor(it, cls, null)) continue;
+            // Role check
+            if (role) {
+                if (cls) {
+                    if (!classFillsRole(it, cls, role)) continue;
+                } else {
+                    if (!it.classes.some(c => classFillsRole(it, c, role))) continue;
+                }
+            }
+            n++;
+        }
+        return n;
+    }
+
     function syncClassDropdown(role) {
         const allowed = new Set(ROLE_CLASSES[role] || ROLE_CLASSES['']);
         const sel = document.getElementById('f-class');
         Array.from(sel.options).forEach(opt => {
             // Always keep the empty "Any class" option
-            if (!opt.value) { opt.hidden = false; return; }
-            opt.hidden = !allowed.has(opt.value);
+            if (!opt.value) {
+                opt.hidden = false;
+                opt.textContent = `${opt.dataset.baseLabel} (${countForClassInFinder('', role)})`;
+                return;
+            }
+            const n = countForClassInFinder(opt.value, role);
+            // Hide if class can't fill this role OR no items match
+            opt.hidden = !allowed.has(opt.value) || n === 0;
+            opt.textContent = `${opt.dataset.baseLabel} (${n})`;
         });
         // If current selection is now hidden, reset to empty
-        if (sel.value && !allowed.has(sel.value)) {
+        if (sel.value && (
+            !allowed.has(sel.value) ||
+            countForClassInFinder(sel.value, role) === 0
+        )) {
             sel.value = '';
             state.class = '';
         }
