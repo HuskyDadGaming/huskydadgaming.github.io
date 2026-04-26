@@ -777,32 +777,44 @@
         }
     });
 
-    // Touch support — tap on an item-row to show tooltip; tap anywhere else to hide.
-    // We intercept touchend so we can position relative to the touch point.
+    // Touch support — tap on an item-row to show tooltip; tap anywhere else
+    // (or scroll) to hide. Designed for phones/tablets where hover doesn't exist.
     document.body.addEventListener('touchend', (ev) => {
         const row = ev.target.closest('.item-row[data-item-id]');
         if (row) {
-            // Toggle tooltip on tap
+            // Same item tapped twice → dismiss
             if (tooltipShownFor === row) {
                 hideTooltip();
+                ev.preventDefault();
                 return;
             }
             try {
                 const data = JSON.parse(row.dataset.itemJson || 'null');
                 if (data) {
-                    // Synthesize a fake event with touch coordinates for positionTooltip
                     const touch = ev.changedTouches[0];
                     const fakeEv = { clientX: touch.clientX, clientY: touch.clientY };
                     tooltipShownFor = row;
                     showTooltip(data, fakeEv);
-                    // Prevent any subsequent click navigation that would dismiss it
+                    // Prevent the synthesized click that would otherwise navigate
+                    // or interact with elements behind the tooltip.
                     ev.preventDefault();
                 }
-            } catch (e) { /* ignore */ }
+            } catch (e) { /* ignore malformed JSON */ }
         } else if (tooltipShownFor) {
+            // Tapped outside any item-row → dismiss
             hideTooltip();
         }
     }, { passive: false });
+
+    // Dismiss tooltip on any scroll (window or any scrollable container).
+    // Use capture to catch scroll events from descendants too.
+    function dismissTooltipOnScroll() {
+        if (tooltipShownFor) hideTooltip();
+    }
+    window.addEventListener('scroll', dismissTooltipOnScroll, { passive: true, capture: true });
+    // Also dismiss on touchmove (covers cases where scroll event is throttled
+    // mid-gesture, e.g. some iOS WebView contexts).
+    window.addEventListener('touchmove', dismissTooltipOnScroll, { passive: true });
 
     function renderItem(it, slotLabel) {
         if (!it) {
