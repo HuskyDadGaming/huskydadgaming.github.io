@@ -46,7 +46,18 @@
         /* Character roster */
         .character-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1rem; margin-bottom: 2rem;
+            gap: 1rem;
+        }
+        .squad-section {
+            margin-bottom: 2rem;
+        }
+        .squad-header {
+            color: #ddd; font-size: 1.05rem; font-weight: 600;
+            padding-bottom: 6px; margin-bottom: 0.8rem;
+            border-bottom: 1px solid #3a3a3a;
+        }
+        .squad-header .squad-meta {
+            color: #888; font-weight: 400; font-size: 0.9em;
         }
         .character-card {
             background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
@@ -196,7 +207,7 @@
     <div id="view-roster" style="display:none;">
         <h1 style="margin-bottom:1rem;">Characters</h1>
         <div id="roster-loading" class="loading">Loading characters</div>
-        <div id="roster-grid" class="character-grid" style="display:none;"></div>
+        <div id="roster-grid" class="roster-squads" style="display:none;"></div>
         <p id="roster-empty" style="display:none; color:#888;">No characters found.</p>
     </div>
 
@@ -289,6 +300,70 @@
     };
 
     // ----- Character roster -----
+    /**
+     * Group characters into squads.
+     * 1. Group by accountId.
+     * 2. Within an account, split into sub-squads where there's a level gap >= 5.
+     * Characters arrive sorted by account, then level DESC.
+     */
+    function groupIntoSquads(characters) {
+        const LEVEL_GAP_THRESHOLD = 5;
+        const byAccount = {};
+        for (const c of characters) {
+            (byAccount[c.accountId] = byAccount[c.accountId] || {
+                accountId: c.accountId,
+                accountName: c.accountName,
+                chars: [],
+            }).chars.push(c);
+        }
+
+        const squads = [];
+        for (const acct of Object.values(byAccount)) {
+            // chars already sorted by level DESC within an account.
+            // Walk and split at gaps.
+            let current = [];
+            for (const c of acct.chars) {
+                if (current.length === 0) {
+                    current.push(c);
+                    continue;
+                }
+                const prevLevel = current[current.length - 1].level;
+                if (prevLevel - c.level >= LEVEL_GAP_THRESHOLD) {
+                    squads.push({ accountName: acct.accountName, chars: current });
+                    current = [c];
+                } else {
+                    current.push(c);
+                }
+            }
+            if (current.length) squads.push({ accountName: acct.accountName, chars: current });
+        }
+
+        // Sort squads: highest top-level first, so the strongest squad shows first.
+        squads.sort((a, b) => b.chars[0].level - a.chars[0].level);
+        return squads;
+    }
+
+    function renderSquad(squad) {
+        const top = squad.chars[0].level;
+        const bottom = squad.chars[squad.chars.length - 1].level;
+        const lvlLabel = (top === bottom) ? `Lvl ${top}` : `Lvl ${bottom}-${top}`;
+        const cards = squad.chars.map(c => `
+            <a class="character-card" href="#" onclick="showCharacter('${escape(c.name)}'); return false;">
+                <div class="char-name">${escape(c.name)}</div>
+                <div class="char-meta">
+                    <span class="level-badge">Lvl ${c.level}</span>
+                    ${escape(c.race)} ${escape(c.class)}
+                </div>
+            </a>
+        `).join('');
+        return `
+            <div class="squad-section">
+                <h2 class="squad-header">${escape(squad.accountName)}'s squad <span class="squad-meta">— ${lvlLabel}</span></h2>
+                <div class="character-grid">${cards}</div>
+            </div>
+        `;
+    }
+
     window.showRoster = async function() {
         showView('roster');
         const loading = document.getElementById('roster-loading');
@@ -307,15 +382,8 @@
                 return;
             }
             grid.style.display = '';
-            grid.innerHTML = data.characters.map(c => `
-                <a class="character-card" href="#" onclick="showCharacter('${escape(c.name)}'); return false;">
-                    <div class="char-name">${escape(c.name)}</div>
-                    <div class="char-meta">
-                        <span class="level-badge">Lvl ${c.level}</span>
-                        ${escape(c.race)} ${escape(c.class)}
-                    </div>
-                </a>
-            `).join('');
+            const squads = groupIntoSquads(data.characters);
+            grid.innerHTML = squads.map(renderSquad).join('');
         } catch (e) {
             loading.style.display = 'none';
             if (e.message === 'Bad API key') { showView('login'); showError('Session expired'); return; }
