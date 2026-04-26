@@ -769,12 +769,45 @@
         'melee':  ['warrior','paladin','dk','rogue','druid','shaman'],
         'ranged': ['hunter','mage','warlock','priest','druid','shaman','paladin'],
     };
+
+    // Strip the bracketed item count "(11)" from each option label so we
+    // can rebuild it dynamically. Cache the bare label.
+    Array.from(classSelect.options).forEach(opt => {
+        opt.dataset.baseLabel = opt.textContent.replace(/\s*\(\d+\)\s*$/, '');
+    });
+
+    // Compute how many items would be visible for a given (role, class) pair.
+    // Used to populate the dropdown labels.
+    function countForClass(cls, role) {
+        let n = 0;
+        rows.forEach(row => {
+            const it = rowItemCache.get(row);
+            const itemClasses = it.classes;
+            if (cls !== 'all' && !itemClasses.includes(cls)) return;
+            if (cls !== 'all' && role === 'all' && !passesClassArmor(it, cls, null)) return;
+            if (role !== 'all') {
+                if (cls !== 'all') {
+                    if (!classFillsRole(it, cls, role)) return;
+                } else {
+                    if (!itemClasses.some(c => classFillsRole(it, c, role))) return;
+                }
+            }
+            n++;
+        });
+        return n;
+    }
+
     function syncClassDropdown(role) {
         const allowed = new Set(ROLE_CLASSES[role] || ROLE_CLASSES['all']);
         Array.from(classSelect.options).forEach(opt => {
             // Always keep the "All classes" option (value="all")
-            if (opt.value === 'all') { opt.hidden = false; return; }
+            if (opt.value === 'all') {
+                opt.hidden = false;
+                opt.textContent = `${opt.dataset.baseLabel} (${countForClass('all', role)})`;
+                return;
+            }
             opt.hidden = !allowed.has(opt.value);
+            opt.textContent = `${opt.dataset.baseLabel} (${countForClass(opt.value, role)})`;
         });
         // If current selection is now hidden, reset to "all"
         if (classSelect.value !== 'all' && !allowed.has(classSelect.value)) {
@@ -782,6 +815,9 @@
             activeClass = 'all';
         }
     }
+
+    // Initialize dropdown labels for "all" role on page load
+    syncClassDropdown('all');
 
     function applyFilters() {
         rows.forEach(row => {
