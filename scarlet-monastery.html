@@ -140,48 +140,62 @@
             .boss-card table tr,
             .boss-card table td { display: block; width: 100%; }
 
-            .boss-card table thead { display: none; }  /* labels go on each cell */
+            .boss-card table thead { display: none; }
 
             .boss-card table tr.item-row {
                 background: #232323; border: 1px solid #2d2d2d;
                 border-radius: 6px;
-                padding: 0.6rem 0.75rem;
+                padding: 0.55rem 0.75rem;
                 margin-bottom: 0.5rem;
             }
+            /* Each cell becomes a 2-column grid: fixed-width label on left,
+               content cluster on right (right-aligned). This keeps stats and
+               class pills tightly grouped instead of spread across the row. */
             .boss-card table tr.item-row td {
-                padding: 0; border: 0;
-                display: flex; justify-content: space-between; align-items: baseline;
-                gap: 8px; font-size: 0.82rem;
-                line-height: 1.45;
+                padding: 3px 0; border: 0;
+                font-size: 0.82rem; line-height: 1.4;
+                display: grid;
+                grid-template-columns: 70px 1fr;
+                gap: 8px;
+                align-items: baseline;
             }
-            /* Item name cell — full-width header, no label */
-            .boss-card table tr.item-row td:nth-child(1) {
-                display: block;
-                font-size: 0.95rem; font-weight: 600;
-                margin-bottom: 4px; padding-bottom: 4px;
-                border-bottom: 1px solid #2d2d2d;
+            /* Label: small grey caps in the left grid column */
+            .boss-card table tr.item-row td::before {
+                color: #777; font-size: 0.7rem; text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
-            /* Cells with values get a left-side grey label via ::before */
             .boss-card table tr.item-row td:nth-child(2)::before { content: 'Slot'; }
             .boss-card table tr.item-row td:nth-child(3)::before { content: 'Stats'; }
             .boss-card table tr.item-row td:nth-child(4)::before { content: 'Roles'; }
             .boss-card table tr.item-row td:nth-child(5)::before { content: 'Classes'; }
             .boss-card table tr.item-row td:nth-child(6)::before { content: 'iLvl'; }
             .boss-card table tr.item-row td:nth-child(7)::before { content: 'Drop'; }
-            .boss-card table tr.item-row td::before {
-                color: #777; font-size: 0.72rem; text-transform: uppercase;
-                letter-spacing: 0.5px; flex-shrink: 0;
-            }
-            /* Right-side values right-aligned for readability */
+
+            /* Right column — value content, right-aligned, wraps if needed */
             .boss-card table tr.item-row td > * {
                 text-align: right;
             }
-            .boss-card table tr.item-row td:nth-child(1) > * {
-                text-align: left;
+            /* Stats list children render on a single line, wrap as needed */
+            .boss-card .stats-list { line-height: 1.6; }
+            .boss-card .stat {
+                display: inline-block; white-space: nowrap;
+                margin-left: 6px;
             }
-            /* Stats list wraps gracefully on the right */
-            .boss-card .stats-list { text-align: right; }
-            .boss-card .stat { display: inline; margin-left: 6px; }
+            .boss-card .stat:first-child { margin-left: 0; }
+            /* Role/class pills cluster tight on the right */
+            .boss-card .role-pill, .boss-card .class-pill {
+                margin: 0 1px; vertical-align: middle;
+            }
+
+            /* Item name cell — full-width header, no label, no grid */
+            .boss-card table tr.item-row td:nth-child(1) {
+                display: block;
+                font-size: 0.95rem; font-weight: 600;
+                margin-bottom: 6px; padding: 0 0 6px 0;
+                border-bottom: 1px solid #2d2d2d;
+            }
+            .boss-card table tr.item-row td:nth-child(1)::before { content: none; }
+
             .slot-text { font-size: 0.82rem; color: #ddd; }
 
             /* Class colour legend — compact */
@@ -194,6 +208,9 @@
             .navbar-brand { font-size: 0.85rem; }
             h1 { font-size: 1.3rem; }
             .role-btn { font-size: 0.72rem; padding: 4px 7px; }
+            .boss-card table tr.item-row td {
+                grid-template-columns: 60px 1fr;
+            }
         }
     </style>
 </head>

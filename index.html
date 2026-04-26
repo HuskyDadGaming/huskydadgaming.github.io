@@ -274,23 +274,23 @@
             .finder-table tbody tr {
                 background: #232323; border: 1px solid #2d2d2d;
                 border-radius: 6px;
-                padding: 0.6rem 0.75rem;
+                padding: 0.55rem 0.75rem;
                 margin-bottom: 0.5rem;
             }
+            /* Each cell becomes a 2-column grid: fixed-width label on left,
+               content cluster on right (right-aligned). */
             .finder-table tbody tr td {
-                padding: 0; border: 0;
-                display: flex; justify-content: space-between; align-items: baseline;
-                gap: 8px; font-size: 0.82rem;
-                line-height: 1.45;
+                padding: 3px 0; border: 0;
+                font-size: 0.82rem; line-height: 1.4;
+                display: grid;
+                grid-template-columns: 70px 1fr;
+                gap: 8px;
+                align-items: baseline;
             }
-            /* Item name cell — full-width header, no label */
-            .finder-table tbody tr td:nth-child(1) {
-                display: block;
-                font-size: 0.95rem; font-weight: 600;
-                margin-bottom: 4px; padding-bottom: 4px;
-                border-bottom: 1px solid #2d2d2d;
+            .finder-table tbody tr td::before {
+                color: #777; font-size: 0.7rem; text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
-            /* Cells with values get a left-side grey label via ::before */
             .finder-table tbody tr td:nth-child(2)::before { content: 'Slot'; }
             .finder-table tbody tr td:nth-child(3)::before { content: 'Stats'; }
             .finder-table tbody tr td:nth-child(4)::before { content: 'Roles'; }
@@ -299,17 +299,23 @@
             .finder-table tbody tr td:nth-child(7)::before { content: 'Req'; }
             .finder-table tbody tr td:nth-child(8)::before { content: 'Source'; }
             .finder-table tbody tr td:nth-child(9)::before { content: 'Drop'; }
-            .finder-table tbody tr td::before {
-                color: #777; font-size: 0.72rem; text-transform: uppercase;
-                letter-spacing: 0.5px; flex-shrink: 0;
+
+            /* Right column content, right-aligned with wrapping */
+            .finder-table tbody tr td > * { text-align: right; }
+            .finder-table .stat { display: inline-block; white-space: nowrap; margin-left: 6px; }
+            .finder-table .stat:first-child { margin-left: 0; }
+            .finder-table .role-pill, .finder-table .class-pill {
+                margin: 0 1px; vertical-align: middle;
             }
-            /* Right-side values right-aligned for readability */
-            .finder-table tbody tr td > * {
-                text-align: right;
+
+            /* Item name cell — full-width header */
+            .finder-table tbody tr td:nth-child(1) {
+                display: block;
+                font-size: 0.95rem; font-weight: 600;
+                margin-bottom: 6px; padding: 0 0 6px 0;
+                border-bottom: 1px solid #2d2d2d;
             }
-            .finder-table tbody tr td:nth-child(1) > * {
-                text-align: left;
-            }
+            .finder-table tbody tr td:nth-child(1)::before { content: none; }
         }
 
         @media (max-width: 400px) {
