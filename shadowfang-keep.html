@@ -1015,7 +1015,12 @@
             roleButtons.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             activeRole = btn.dataset.role;
+            // Always reset class to "All" when role changes — keeps role
+            // counts predictable and avoids stale narrow filters.
+            classSelect.value = 'all';
+            activeClass = 'all';
             syncClassDropdown(activeRole);
+            syncRoleButtons();
             applyFilters();
         });
     });
