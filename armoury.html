@@ -245,6 +245,107 @@
             color: #555; font-size: 0.7rem; margin-top: 4px;
             border-top: 1px solid #1f1f1f; padding-top: 4px;
         }
+
+        /* ============================================================
+           Mobile-friendly responsive styles
+           Tablet:  ≤900px
+           Phone:   ≤600px
+           Tiny:    ≤400px
+           ============================================================ */
+
+        /* Tablet — tighten container padding, reduce header bulk */
+        @media (max-width: 900px) {
+            .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+            .char-header { padding: 1rem; margin-bottom: 1rem; }
+            .char-header h1 { font-size: 1.5rem; }
+            .char-stats { gap: 1rem; }
+            .item-list {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 6px;
+            }
+            .character-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+
+        /* Phone — single-column lists, stacked headers, smaller fonts */
+        @media (max-width: 600px) {
+            body { padding-bottom: 2rem; font-size: 0.92rem; }
+            .container { padding-left: 0.5rem; padding-right: 0.5rem; }
+            .navbar { margin-bottom: 1rem; }
+            .navbar-brand { font-size: 1rem; }
+
+            /* Login screen */
+            .login-card { padding: 1.25rem; margin: 1rem auto; }
+            .login-card h1 { font-size: 1.4rem; }
+
+            /* Character header — compact */
+            .char-header { padding: 0.85rem; border-radius: 6px; margin-bottom: 0.85rem; }
+            .char-header h1 { font-size: 1.25rem; }
+            .char-header .subline { font-size: 0.85rem; }
+            .char-stats {
+                flex-direction: column; gap: 0.35rem;
+                font-size: 0.8rem; margin-top: 0.5rem;
+            }
+
+            /* Section headers — compact */
+            .section-header { margin-top: 1.25rem; margin-bottom: 0.5rem; }
+            .section-header h2 { font-size: 1.05rem; }
+            .section-header .count { font-size: 0.78rem; }
+
+            /* Roster — 1 to 2 cards per row */
+            .character-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 0.6rem;
+            }
+            .character-card { padding: 0.7rem; }
+            .character-card .char-name { font-size: 1rem; margin-bottom: 4px; }
+            .character-card .char-meta { font-size: 0.75rem; }
+            .roster-section-header { margin-top: 1.25rem; }
+            .roster-section-header h2 { font-size: 0.95rem; }
+            .roster-section-header .roster-section-count { font-size: 0.75rem; }
+
+            /* Item rows — single column, slot label above */
+            .item-list {
+                grid-template-columns: 1fr; gap: 5px;
+            }
+            .item-row {
+                padding: 6px 9px; gap: 8px; font-size: 0.82rem;
+            }
+            .item-row .slot-label {
+                min-width: 64px; font-size: 0.68rem;
+            }
+            .item-row .item-stats {
+                font-size: 0.72rem;
+                /* Allow stat list to wrap on tiny screens for full visibility */
+                white-space: normal;
+            }
+            .item-row .req-level { font-size: 0.68rem; }
+            .item-row .item-count { font-size: 0.66rem; }
+
+            /* Tooltip — narrower, smaller font, never go off-edge */
+            #armoury-tooltip {
+                max-width: calc(100vw - 24px);
+                min-width: 0;
+                font-size: 0.78rem;
+                padding: 6px 10px;
+            }
+            #armoury-tooltip .tt-name { font-size: 0.88rem; }
+        }
+
+        /* Tiny phones — push everything tighter */
+        @media (max-width: 400px) {
+            body { font-size: 0.88rem; }
+            .character-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+            }
+            .character-card { padding: 0.55rem; }
+            .character-card .char-name { font-size: 0.92rem; }
+            .character-card .level-badge { font-size: 0.7rem; padding: 1px 5px; }
+            .char-header h1 { font-size: 1.15rem; }
+            .item-row .slot-label { min-width: 56px; }
+        }
     </style>
 </head>
 <body>
@@ -675,6 +776,33 @@
             hideTooltip();
         }
     });
+
+    // Touch support — tap on an item-row to show tooltip; tap anywhere else to hide.
+    // We intercept touchend so we can position relative to the touch point.
+    document.body.addEventListener('touchend', (ev) => {
+        const row = ev.target.closest('.item-row[data-item-id]');
+        if (row) {
+            // Toggle tooltip on tap
+            if (tooltipShownFor === row) {
+                hideTooltip();
+                return;
+            }
+            try {
+                const data = JSON.parse(row.dataset.itemJson || 'null');
+                if (data) {
+                    // Synthesize a fake event with touch coordinates for positionTooltip
+                    const touch = ev.changedTouches[0];
+                    const fakeEv = { clientX: touch.clientX, clientY: touch.clientY };
+                    tooltipShownFor = row;
+                    showTooltip(data, fakeEv);
+                    // Prevent any subsequent click navigation that would dismiss it
+                    ev.preventDefault();
+                }
+            } catch (e) { /* ignore */ }
+        } else if (tooltipShownFor) {
+            hideTooltip();
+        }
+    }, { passive: false });
 
     function renderItem(it, slotLabel) {
         if (!it) {
