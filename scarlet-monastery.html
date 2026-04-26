@@ -91,6 +91,74 @@
         }
         .legend { font-size: 0.8rem; color: #888; margin-top: 8px; }
         .wing-intro { color: #aaa; font-style: italic; margin-bottom: 1rem; font-size: 0.9rem; }
+    
+        /* ============================================================
+           Mobile-friendly responsive styles
+           Tablet:  ≤900px
+           Phone:   ≤600px
+           Tiny:    ≤400px
+           ============================================================ */
+
+        @media (max-width: 900px) {
+            .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+            .filter-row select, .filter-row .role-btn {
+                flex: 1 1 auto;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body { font-size: 0.92rem; padding-bottom: 2rem; }
+            .container { padding-left: 0.5rem; padding-right: 0.5rem; }
+            .navbar { margin-bottom: 1rem; }
+            .navbar-brand { font-size: 0.95rem; }
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.2rem; }
+
+            /* Filter rows stack labels above controls */
+            .filter-row {
+                gap: 6px; margin-bottom: 8px;
+            }
+            .filter-row > .label {
+                min-width: 0; flex: 0 0 100%; font-size: 0.78rem;
+                margin-bottom: -2px;
+            }
+            .role-btn { padding: 5px 9px; font-size: 0.78rem; flex: 1 1 auto; }
+            .class-select { padding: 5px 8px; font-size: 0.85rem; flex: 1 1 100%; }
+
+            /* Boss cards */
+            .boss-card { padding: 0.7rem; margin-bottom: 0.85rem; }
+            .boss-card h3 { font-size: 1.05rem; }
+
+            /* Boss item table — hide Stats, Roles, Classes, iLvl, Drop on phone.
+               Column order on dungeon pages: 1=Item 2=Slot 3=Stats 4=Roles 5=Classes 6=iLvl 7=Drop */
+            .boss-card table { font-size: 0.78rem; }
+            .boss-card table thead th { font-size: 0.65rem; padding: 5px 4px; }
+            .boss-card table tbody td { padding: 5px 5px; }
+            .boss-card table thead th:nth-child(3),  /* Stats */
+            .boss-card table tbody td:nth-child(3),
+            .boss-card table thead th:nth-child(4),  /* Roles */
+            .boss-card table tbody td:nth-child(4),
+            .boss-card table thead th:nth-child(5),  /* Classes */
+            .boss-card table tbody td:nth-child(5),
+            .boss-card table thead th:nth-child(6),  /* iLvl */
+            .boss-card table tbody td:nth-child(6),
+            .boss-card table thead th:nth-child(7)   /* Drop chance */
+            { display: none; }
+            .boss-card table tbody td:nth-child(7) { display: none; }
+
+            .slot-text { font-size: 0.72rem; color: #888; }
+
+            /* Class colour legend — compact */
+            .legend { font-size: 0.7rem; line-height: 1.7; }
+            .legend .class-pill { font-size: 0.65rem; padding: 1px 5px; }
+        }
+
+        @media (max-width: 400px) {
+            body { font-size: 0.88rem; }
+            .navbar-brand { font-size: 0.85rem; }
+            h1 { font-size: 1.3rem; }
+            .role-btn { font-size: 0.72rem; padding: 4px 7px; }
+        }
     </style>
 </head>
 <body>
