@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KCraft Armoury</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚔️</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #1a1a1a; color: #ddd; padding-bottom: 3rem; }
+        .container { max-width: 1100px; }
+        h1, h2, h3 { color: #ffd100; }
+        a { color: #4ea8de; text-decoration: none; }
+        a:hover { color: #88c5f0; }
+        .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
+
+        /* Login screen */
+        .login-card {
+            background: #232323; border: 1px solid #3a3a3a; border-radius: 8px;
+            padding: 2rem; margin: 2rem auto; max-width: 540px;
+        }
+        .login-card label { display: block; color: #999; font-size: 0.85rem; margin-bottom: 4px; }
+        .login-card input {
+            width: 100%; background: #2d2d2d; border: 1px solid #3a3a3a; color: #ddd;
+            padding: 8px 12px; border-radius: 4px; margin-bottom: 12px;
+            font-size: 0.9rem; font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        }
+        .login-card input:focus { outline: none; border-color: #ffd100; }
+        .login-card button {
+            background: #ffd100; color: #1a1a1a; border: none; padding: 10px 20px;
+            border-radius: 4px; cursor: pointer; font-weight: 600;
+        }
+        .login-card button:hover { background: #ffea66; }
+        .login-card .help {
+            color: #888; font-size: 0.82rem; margin-top: 12px; line-height: 1.5;
+        }
+        .login-card .help code {
+            background: #2d2d2d; padding: 1px 5px; border-radius: 3px;
+            color: #ffd100; font-size: 0.78rem;
+        }
+        .login-error {
+            background: #4a1818; color: #ff9b9b; padding: 8px 12px;
+            border-radius: 4px; margin-bottom: 12px; font-size: 0.85rem;
+        }
+
+        /* Character roster */
+        .character-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem; margin-bottom: 2rem;
+        }
+        .character-card {
+            background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
+            padding: 1rem; cursor: pointer; transition: all 0.15s;
+            display: block; text-decoration: none; color: inherit;
+        }
+        .character-card:hover {
+            border-color: #ffd100; transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 209, 0, 0.1);
+            color: inherit;
+        }
+        .character-card .char-name {
+            font-size: 1.1rem; font-weight: 600; margin-bottom: 6px;
+        }
+        .character-card .char-meta {
+            color: #aaa; font-size: 0.82rem;
+        }
+        .character-card .level-badge {
+            display: inline-block; background: #2d2d2d; color: #ffd100;
+            padding: 2px 8px; border-radius: 3px; font-size: 0.78rem;
+            font-weight: 600; margin-right: 6px;
+        }
+
+        /* Character page */
+        .char-header {
+            background: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
+            padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;
+            border: 1px solid #3a3a3a;
+        }
+        .char-header h1 { margin-bottom: 4px; }
+        .char-header .subline { color: #aaa; font-size: 0.95rem; margin-bottom: 0.5rem; }
+        .char-stats {
+            display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+        .char-stats .stat { color: #999; }
+        .char-stats .stat strong { color: #ffd100; font-weight: 600; }
+        .online-dot {
+            display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+            background: #1eff00; margin-right: 6px; box-shadow: 0 0 6px #1eff00;
+        }
+
+        /* Section headings */
+        .section-header {
+            display: flex; align-items: baseline; justify-content: space-between;
+            margin-top: 2rem; margin-bottom: 0.75rem;
+            padding-bottom: 6px; border-bottom: 1px solid #3a3a3a;
+        }
+        .section-header h2 { font-size: 1.2rem; margin: 0; }
+        .section-header .count { color: #888; font-size: 0.85rem; }
+
+        /* Item lists */
+        .item-list {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 8px;
+        }
+        .item-row {
+            background: #232323; border: 1px solid #2d2d2d; border-radius: 4px;
+            padding: 8px 12px; display: flex; align-items: center; gap: 12px;
+            font-size: 0.85rem;
+        }
+        .item-row.empty {
+            opacity: 0.4; font-style: italic; color: #666;
+            justify-content: center;
+        }
+        .item-row .slot-label {
+            min-width: 90px; color: #888; font-size: 0.75rem; text-transform: uppercase;
+            letter-spacing: 0.5px; flex-shrink: 0;
+        }
+        .item-row .item-info { flex: 1; min-width: 0; }
+        .item-row .item-name { font-weight: 600; }
+        .item-row .item-stats {
+            color: #999; font-size: 0.78rem; margin-top: 2px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .item-row .item-stats .stat-pip { margin-right: 8px; }
+        .item-row .req-level {
+            color: #666; font-size: 0.72rem; flex-shrink: 0;
+        }
+        .item-row .item-count {
+            background: #2d2d2d; color: #ffd100; padding: 1px 6px; border-radius: 3px;
+            font-size: 0.7rem; font-weight: 600; flex-shrink: 0;
+        }
+
+        /* Money display */
+        .money { font-variant-numeric: tabular-nums; }
+        .gold { color: #ffd100; }
+        .silver { color: #c8c8c8; }
+        .copper { color: #c97a36; }
+
+        /* Logout link */
+        .logout {
+            font-size: 0.8rem; color: #888; cursor: pointer;
+        }
+        .logout:hover { color: #ff9b9b; }
+
+        /* Loading */
+        .loading {
+            text-align: center; padding: 3rem; color: #888; font-style: italic;
+        }
+        .loading::after {
+            content: ''; display: inline-block; width: 1em;
+            animation: dots 1.5s infinite steps(4);
+        }
+        @keyframes dots {
+            0% { content: ''; } 25% { content: '.'; }
+            50% { content: '..'; } 75% { content: '...'; }
+        }
+
+        .timestamp {
+            color: #666; font-size: 0.75rem; text-align: right; margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">⚔️ KCraft Loot Guide</a>
+        <span class="navbar-text small">
+            <a href="index.html" style="color:#aaa;">← Loot Guide</a>
+            &nbsp;·&nbsp;
+            <span class="logout" onclick="logout()">Sign out</span>
+        </span>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Login screen -->
+    <div id="view-login" style="display:none;">
+        <div class="login-card">
+            <h2 style="margin-bottom:1rem; font-size:1.3rem;">⚔️ Armoury access</h2>
+            <div id="login-error" class="login-error" style="display:none;"></div>
+
+            <label for="api-base">API URL</label>
+            <input id="api-base" placeholder="https://your.public.ip:47291" autocomplete="off">
+
+            <label for="api-key">API key</label>
+            <input id="api-key" type="password" placeholder="paste your key" autocomplete="off">
+
+            <button onclick="login()">Connect</button>
+
+            <div class="help">
+                The armoury connects to a private API running on Kyle's home server.
+                You need both the URL and the API key — ask in Discord. Both values are
+                stored only in your browser's <code>localStorage</code> and never sent
+                anywhere except the API itself.
+                <br><br>
+                <strong>First time?</strong> You may see "Your connection is not private"
+                when first connecting — that's the self-signed cert. Visit the API URL
+                directly once and click <em>Advanced → Proceed</em> to whitelist it.
+            </div>
+        </div>
+    </div>
+
+    <!-- Character roster -->
+    <div id="view-roster" style="display:none;">
+        <h1 style="margin-bottom:1rem;">Characters</h1>
+        <div id="roster-loading" class="loading">Loading characters</div>
+        <div id="roster-grid" class="character-grid" style="display:none;"></div>
+        <p id="roster-empty" style="display:none; color:#888;">No characters found.</p>
+    </div>
+
+    <!-- Single character view -->
+    <div id="view-character" style="display:none;">
+        <p style="margin-bottom:0.5rem;">
+            <a href="#" onclick="showRoster(); return false;">← All characters</a>
+        </p>
+        <div id="char-loading" class="loading">Loading character</div>
+        <div id="char-content" style="display:none;"></div>
+    </div>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    // ----- Storage helpers -----
+    const STORAGE = { base: 'kcraft.armoury.base', key: 'kcraft.armoury.key' };
+
+    function getCreds() {
+        return {
+            base: localStorage.getItem(STORAGE.base) || '',
+            key:  localStorage.getItem(STORAGE.key)  || '',
+        };
+    }
+    function setCreds(base, key) {
+        // Strip trailing slash to keep URL building simple.
+        localStorage.setItem(STORAGE.base, base.replace(/\/$/, ''));
+        localStorage.setItem(STORAGE.key, key);
+    }
+    function clearCreds() {
+        localStorage.removeItem(STORAGE.base);
+        localStorage.removeItem(STORAGE.key);
+    }
+
+    // ----- API client -----
+    async function api(path) {
+        const { base, key } = getCreds();
+        if (!base || !key) throw new Error('Not logged in');
+        const r = await fetch(base + path, {
+            headers: { 'X-API-Key': key },
+            credentials: 'omit',
+        });
+        if (r.status === 401) throw new Error('Bad API key');
+        if (r.status === 404) throw new Error('Not found');
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+    }
+
+    // ----- View management -----
+    function showView(name) {
+        ['login', 'roster', 'character'].forEach(v => {
+            document.getElementById('view-' + v).style.display = (v === name) ? '' : 'none';
+        });
+    }
+
+    function showError(msg) {
+        const el = document.getElementById('login-error');
+        el.textContent = msg;
+        el.style.display = msg ? '' : 'none';
+    }
+
+    // ----- Login flow -----
+    window.login = async function() {
+        const base = document.getElementById('api-base').value.trim();
+        const key  = document.getElementById('api-key').value.trim();
+        if (!base || !key) { showError('Fill in both fields'); return; }
+        if (!/^https?:\/\//.test(base)) { showError('URL must start with http:// or https://'); return; }
+
+        setCreds(base, key);
+        showError('');
+
+        // Validate by hitting /armoury
+        try {
+            await api('/armoury');
+            showRoster();
+        } catch (e) {
+            showError(e.message + '. If this is a self-signed cert, visit ' + base + '/healthz once and accept the warning, then try again.');
+            clearCreds();
+        }
+    };
+
+    window.logout = function() {
+        clearCreds();
+        document.getElementById('api-base').value = '';
+        document.getElementById('api-key').value = '';
+        showView('login');
+    };
+
+    // ----- Character roster -----
+    window.showRoster = async function() {
+        showView('roster');
+        const loading = document.getElementById('roster-loading');
+        const grid = document.getElementById('roster-grid');
+        const empty = document.getElementById('roster-empty');
+        loading.style.display = '';
+        grid.style.display = 'none';
+        empty.style.display = 'none';
+        grid.innerHTML = '';
+
+        try {
+            const data = await api('/armoury');
+            loading.style.display = 'none';
+            if (!data.characters || data.characters.length === 0) {
+                empty.style.display = '';
+                return;
+            }
+            grid.style.display = '';
+            grid.innerHTML = data.characters.map(c => `
+                <a class="character-card" href="#" onclick="showCharacter('${escape(c.name)}'); return false;">
+                    <div class="char-name">${escape(c.name)}</div>
+                    <div class="char-meta">
+                        <span class="level-badge">Lvl ${c.level}</span>
+                        ${escape(c.race)} ${escape(c.class)}
+                    </div>
+                </a>
+            `).join('');
+        } catch (e) {
+            loading.style.display = 'none';
+            if (e.message === 'Bad API key') { showView('login'); showError('Session expired'); return; }
+            empty.textContent = 'Failed to load: ' + e.message;
+            empty.style.display = '';
+        }
+    };
+
+    // ----- Single character view -----
+    window.showCharacter = async function(name) {
+        showView('character');
+        const loading = document.getElementById('char-loading');
+        const content = document.getElementById('char-content');
+        loading.style.display = '';
+        content.style.display = 'none';
+        content.innerHTML = '';
+
+        try {
+            const c = await api('/armoury/' + encodeURIComponent(name));
+            loading.style.display = 'none';
+            content.style.display = '';
+            content.innerHTML = renderCharacter(c);
+        } catch (e) {
+            loading.style.display = 'none';
+            content.style.display = '';
+            content.innerHTML = `<p style="color:#ff9b9b;">Failed to load: ${escape(e.message)}</p>`;
+        }
+    };
+
+    // ----- Rendering helpers -----
+    function escape(s) {
+        return String(s == null ? '' : s).replace(/[<>&"']/g, c => ({
+            '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'
+        }[c]));
+    }
+
+    function renderItem(it, slotLabel) {
+        if (!it) {
+            return `<div class="item-row empty">
+                <span class="slot-label">${escape(slotLabel || '')}</span>
+                <span>(empty)</span>
+            </div>`;
+        }
+        const stats = (it.stats || []).map(s =>
+            `<span class="stat-pip">${escape(s)}</span>`
+        ).join('');
+        const count = (it.count > 1) ? `<span class="item-count">×${it.count}</span>` : '';
+        const req = it.reqLevel ? `<span class="req-level">Lvl ${it.reqLevel}</span>` : '';
+        return `<div class="item-row">
+            <span class="slot-label">${escape(slotLabel || it.invType || '')}</span>
+            <div class="item-info">
+                <div class="item-name" style="color:${it.color}">${escape(it.name)}</div>
+                ${stats ? `<div class="item-stats">${stats}</div>` : ''}
+            </div>
+            ${count}
+            ${req}
+        </div>`;
+    }
+
+    function renderCharacter(c) {
+        // Equipped items in canonical order
+        const equippedOrder = [
+            [0, 'Head'], [1, 'Neck'], [2, 'Shoulder'], [14, 'Back'], [4, 'Chest'],
+            [3, 'Shirt'], [18, 'Tabard'], [8, 'Wrist'], [9, 'Hands'], [5, 'Waist'],
+            [6, 'Legs'], [7, 'Feet'],
+            [10, 'Finger 1'], [11, 'Finger 2'],
+            [12, 'Trinket 1'], [13, 'Trinket 2'],
+            [15, 'Main Hand'], [16, 'Off Hand'], [17, 'Ranged'],
+        ];
+        const equippedHtml = equippedOrder.map(([slot, label]) =>
+            renderItem(c.equipped[slot], label)
+        ).join('');
+
+        // Backpack — array of 16, may have nulls for empty slots
+        const backpackHtml = (c.backpack || []).map((it, i) =>
+            renderItem(it, `Slot ${i + 1}`)
+        ).join('');
+        const backpackFilled = (c.backpack || []).filter(x => x).length;
+
+        // Items inside equipped bags (additional bag slots)
+        let bagsHtml = '';
+        let bagsCount = 0;
+        if (c.bagItems && Object.keys(c.bagItems).length > 0) {
+            for (const bagGuid of Object.keys(c.bagItems)) {
+                const items = c.bagItems[bagGuid];
+                bagsCount += items.length;
+                bagsHtml += items.map(it =>
+                    renderItem(it, `Bag slot ${(it.bagSlot ?? 0) + 1}`)
+                ).join('');
+            }
+        }
+
+        // Bank — array of 28
+        const bankHtml = (c.bank || []).map((it, i) =>
+            renderItem(it, `Slot ${i + 1}`)
+        ).join('');
+        const bankFilled = (c.bank || []).filter(x => x).length;
+
+        const onlineBadge = c.online
+            ? `<span class="online-dot" title="Online"></span><span style="color:#1eff00;">Online</span>`
+            : `<span style="color:#666;">Offline</span>`;
+
+        return `
+            <div class="char-header">
+                <h1>${escape(c.name)}</h1>
+                <div class="subline">
+                    Level ${c.level} ${escape(c.race)} ${escape(c.class)}
+                    &nbsp;·&nbsp; ${onlineBadge}
+                </div>
+                <div class="char-stats">
+                    <div class="stat">
+                        <strong class="money">
+                            <span class="gold">${c.gold}g</span>
+                            <span class="silver">${c.silver}s</span>
+                            <span class="copper">${c.copper}c</span>
+                        </strong>
+                    </div>
+                    <div class="stat">Played: <strong>${c.totalPlayedHours} hours</strong></div>
+                    <div class="stat">At ${c.level}: <strong>${c.levelPlayedHours} hours</strong></div>
+                    <div class="stat">Kills: <strong>${c.kills.toLocaleString()}</strong></div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>Equipped</h2>
+                <span class="count">${equippedOrder.filter(([s]) => c.equipped[s]).length} / 19</span>
+            </div>
+            <div class="item-list">${equippedHtml}</div>
+
+            <div class="section-header">
+                <h2>Backpack</h2>
+                <span class="count">${backpackFilled} / 16</span>
+            </div>
+            <div class="item-list">${backpackHtml}</div>
+
+            ${bagsHtml ? `
+                <div class="section-header">
+                    <h2>Bags</h2>
+                    <span class="count">${bagsCount} items</span>
+                </div>
+                <div class="item-list">${bagsHtml}</div>
+            ` : ''}
+
+            <div class="section-header">
+                <h2>Bank</h2>
+                <span class="count">${bankFilled} / 28</span>
+            </div>
+            <div class="item-list">${bankHtml}</div>
+
+            <p class="timestamp">Snapshot taken: ${new Date().toLocaleString()}</p>
+        `;
+    }
+
+    // ----- Boot -----
+    const { base, key } = getCreds();
+    if (base && key) {
+        // Pre-fill the form values in case auth fails and they need to retry
+        document.getElementById('api-base').value = base;
+        document.getElementById('api-key').value = key;
+        showRoster();
+    } else {
+        showView('login');
+    }
+})();
+</script>
+
+</body>
+</html>
