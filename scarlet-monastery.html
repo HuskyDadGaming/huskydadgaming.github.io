@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scarlet Monastery — KCraft Loot Guide</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #1a1a1a; color: #ddd; padding-bottom: 3rem; }
+        .container { max-width: 1100px; }
+        h1, h2, h3 { color: #ffd100; }
+        h2.wing-header {
+            color: #ffd100; margin-top: 2.5rem; margin-bottom: 1rem;
+            padding-bottom: 0.5rem; border-bottom: 1px solid #3a3a3a;
+            font-size: 1.6rem;
+        }
+        h2.wing-header .wing-meta {
+            color: #888; font-size: 0.85rem; font-weight: 400;
+            margin-left: 12px; text-transform: none; letter-spacing: 0;
+        }
+        a { color: #4ea8de; text-decoration: none; }
+        a:hover { color: #88c5f0; }
+        .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
+        .card { background: #232323; border: 1px solid #3a3a3a; margin-bottom: 1.5rem; }
+        .card-title { color: #ffd100; margin-bottom: 0.25rem; }
+        .boss-flavour { color: #aaa; font-style: italic; font-size: 0.9rem; margin-bottom: 1rem; }
+        .boss-meta { color: #777; font-size: 0.8rem; }
+        table.table { color: #ddd; margin-bottom: 0; }
+        table.table > :not(caption) > * > * {
+            background-color: transparent; color: #ddd;
+            border-bottom-color: #3a3a3a; vertical-align: middle;
+        }
+        table.table > thead {
+            color: #999; font-size: 0.78rem;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        table.table tbody tr:hover { background: #2a2a2a; }
+        code { color: #ff9800; background: #2d2d2d; padding: 2px 5px; border-radius: 3px; }
+        .footer-note {
+            color: #888; margin-top: 2rem; font-size: 0.85rem;
+            border-top: 1px solid #3a3a3a; padding-top: 1rem;
+        }
+        .meta-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .meta-pill {
+            font-size: 0.8rem; padding: 4px 10px; border-radius: 4px;
+            background: #2d2d2d; color: #aaa;
+        }
+        .meta-pill.horde { background: #4a1818; color: #ff6b6b; }
+        .meta-pill.alliance { background: #18324a; color: #6bbfff; }
+        .meta-pill.both { background: #3a3a3a; color: #ddd; }
+        .role-pill {
+            display: inline-block; padding: 2px 7px; border-radius: 4px;
+            font-size: 0.75rem; margin-right: 3px; cursor: default;
+            font-weight: 600;
+        }
+        .class-pill {
+            display: inline-block; width: 18px; height: 18px;
+            line-height: 18px; text-align: center; border-radius: 3px;
+            font-size: 0.7rem; font-weight: 700;
+            color: #1a1a1a; margin-right: 2px; cursor: default;
+        }
+        .filter-bar {
+            margin-bottom: 1.5rem; padding: 1rem;
+            background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
+        }
+        .filter-row {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            align-items: center; margin-bottom: 8px;
+        }
+        .filter-row:last-child { margin-bottom: 0; }
+        .filter-row > .label { color: #999; font-size: 0.9rem; min-width: 90px; }
+        .filter-btn {
+            padding: 6px 12px; background: #2d2d2d; color: #ddd;
+            border: 1px solid #3a3a3a; border-radius: 4px;
+            cursor: pointer; font-size: 0.85rem; transition: all 0.15s;
+        }
+        .filter-btn:hover { background: #3d3d3d; }
+        .filter-btn.active {
+            background: #ffd100; color: #1a1a1a;
+            border-color: #ffd100; font-weight: 600;
+        }
+        .class-select {
+            padding: 6px 12px; background: #2d2d2d; color: #ddd;
+            border: 1px solid #3a3a3a; border-radius: 4px;
+            font-size: 0.9rem; min-width: 200px; cursor: pointer;
+        }
+        .class-select:focus { outline: none; border-color: #ffd100; }
+        .stats-list { font-size: 0.8rem; color: #aaa; }
+        .stats-list .stat { margin-right: 8px; white-space: nowrap; }
+        .slot-text { color: #bbb; font-size: 0.85rem; }
+        .empty-loot { color: #777; font-style: italic; font-size: 0.9rem; }
+        .role-only-message {
+            color: #777; font-style: italic; font-size: 0.9rem; display: none;
+        }
+        .legend { font-size: 0.8rem; color: #888; margin-top: 8px; }
+        .wing-intro { color: #aaa; font-style: italic; margin-bottom: 1rem; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">⚔️ KCraft Loot Guide</a>
+        <span class="navbar-text small">Generated from server DB</span>
+    </div>
+</nav>
+
+<div class="container">
+
+    <p class="mb-2"><a href="index.html">← All dungeons</a></p>
+
+    <h1>Scarlet Monastery</h1>
+    <p class="text-muted mb-3">A cathedral complex in the Tirisfal Glades held by the fanatical Scarlet Crusade. Four wings on a single instance map: Graveyard (low), Library, Armory, and Cathedral (final). Pick one wing per run — the entrance lobby lets you pick which doors to open. Iconic for the Mograine + Whitemane paired final fight in the Cathedral.</p>
+
+    <div class="meta-bar">
+        <span class="meta-pill both">Both</span>
+        <span class="meta-pill">Mob lvl 30–40</span>
+        <span class="meta-pill">Recommended 26–45</span>
+        <span class="meta-pill">5-player dungeon</span>
+        <span class="meta-pill">11 bosses</span>
+        <span class="meta-pill">Map ID 189</span>
+    </div>
+
+    <div class="filter-bar">
+        <div class="filter-row">
+            <span class="label">Role:</span>
+                        <button class="filter-btn role-btn active" data-role="all">All (34)</button>
+            <button class="filter-btn role-btn" data-role="tank">🛡 Tank (1)</button>
+            <button class="filter-btn role-btn" data-role="heal">+ Healer (7)</button>
+            <button class="filter-btn role-btn" data-role="melee">⚔ Melee (20)</button>
+            <button class="filter-btn role-btn" data-role="ranged">🏹 Ranged (11)</button>
+        </div>
+        <div class="filter-row">
+            <span class="label">Class:</span>
+            <select class="class-select" id="class-filter">
+                                <option value="all">All classes (34)</option>
+                <option value="warrior">Warrior (23)</option>
+                <option value="paladin">Paladin (28)</option>
+                <option value="hunter">Hunter (20)</option>
+                <option value="rogue">Rogue (10)</option>
+                <option value="priest">Priest (17)</option>
+                <option value="dk">Death Knight (19)</option>
+                <option value="shaman">Shaman (32)</option>
+                <option value="mage">Mage (16)</option>
+                <option value="warlock">Warlock (16)</option>
+                <option value="druid">Druid (23)</option>
+            </select>
+        </div>
+        <div class="legend">
+            Class colours: <span class="class-pill" style="background:#C79C6E;">W</span>Warrior <span class="class-pill" style="background:#F58CBA;">P</span>Paladin <span class="class-pill" style="background:#ABD473;">H</span>Hunter <span class="class-pill" style="background:#FFF569;">R</span>Rogue <span class="class-pill" style="background:#FFFFFF;">P</span>Priest <span class="class-pill" style="background:#C41F3B;">K</span>Death Knight <span class="class-pill" style="background:#0070DE;">S</span>Shaman <span class="class-pill" style="background:#69CCF0;">M</span>Mage <span class="class-pill" style="background:#9482C9;">W</span>Warlock <span class="class-pill" style="background:#FF7D0A;">D</span>Druid 
+        </div>
+    </div>
+
+    <h2 class="wing-header">🪦 Graveyard wing <span class="wing-meta">lvl 32 · 5 bosses</span></h2>
+    <p class="wing-intro">Outdoor cemetery wing — open-air, lots of patrols. Three rare bosses (rank 2) spawn here on rotation: Azshir, Fallen Champion, Ironspine. Bloodmage Thalnos is the wing finisher in the back crypt.</p>
+    <div class="card boss-card" data-boss="Interrogator Vishas">
+        <div class="card-body">
+            <h3 class="card-title">Interrogator Vishas</h3>
+            <p class="boss-flavour">Sadistic Crusade torturer. Hits hard with shadow fear and a self-heal — kick if you have the option. Not too tough, just keep healers untouchable. Drops the Bloody Brass Knuckles, an early melee twink staple.</p>
+            <p class="boss-meta">
+                Level 32 · Entry <code>3983</code>
+            </p>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:25%">Item</th>
+                        <th style="width:14%">Slot</th>
+                        <th style="width:23%">Stats</th>
+                        <th style="width:10%">Roles</th>
+                        <th style="width:18%">Classes</th>
+                        <th class="text-end" style="width:5%">iLvl</th>
+                        <th class="text-end" style="width:5%">Drop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row" data-roles="melee" data-classes="warrior hunter rogue shaman druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Bloody Brass Knuckles</span></td>
+                        <td><span class="slot-text">Fist</span></td>
+                        <td><span class="stats-list"><span class="stat">+8 Strength</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">34</td>
+                        <td class="text-end">90%</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee" data-classes="warrior hunter rogue priest shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Torturing Poker</span></td>
+                        <td><span class="slot-text">Dagger</span></td>
+                        <td><span class="stats-list"><span class="text-muted small">—</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">34</td>
+                        <td class="text-end">10%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="role-only-message">No items match these filters for this boss.</p>
+
+        </div>
+    </div>
+
+    <div class="card boss-card" data-boss="Bloodmage Thalnos">
+        <div class="card-body">
+            <h3 class="card-title">Bloodmage Thalnos</h3>
+            <p class="boss-flavour">Wing-finisher mage in the back crypt. Pulls a pair of skeletal mages with him — AoE the adds, focus Thalnos. Famous for dropping Bloodmage Mantle (top-tier lowbie cloth shoulder) and Orb of the Forgotten Seer (caster off-hand). Will return as an Acherus DK trainer in WotLK lore — small canon Easter egg.</p>
+            <p class="boss-meta">
+                Level 32 · Entry <code>4543</code>
+            </p>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:25%">Item</th>
+                        <th style="width:14%">Slot</th>
+                        <th style="width:23%">Stats</th>
+                        <th style="width:10%">Roles</th>
+                        <th style="width:18%">Classes</th>
+                        <th class="text-end" style="width:5%">iLvl</th>
+                        <th class="text-end" style="width:5%">Drop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row" data-roles="heal ranged" data-classes="paladin priest shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Bloodmage Mantle</span></td>
+                        <td><span class="slot-text">Shoulder (Cloth)</span></td>
+                        <td><span class="stats-list"><span class="stat">+38 Armor</span><span class="stat">+8 Intellect</span><span class="stat">+4 Spirit</span><span class="stat">+10 Crit</span></span></td>
+                        <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
+                        <td><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">35</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="" data-classes="warrior paladin hunter rogue priest dk shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Orb of the Forgotten Seer</span></td>
+                        <td><span class="slot-text">Held</span></td>
+                        <td><span class="stats-list"><span class="text-muted small">—</span></span></td>
+                        <td></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">38</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="role-only-message">No items match these filters for this boss.</p>
+
+        </div>
+    </div>
+
+    <div class="card boss-card" data-boss="Azshir the Sleepless">
+        <div class="card-body">
+            <h3 class="card-title">Azshir the Sleepless</h3>
+            <p class="boss-flavour">Rare ghost boss — random spawn chance per run. Rank 2 elite. Tank-and-spank, drops Ghostshard Talisman (rare neck) and Necrotic Wand. Worth a shout in guild chat if he&#x27;s up.</p>
+            <p class="boss-meta">
+                Level 32 · Entry <code>6490</code>
+            </p>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:25%">Item</th>
+                        <th style="width:14%">Slot</th>
+                        <th style="width:23%">Stats</th>
+                        <th style="width:10%">Roles</th>
+                        <th style="width:18%">Classes</th>
+                        <th class="text-end" style="width:5%">iLvl</th>
+                        <th class="text-end" style="width:5%">Drop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row" data-roles="" data-classes="warrior paladin hunter rogue priest dk shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Ghostshard Talisman</span></td>
+                        <td><span class="slot-text">Neck</span></td>
+                        <td><span class="stats-list"><span class="stat">+9 Stamina</span></span></td>
+                        <td></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">35</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="ranged" data-classes="priest mage warlock">
+                        <td><span style="color:#0070dd; font-weight:600;">Necrotic Wand</span></td>
+                        <td><span class="slot-text">Wand</span></td>
+                        <td><span class="stats-list"><span class="text-muted small">—</span></span></td>
+                        <td><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
+                        <td><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span></td>
+                        <td class="text-end">35</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="" data-classes="warrior paladin hunter rogue priest dk shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Blighted Leggings</span></td>
+                        <td><span class="slot-text">Legs (Cloth)</span></td>
+                        <td><span class="stats-list"><span class="stat">+45 Armor</span><span class="stat">+7 Stamina</span></span></td>
+                        <td></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">35</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="role-only-message">No items match these filters for this boss.</p>
+
+        </div>
+    </div>
+
+    <div class="card boss-card" data-boss="Fallen Champion">
+        <div class="card-body">
+            <h3 class="card-title">Fallen Champion</h3>
+            <p class="boss-flavour">Rare ghost boss in plate armor. Random spawn. Drops Embalmed Shroud (cloth chest) and Morbid Dawn (decent 2H sword). Rank 2 elite — same rotation slot as Azshir/Ironspine.</p>
+            <p class="boss-meta">
+                Level 32 · Entry <code>6488</code>
+            </p>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:25%">Item</th>
+                        <th style="width:14%">Slot</th>
+                        <th style="width:23%">Stats</th>
+                        <th style="width:10%">Roles</th>
+                        <th style="width:18%">Classes</th>
+                        <th class="text-end" style="width:5%">iLvl</th>
+                        <th class="text-end" style="width:5%">Drop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row" data-roles="heal ranged" data-classes="paladin priest shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Embalmed Shroud</span></td>
+                        <td><span class="slot-text">Head (Cloth)</span></td>
+                        <td><span class="stats-list"><span class="stat">+42 Armor</span><span class="stat">+11 Intellect</span><span class="stat">+7 Stamina</span></span></td>
+                        <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
+                        <td><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">35</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee ranged" data-classes="warrior paladin hunter rogue dk shaman druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebon Vise</span></td>
+                        <td><span class="slot-text">Hands (Leather)</span></td>
+                        <td><span class="stats-list"><span class="stat">+70 Armor</span><span class="stat">+4 Strength</span><span class="stat">+6 Agility</span><span class="stat">+8 Stamina</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">35</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin hunter dk">
+                        <td><span style="color:#0070dd; font-weight:600;">Morbid Dawn</span></td>
+                        <td><span class="slot-text">Sword (2H)</span></td>
+                        <td><span class="stats-list"><span class="stat">+15 Stamina</span><span class="stat">+10 Strength</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span></td>
+                        <td class="text-end">35</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="role-only-message">No items match these filters for this boss.</p>
+
+        </div>
+    </div>
+
+    <div class="card boss-card" data-boss="Ironspine">
+        <div class="card-body">
+            <h3 class="card-title">Ironspine</h3>
+            <p class="boss-flavour">Rare skeletal boss. Random spawn rotation with the other two rares. Has a full set named after him: Ironspine&#x27;s Fist, Eye, and Ribcage — the Ribcage is a great low-level plate chest piece for Prot tanks.</p>
+            <p class="boss-meta">
+                Level 32 · Entry <code>6489</code>
+            </p>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:25%">Item</th>
+                        <th style="width:14%">Slot</th>
+                        <th style="width:23%">Stats</th>
+                        <th style="width:10%">Roles</th>
+                        <th style="width:18%">Classes</th>
+                        <th class="text-end" style="width:5%">iLvl</th>
+                        <th class="text-end" style="width:5%">Drop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin dk shaman druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Ironspine&#x27;s Fist</span></td>
+                        <td><span class="slot-text">Mace (1H)</span></td>
+                        <td><span class="stats-list"><span class="stat">+7 Strength</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">35</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin hunter rogue dk shaman druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Ironspine&#x27;s Eye</span></td>
+                        <td><span class="slot-text">Finger</span></td>
+                        <td><span class="stats-list"><span class="stat">+9 Agility</span><span class="stat">+4 Strength</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">35</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee ranged" data-classes="warrior paladin hunter dk shaman">
+                        <td><span style="color:#0070dd; font-weight:600;">Ironspine&#x27;s Ribcage</span></td>
+                        <td><span class="slot-text">Chest (Mail)</span></td>
+                        <td><span class="stats-list"><span class="stat">+235 Armor</span><span class="stat">+17 Stamina</span><span class="stat">+6 Strength</span><span class="stat">+3 Agility</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span></td>
+                        <td class="text-end">35</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="role-only-message">No items match these filters for this boss.</p>
+
+        </div>
+    </div>
+
+    <h2 class="wing-header">📚 Library wing <span class="wing-meta">lvl 34–35 · 2 bosses</span></h2>
+    <p class="wing-intro">Scarlet Crusade scriptorium and reading rooms. Shorter than the others — just two bosses. Famous for the Library quest chain (no longer mandatory on most servers but still gives nice XP).</p>
+    <div class="card boss-card" data-boss="Houndmaster Loksey">
+        <div class="card-body">
+            <h3 class="card-title">Houndmaster Loksey</h3>
+            <p class="boss-flavour">First boss — patrols the entrance hall with two attack hounds. Mind-soothe or sap a dog if you can, otherwise burst Loksey while tank holds the dogs. Drops Dog Training Gloves (60% chance) — best-in-slot mail hands for the bracket.</p>
+            <p class="boss-meta">
+                Level 34 · Entry <code>3974</code>
+            </p>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:25%">Item</th>
+                        <th style="width:14%">Slot</th>
+                        <th style="width:23%">Stats</th>
+                        <th style="width:10%">Roles</th>
+                        <th style="width:18%">Classes</th>
+                        <th class="text-end" style="width:5%">iLvl</th>
+                        <th class="text-end" style="width:5%">Drop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row" data-roles="melee ranged" data-classes="warrior paladin hunter rogue dk shaman druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Dog Training Gloves</span></td>
+                        <td><span class="slot-text">Hands (Leather)</span></td>
+                        <td><span class="stats-list"><span class="stat">+69 Armor</span><span class="stat">+8 Strength</span><span class="stat">+8 Agility</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">34</td>
+                        <td class="text-end">60%</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee" data-classes="warrior hunter priest shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Loksey&#x27;s Training Stick</span></td>
+                        <td><span class="slot-text">Staff</span></td>
+                        <td><span class="stats-list"><span class="text-muted small">—</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">10%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="role-only-message">No items match these filters for this boss.</p>
+
+        </div>
+    </div>
+
+    <div class="card boss-card" data-boss="Arcanist Doan">
+        <div class="card-body">
+            <h3 class="card-title">Arcanist Doan</h3>
+            <p class="boss-flavour">Library wing-finisher. Channels a massive Detonation AoE at ~50% HP — interrupt or run out, otherwise the whole party dies. Drops Robe of Doan (BiS cloth) and the rare epic Deadman&#x27;s Hand ring (4% drop, screenshot-worthy).</p>
+            <p class="boss-meta">
+                Level 35 · Entry <code>6487</code>
+            </p>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:25%">Item</th>
+                        <th style="width:14%">Slot</th>
+                        <th style="width:23%">Stats</th>
+                        <th style="width:10%">Roles</th>
+                        <th style="width:18%">Classes</th>
+                        <th class="text-end" style="width:5%">iLvl</th>
+                        <th class="text-end" style="width:5%">Drop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row" data-roles="" data-classes="warrior paladin hunter rogue priest dk shaman mage warlock druid">
+                        <td><span style="color:#a335ee; font-weight:600;">Deadman&#x27;s Hand</span></td>
+                        <td><span class="slot-text">Finger</span></td>
+                        <td><span class="stats-list"><span class="stat">+10 Stamina</span></span></td>
+                        <td></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">4%</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee" data-classes="priest shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Illusionary Rod</span></td>
+                        <td><span class="slot-text">Staff</span></td>
+                        <td><span class="stats-list"><span class="stat">+15 Intellect</span><span class="stat">+7 Stamina</span><span class="stat">+10 Crit</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">39</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="heal ranged" data-classes="paladin priest shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Robe of Doan</span></td>
+                        <td><span class="slot-text">Chest (Cloth)</span></td>
+                        <td><span class="stats-list"><span class="stat">+55 Armor</span><span class="stat">+4 Stamina</span><span class="stat">+13 Spirit</span></span></td>
+                        <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
+                        <td><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">38</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee" data-classes="priest shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Hypnotic Blade</span></td>
+                        <td><span class="slot-text">Dagger</span></td>
+                        <td><span class="stats-list"><span class="stat">+8 Intellect</span><span class="stat">+3 Spirit</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">39</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="heal ranged" data-classes="paladin priest shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Mantle of Doan</span></td>
+                        <td><span class="slot-text">Shoulder (Cloth)</span></td>
+                        <td><span class="stats-list"><span class="stat">+41 Armor</span><span class="stat">+9 Intellect</span><span class="stat">+7 Spirit</span><span class="stat">+9 Hit</span></span></td>
+                        <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
+                        <td><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">38</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="role-only-message">No items match these filters for this boss.</p>
+
+        </div>
+    </div>
+
+    <h2 class="wing-header">⚔️ Armory wing <span class="wing-meta">lvl 37 · 1 boss</span></h2>
+    <p class="wing-intro">Single-boss wing centered on Herod, the Crusade champion. He summons huge waves of trash on a Whirlwind enrage — pull him back into the training hall and AoE the adds. Drops Ravager and the iconic Raging Berserker&#x27;s Helm.</p>
+    <div class="card boss-card" data-boss="Herod">
+        <div class="card-body">
+            <h3 class="card-title">Herod</h3>
+            <p class="boss-flavour">Champion of the Crusade. Whirlwinds at low HP and yells &quot;MORE! MORE BLOOD FOR THE LEGION&#x27;S BLOODBATH!&quot; while summoning the entire training hall to attack. Pull him back, AoE the trash, finish him. Drops Ravager (legendary 2H axe, every tank&#x27;s first proper weapon) and Raging Berserker&#x27;s Helm (BiS plate head for the bracket).</p>
+            <p class="boss-meta">
+                Level 37 · Entry <code>3975</code>
+            </p>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:25%">Item</th>
+                        <th style="width:14%">Slot</th>
+                        <th style="width:23%">Stats</th>
+                        <th style="width:10%">Roles</th>
+                        <th style="width:18%">Classes</th>
+                        <th class="text-end" style="width:5%">iLvl</th>
+                        <th class="text-end" style="width:5%">Drop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin hunter dk shaman">
+                        <td><span style="color:#0070dd; font-weight:600;">Ravager</span></td>
+                        <td><span class="slot-text">Axe (2H)</span></td>
+                        <td><span class="stats-list"><span class="text-muted small">—</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span></td>
+                        <td class="text-end">42</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin hunter dk shaman">
+                        <td><span style="color:#0070dd; font-weight:600;">Herod&#x27;s Shoulder</span></td>
+                        <td><span class="slot-text">Shoulder (Mail)</span></td>
+                        <td><span class="stats-list"><span class="stat">+196 Armor</span><span class="stat">+6 Strength</span><span class="stat">+15 Stamina</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span></td>
+                        <td class="text-end">42</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin hunter dk shaman">
+                        <td><span style="color:#0070dd; font-weight:600;">Raging Berserker&#x27;s Helm</span></td>
+                        <td><span class="slot-text">Head (Mail)</span></td>
+                        <td><span class="stats-list"><span class="stat">+213 Armor</span><span class="stat">+8 Stamina</span><span class="stat">+13 Strength</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span></td>
+                        <td class="text-end">42</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin hunter dk shaman">
+                        <td><span style="color:#0070dd; font-weight:600;">Scarlet Leggings</span></td>
+                        <td><span class="slot-text">Legs (Mail)</span></td>
+                        <td><span class="stats-list"><span class="stat">+233 Armor</span><span class="stat">+20 Strength</span><span class="stat">+10 Stamina</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span></td>
+                        <td class="text-end">43</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="role-only-message">No items match these filters for this boss.</p>
+
+        </div>
+    </div>
+
+    <h2 class="wing-header">✝️ Cathedral wing <span class="wing-meta">lvl 40 · 2 bosses</span></h2>
+    <p class="wing-intro">The big finale wing — lots of trash leading up to a dramatic boss room. Fairbanks is an OPTIONAL fight tucked off to the side (skip-able). The main event is Mograine + Whitemane: kill Mograine, Whitemane resurrects him, kill her, then finish Mograine again. Ignite the boss-rage on her res — burn through it.</p>
+    <div class="card boss-card" data-boss="High Inquisitor Fairbanks">
+        <div class="card-body">
+            <h3 class="card-title">High Inquisitor Fairbanks</h3>
+            <p class="boss-flavour">OPTIONAL boss tucked in a side room before the main Cathedral. Long RP intro — he was an old friend of Mograine. Skip-able if you&#x27;re speed-running. Drops a trio of leather/mail bracers and shawl with caster stats. Worth one pull if you&#x27;ve got a healer who needs the Inquisitor&#x27;s Shawl.</p>
+            <p class="boss-meta">
+                Level 40 · Entry <code>4542</code>
+            </p>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:25%">Item</th>
+                        <th style="width:14%">Slot</th>
+                        <th style="width:23%">Stats</th>
+                        <th style="width:10%">Roles</th>
+                        <th style="width:18%">Classes</th>
+                        <th class="text-end" style="width:5%">iLvl</th>
+                        <th class="text-end" style="width:5%">Drop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row" data-roles="" data-classes="warrior paladin hunter dk shaman">
+                        <td><span style="color:#0070dd; font-weight:600;">Dusty Mail Boots</span></td>
+                        <td><span class="slot-text">Feet (Mail)</span></td>
+                        <td><span class="stats-list"><span class="stat">+237 Armor</span><span class="stat">+13 Stamina</span></span></td>
+                        <td></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span></td>
+                        <td class="text-end">41</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="heal ranged" data-classes="paladin priest shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Inquisitor&#x27;s Shawl</span></td>
+                        <td><span class="slot-text">Shoulder (Cloth)</span></td>
+                        <td><span class="stats-list"><span class="stat">+44 Armor</span><span class="stat">+11 Intellect</span><span class="stat">+13 Spell Power</span></span></td>
+                        <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
+                        <td><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">41</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin hunter rogue dk shaman druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Branded Leather Bracers</span></td>
+                        <td><span class="slot-text">Wrist (Leather)</span></td>
+                        <td><span class="stats-list"><span class="stat">+54 Armor</span><span class="stat">+6 Stamina</span><span class="stat">+20 Attack Power</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#FFF569;" title="Rogue">R</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">41</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="role-only-message">No items match these filters for this boss.</p>
+
+        </div>
+    </div>
+
+    <div class="card boss-card" data-boss="Mograine &amp; Whitemane">
+        <div class="card-body">
+            <h3 class="card-title">Mograine &amp; Whitemane</h3>
+            <p class="boss-flavour"></p>
+            <p class="boss-meta">
+                Level 40 · Entry <code>3976</code> &amp; <code>3977</code>
+            </p>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:25%">Item</th>
+                        <th style="width:14%">Slot</th>
+                        <th style="width:23%">Stats</th>
+                        <th style="width:10%">Roles</th>
+                        <th style="width:18%">Classes</th>
+                        <th class="text-end" style="width:5%">iLvl</th>
+                        <th class="text-end" style="width:5%">Drop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row" data-roles="melee tank" data-classes="warrior paladin shaman">
+                        <td><span style="color:#0070dd; font-weight:600;">Aegis of the Scarlet Commander</span></td>
+                        <td><span class="slot-text">Shield</span></td>
+                        <td><span class="stats-list"><span class="stat">+1548 Armor</span><span class="stat">+7 Defense</span><span class="stat">+8 Stamina</span><span class="stat">+7 Strength</span></span></td>
+                        <td><span class="role-pill" style="background:#3a5a8a;color:#7eb0e8;" title="Tank">🛡</span><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span></td>
+                        <td class="text-end">44</td>
+                        <td class="text-end">40%</td>
+                    </tr>
+                    <tr class="item-row" data-roles="" data-classes="warrior paladin hunter dk shaman">
+                        <td><span style="color:#0070dd; font-weight:600;">Gauntlets of Divinity</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stats-list"><span class="stat">+168 Armor</span><span class="stat">+7 Stamina</span></span></td>
+                        <td></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span></td>
+                        <td class="text-end">44</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin dk shaman druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Mograine&#x27;s Might</span></td>
+                        <td><span class="slot-text">Mace (2H)</span></td>
+                        <td><span class="stats-list"><span class="stat">+16 Hit</span><span class="stat">+17 Stamina</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">44</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin hunter dk shaman">
+                        <td><span style="color:#0070dd; font-weight:600;">Scarlet Leggings</span></td>
+                        <td><span class="slot-text">Legs (Mail)</span></td>
+                        <td><span class="stats-list"><span class="stat">+233 Armor</span><span class="stat">+20 Strength</span><span class="stat">+10 Stamina</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#ABD473;" title="Hunter">H</span><span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span></td>
+                        <td class="text-end">43</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="melee" data-classes="paladin priest shaman druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Hand of Righteousness</span></td>
+                        <td><span class="slot-text">Mace (1H)</span></td>
+                        <td><span class="stats-list"><span class="stat">+8 Spirit</span></span></td>
+                        <td><span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span></td>
+                        <td><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">44</td>
+                        <td class="text-end">20%</td>
+                    </tr>
+                    <tr class="item-row" data-roles="heal ranged" data-classes="paladin priest shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Triune Amulet</span></td>
+                        <td><span class="slot-text">Neck</span></td>
+                        <td><span class="stats-list"><span class="stat">+7 Intellect</span><span class="stat">+7 Spirit</span><span class="stat">+7 Stamina</span></span></td>
+                        <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
+                        <td><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">44</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                    <tr class="item-row" data-roles="heal ranged" data-classes="paladin priest shaman mage warlock druid">
+                        <td><span style="color:#0070dd; font-weight:600;">Whitemane&#x27;s Chapeau</span></td>
+                        <td><span class="slot-text">Head (Cloth)</span></td>
+                        <td><span class="stats-list"><span class="stat">+52 Armor</span><span class="stat">+14 Spirit</span><span class="stat">+14 Intellect</span><span class="stat">+9 Stamina</span></span></td>
+                        <td><span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span><span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span></td>
+                        <td><span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span><span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span><span class="class-pill" style="background:#0070DE;" title="Shaman">S</span><span class="class-pill" style="background:#69CCF0;" title="Mage">M</span><span class="class-pill" style="background:#9482C9;" title="Warlock">W</span><span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span></td>
+                        <td class="text-end">44</td>
+                        <td class="text-end">—</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="role-only-message">No items match these filters for this boss.</p>
+
+        </div>
+    </div>
+
+
+    <div class="footer-note">
+        <p><strong>Loot data sourced directly from your KCraft database.</strong> Drop rates reflect <code>creature_loot_template.Chance</code> values from your server install. <em>Always</em> drops indicate ≥95% drop chance.</p>
+        <p><strong>Role &amp; class tagging</strong> is inferred from armor type, weapon type, stats, and explicit class restrictions. Filters combine — e.g. selecting "Healer" and "Druid" shows Resto-friendly drops only.</p>
+        <p>Filter: equippable gear only (34 items shown, 25 non-gear filtered out).</p>
+    </div>
+
+</div>
+
+<script>
+(function() {
+    const roleButtons = document.querySelectorAll('.role-btn');
+    const classSelect = document.getElementById('class-filter');
+    const rows = document.querySelectorAll('.item-row');
+    const bossCards = document.querySelectorAll('.boss-card');
+    let activeRole = 'all';
+    let activeClass = 'all';
+
+    function applyFilters() {
+        rows.forEach(row => {
+            const itemRoles = row.dataset.roles.split(' ').filter(s => s);
+            const itemClasses = row.dataset.classes.split(' ').filter(s => s);
+            const roleMatch = (activeRole === 'all') || itemRoles.includes(activeRole);
+            const classMatch = (activeClass === 'all') || itemClasses.includes(activeClass);
+            row.style.display = (roleMatch && classMatch) ? '' : 'none';
+        });
+        bossCards.forEach(card => {
+            const visibleRows = Array.from(card.querySelectorAll('.item-row')).filter(r => r.style.display !== 'none');
+            const msg = card.querySelector('.role-only-message');
+            const tbl = card.querySelector('table');
+            if (msg && tbl) {
+                if ((activeRole !== 'all' || activeClass !== 'all') && visibleRows.length === 0) {
+                    msg.style.display = 'block'; tbl.style.display = 'none';
+                } else {
+                    msg.style.display = 'none'; tbl.style.display = '';
+                }
+            }
+        });
+    }
+
+    roleButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            roleButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeRole = btn.dataset.role;
+            applyFilters();
+        });
+    });
+    classSelect.addEventListener('change', () => {
+        activeClass = classSelect.value;
+        applyFilters();
+    });
+})();
+</script>
+
+</body>
+</html>
