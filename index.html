@@ -102,17 +102,12 @@
         .tab-btn.active {
             color: #ffd100; border-bottom-color: #ffd100; font-weight: 600;
         }
-        /* Armoury tab is an <a> link to a separate page, not a view-toggle.
-           Push it to the right edge to visually separate it. */
+        /* Armoury tab is an <a> link to a separate page, not a view-toggle. */
         a.tab-btn.tab-link {
-            text-decoration: none; margin-left: auto;
+            text-decoration: none;
             display: inline-flex; align-items: center; gap: 6px;
         }
-        a.tab-btn.tab-link::after {
-            content: '↗'; font-size: 0.85em; opacity: 0.6;
-        }
         a.tab-btn.tab-link:hover { color: #ffd100; }
-        a.tab-btn.tab-link:hover::after { opacity: 1; }
         .tab-view { display: none; }
         .tab-view.active { display: block; }
 
