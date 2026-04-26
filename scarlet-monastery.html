@@ -1095,25 +1095,15 @@
         btn.dataset.baseLabel = btn.textContent.replace(/\s*\(\d+\)\s*$/, '');
     });
 
-    // Compute how many items would match a given role (with current activeClass).
-    // Mirrors the actual applyFilters logic for accurate counts.
+    // Compute how many items match a given role across ALL classes — used
+    // for role-button labels. Independent of activeClass so the counts always
+    // reflect the role's full pool, not narrowed by current class selection.
     function countForRole(role) {
         let n = 0;
         rows.forEach(row => {
             const it = rowItemCache.get(row);
-            const itemClasses = it.classes;
-            // Honour active class filter when computing role counts
-            if (activeClass !== 'all' && !itemClasses.includes(activeClass)) return;
-            if (activeClass !== 'all' && role === 'all'
-                && !passesClassArmor(it, activeClass, null)) return;
-            if (role !== 'all') {
-                if (activeClass !== 'all') {
-                    if (!classFillsRole(it, activeClass, role)) return;
-                } else {
-                    if (!itemClasses.some(c => classFillsRole(it, c, role))) return;
-                }
-            }
-            n++;
+            if (role === 'all') { n++; return; }
+            if (it.classes.some(c => classFillsRole(it, c, role))) n++;
         });
         return n;
     }
@@ -1198,7 +1188,6 @@
     });
     classSelect.addEventListener('change', () => {
         activeClass = classSelect.value;
-        syncRoleButtons();  // role counts depend on active class
         applyFilters();
     });
 })();

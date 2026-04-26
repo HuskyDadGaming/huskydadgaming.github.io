@@ -1685,16 +1685,13 @@
         const lvlMax = state.lvlMax ? parseInt(state.lvlMax, 10) : null;
         const qualityMin = state.quality ? parseInt(state.quality, 10) : null;
 
-        // Pre-filter items by everything EXCEPT role - then count per role
+        // Pre-filter items by everything EXCEPT role and class — role counts
+        // should reflect the role's full pool, not narrow by class selection.
         const baseFiltered = items.filter(it => {
             if (s) {
                 if (!it.name.toLowerCase().includes(s) && !it.bossName.toLowerCase().includes(s)) return false;
             }
             if (state.slot && it.slotFilter !== state.slot) return false;
-            if (state.class) {
-                if (!it.classes.includes(state.class)) return false;
-                if (!passesClassArmor(it, state.class, null)) return false;
-            }
             if (state.dungeon && String(it.mapId) !== state.dungeon) return false;
             if (qualityMin !== null) {
                 if (qualityMin === 4 ? it.quality !== 4 : it.quality < qualityMin) return false;
@@ -1704,10 +1701,9 @@
             return true;
         });
 
-        const matchesRole = (it, role) => {
-            if (state.class) return classFillsRole(it, state.class, role);
-            return it.classes.some(c => classFillsRole(it, c, role));
-        };
+        // Role counts ignore active class — shows total items per role.
+        const matchesRole = (it, role) =>
+            it.classes.some(c => classFillsRole(it, c, role));
 
         const counts = {
             '': baseFiltered.length,
