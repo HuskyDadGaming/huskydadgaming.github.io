@@ -183,23 +183,12 @@
             <div id="login-error" class="login-error" style="display:none;"></div>
 
             <label for="api-base">API URL</label>
-            <input id="api-base" placeholder="https://your.public.ip:47291" autocomplete="off">
+            <input id="api-base" autocomplete="off">
 
             <label for="api-key">API key</label>
-            <input id="api-key" type="password" placeholder="paste your key" autocomplete="off">
+            <input id="api-key" type="password" autocomplete="off">
 
             <button onclick="login()">Connect</button>
-
-            <div class="help">
-                The armoury connects to a private API running on Kyle's home server.
-                You need both the URL and the API key — ask in Discord. Both values are
-                stored only in your browser's <code>localStorage</code> and never sent
-                anywhere except the API itself.
-                <br><br>
-                <strong>First time?</strong> You may see "Your connection is not private"
-                when first connecting — that's the self-signed cert. Visit the API URL
-                directly once and click <em>Advanced → Proceed</em> to whitelist it.
-            </div>
         </div>
     </div>
 
