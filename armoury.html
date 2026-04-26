@@ -338,8 +338,13 @@
             if (current.length) squads.push({ accountName: acct.accountName, chars: current });
         }
 
-        // Sort squads: highest top-level first, so the strongest squad shows first.
-        squads.sort((a, b) => b.chars[0].level - a.chars[0].level);
+        // Sort squads alphabetically by account, then highest-level squad first
+        // within an account (so e.g. Tom's lvl 19 squad shows before Tom's lvl 8).
+        squads.sort((a, b) => {
+            const cmp = a.accountName.localeCompare(b.accountName);
+            if (cmp !== 0) return cmp;
+            return b.chars[0].level - a.chars[0].level;
+        });
         return squads;
     }
 
@@ -349,7 +354,9 @@
         const lvlLabel = (top === bottom) ? `Lvl ${top}` : `Lvl ${bottom}-${top}`;
         const cards = squad.chars.map(c => `
             <a class="character-card" href="#" onclick="showCharacter('${escape(c.name)}'); return false;">
-                <div class="char-name">${escape(c.name)}</div>
+                <div class="char-name">
+                    ${c.online ? '<span class="online-dot" title="Online"></span>' : ''}${escape(c.name)}
+                </div>
                 <div class="char-meta">
                     <span class="level-badge">Lvl ${c.level}</span>
                     ${escape(c.race)} ${escape(c.class)}
