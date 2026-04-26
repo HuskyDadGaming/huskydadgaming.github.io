@@ -257,21 +257,59 @@
             }
             .finder-row .lvl-input { width: 60px; flex: 0 0 60px; }
 
-            /* Finder result table — collapse non-critical cols on phone.
-               Order: 1=Item 2=Slot 3=Stats 4=Roles 5=Classes 6=iLvl 7=Req 8=Source 9=Drop */
-            .finder-table { font-size: 0.78rem; }
-            .finder-table thead th { font-size: 0.62rem; padding: 5px 4px; }
-            .finder-table tbody td { padding: 5px 5px; }
-            .finder-table thead th:nth-child(3),  /* Stats */
-            .finder-table tbody td:nth-child(3),
-            .finder-table thead th:nth-child(4),  /* Roles */
-            .finder-table tbody td:nth-child(4),
-            .finder-table thead th:nth-child(5),  /* Classes */
-            .finder-table tbody td:nth-child(5),
-            .finder-table thead th:nth-child(6),  /* iLvl */
-            .finder-table tbody td:nth-child(6),
-            .finder-table thead th:nth-child(9),  /* Drop chance */
-            .finder-table tbody td:nth-child(9) { display: none; }
+            /* ---------------------------------------------------------------
+               Find Loot results table becomes CARD LAYOUT on phone — every
+               row stacks vertically with labels, no column data is hidden.
+               Column order: 1=Item 2=Slot 3=Stats 4=Roles 5=Classes
+                             6=iLvl 7=Req 8=Source 9=Drop
+               --------------------------------------------------------------- */
+            .finder-table,
+            .finder-table thead,
+            .finder-table tbody,
+            .finder-table tr,
+            .finder-table td { display: block; width: 100%; }
+
+            .finder-table thead { display: none; }
+
+            .finder-table tbody tr {
+                background: #232323; border: 1px solid #2d2d2d;
+                border-radius: 6px;
+                padding: 0.6rem 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+            .finder-table tbody tr td {
+                padding: 0; border: 0;
+                display: flex; justify-content: space-between; align-items: baseline;
+                gap: 8px; font-size: 0.82rem;
+                line-height: 1.45;
+            }
+            /* Item name cell — full-width header, no label */
+            .finder-table tbody tr td:nth-child(1) {
+                display: block;
+                font-size: 0.95rem; font-weight: 600;
+                margin-bottom: 4px; padding-bottom: 4px;
+                border-bottom: 1px solid #2d2d2d;
+            }
+            /* Cells with values get a left-side grey label via ::before */
+            .finder-table tbody tr td:nth-child(2)::before { content: 'Slot'; }
+            .finder-table tbody tr td:nth-child(3)::before { content: 'Stats'; }
+            .finder-table tbody tr td:nth-child(4)::before { content: 'Roles'; }
+            .finder-table tbody tr td:nth-child(5)::before { content: 'Classes'; }
+            .finder-table tbody tr td:nth-child(6)::before { content: 'iLvl'; }
+            .finder-table tbody tr td:nth-child(7)::before { content: 'Req'; }
+            .finder-table tbody tr td:nth-child(8)::before { content: 'Source'; }
+            .finder-table tbody tr td:nth-child(9)::before { content: 'Drop'; }
+            .finder-table tbody tr td::before {
+                color: #777; font-size: 0.72rem; text-transform: uppercase;
+                letter-spacing: 0.5px; flex-shrink: 0;
+            }
+            /* Right-side values right-aligned for readability */
+            .finder-table tbody tr td > * {
+                text-align: right;
+            }
+            .finder-table tbody tr td:nth-child(1) > * {
+                text-align: left;
+            }
         }
 
         @media (max-width: 400px) {

@@ -129,24 +129,60 @@
             .boss-card { padding: 0.7rem; margin-bottom: 0.85rem; }
             .boss-card h3 { font-size: 1.05rem; }
 
-            /* Boss item table — hide Stats, Roles, Classes, iLvl, Drop on phone.
-               Column order on dungeon pages: 1=Item 2=Slot 3=Stats 4=Roles 5=Classes 6=iLvl 7=Drop */
-            .boss-card table { font-size: 0.78rem; }
-            .boss-card table thead th { font-size: 0.65rem; padding: 5px 4px; }
-            .boss-card table tbody td { padding: 5px 5px; }
-            .boss-card table thead th:nth-child(3),  /* Stats */
-            .boss-card table tbody td:nth-child(3),
-            .boss-card table thead th:nth-child(4),  /* Roles */
-            .boss-card table tbody td:nth-child(4),
-            .boss-card table thead th:nth-child(5),  /* Classes */
-            .boss-card table tbody td:nth-child(5),
-            .boss-card table thead th:nth-child(6),  /* iLvl */
-            .boss-card table tbody td:nth-child(6),
-            .boss-card table thead th:nth-child(7)   /* Drop chance */
-            { display: none; }
-            .boss-card table tbody td:nth-child(7) { display: none; }
+            /* ---------------------------------------------------------------
+               Boss item tables become CARD LAYOUT on phone — every row stacks
+               vertically with labels, so no column data is hidden.
+               Column order: 1=Item 2=Slot 3=Stats 4=Roles 5=Classes 6=iLvl 7=Drop
+               --------------------------------------------------------------- */
+            .boss-card table,
+            .boss-card table thead,
+            .boss-card table tbody,
+            .boss-card table tr,
+            .boss-card table td { display: block; width: 100%; }
 
-            .slot-text { font-size: 0.72rem; color: #888; }
+            .boss-card table thead { display: none; }  /* labels go on each cell */
+
+            .boss-card table tr.item-row {
+                background: #232323; border: 1px solid #2d2d2d;
+                border-radius: 6px;
+                padding: 0.6rem 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+            .boss-card table tr.item-row td {
+                padding: 0; border: 0;
+                display: flex; justify-content: space-between; align-items: baseline;
+                gap: 8px; font-size: 0.82rem;
+                line-height: 1.45;
+            }
+            /* Item name cell — full-width header, no label */
+            .boss-card table tr.item-row td:nth-child(1) {
+                display: block;
+                font-size: 0.95rem; font-weight: 600;
+                margin-bottom: 4px; padding-bottom: 4px;
+                border-bottom: 1px solid #2d2d2d;
+            }
+            /* Cells with values get a left-side grey label via ::before */
+            .boss-card table tr.item-row td:nth-child(2)::before { content: 'Slot'; }
+            .boss-card table tr.item-row td:nth-child(3)::before { content: 'Stats'; }
+            .boss-card table tr.item-row td:nth-child(4)::before { content: 'Roles'; }
+            .boss-card table tr.item-row td:nth-child(5)::before { content: 'Classes'; }
+            .boss-card table tr.item-row td:nth-child(6)::before { content: 'iLvl'; }
+            .boss-card table tr.item-row td:nth-child(7)::before { content: 'Drop'; }
+            .boss-card table tr.item-row td::before {
+                color: #777; font-size: 0.72rem; text-transform: uppercase;
+                letter-spacing: 0.5px; flex-shrink: 0;
+            }
+            /* Right-side values right-aligned for readability */
+            .boss-card table tr.item-row td > * {
+                text-align: right;
+            }
+            .boss-card table tr.item-row td:nth-child(1) > * {
+                text-align: left;
+            }
+            /* Stats list wraps gracefully on the right */
+            .boss-card .stats-list { text-align: right; }
+            .boss-card .stat { display: inline; margin-left: 6px; }
+            .slot-text { font-size: 0.82rem; color: #ddd; }
 
             /* Class colour legend — compact */
             .legend { font-size: 0.7rem; line-height: 1.7; }
