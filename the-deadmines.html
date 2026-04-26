@@ -552,22 +552,200 @@
 </div>
 
 <script>
+// ============================================================
+// KCraft smart filter logic
+// Mirrors the cross-dungeon loot finder for consistent results.
+// Reads each row's slot text and stats from the DOM, builds a
+// virtual item object, and runs the same classFillsRole logic.
+// ============================================================
 (function() {
+    'use strict';
+
+    const CLASS_ARMOR_FLOOR = {
+        warrior: ['Plate', 'Mail'],
+        paladin: ['Plate', 'Mail'],
+        dk:      ['Plate'],
+        hunter:  ['Mail', 'Leather'],
+        shaman:  ['Mail', 'Leather'],
+        rogue:   ['Leather'],
+        druid:   ['Leather'],
+        priest:  ['Cloth'],
+        mage:    ['Cloth'],
+        warlock: ['Cloth'],
+    };
+
+    // Map slot text → slotFilter category. Slot text examples:
+    // "Head (Cloth)", "Sword (1H)", "Sword (2H)", "Mace (1H)", "Shield",
+    // "Wand", "Bow", "Gun", "Dagger", "Staff", "Polearm", "Held", "Fist",
+    // "Finger", "Neck", "Back", "Trinket".
+    function computeSlotFilter(slot) {
+        if (!slot) return '';
+        const s = slot.trim();
+        if (/\(2H\)/.test(s) || s === 'Staff' || s === 'Polearm') return 'Two-Hand';
+        if (/\(1H\)/.test(s) || s === 'Dagger' || s === 'Fist') return 'One-Hand';
+        if (s === 'Shield') return 'Off-Hand';
+        if (s === 'Held') return 'Held';
+        if (s === 'Wand' || s === 'Bow' || s === 'Gun' || s === 'Crossbow' || s === 'Thrown') return 'Ranged';
+        if (s === 'Main Hand') return 'Main Hand';
+        if (s === 'Off Hand' || s === 'Off-Hand') return 'Off-Hand';
+        // Armor slots like "Head (Cloth)" → "Head"
+        const m = s.match(/^([A-Za-z ]+?)\s*\(/);
+        if (m) return m[1].trim();
+        // Fallback: the slot text itself (Finger, Neck, Back, Trinket, Tabard, Shirt...)
+        return s;
+    }
+
+    function passesClassArmor(it, cls, role) {
+        const allowed = CLASS_ARMOR_FLOOR[cls];
+        if (!allowed) return true;
+        const m = (it.slot || '').match(/\((Cloth|Leather|Mail|Plate)\)/);
+        if (!m) return true;
+        if (role === 'heal' || role === 'ranged') return true;
+        return allowed.includes(m[1]);
+    }
+
+    function classFillsRole(it, cls, role) {
+        if (!passesClassArmor(it, cls, role)) return false;
+        const slot = it.slotFilter;
+        const ic = it.slot;
+        const stats = (it.stats || []).join(' ');
+        const hasStat = (n) => stats.indexOf(n) >= 0;
+        const isShield = slot === 'Off-Hand' && /Shield/.test(ic);
+        const isPlate = /\(Plate\)/.test(ic);
+        const isMail = /\(Mail\)/.test(ic);
+        const isLeather = /\(Leather\)/.test(ic);
+        const isCloth = /\(Cloth\)/.test(ic);
+        const isWeapon = ['One-Hand','Two-Hand','Main Hand','Off-Hand','Ranged','Held','Thrown'].includes(slot);
+
+        if (role === 'tank') {
+            if (!['warrior','paladin','dk','druid','shaman'].includes(cls)) return false;
+            if (hasStat('Defense') || hasStat('Dodge') || hasStat('Parry') ||
+                hasStat('Block') || hasStat('Resilience')) return true;
+            if (cls === 'warrior' || cls === 'paladin' || cls === 'dk') {
+                if (cls !== 'dk' && isShield) return true;
+                if (isPlate) return true;
+                if (!isWeapon && hasStat('Stamina')) return true;
+                if (slot === 'One-Hand' && hasStat('Stamina')) return true;
+                if (slot === 'Two-Hand' && hasStat('Stamina')) return true;
+                return false;
+            }
+            if (cls === 'druid') {
+                if (isLeather && hasStat('Stamina')) return true;
+                return false;
+            }
+            if (cls === 'shaman') {
+                if (isShield) return true;
+                if (isMail && hasStat('Stamina') && hasStat('Strength')) return true;
+                return false;
+            }
+            return false;
+        }
+
+        if (role === 'heal') {
+            if (!['priest','paladin','druid','shaman'].includes(cls)) return false;
+            if (hasStat('Spirit') || hasStat('MP5') || hasStat('Spell Power')) return true;
+            if (hasStat('Intellect') && (isCloth || isLeather || isMail)) return true;
+            return false;
+        }
+
+        if (role === 'melee') {
+            if (!['warrior','paladin','dk','rogue','hunter','druid','shaman'].includes(cls)) return false;
+            if (cls === 'hunter') return false;
+            if (isWeapon && (hasStat('Spirit') || hasStat('Spell Power') || hasStat('MP5'))) return false;
+            if (isWeapon && hasStat('Intellect') && !(hasStat('Strength') || hasStat('Agility') || hasStat('Attack Power'))) return false;
+            if (hasStat('Strength') || hasStat('Attack Power') || hasStat('Armor Pen')) return true;
+            if (hasStat('Agility') && (cls === 'rogue' || cls === 'druid' || cls === 'shaman')) return true;
+            if (['One-Hand','Two-Hand','Main Hand'].includes(slot)) return true;
+            return false;
+        }
+
+        if (role === 'ranged') {
+            if (slot === 'Ranged') return true;
+            if (cls === 'mage' || cls === 'warlock') return true;
+            if (cls === 'hunter') {
+                if (hasStat('Agility') || hasStat('Attack Power')) return true;
+                if (slot === 'Ranged') return true;
+                return false;
+            }
+            if (cls === 'priest') return true;
+            if (cls === 'shaman' || cls === 'druid' || cls === 'paladin') {
+                if (hasStat('Spell Power') || hasStat('Intellect') || hasStat('Spirit')) return true;
+                return false;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    // Build a virtual `it` object from a row's DOM by reading slot + stats text.
+    function rowToItem(row) {
+        const slotEl = row.querySelector('.slot-text');
+        const slot = slotEl ? slotEl.textContent.trim() : '';
+        const statEls = row.querySelectorAll('.stat');
+        const stats = Array.from(statEls).map(el => el.textContent.trim()).filter(Boolean);
+        const classes = (row.dataset.classes || '').split(' ').filter(Boolean);
+        return {
+            slot: slot,
+            slotFilter: computeSlotFilter(slot),
+            stats: stats,
+            classes: classes,
+        };
+    }
+
+    // ---- Apply filters using the smart logic ----
     const roleButtons = document.querySelectorAll('.role-btn');
     const classSelect = document.getElementById('class-filter');
     const rows = document.querySelectorAll('.item-row');
     const bossCards = document.querySelectorAll('.boss-card');
     let activeRole = 'all';
     let activeClass = 'all';
-    
+
+    // Cache: map each row to its parsed item so we don't reparse on every filter change.
+    const rowItemCache = new Map();
+    rows.forEach(row => rowItemCache.set(row, rowToItem(row)));
+
     function applyFilters() {
         rows.forEach(row => {
-            const itemRoles = row.dataset.roles.split(' ').filter(s => s);
-            const itemClasses = row.dataset.classes.split(' ').filter(s => s);
-            const roleMatch = (activeRole === 'all') || itemRoles.includes(activeRole);
-            const classMatch = (activeClass === 'all') || itemClasses.includes(activeClass);
-            row.style.display = (roleMatch && classMatch) ? '' : 'none';
+            const it = rowItemCache.get(row);
+            const itemClasses = it.classes;
+
+            // 1. Class proficiency check
+            const classProficient = (activeClass === 'all') || itemClasses.includes(activeClass);
+            if (!classProficient) {
+                row.style.display = 'none';
+                return;
+            }
+
+            // 2. Class armor floor (when class selected, no role)
+            if (activeClass !== 'all' && activeRole === 'all') {
+                if (!passesClassArmor(it, activeClass, null)) {
+                    row.style.display = 'none';
+                    return;
+                }
+            }
+
+            // 3. Role + class smart logic
+            if (activeRole !== 'all') {
+                if (activeClass !== 'all') {
+                    // class+role: smart per-class logic
+                    if (!classFillsRole(it, activeClass, activeRole)) {
+                        row.style.display = 'none';
+                        return;
+                    }
+                } else {
+                    // role-only: union across all proficient classes
+                    const anyMatch = itemClasses.some(c => classFillsRole(it, c, activeRole));
+                    if (!anyMatch) {
+                        row.style.display = 'none';
+                        return;
+                    }
+                }
+            }
+
+            row.style.display = '';
         });
+
+        // Update boss-card empty messages
         bossCards.forEach(card => {
             const visibleRows = Array.from(card.querySelectorAll('.item-row')).filter(r => r.style.display !== 'none');
             const msg = card.querySelector('.role-only-message');
@@ -581,7 +759,7 @@
             }
         });
     }
-    
+
     roleButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             roleButtons.forEach(b => b.classList.remove('active'));
