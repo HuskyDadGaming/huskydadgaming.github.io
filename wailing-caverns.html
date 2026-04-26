@@ -953,6 +953,43 @@
     // Initialize dropdown labels for "all" role on page load
     syncClassDropdown('all');
 
+    // Cache the original role-button labels (without counts) so we can rebuild
+    // them with smart-filter counts that match the actual filter logic.
+    roleButtons.forEach(btn => {
+        btn.dataset.baseLabel = btn.textContent.replace(/\s*\(\d+\)\s*$/, '');
+    });
+
+    // Compute how many items would match a given role (with current activeClass).
+    // Mirrors the actual applyFilters logic for accurate counts.
+    function countForRole(role) {
+        let n = 0;
+        rows.forEach(row => {
+            const it = rowItemCache.get(row);
+            const itemClasses = it.classes;
+            // Honour active class filter when computing role counts
+            if (activeClass !== 'all' && !itemClasses.includes(activeClass)) return;
+            if (activeClass !== 'all' && role === 'all'
+                && !passesClassArmor(it, activeClass, null)) return;
+            if (role !== 'all') {
+                if (activeClass !== 'all') {
+                    if (!classFillsRole(it, activeClass, role)) return;
+                } else {
+                    if (!itemClasses.some(c => classFillsRole(it, c, role))) return;
+                }
+            }
+            n++;
+        });
+        return n;
+    }
+
+    function syncRoleButtons() {
+        roleButtons.forEach(btn => {
+            const role = btn.dataset.role;
+            btn.textContent = `${btn.dataset.baseLabel} (${countForRole(role)})`;
+        });
+    }
+    syncRoleButtons();
+
     function applyFilters() {
         rows.forEach(row => {
             const it = rowItemCache.get(row);
@@ -1020,6 +1057,7 @@
     });
     classSelect.addEventListener('change', () => {
         activeClass = classSelect.value;
+        syncRoleButtons();  // role counts depend on active class
         applyFilters();
     });
 })();
