@@ -99,6 +99,30 @@
             display: inline-block; width: 8px; height: 8px; border-radius: 50%;
             background: #1eff00; margin-right: 6px; box-shadow: 0 0 6px #1eff00;
         }
+        .offline-dot {
+            display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+            background: #cc3333; margin-right: 6px;
+        }
+        .status-online {
+            color: #1eff00; font-size: 0.78rem; font-weight: 500;
+            margin-left: 4px;
+        }
+        .status-offline {
+            color: #888; font-size: 0.78rem; font-weight: 500;
+            margin-left: 4px;
+        }
+
+        /* Roster online/offline section dividers */
+        .roster-section-header {
+            display: flex; align-items: baseline; gap: 10px;
+            margin-top: 2rem; margin-bottom: 0.5rem;
+            padding-bottom: 6px; border-bottom: 1px solid #3a3a3a;
+        }
+        .roster-section-header:first-child { margin-top: 0; }
+        .roster-section-header h2 { font-size: 1.05rem; margin: 0; font-weight: 600; }
+        .roster-section-header .roster-section-count { color: #777; font-size: 0.82rem; }
+        .roster-section-online h2 { color: #1eff00; }
+        .roster-section-offline h2 { color: #888; }
 
         /* Section headings */
         .section-header {
@@ -406,23 +430,64 @@
         const top = squad.chars[0].level;
         const bottom = squad.chars[squad.chars.length - 1].level;
         const lvlLabel = (top === bottom) ? `Lvl ${top}` : `Lvl ${bottom}-${top}`;
-        const cards = squad.chars.map(c => `
-            <a class="character-card" href="#" onclick="showCharacter('${escape(c.name)}'); return false;">
-                <div class="char-name">
-                    ${c.online ? '<span class="online-dot" title="Online"></span>' : ''}${escape(c.name)}
-                </div>
-                <div class="char-meta">
-                    <span class="level-badge">Lvl ${c.level}</span>
-                    ${escape(c.race)} ${escape(c.class)}
-                </div>
-            </a>
-        `).join('');
+        // Squad is "online" if ANY member is online
+        const anyOnline = squad.chars.some(c => c.online);
+        const squadStatus = anyOnline
+            ? '<span class="status-online">● Online</span>'
+            : '<span class="status-offline">● Offline</span>';
+        const cards = squad.chars.map(c => {
+            const dot = c.online
+                ? '<span class="online-dot" title="Online"></span>'
+                : '<span class="offline-dot" title="Offline"></span>';
+            const status = c.online
+                ? '<span class="status-online">Online</span>'
+                : '<span class="status-offline">Offline</span>';
+            return `
+                <a class="character-card" href="#" onclick="showCharacter('${escape(c.name)}'); return false;">
+                    <div class="char-name">
+                        ${dot}${escape(c.name)}${status}
+                    </div>
+                    <div class="char-meta">
+                        <span class="level-badge">Lvl ${c.level}</span>
+                        ${escape(c.race)} ${escape(c.class)}
+                    </div>
+                </a>
+            `;
+        }).join('');
         return `
             <div class="squad-section">
-                <h2 class="squad-header">${escape(squad.accountName)}'s squad <span class="squad-meta">— ${lvlLabel}</span></h2>
+                <h2 class="squad-header">${escape(squad.accountName)}'s squad ${squadStatus} <span class="squad-meta">— ${lvlLabel}</span></h2>
                 <div class="character-grid">${cards}</div>
             </div>
         `;
+    }
+
+    // Render the full roster with online/offline section dividers.
+    function renderRoster(squads) {
+        const onlineSquads = squads.filter(s => s.chars.some(c => c.online));
+        const offlineSquads = squads.filter(s => !s.chars.some(c => c.online));
+        const html = [];
+        if (onlineSquads.length) {
+            const onlineCount = onlineSquads.reduce((n, s) => n + s.chars.filter(c => c.online).length, 0);
+            html.push(`
+                <div class="roster-section-header roster-section-online">
+                    <h2>🟢 Online</h2>
+                    <span class="roster-section-count">${onlineCount} online · ${onlineSquads.length} squad${onlineSquads.length === 1 ? '' : 's'}</span>
+                </div>
+            `);
+            html.push(...onlineSquads.map(renderSquad));
+        }
+        if (offlineSquads.length) {
+            const offlineCount = offlineSquads.reduce((n, s) => n + s.chars.length, 0);
+            html.push(`
+                <div class="roster-section-header roster-section-offline">
+                    <h2>🔴 Offline</h2>
+                    <span class="roster-section-count">${offlineCount} character${offlineCount === 1 ? '' : 's'} · ${offlineSquads.length} squad${offlineSquads.length === 1 ? '' : 's'}</span>
+                </div>
+            `);
+            html.push(...offlineSquads.map(renderSquad));
+        }
+        return html.join('');
     }
 
     window.showRoster = async function() {
@@ -444,7 +509,7 @@
             }
             grid.style.display = '';
             const squads = groupIntoSquads(data.characters);
-            grid.innerHTML = squads.map(renderSquad).join('');
+            grid.innerHTML = renderRoster(squads);
         } catch (e) {
             loading.style.display = 'none';
             if (e.message === 'Bad API key') { showView('login'); showError('Session expired'); return; }
