@@ -427,6 +427,35 @@
         }[c]));
     }
 
+    // Build a multi-line text tooltip for native title="..." attribute.
+    // Browser shows after ~1s hover with no styling but full content visible.
+    function buildTooltip(it, slotLabel) {
+        const lines = [];
+        lines.push(it.name);
+        const meta = [];
+        if (it.qualityName && it.qualityName !== 'Common') meta.push(it.qualityName);
+        if (it.invType) meta.push(it.invType);
+        if (it.reqLevel) meta.push(`Lvl ${it.reqLevel}`);
+        if (meta.length) lines.push(meta.join(' · '));
+        if (it.stats && it.stats.length) {
+            lines.push('');
+            it.stats.forEach(s => lines.push(s));
+        }
+        if (it.maxDurability) {
+            lines.push('');
+            lines.push(`Durability ${it.durability}/${it.maxDurability}`);
+        }
+        if (it.count > 1) {
+            lines.push('');
+            lines.push(`Stack: ${it.count}`);
+        }
+        if (it.id) {
+            lines.push('');
+            lines.push(`Item ID: ${it.id}`);
+        }
+        return lines.join('\n');
+    }
+
     function renderItem(it, slotLabel) {
         if (!it) {
             return `<div class="item-row empty">
@@ -439,7 +468,8 @@
         ).join('');
         const count = (it.count > 1) ? `<span class="item-count">×${it.count}</span>` : '';
         const req = it.reqLevel ? `<span class="req-level">Lvl ${it.reqLevel}</span>` : '';
-        return `<div class="item-row">
+        const tooltip = escape(buildTooltip(it, slotLabel));
+        return `<div class="item-row" title="${tooltip}">
             <span class="slot-label">${escape(slotLabel || it.invType || '')}</span>
             <div class="item-info">
                 <div class="item-name" style="color:${it.color}">${escape(it.name)}</div>
