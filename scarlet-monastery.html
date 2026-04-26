@@ -192,17 +192,18 @@
             .boss-card table tr.item-row td:nth-child(1)::before { content: none; }
 
             /* Compact rows: iLvl and Drop. Single-value cells with the label
-               inline on the left (less vertical bulk). */
+               inline on the left (less vertical bulk).
+               Override Bootstrap .text-end which would right-align the value. */
             .boss-card table tr.item-row td:nth-child(6),
             .boss-card table tr.item-row td:nth-child(7) {
                 display: flex; gap: 12px;
                 align-items: baseline;
                 font-size: 0.82rem;
+                text-align: left !important;
             }
             .boss-card table tr.item-row td:nth-child(6)::before,
             .boss-card table tr.item-row td:nth-child(7)::before {
                 display: inline-block; margin-bottom: 0;
-                min-width: 64px;
             }
 
             .slot-text { font-size: 0.85rem; color: #ddd; }

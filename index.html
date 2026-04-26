@@ -316,7 +316,8 @@
             }
             .finder-table tbody tr td:nth-child(1)::before { content: none; }
 
-            /* Compact rows: Slot, iLvl, Req, Drop — label inline on left */
+            /* Compact rows: Slot, iLvl, Req, Drop — label inline on left.
+               Override Bootstrap .text-end which would right-align the value. */
             .finder-table tbody tr td:nth-child(2),
             .finder-table tbody tr td:nth-child(6),
             .finder-table tbody tr td:nth-child(7),
@@ -324,13 +325,13 @@
                 display: flex; gap: 12px;
                 align-items: baseline;
                 font-size: 0.82rem;
+                text-align: left !important;
             }
             .finder-table tbody tr td:nth-child(2)::before,
             .finder-table tbody tr td:nth-child(6)::before,
             .finder-table tbody tr td:nth-child(7)::before,
             .finder-table tbody tr td:nth-child(9)::before {
                 display: inline-block; margin-bottom: 0;
-                min-width: 64px;
             }
         }
 
