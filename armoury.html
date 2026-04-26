@@ -143,6 +143,10 @@
             padding: 8px 12px; display: flex; align-items: center; gap: 12px;
             font-size: 0.85rem;
         }
+        .item-row.tooltip-active {
+            background: #2d2d2d; border-color: #ffd100;
+            box-shadow: 0 0 0 1px #ffd100;
+        }
         .item-row.empty {
             opacity: 0.4; font-style: italic; color: #666;
             justify-content: center;
@@ -725,15 +729,23 @@
     const tooltipEl = document.getElementById('armoury-tooltip');
     let tooltipShownFor = null;
 
-    function showTooltip(it, ev) {
+    function showTooltip(it, ev, row) {
         tooltipEl.innerHTML = buildTooltipHTML(it);
         tooltipEl.classList.add('visible');
         tooltipEl.setAttribute('aria-hidden', 'false');
         positionTooltip(ev);
+        // Highlight the row that owns the tooltip. If we're switching rows,
+        // un-highlight the previous one first.
+        if (tooltipShownFor && tooltipShownFor !== row) {
+            tooltipShownFor.classList.remove('tooltip-active');
+        }
+        if (row) row.classList.add('tooltip-active');
+        tooltipShownFor = row || null;
     }
     function hideTooltip() {
         tooltipEl.classList.remove('visible');
         tooltipEl.setAttribute('aria-hidden', 'true');
+        if (tooltipShownFor) tooltipShownFor.classList.remove('tooltip-active');
         tooltipShownFor = null;
     }
     function positionTooltip(ev) {
@@ -758,10 +770,9 @@
         const row = ev.target.closest('.item-row[data-item-id]');
         if (!row) return;
         if (tooltipShownFor === row) return;
-        tooltipShownFor = row;
         try {
             const data = JSON.parse(row.dataset.itemJson || 'null');
-            if (data) showTooltip(data, ev);
+            if (data) showTooltip(data, ev, row);
         } catch (e) { /* malformed JSON — ignore */ }
     });
     document.body.addEventListener('mousemove', (ev) => {
@@ -779,12 +790,43 @@
 
     // Touch support — tap on an item-row to show tooltip; tap anywhere else
     // (or scroll) to hide. Designed for phones/tablets where hover doesn't exist.
+    //
+    // Critical UX: we must distinguish a *tap* (no movement) from a *scroll
+    // gesture* (finger drags). Scroll events should never open a tooltip.
+    let touchStart = null;  // { x, y, isScroll } or null
+    const TAP_MOVE_THRESHOLD_PX = 10;  // moved more than this → scroll, not tap
+
+    document.body.addEventListener('touchstart', (ev) => {
+        if (ev.touches.length !== 1) {
+            // Multi-touch: never treat as tap
+            touchStart = { x: 0, y: 0, isScroll: true };
+            return;
+        }
+        const t = ev.touches[0];
+        touchStart = { x: t.clientX, y: t.clientY, isScroll: false };
+    }, { passive: true });
+
+    document.body.addEventListener('touchmove', (ev) => {
+        if (!touchStart) return;
+        const t = ev.touches[0];
+        if (!t) return;
+        const dx = Math.abs(t.clientX - touchStart.x);
+        const dy = Math.abs(t.clientY - touchStart.y);
+        if (dx > TAP_MOVE_THRESHOLD_PX || dy > TAP_MOVE_THRESHOLD_PX) {
+            touchStart.isScroll = true;
+        }
+    }, { passive: true });
+
     document.body.addEventListener('touchend', (ev) => {
+        const wasScroll = !touchStart || touchStart.isScroll;
+        touchStart = null;
+        if (wasScroll) return;  // Scroll gesture — never show tooltip
+
         const row = ev.target.closest('.item-row[data-item-id]');
         if (row) {
-            // Same item tapped twice → dismiss
+            // Tap on an item-row → show tooltip. If already shown for this
+            // row, leave it as is (no toggle-off). Tap elsewhere to dismiss.
             if (tooltipShownFor === row) {
-                hideTooltip();
                 ev.preventDefault();
                 return;
             }
@@ -793,28 +835,24 @@
                 if (data) {
                     const touch = ev.changedTouches[0];
                     const fakeEv = { clientX: touch.clientX, clientY: touch.clientY };
-                    tooltipShownFor = row;
-                    showTooltip(data, fakeEv);
-                    // Prevent the synthesized click that would otherwise navigate
-                    // or interact with elements behind the tooltip.
+                    showTooltip(data, fakeEv, row);
+                    // Prevent the synthesized click that would otherwise
+                    // navigate or interact with elements behind the tooltip.
                     ev.preventDefault();
                 }
             } catch (e) { /* ignore malformed JSON */ }
         } else if (tooltipShownFor) {
-            // Tapped outside any item-row → dismiss
+            // Tap outside any item-row → dismiss
             hideTooltip();
         }
     }, { passive: false });
 
-    // Dismiss tooltip on any scroll (window or any scrollable container).
-    // Use capture to catch scroll events from descendants too.
+    // Also dismiss on actual scroll events (covers programmatic scroll,
+    // momentum scrolling after a tap-drag, and scrollable containers).
     function dismissTooltipOnScroll() {
         if (tooltipShownFor) hideTooltip();
     }
     window.addEventListener('scroll', dismissTooltipOnScroll, { passive: true, capture: true });
-    // Also dismiss on touchmove (covers cases where scroll event is throttled
-    // mid-gesture, e.g. some iOS WebView contexts).
-    window.addEventListener('touchmove', dismissTooltipOnScroll, { passive: true });
 
     function renderItem(it, slotLabel) {
         if (!it) {
