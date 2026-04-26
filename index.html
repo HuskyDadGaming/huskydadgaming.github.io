@@ -86,10 +86,125 @@
             font-weight: 600; display: inline-block; margin-top: 6px;
         }
         .status-tag.todo { color: #777; }
-        .footer-note {
-            color: #888; margin-top: 2rem; font-size: 0.85rem;
-            border-top: 1px solid #3a3a3a; padding-top: 1rem;
+
+        /* Tab switcher */
+        .tab-bar {
+            display: flex; gap: 4px; margin-bottom: 2rem;
+            border-bottom: 1px solid #3a3a3a;
         }
+        .tab-btn {
+            padding: 10px 20px; background: transparent; color: #888;
+            border: none; border-bottom: 3px solid transparent;
+            cursor: pointer; font-size: 0.95rem; font-weight: 500;
+            transition: all 0.15s; margin-bottom: -1px;
+        }
+        .tab-btn:hover { color: #ddd; background: #2326; }
+        .tab-btn.active {
+            color: #ffd100; border-bottom-color: #ffd100; font-weight: 600;
+        }
+        .tab-view { display: none; }
+        .tab-view.active { display: block; }
+
+        /* Loot finder filters */
+        .finder-bar {
+            background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
+            padding: 1rem; margin-bottom: 1.5rem;
+        }
+        .finder-row {
+            display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+            margin-bottom: 10px;
+        }
+        .finder-row:last-child { margin-bottom: 0; }
+        .finder-row > .lbl {
+            color: #999; font-size: 0.85rem; min-width: 70px;
+        }
+        .finder-row select, .finder-row input[type=text] {
+            background: #2d2d2d; color: #ddd; border: 1px solid #3a3a3a;
+            border-radius: 4px; padding: 6px 10px; font-size: 0.85rem;
+            min-width: 130px;
+        }
+        .finder-row input[type=text] { min-width: 220px; }
+        .finder-row select:focus, .finder-row input:focus {
+            outline: none; border-color: #ffd100;
+        }
+        .finder-row .lvl-input { width: 70px; min-width: 0; text-align: center; }
+        .finder-row .quick-btn {
+            padding: 6px 12px; background: #2d2d2d; color: #ddd;
+            border: 1px solid #3a3a3a; border-radius: 4px;
+            cursor: pointer; font-size: 0.8rem;
+        }
+        .finder-row .quick-btn:hover { background: #3d3d3d; }
+        .finder-row .quick-btn.active {
+            background: #ffd100; color: #1a1a1a; border-color: #ffd100; font-weight: 600;
+        }
+        .finder-row .reset-btn {
+            margin-left: auto; padding: 6px 12px;
+            background: #4a1818; color: #ff9b9b; border: 1px solid #6a2828;
+            border-radius: 4px; cursor: pointer; font-size: 0.8rem;
+        }
+        .finder-row .reset-btn:hover { background: #6a2828; }
+
+        /* Result count + table */
+        .finder-count {
+            color: #888; font-size: 0.85rem; margin-bottom: 8px; padding: 0 4px;
+        }
+        .finder-count strong { color: #ffd100; }
+        .finder-table {
+            width: 100%; border-collapse: collapse; font-size: 0.85rem;
+        }
+        .finder-table thead th {
+            background: #2d2d2d; color: #999; font-weight: 600;
+            font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px;
+            padding: 8px 10px; text-align: left;
+            border-bottom: 1px solid #3a3a3a; position: sticky; top: 0;
+        }
+        .finder-table tbody td {
+            padding: 7px 10px; border-bottom: 1px solid #2a2a2a;
+            vertical-align: middle;
+        }
+        .finder-table tbody tr:hover { background: #2326; }
+        .finder-table .item-name { font-weight: 600; }
+        .finder-table .stats-cell {
+            color: #999; font-size: 0.78rem;
+        }
+        .finder-table .stats-cell .stat { margin-right: 7px; white-space: nowrap; }
+        .finder-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+        .finder-table .roles, .finder-table .classes { white-space: nowrap; }
+        .role-pill {
+            display: inline-block; padding: 1px 5px; border-radius: 3px;
+            font-size: 0.7rem; margin-right: 2px; font-weight: 600;
+        }
+        .class-pill {
+            display: inline-block; width: 16px; height: 16px;
+            line-height: 16px; text-align: center; border-radius: 2px;
+            font-size: 0.65rem; font-weight: 700; color: #1a1a1a;
+            margin-right: 1px;
+        }
+        .dungeon-link { color: #4ea8de; font-size: 0.8rem; }
+        .dungeon-link:hover { color: #88c5f0; text-decoration: underline; }
+        .boss-name { color: #aaa; font-size: 0.75rem; display: block; margin-top: 1px; }
+        .empty-finder {
+            text-align: center; padding: 3rem 1rem; color: #666; font-style: italic;
+        }
+        .quality-tag {
+            display: inline-block; padding: 1px 5px; border-radius: 3px;
+            font-size: 0.65rem; margin-left: 6px; font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .finder-row > .lbl { min-width: 60px; font-size: 0.78rem; }
+            .finder-row select, .finder-row input[type=text] {
+                font-size: 0.78rem; padding: 5px 8px; min-width: 100px;
+            }
+            .finder-table { font-size: 0.75rem; }
+            .finder-table thead th { font-size: 0.65rem; padding: 6px; }
+            .finder-table tbody td { padding: 5px 6px; }
+            /* Hide less critical columns on phone */
+            .finder-table .col-stats { display: none; }
+        }
+
     </style>
 </head>
 <body>
@@ -105,9 +220,16 @@
 
     <div class="hero">
         <h1>KCraft Loot Guide</h1>
-        <p>Per-dungeon loot tables generated directly from our server's database. Every drop chance, every stat — straight from the source. Filter by role and class to find what's actually worth running.</p>
+        <p>A loot guide for KCraft. Browse dungeons or use the loot finder to search across them all.</p>
         <div class="progress-pill">9 of 49 dungeons available · more added as we run them</div>
     </div>
+
+    <div class="tab-bar">
+        <button class="tab-btn active" data-view="dungeons">📚 Browse Dungeons</button>
+        <button class="tab-btn" data-view="finder">🔍 Find Loot</button>
+    </div>
+
+    <section id="view-dungeons" class="tab-view active">
 
     <div class="expansion-section">
         <div class="expansion-header" style="border-color: #ffd100;">
@@ -1018,12 +1140,556 @@
         </div>
     </div>
 
-    <div class="footer-note">
-        <p><strong>Two level numbers:</strong> <em>Mob levels</em> are the actual creature levels in the dungeon, pulled from our server's database. <em>Recommended</em> is the player level bracket where you'll get full XP and appropriate gear drops — usually a few levels wider than the mob range.</p>
-        <p><strong>About this guide:</strong> Loot data is pulled directly from our KCraft database (<code>creature_loot_template</code> + <code>item_template</code>). Drop chances are real values from the server install, not generic Wowhead estimates. Each dungeon page filters out trade goods, vendor trash, quest items, and bags — leaving only equippable gear.</p>
-        <p><strong>Filters:</strong> Each dungeon page includes role filtering (Tank/Healer/Melee/Ranged) and class filtering (all 10 WotLK classes). Combine them to find exactly what you're looking for — e.g. "Healer Druid gear" shows Resto-friendly leather and staff drops.</p>
-    </div>
+
+    </section>
+
+    <section id="view-finder" class="tab-view">
+
+        <div class="finder-bar">
+
+            <div class="finder-row">
+                <span class="lbl">Search:</span>
+                <input type="text" id="f-search" placeholder="Item or boss name…" autocomplete="off">
+                <span class="lbl" style="margin-left:12px">Slot:</span>
+                <select id="f-slot">
+                    <option value="">Any slot</option>
+                </select>
+                <button class="reset-btn" id="f-reset">Reset all</button>
+            </div>
+
+            <div class="finder-row">
+                <span class="lbl">Class:</span>
+                <select id="f-class">
+                    <option value="">Any class</option>
+                    <option value="warrior">Warrior</option>
+                    <option value="paladin">Paladin</option>
+                    <option value="hunter">Hunter</option>
+                    <option value="rogue">Rogue</option>
+                    <option value="priest">Priest</option>
+                    <option value="dk">Death Knight</option>
+                    <option value="shaman">Shaman</option>
+                    <option value="mage">Mage</option>
+                    <option value="warlock">Warlock</option>
+                    <option value="druid">Druid</option>
+                </select>
+                <span class="lbl" style="margin-left:12px">Role:</span>
+                <button class="quick-btn role-btn active" data-role="">Any</button>
+                <button class="quick-btn role-btn" data-role="tank">🛡 Tank</button>
+                <button class="quick-btn role-btn" data-role="heal">+ Heal</button>
+                <button class="quick-btn role-btn" data-role="melee">⚔ Melee</button>
+                <button class="quick-btn role-btn" data-role="ranged">🏹 Ranged</button>
+            </div>
+
+            <div class="finder-row">
+                <span class="lbl">Dungeon:</span>
+                <select id="f-dungeon">
+                    <option value="">Any dungeon</option>
+                </select>
+                <span class="lbl" style="margin-left:12px">Quality:</span>
+                <select id="f-quality">
+                    <option value="">Any</option>
+                    <option value="2">Uncommon+</option>
+                    <option value="3">Rare+</option>
+                    <option value="4">Epic only</option>
+                </select>
+                <span class="lbl" style="margin-left:12px">Req lvl:</span>
+                <input type="text" id="f-lvl-min" class="lvl-input" placeholder="min" inputmode="numeric">
+                <span class="lbl" style="min-width:auto">to</span>
+                <input type="text" id="f-lvl-max" class="lvl-input" placeholder="max" inputmode="numeric">
+            </div>
+
+        </div>
+
+        <div class="finder-count" id="f-count"></div>
+
+        <div style="overflow-x:auto">
+            <table class="finder-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Slot</th>
+                        <th class="col-stats">Stats</th>
+                        <th>Roles</th>
+                        <th>Classes</th>
+                        <th class="num">iLvl</th>
+                        <th class="num">Req</th>
+                        <th>Source</th>
+                        <th class="num">Drop</th>
+                    </tr>
+                </thead>
+                <tbody id="f-tbody"></tbody>
+            </table>
+        </div>
+        <div id="f-empty" class="empty-finder" style="display:none">
+            No items match your filters. Try clearing one.
+        </div>
+
+    </section>
+
 
 </div>
+
+<script id="loot-data" type="application/json">{"meta":{"totalItems":168,"totalBosses":64,"totalDungeons":9},"dungeons":[{"id":389,"name":"Ragefire Chasm","page":"ragefire-chasm.html","lvl":"13–18","faction":"Horde","count":8},{"id":43,"name":"Wailing Caverns","page":"wailing-caverns.html","lvl":"17–24","faction":"Both","count":23},{"id":33,"name":"Shadowfang Keep","page":"shadowfang-keep.html","lvl":"17–26","faction":"Both","count":19},{"id":36,"name":"The Deadmines","page":"the-deadmines.html","lvl":"17–26","faction":"Alliance","count":20},{"id":48,"name":"Blackfathom Deeps","page":"blackfathom-deeps.html","lvl":"20–28","faction":"Both","count":23},{"id":34,"name":"The Stockade","page":"the-stockade.html","lvl":"24–30","faction":"Alliance","count":5},{"id":90,"name":"Gnomeregan","page":"gnomeregan.html","lvl":"24–32","faction":"Both","count":15},{"id":47,"name":"Razorfen Kraul","page":"razorfen-kraul.html","lvl":"24–35","faction":"Both","count":21},{"id":189,"name":"Scarlet Monastery","page":"scarlet-monastery.html","lvl":"30–40","faction":"Both","count":34}],"items":[{"id":34227,"name":"Deadman's Hand","quality":4,"color":"#a335ee","ilvl":36,"req":29,"slot":"Finger","slotFilter":"Finger","stats":["+10 Stamina"],"roles":[],"classes":["warrior","paladin","hunter","rogue","priest","dk","shaman","mage","warlock","druid"],"chance":4.0,"chanceStr":"4%","bossId":6487,"bossName":"Arcanist Doan","bossLvl":35,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Library"},{"id":7726,"name":"Aegis of the Scarlet Commander","quality":3,"color":"#0070dd","ilvl":44,"req":39,"slot":"Shield","slotFilter":"Off-Hand","stats":["+1548 Armor","+7 Defense","+8 Stamina","+7 Strength"],"roles":["melee","tank"],"classes":["warrior","paladin","shaman"],"chance":40.0,"chanceStr":"40%","bossId":3976,"bossName":"Scarlet Commander Mograine","bossLvl":40,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Cathedral"},{"id":7724,"name":"Gauntlets of Divinity","quality":3,"color":"#0070dd","ilvl":44,"req":39,"slot":"Hands (Mail)","slotFilter":"Hands","stats":["+168 Armor","+7 Stamina"],"roles":[],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":0.0,"chanceStr":"—","bossId":3976,"bossName":"Scarlet Commander Mograine","bossLvl":40,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Cathedral"},{"id":7721,"name":"Hand of Righteousness","quality":3,"color":"#0070dd","ilvl":44,"req":39,"slot":"Mace (1H)","slotFilter":"Main Hand","stats":["+8 Spirit"],"roles":["melee"],"classes":["paladin","priest","shaman","druid"],"chance":20.0,"chanceStr":"20%","bossId":3977,"bossName":"High Inquisitor Whitemane","bossLvl":40,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Cathedral"},{"id":7723,"name":"Mograine's Might","quality":3,"color":"#0070dd","ilvl":44,"req":39,"slot":"Mace (2H)","slotFilter":"Two-Hand","stats":["+16 Hit","+17 Stamina"],"roles":["melee"],"classes":["warrior","paladin","dk","shaman","druid"],"chance":0.0,"chanceStr":"—","bossId":3976,"bossName":"Scarlet Commander Mograine","bossLvl":40,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Cathedral"},{"id":7722,"name":"Triune Amulet","quality":3,"color":"#0070dd","ilvl":44,"req":39,"slot":"Neck","slotFilter":"Neck","stats":["+7 Intellect","+7 Spirit","+7 Stamina"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":3977,"bossName":"High Inquisitor Whitemane","bossLvl":40,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Cathedral"},{"id":7720,"name":"Whitemane's Chapeau","quality":3,"color":"#0070dd","ilvl":44,"req":39,"slot":"Head (Cloth)","slotFilter":"Head","stats":["+52 Armor","+14 Spirit","+14 Intellect","+9 Stamina"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":3977,"bossName":"High Inquisitor Whitemane","bossLvl":40,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Cathedral"},{"id":10330,"name":"Scarlet Leggings","quality":3,"color":"#0070dd","ilvl":43,"req":38,"slot":"Legs (Mail)","slotFilter":"Legs","stats":["+233 Armor","+20 Strength","+10 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":0.0,"chanceStr":"—","bossId":3975,"bossName":"Herod","bossLvl":37,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Armory"},{"id":10330,"name":"Scarlet Leggings","quality":3,"color":"#0070dd","ilvl":43,"req":38,"slot":"Legs (Mail)","slotFilter":"Legs","stats":["+233 Armor","+20 Strength","+10 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":0.0,"chanceStr":"—","bossId":3976,"bossName":"Scarlet Commander Mograine","bossLvl":40,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Cathedral"},{"id":7718,"name":"Herod's Shoulder","quality":3,"color":"#0070dd","ilvl":42,"req":37,"slot":"Shoulder (Mail)","slotFilter":"Shoulder","stats":["+196 Armor","+6 Strength","+15 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":0.0,"chanceStr":"—","bossId":3975,"bossName":"Herod","bossLvl":37,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Armory"},{"id":7719,"name":"Raging Berserker's Helm","quality":3,"color":"#0070dd","ilvl":42,"req":37,"slot":"Head (Mail)","slotFilter":"Head","stats":["+213 Armor","+8 Stamina","+13 Strength"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":0.0,"chanceStr":"—","bossId":3975,"bossName":"Herod","bossLvl":37,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Armory"},{"id":7717,"name":"Ravager","quality":3,"color":"#0070dd","ilvl":42,"req":37,"slot":"Axe (2H)","slotFilter":"Two-Hand","stats":[],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":0.0,"chanceStr":"—","bossId":3975,"bossName":"Herod","bossLvl":37,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Armory"},{"id":19508,"name":"Branded Leather Bracers","quality":3,"color":"#0070dd","ilvl":41,"req":36,"slot":"Wrist (Leather)","slotFilter":"Wrist","stats":["+54 Armor","+6 Stamina","+20 Attack Power"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":0.0,"chanceStr":"—","bossId":4542,"bossName":"High Inquisitor Fairbanks","bossLvl":40,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Cathedral"},{"id":19509,"name":"Dusty Mail Boots","quality":3,"color":"#0070dd","ilvl":41,"req":36,"slot":"Feet (Mail)","slotFilter":"Feet","stats":["+237 Armor","+13 Stamina"],"roles":[],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":0.0,"chanceStr":"—","bossId":4542,"bossName":"High Inquisitor Fairbanks","bossLvl":40,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Cathedral"},{"id":19507,"name":"Inquisitor's Shawl","quality":3,"color":"#0070dd","ilvl":41,"req":36,"slot":"Shoulder (Cloth)","slotFilter":"Shoulder","stats":["+44 Armor","+11 Intellect","+13 Spell Power"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":4542,"bossName":"High Inquisitor Fairbanks","bossLvl":40,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Cathedral"},{"id":7714,"name":"Hypnotic Blade","quality":3,"color":"#0070dd","ilvl":39,"req":34,"slot":"Dagger","slotFilter":"Main Hand","stats":["+8 Intellect","+3 Spirit"],"roles":["melee"],"classes":["priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":6487,"bossName":"Arcanist Doan","bossLvl":35,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Library"},{"id":7713,"name":"Illusionary Rod","quality":3,"color":"#0070dd","ilvl":39,"req":34,"slot":"Staff","slotFilter":"Two-Hand","stats":["+15 Intellect","+7 Stamina","+10 Crit"],"roles":["melee"],"classes":["priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":6487,"bossName":"Arcanist Doan","bossLvl":35,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Library"},{"id":7712,"name":"Mantle of Doan","quality":3,"color":"#0070dd","ilvl":38,"req":33,"slot":"Shoulder (Cloth)","slotFilter":"Shoulder","stats":["+41 Armor","+9 Intellect","+7 Spirit","+9 Hit"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":6487,"bossName":"Arcanist Doan","bossLvl":35,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Library"},{"id":7685,"name":"Orb of the Forgotten Seer","quality":3,"color":"#0070dd","ilvl":38,"req":33,"slot":"Held","slotFilter":"Held","stats":[],"roles":[],"classes":["warrior","paladin","hunter","rogue","priest","dk","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":4543,"bossName":"Bloodmage Thalnos","bossLvl":32,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Graveyard"},{"id":7711,"name":"Robe of Doan","quality":3,"color":"#0070dd","ilvl":38,"req":33,"slot":"Chest (Cloth)","slotFilter":"Chest","stats":["+55 Armor","+4 Stamina","+13 Spirit"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":6487,"bossName":"Arcanist Doan","bossLvl":35,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Library"},{"id":9461,"name":"Charged Gear","quality":3,"color":"#0070dd","ilvl":37,"req":28,"slot":"Finger","slotFilter":"Finger","stats":[],"roles":[],"classes":["warrior","paladin","hunter","rogue","priest","dk","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":7800,"bossName":"Mekgineer Thermaplugg","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":9492,"name":"Electromagnetic Gigaflux Reactivator","quality":3,"color":"#0070dd","ilvl":37,"req":28,"slot":"Head (Cloth)","slotFilter":"Head","stats":["+44 Armor","+12 Spirit","+15 Intellect"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":20.0,"chanceStr":"20%","bossId":7800,"bossName":"Mekgineer Thermaplugg","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":9458,"name":"Thermaplugg's Central Core","quality":3,"color":"#0070dd","ilvl":37,"req":28,"slot":"Shield","slotFilter":"Off-Hand","stats":["+795 Armor","+3 Spirit"],"roles":["heal","ranged","tank"],"classes":["paladin","shaman"],"chance":0.0,"chanceStr":"—","bossId":7800,"bossName":"Mekgineer Thermaplugg","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":9459,"name":"Thermaplugg's Left Arm","quality":3,"color":"#0070dd","ilvl":37,"req":28,"slot":"Axe (2H)","slotFilter":"Two-Hand","stats":["+18 Strength","+7 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":20.0,"chanceStr":"20%","bossId":7800,"bossName":"Mekgineer Thermaplugg","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":6693,"name":"Agamaggan's Clutch","quality":3,"color":"#0070dd","ilvl":36,"req":27,"slot":"Finger","slotFilter":"Finger","stats":["+9 Spirit","+5 Stamina"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":4421,"bossName":"Charlga Razorflank","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":6694,"name":"Heart of Agamaggan","quality":3,"color":"#0070dd","ilvl":36,"req":27,"slot":"Shield","slotFilter":"Off-Hand","stats":["+776 Armor","+8 Spirit","+7 Stamina"],"roles":["heal","ranged","tank"],"classes":["paladin","shaman"],"chance":40.0,"chanceStr":"40%","bossId":4421,"bossName":"Charlga Razorflank","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":7710,"name":"Loksey's Training Stick","quality":3,"color":"#0070dd","ilvl":36,"req":31,"slot":"Staff","slotFilter":"Two-Hand","stats":[],"roles":["melee"],"classes":["warrior","hunter","priest","shaman","mage","warlock","druid"],"chance":10.0,"chanceStr":"10%","bossId":3974,"bossName":"Houndmaster Loksey","bossLvl":34,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Library"},{"id":6692,"name":"Pronged Reaver","quality":3,"color":"#0070dd","ilvl":36,"req":30,"slot":"Axe (1H)","slotFilter":"One-Hand","stats":["+5 Spirit","+6 Strength"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","shaman"],"chance":20.0,"chanceStr":"20%","bossId":4421,"bossName":"Charlga Razorflank","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":7709,"name":"Blighted Leggings","quality":3,"color":"#0070dd","ilvl":35,"req":30,"slot":"Legs (Cloth)","slotFilter":"Legs","stats":["+45 Armor","+7 Stamina"],"roles":[],"classes":["warrior","paladin","hunter","rogue","priest","dk","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":6490,"bossName":"Azshir the Sleepless","bossLvl":32,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Graveyard"},{"id":7684,"name":"Bloodmage Mantle","quality":3,"color":"#0070dd","ilvl":35,"req":30,"slot":"Shoulder (Cloth)","slotFilter":"Shoulder","stats":["+38 Armor","+8 Intellect","+4 Spirit","+10 Crit"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":4543,"bossName":"Bloodmage Thalnos","bossLvl":32,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Graveyard"},{"id":7690,"name":"Ebon Vise","quality":3,"color":"#0070dd","ilvl":35,"req":30,"slot":"Hands (Leather)","slotFilter":"Hands","stats":["+70 Armor","+4 Strength","+6 Agility","+8 Stamina"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":0.0,"chanceStr":"—","bossId":6488,"bossName":"Fallen Champion","bossLvl":32,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Graveyard"},{"id":7691,"name":"Embalmed Shroud","quality":3,"color":"#0070dd","ilvl":35,"req":30,"slot":"Head (Cloth)","slotFilter":"Head","stats":["+42 Armor","+11 Intellect","+7 Stamina"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":6488,"bossName":"Fallen Champion","bossLvl":32,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Graveyard"},{"id":7731,"name":"Ghostshard Talisman","quality":3,"color":"#0070dd","ilvl":35,"req":30,"slot":"Neck","slotFilter":"Neck","stats":["+9 Stamina"],"roles":[],"classes":["warrior","paladin","hunter","rogue","priest","dk","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":6490,"bossName":"Azshir the Sleepless","bossLvl":32,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Graveyard"},{"id":9456,"name":"Glass Shooter","quality":3,"color":"#0070dd","ilvl":35,"req":30,"slot":"Gun","slotFilter":"Ranged","stats":[],"roles":["ranged"],"classes":["warrior","hunter","rogue"],"chance":0.0,"chanceStr":"—","bossId":6228,"bossName":"Dark Iron Ambassador","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":7686,"name":"Ironspine's Eye","quality":3,"color":"#0070dd","ilvl":35,"req":30,"slot":"Finger","slotFilter":"Finger","stats":["+9 Agility","+4 Strength"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":0.0,"chanceStr":"—","bossId":6489,"bossName":"Ironspine","bossLvl":32,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Graveyard"},{"id":7687,"name":"Ironspine's Fist","quality":3,"color":"#0070dd","ilvl":35,"req":30,"slot":"Mace (1H)","slotFilter":"One-Hand","stats":["+7 Strength"],"roles":["melee"],"classes":["warrior","paladin","dk","shaman","druid"],"chance":0.0,"chanceStr":"—","bossId":6489,"bossName":"Ironspine","bossLvl":32,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Graveyard"},{"id":7688,"name":"Ironspine's Ribcage","quality":3,"color":"#0070dd","ilvl":35,"req":30,"slot":"Chest (Mail)","slotFilter":"Chest","stats":["+235 Armor","+17 Stamina","+6 Strength","+3 Agility"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":0.0,"chanceStr":"—","bossId":6489,"bossName":"Ironspine","bossLvl":32,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Graveyard"},{"id":7689,"name":"Morbid Dawn","quality":3,"color":"#0070dd","ilvl":35,"req":30,"slot":"Sword (2H)","slotFilter":"Two-Hand","stats":["+15 Stamina","+10 Strength"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk"],"chance":0.0,"chanceStr":"—","bossId":6488,"bossName":"Fallen Champion","bossLvl":32,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Graveyard"},{"id":7708,"name":"Necrotic Wand","quality":3,"color":"#0070dd","ilvl":35,"req":30,"slot":"Wand","slotFilter":"Ranged","stats":[],"roles":["ranged"],"classes":["priest","mage","warlock"],"chance":0.0,"chanceStr":"—","bossId":6490,"bossName":"Azshir the Sleepless","bossLvl":32,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Graveyard"},{"id":9457,"name":"Royal Diplomatic Scepter","quality":3,"color":"#0070dd","ilvl":35,"req":30,"slot":"Mace (1H)","slotFilter":"One-Hand","stats":["+7 Spirit","+2 Stamina"],"roles":["melee"],"classes":["paladin","priest","shaman","druid"],"chance":0.0,"chanceStr":"—","bossId":6228,"bossName":"Dark Iron Ambassador","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":6691,"name":"Swinetusk Shank","quality":3,"color":"#0070dd","ilvl":35,"req":30,"slot":"Dagger","slotFilter":"One-Hand","stats":["+6 Stamina","+4 Spirit"],"roles":["melee"],"classes":["priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":4422,"bossName":"Agathelos the Raging","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":7683,"name":"Bloody Brass Knuckles","quality":3,"color":"#0070dd","ilvl":34,"req":29,"slot":"Fist","slotFilter":"One-Hand","stats":["+8 Strength"],"roles":["melee"],"classes":["warrior","hunter","rogue","shaman","druid"],"chance":90.0,"chanceStr":"90%","bossId":3983,"bossName":"Interrogator Vishas","bossLvl":32,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Graveyard"},{"id":6687,"name":"Corpsemaker","quality":3,"color":"#0070dd","ilvl":34,"req":27,"slot":"Axe (2H)","slotFilter":"Two-Hand","stats":["+15 Strength","+8 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":40.0,"chanceStr":"40%","bossId":4420,"bossName":"Overlord Ramtusk","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":7756,"name":"Dog Training Gloves","quality":3,"color":"#0070dd","ilvl":34,"req":29,"slot":"Hands (Leather)","slotFilter":"Hands","stats":["+69 Armor","+8 Strength","+8 Agility"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":60.0,"chanceStr":"60%","bossId":3974,"bossName":"Houndmaster Loksey","bossLvl":34,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Library"},{"id":9447,"name":"Electrocutioner Lagnut","quality":3,"color":"#0070dd","ilvl":34,"req":28,"slot":"Finger","slotFilter":"Finger","stats":["+9 Spirit","+4 Stamina"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":6235,"bossName":"Electrocutioner 6000","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":9446,"name":"Electrocutioner Leg","quality":3,"color":"#0070dd","ilvl":34,"req":28,"slot":"Sword (1H)","slotFilter":"One-Hand","stats":[],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","mage","warlock"],"chance":0.0,"chanceStr":"—","bossId":6235,"bossName":"Electrocutioner 6000","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":6690,"name":"Ferine Leggings","quality":3,"color":"#0070dd","ilvl":34,"req":29,"slot":"Legs (Leather)","slotFilter":"Legs","stats":["+96 Armor","+12 Strength","+13 Agility"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":60.0,"chanceStr":"60%","bossId":4422,"bossName":"Agathelos the Raging","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":9449,"name":"Manual Crowd Pummeler","quality":3,"color":"#0070dd","ilvl":34,"req":28,"slot":"Mace (2H)","slotFilter":"Two-Hand","stats":["+16 Strength","+5 Agility"],"roles":["melee"],"classes":["warrior","paladin","dk","shaman","druid"],"chance":40.0,"chanceStr":"40%","bossId":6229,"bossName":"Crowd Pummeler 9-60","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":7682,"name":"Torturing Poker","quality":3,"color":"#0070dd","ilvl":34,"req":29,"slot":"Dagger","slotFilter":"One-Hand","stats":[],"roles":["melee"],"classes":["warrior","hunter","rogue","priest","shaman","mage","warlock","druid"],"chance":10.0,"chanceStr":"10%","bossId":3983,"bossName":"Interrogator Vishas","bossLvl":32,"mapId":189,"dungeon":"Scarlet Monastery","page":"scarlet-monastery.html","faction":"Both","wing":"Graveyard"},{"id":2816,"name":"Death Speaker Scepter","quality":3,"color":"#0070dd","ilvl":33,"req":27,"slot":"Mace (1H)","slotFilter":"Main Hand","stats":["+1 Spirit"],"roles":["melee"],"classes":["paladin","priest","shaman","druid"],"chance":20.0,"chanceStr":"20%","bossId":4428,"bossName":"Death Speaker Jargba","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":9455,"name":"Emissary Cuffs","quality":3,"color":"#0070dd","ilvl":33,"req":28,"slot":"Wrist (Leather)","slotFilter":"Wrist","stats":["+47 Armor"],"roles":[],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":0.0,"chanceStr":"—","bossId":6228,"bossName":"Dark Iron Ambassador","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":9450,"name":"Gnomebot Operating Boots","quality":3,"color":"#0070dd","ilvl":33,"req":28,"slot":"Feet (Leather)","slotFilter":"Feet","stats":["+74 Armor","+8 Stamina","+3 Intellect"],"roles":["ranged"],"classes":["paladin","shaman","druid"],"chance":60.0,"chanceStr":"60%","bossId":6229,"bossName":"Crowd Pummeler 9-60","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":9448,"name":"Spidertank Oilrag","quality":3,"color":"#0070dd","ilvl":33,"req":28,"slot":"Wrist (Cloth)","slotFilter":"Wrist","stats":["+22 Armor","+6 Stamina"],"roles":[],"classes":["warrior","paladin","hunter","rogue","priest","dk","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":6235,"bossName":"Electrocutioner 6000","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":6686,"name":"Tusken Helm","quality":3,"color":"#0070dd","ilvl":33,"req":27,"slot":"Head (Mail)","slotFilter":"Head","stats":["+185 Armor","+12 Strength","+12 Agility"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":60.0,"chanceStr":"60%","bossId":4420,"bossName":"Overlord Ramtusk","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":9454,"name":"Acidic Walkers","quality":3,"color":"#0070dd","ilvl":32,"req":27,"slot":"Feet (Cloth)","slotFilter":"Feet","stats":["+34 Armor","+8 Intellect","+4 Spirit"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":7079,"bossName":"Viscous Fallout","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":6697,"name":"Batwing Mantle","quality":3,"color":"#0070dd","ilvl":32,"req":27,"slot":"Shoulder (Cloth)","slotFilter":"Shoulder","stats":["+37 Armor","+5 Spirit","+10 Intellect"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":4425,"bossName":"Blind Hunter","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":9452,"name":"Hydrocane","quality":3,"color":"#0070dd","ilvl":32,"req":27,"slot":"Staff","slotFilter":"Two-Hand","stats":[],"roles":["melee"],"classes":["warrior","hunter","priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":7079,"bossName":"Viscous Fallout","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":6696,"name":"Nightstalker Bow","quality":3,"color":"#0070dd","ilvl":32,"req":27,"slot":"Bow","slotFilter":"Ranged","stats":["+3 Agility"],"roles":["ranged"],"classes":["warrior","hunter","rogue"],"chance":0.0,"chanceStr":"—","bossId":4425,"bossName":"Blind Hunter","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":6695,"name":"Stygian Bone Amulet","quality":3,"color":"#0070dd","ilvl":32,"req":27,"slot":"Neck","slotFilter":"Neck","stats":["+8 Spirit","+4 Stamina"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":4425,"bossName":"Blind Hunter","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":6681,"name":"Thornspike","quality":3,"color":"#0070dd","ilvl":32,"req":27,"slot":"Dagger","slotFilter":"One-Hand","stats":["+8 Agility"],"roles":["melee"],"classes":["warrior","hunter","rogue","shaman","druid"],"chance":100.0,"chanceStr":"Always","bossId":4424,"bossName":"Aggem Thorncurse","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":9453,"name":"Toxic Revenger","quality":3,"color":"#0070dd","ilvl":32,"req":27,"slot":"Dagger","slotFilter":"One-Hand","stats":[],"roles":["melee"],"classes":["warrior","hunter","rogue","priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":7079,"bossName":"Viscous Fallout","bossLvl":28,"mapId":90,"dungeon":"Gnomeregan","page":"gnomeregan.html","faction":"Both","wing":null},{"id":6688,"name":"Whisperwind Headdress","quality":3,"color":"#0070dd","ilvl":32,"req":27,"slot":"Head (Leather)","slotFilter":"Head","stats":["+86 Armor","+3 Stamina","+7 Intellect","+7 Spirit"],"roles":["heal","ranged"],"classes":["paladin","shaman","druid"],"chance":0.0,"chanceStr":"—","bossId":4842,"bossName":"Earthcaller Halmgar","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":6689,"name":"Wind Spirit Staff","quality":3,"color":"#0070dd","ilvl":32,"req":27,"slot":"Staff","slotFilter":"Two-Hand","stats":["+5 Intellect","+15 Spirit","+3 Stamina"],"roles":["melee"],"classes":["priest","shaman","mage","warlock","druid"],"chance":0.0,"chanceStr":"—","bossId":4842,"bossName":"Earthcaller Halmgar","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":1488,"name":"Avenger's Armor","quality":3,"color":"#0070dd","ilvl":31,"req":26,"slot":"Chest (Mail)","slotFilter":"Chest","stats":["+221 Armor","+15 Strength","+6 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":0.08,"chanceStr":"0.08%","bossId":6168,"bossName":"Roogug","bossLvl":26,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":6682,"name":"Death Speaker Robes","quality":3,"color":"#0070dd","ilvl":31,"req":26,"slot":"Chest (Cloth)","slotFilter":"Chest","stats":["+48 Armor","+3 Stamina","+8 Intellect","+6 Spirit","+12 Crit"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":4428,"bossName":"Death Speaker Jargba","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":6910,"name":"Leech Pants","quality":3,"color":"#0070dd","ilvl":31,"req":24,"slot":"Legs (Cloth)","slotFilter":"Legs","stats":["+42 Armor","+5 Intellect","+15 Spirit","+1 Stamina"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":4829,"bossName":"Aku'mai","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6911,"name":"Moss Cinch","quality":3,"color":"#0070dd","ilvl":31,"req":24,"slot":"Waist (Leather)","slotFilter":"Waist","stats":["+59 Armor","+11 Intellect","+5 Stamina"],"roles":["ranged"],"classes":["paladin","shaman","druid"],"chance":40.0,"chanceStr":"40%","bossId":4829,"bossName":"Aku'mai","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6909,"name":"Strike of the Hydra","quality":3,"color":"#0070dd","ilvl":31,"req":24,"slot":"Sword (2H)","slotFilter":"Two-Hand","stats":[],"roles":["melee"],"classes":["warrior","paladin","hunter","dk"],"chance":20.0,"chanceStr":"20%","bossId":4829,"bossName":"Aku'mai","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6685,"name":"Death Speaker Mantle","quality":3,"color":"#0070dd","ilvl":30,"req":25,"slot":"Shoulder (Cloth)","slotFilter":"Shoulder","stats":["+35 Armor","+7 Intellect","+3 Spirit"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":4428,"bossName":"Death Speaker Jargba","bossLvl":27,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":2264,"name":"Mantle of Thieves","quality":3,"color":"#0070dd","ilvl":30,"req":25,"slot":"Shoulder (Leather)","slotFilter":"Shoulder","stats":["+77 Armor","+10 Agility","+3 Hit","+4 Stamina"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":0.03,"chanceStr":"0.03%","bossId":6168,"bossName":"Roogug","bossLvl":26,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":4438,"name":"Pugilist Bracers","quality":3,"color":"#0070dd","ilvl":30,"req":25,"slot":"Wrist (Mail)","slotFilter":"Wrist","stats":["+95 Armor","+8 Strength","+3 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":0.16,"chanceStr":"0.16%","bossId":6168,"bossName":"Roogug","bossLvl":26,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":6392,"name":"Belt of Arugal","quality":3,"color":"#0070dd","ilvl":29,"req":20,"slot":"Waist (Cloth)","slotFilter":"Waist","stats":["+26 Armor","+10 Intellect","+3 Spirit"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":4275,"bossName":"Archmage Arugal","bossLvl":21,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":6901,"name":"Glowing Thresher Cape","quality":3,"color":"#0070dd","ilvl":29,"req":24,"slot":"Back","slotFilter":"Back","stats":["+23 Armor","+8 Spirit","+3 Intellect"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":4830,"bossName":"Old Serra'kis","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6220,"name":"Meteor Shard","quality":3,"color":"#0070dd","ilvl":29,"req":20,"slot":"Dagger","slotFilter":"One-Hand","stats":[],"roles":["melee"],"classes":["warrior","hunter","rogue","priest","shaman","mage","warlock","druid"],"chance":20.0,"chanceStr":"20%","bossId":4275,"bossName":"Archmage Arugal","bossLvl":21,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":6324,"name":"Robes of Arugal","quality":3,"color":"#0070dd","ilvl":29,"req":20,"slot":"Chest (Cloth)","slotFilter":"Chest","stats":["+46 Armor","+3 Spirit","+9 Intellect","+5 Stamina"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":4275,"bossName":"Archmage Arugal","bossLvl":21,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":1155,"name":"Rod of the Sleepwalker","quality":3,"color":"#0070dd","ilvl":29,"req":24,"slot":"Staff","slotFilter":"Two-Hand","stats":["+11 Intellect","+10 Spirit"],"roles":["melee"],"classes":["priest","shaman","mage","warlock","druid"],"chance":60.0,"chanceStr":"60%","bossId":4832,"bossName":"Twilight Lord Kelris","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":1976,"name":"Slaghammer","quality":3,"color":"#0070dd","ilvl":29,"req":24,"slot":"Mace (2H)","slotFilter":"Two-Hand","stats":["+10 Stamina","+11 Strength"],"roles":["melee"],"classes":["warrior","paladin","dk","shaman","druid"],"chance":0.08,"chanceStr":"0.08%","bossId":6168,"bossName":"Roogug","bossLvl":26,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":6906,"name":"Algae Fists","quality":3,"color":"#0070dd","ilvl":28,"req":23,"slot":"Hands (Mail)","slotFilter":"Hands","stats":["+132 Armor","+10 Strength","+4 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":50.0,"chanceStr":"50%","bossId":6243,"bossName":"Gelihast","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6904,"name":"Bite of Serra'kis","quality":3,"color":"#0070dd","ilvl":28,"req":23,"slot":"Dagger","slotFilter":"One-Hand","stats":[],"roles":["melee"],"classes":["warrior","hunter","rogue","priest","shaman","mage","warlock","druid"],"chance":30.0,"chanceStr":"30%","bossId":4830,"bossName":"Old Serra'kis","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6320,"name":"Commander's Crest","quality":3,"color":"#0070dd","ilvl":28,"req":20,"slot":"Shield","slotFilter":"Off-Hand","stats":["+623 Armor","+3 Dodge","+3 Stamina","+6 Strength"],"roles":["melee","tank"],"classes":["warrior","paladin","shaman"],"chance":0.0,"chanceStr":"—","bossId":4278,"bossName":"Commander Springvale","bossLvl":20,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":6903,"name":"Gaze Dreamer Pants","quality":3,"color":"#0070dd","ilvl":28,"req":23,"slot":"Legs (Cloth)","slotFilter":"Legs","stats":["+40 Armor","+7 Intellect","+6 Spirit"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":4832,"bossName":"Twilight Lord Kelris","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6627,"name":"Mutant Scale Breastplate","quality":3,"color":"#0070dd","ilvl":28,"req":20,"slot":"Chest (Mail)","slotFilter":"Chest","stats":["+211 Armor","+13 Strength","+5 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":33.33,"chanceStr":"33.3%","bossId":3654,"bossName":"Mutanus the Devourer","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":1727,"name":"Sword of Decay","quality":3,"color":"#0070dd","ilvl":28,"req":23,"slot":"Sword (1H)","slotFilter":"One-Hand","stats":[],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","mage","warlock"],"chance":0.16,"chanceStr":"0.16%","bossId":6168,"bossName":"Roogug","bossLvl":26,"mapId":47,"dungeon":"Razorfen Kraul","page":"razorfen-kraul.html","faction":"Both","wing":null},{"id":1454,"name":"Axe of the Enforcer","quality":3,"color":"#0070dd","ilvl":27,"req":22,"slot":"Axe (1H)","slotFilter":"One-Hand","stats":["+4 Strength","+3 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","shaman"],"chance":0.1,"chanceStr":"0.10%","bossId":12902,"bossName":"Lorgus Jett","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6902,"name":"Bands of Serra'kis","quality":3,"color":"#0070dd","ilvl":27,"req":22,"slot":"Wrist (Leather)","slotFilter":"Wrist","stats":["+43 Armor","+4 Strength","+2 Stamina","+6 Agility"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":30.0,"chanceStr":"30%","bossId":4830,"bossName":"Old Serra'kis","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":3414,"name":"Crested Scepter","quality":3,"color":"#0070dd","ilvl":27,"req":22,"slot":"Mace (1H)","slotFilter":"One-Hand","stats":["+5 Stamina","+2 Intellect"],"roles":["melee"],"classes":["paladin","priest","shaman","druid"],"chance":0.1,"chanceStr":"0.10%","bossId":12902,"bossName":"Lorgus Jett","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":2280,"name":"Kam's Walking Stick","quality":3,"color":"#0070dd","ilvl":27,"req":22,"slot":"Staff","slotFilter":"Two-Hand","stats":["+10 Intellect"],"roles":["melee"],"classes":["priest","shaman","mage","warlock","druid"],"chance":1.0,"chanceStr":"1%","bossId":1666,"bossName":"Kam Deepfury","bossLvl":25,"mapId":34,"dungeon":"The Stockade","page":"the-stockade.html","faction":"Alliance","wing":null},{"id":888,"name":"Naga Battle Gloves","quality":3,"color":"#0070dd","ilvl":27,"req":22,"slot":"Hands (Leather)","slotFilter":"Hands","stats":["+61 Armor","+7 Agility","+4 Stamina","+4 Strength"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":40.0,"chanceStr":"40%","bossId":4831,"bossName":"Lady Sarevess","bossLvl":23,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6905,"name":"Reef Axe","quality":3,"color":"#0070dd","ilvl":27,"req":22,"slot":"Axe (2H)","slotFilter":"Two-Hand","stats":["+10 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":50.0,"chanceStr":"50%","bossId":6243,"bossName":"Gelihast","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6461,"name":"Slime-encrusted Pads","quality":3,"color":"#0070dd","ilvl":27,"req":20,"slot":"Shoulder (Cloth)","slotFilter":"Shoulder","stats":["+34 Armor"],"roles":[],"classes":["warrior","paladin","hunter","rogue","priest","dk","shaman","mage","warlock","druid"],"chance":33.33,"chanceStr":"33.3%","bossId":3654,"bossName":"Mutanus the Devourer","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":6314,"name":"Wolfmaster Cape","quality":3,"color":"#0070dd","ilvl":27,"req":20,"slot":"Back","slotFilter":"Back","stats":["+22 Armor","+6 Dodge","+5 Agility"],"roles":["melee","tank"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":40.0,"chanceStr":"40%","bossId":3927,"bossName":"Wolf Master Nandos","bossLvl":21,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":3191,"name":"Arced War Axe","quality":3,"color":"#0070dd","ilvl":26,"req":20,"slot":"Axe (2H)","slotFilter":"Two-Hand","stats":["+10 Strength","+9 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":0.0,"chanceStr":"—","bossId":4278,"bossName":"Commander Springvale","bossLvl":20,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":3230,"name":"Black Wolf Bracers","quality":3,"color":"#0070dd","ilvl":26,"req":20,"slot":"Wrist (Leather)","slotFilter":"Wrist","stats":["+42 Armor","+8 Stamina"],"roles":[],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":30.0,"chanceStr":"30%","bossId":4274,"bossName":"Fenrus the Devourer","bossLvl":21,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":11121,"name":"Darkwater Talwar","quality":3,"color":"#0070dd","ilvl":26,"req":21,"slot":"Sword (1H)","slotFilter":"One-Hand","stats":["+4 Strength"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk"],"chance":40.0,"chanceStr":"40%","bossId":4831,"bossName":"Lady Sarevess","bossLvl":23,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6463,"name":"Deep Fathom Ring","quality":3,"color":"#0070dd","ilvl":26,"req":20,"slot":"Finger","slotFilter":"Finger","stats":["+6 Spirit","+3 Stamina","+3 Intellect"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":33.33,"chanceStr":"33.3%","bossId":3654,"bossName":"Mutanus the Devourer","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":3748,"name":"Feline Mantle","quality":3,"color":"#0070dd","ilvl":26,"req":21,"slot":"Shoulder (Cloth)","slotFilter":"Shoulder","stats":["+33 Armor","+9 Intellect","+5 Spirit"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":60.0,"chanceStr":"60%","bossId":3927,"bossName":"Wolf Master Nandos","bossLvl":21,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":6340,"name":"Fenrus' Hide","quality":3,"color":"#0070dd","ilvl":26,"req":20,"slot":"Back","slotFilter":"Back","stats":["+22 Armor","+6 Agility","+5 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":70.0,"chanceStr":"70%","bossId":4274,"bossName":"Fenrus the Devourer","bossLvl":21,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":6319,"name":"Girdle of the Blindwatcher","quality":3,"color":"#0070dd","ilvl":26,"req":19,"slot":"Waist (Leather)","slotFilter":"Waist","stats":["+54 Armor","+7 Stamina","+8 Intellect"],"roles":["ranged"],"classes":["paladin","shaman","druid"],"chance":60.0,"chanceStr":"60%","bossId":4279,"bossName":"Odo the Blindwatcher","bossLvl":21,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":6641,"name":"Haunting Blade","quality":3,"color":"#0070dd","ilvl":26,"req":20,"slot":"Sword (2H)","slotFilter":"Two-Hand","stats":[],"roles":["melee"],"classes":["warrior","paladin","hunter","dk"],"chance":60.0,"chanceStr":"60%","bossId":3872,"bossName":"Deathsworn Captain","bossLvl":21,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":2942,"name":"Iron Knuckles","quality":3,"color":"#0070dd","ilvl":26,"req":21,"slot":"Fist","slotFilter":"One-Hand","stats":[],"roles":["melee"],"classes":["warrior","hunter","rogue","shaman","druid"],"chance":20.0,"chanceStr":"20%","bossId":1720,"bossName":"Bruegal Ironknuckle","bossLvl":25,"mapId":34,"dungeon":"The Stockade","page":"the-stockade.html","faction":"Alliance","wing":null},{"id":3228,"name":"Jimmied Handcuffs","quality":3,"color":"#0070dd","ilvl":26,"req":21,"slot":"Wrist (Mail)","slotFilter":"Wrist","stats":["+89 Armor","+3 Strength","+7 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":60.0,"chanceStr":"60%","bossId":1720,"bossName":"Bruegal Ironknuckle","bossLvl":25,"mapId":34,"dungeon":"The Stockade","page":"the-stockade.html","faction":"Alliance","wing":null},{"id":3416,"name":"Martyr's Chain","quality":3,"color":"#0070dd","ilvl":26,"req":21,"slot":"Chest (Mail)","slotFilter":"Chest","stats":["+204 Armor","+5 Parry","+8 Stamina","+8 Strength"],"roles":["melee","tank"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":0.24,"chanceStr":"0.24%","bossId":12902,"bossName":"Lorgus Jett","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":3078,"name":"Naga Heartpiercer","quality":3,"color":"#0070dd","ilvl":26,"req":21,"slot":"Bow","slotFilter":"Ranged","stats":["+5 Agility"],"roles":["ranged"],"classes":["warrior","hunter","rogue"],"chance":20.0,"chanceStr":"20%","bossId":4831,"bossName":"Lady Sarevess","bossLvl":23,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6318,"name":"Odo's Ley Staff","quality":3,"color":"#0070dd","ilvl":26,"req":21,"slot":"Staff","slotFilter":"Two-Hand","stats":["+12 Spirit","+5 Stamina"],"roles":["melee"],"classes":["priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":4279,"bossName":"Odo the Blindwatcher","bossLvl":21,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":3417,"name":"Onyx Claymore","quality":3,"color":"#0070dd","ilvl":26,"req":21,"slot":"Sword (2H)","slotFilter":"Two-Hand","stats":["+6 Spirit","+5 Stamina","+9 Strength"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk"],"chance":0.04,"chanceStr":"0.04%","bossId":12902,"bossName":"Lorgus Jett","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":2941,"name":"Prison Shank","quality":3,"color":"#0070dd","ilvl":26,"req":21,"slot":"Dagger","slotFilter":"One-Hand","stats":["+5 Agility","+2 Stamina"],"roles":["melee"],"classes":["warrior","hunter","rogue","shaman","druid"],"chance":20.0,"chanceStr":"20%","bossId":1720,"bossName":"Bruegal Ironknuckle","bossLvl":25,"mapId":34,"dungeon":"The Stockade","page":"the-stockade.html","faction":"Alliance","wing":null},{"id":6321,"name":"Silverlaine's Family Seal","quality":3,"color":"#0070dd","ilvl":26,"req":21,"slot":"Finger","slotFilter":"Finger","stats":["+7 Strength","+3 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":30.0,"chanceStr":"30%","bossId":3887,"bossName":"Baron Silverlaine","bossLvl":20,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":6323,"name":"Baron's Scepter","quality":3,"color":"#0070dd","ilvl":25,"req":20,"slot":"Mace (1H)","slotFilter":"One-Hand","stats":["+8 Strength"],"roles":["melee"],"classes":["warrior","paladin","dk","shaman","druid"],"chance":70.0,"chanceStr":"70%","bossId":3887,"bossName":"Baron Silverlaine","bossLvl":20,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":1292,"name":"Butcher's Cleaver","quality":3,"color":"#0070dd","ilvl":25,"req":20,"slot":"Axe (1H)","slotFilter":"One-Hand","stats":["+5 Strength","+2 Agility"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","shaman"],"chance":10.0,"chanceStr":"10%","bossId":3886,"bossName":"Razorclaw the Butcher","bossLvl":20,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":5193,"name":"Cape of the Brotherhood","quality":3,"color":"#0070dd","ilvl":25,"req":20,"slot":"Back","slotFilter":"Back","stats":["+21 Armor","+6 Agility","+3 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":30.0,"chanceStr":"30%","bossId":639,"bossName":"Edwin VanCleef","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":3413,"name":"Doomspike","quality":3,"color":"#0070dd","ilvl":25,"req":20,"slot":"Dagger","slotFilter":"One-Hand","stats":["+3 Strength","+3 Stamina"],"roles":["melee"],"classes":["warrior","hunter","rogue","shaman","druid"],"chance":0.04,"chanceStr":"0.04%","bossId":12902,"bossName":"Lorgus Jett","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6908,"name":"Ghamoo-ra's Bind","quality":3,"color":"#0070dd","ilvl":25,"req":20,"slot":"Waist (Cloth)","slotFilter":"Waist","stats":["+24 Armor","+4 Stamina","+4 Intellect"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":60.0,"chanceStr":"60%","bossId":4887,"bossName":"Ghamoo-ra","bossLvl":23,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6631,"name":"Living Root","quality":3,"color":"#0070dd","ilvl":25,"req":20,"slot":"Staff","slotFilter":"Two-Hand","stats":["+12 Spirit","+2 Stamina"],"roles":["melee"],"classes":["priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":5775,"bossName":"Verdan the Everliving","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":6642,"name":"Phantom Armor","quality":3,"color":"#0070dd","ilvl":25,"req":20,"slot":"Chest (Mail)","slotFilter":"Chest","stats":["+201 Armor","+5 Crit","+11 Stamina","+3 Strength"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":40.0,"chanceStr":"40%","bossId":3872,"bossName":"Deathsworn Captain","bossLvl":21,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":6630,"name":"Seedcloud Buckler","quality":3,"color":"#0070dd","ilvl":25,"req":20,"slot":"Shield","slotFilter":"Off-Hand","stats":["+566 Armor","+3 Spirit","+6 Intellect"],"roles":["heal","ranged","tank"],"classes":["paladin","shaman"],"chance":40.0,"chanceStr":"40%","bossId":5775,"bossName":"Verdan the Everliving","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":6907,"name":"Tortoise Armor","quality":3,"color":"#0070dd","ilvl":25,"req":20,"slot":"Chest (Mail)","slotFilter":"Chest","stats":["+311 Armor","+6 Stamina"],"roles":[],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":40.0,"chanceStr":"40%","bossId":4887,"bossName":"Ghamoo-ra","bossLvl":23,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":10399,"name":"Blackened Defias Armor","quality":3,"color":"#0070dd","ilvl":24,"req":19,"slot":"Chest (Leather)","slotFilter":"Chest","stats":["+92 Armor","+11 Stamina","+3 Agility","+4 Strength"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":20.0,"chanceStr":"20%","bossId":639,"bossName":"Edwin VanCleef","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":6460,"name":"Cobrahn's Grasp","quality":3,"color":"#0070dd","ilvl":24,"req":19,"slot":"Waist (Mail)","slotFilter":"Waist","stats":["+111 Armor","+8 Strength","+3 Agility"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":20.0,"chanceStr":"20%","bossId":3669,"bossName":"Lord Cobrahn","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":5202,"name":"Corsair's Overshirt","quality":3,"color":"#0070dd","ilvl":24,"req":19,"slot":"Chest (Cloth)","slotFilter":"Chest","stats":["+42 Armor","+11 Spirit","+5 Stamina"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":30.0,"chanceStr":"30%","bossId":639,"bossName":"Edwin VanCleef","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":5191,"name":"Cruel Barb","quality":3,"color":"#0070dd","ilvl":24,"req":19,"slot":"Sword (1H)","slotFilter":"One-Hand","stats":[],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","mage","warlock"],"chance":20.0,"chanceStr":"20%","bossId":639,"bossName":"Edwin VanCleef","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":3415,"name":"Staff of the Friar","quality":3,"color":"#0070dd","ilvl":24,"req":19,"slot":"Staff","slotFilter":"Two-Hand","stats":["+11 Spirit","+4 Stamina","+3 Intellect"],"roles":["melee"],"classes":["priest","shaman","mage","warlock","druid"],"chance":0.04,"chanceStr":"0.04%","bossId":12902,"bossName":"Lorgus Jett","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6472,"name":"Stinging Viper","quality":3,"color":"#0070dd","ilvl":24,"req":19,"slot":"Mace (1H)","slotFilter":"One-Hand","stats":[],"roles":["melee"],"classes":["warrior","paladin","priest","dk","shaman","druid"],"chance":40.0,"chanceStr":"40%","bossId":3670,"bossName":"Lord Pythas","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":1486,"name":"Tree Bark Jacket","quality":3,"color":"#0070dd","ilvl":24,"req":19,"slot":"Chest (Cloth)","slotFilter":"Chest","stats":["+42 Armor","+6 Stamina","+10 Intellect"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":0.02,"chanceStr":"0.02%","bossId":12902,"bossName":"Lorgus Jett","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":6469,"name":"Venomstrike","quality":3,"color":"#0070dd","ilvl":24,"req":19,"slot":"Bow","slotFilter":"Ranged","stats":[],"roles":["ranged"],"classes":["warrior","hunter","rogue"],"chance":25.0,"chanceStr":"25%","bossId":3673,"bossName":"Lord Serpentis","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":6473,"name":"Armor of the Fang","quality":3,"color":"#0070dd","ilvl":23,"req":18,"slot":"Chest (Leather)","slotFilter":"Chest","stats":["+91 Armor","+8 Strength","+8 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":60.0,"chanceStr":"60%","bossId":3670,"bossName":"Lord Pythas","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":6226,"name":"Bloody Apron","quality":3,"color":"#0070dd","ilvl":23,"req":18,"slot":"Chest (Cloth)","slotFilter":"Chest","stats":["+41 Armor","+12 Stamina"],"roles":[],"classes":["warrior","paladin","hunter","rogue","priest","dk","shaman","mage","warlock","druid"],"chance":45.0,"chanceStr":"45%","bossId":3886,"bossName":"Razorclaw the Butcher","bossLvl":20,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":6633,"name":"Butcher's Slicer","quality":3,"color":"#0070dd","ilvl":23,"req":18,"slot":"Sword (1H)","slotFilter":"One-Hand","stats":["+4 Strength","+3 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk"],"chance":45.0,"chanceStr":"45%","bossId":3886,"bossName":"Razorclaw the Butcher","bossLvl":20,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":5201,"name":"Emberstone Staff","quality":3,"color":"#0070dd","ilvl":23,"req":18,"slot":"Staff","slotFilter":"Two-Hand","stats":["+5 Spirit","+5 Stamina","+8 Intellect"],"roles":["melee"],"classes":["priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":647,"bossName":"Captain Greenskin","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":10411,"name":"Footpads of the Fang","quality":3,"color":"#0070dd","ilvl":23,"req":18,"slot":"Feet (Leather)","slotFilter":"Feet","stats":["+62 Armor","+6 Stamina","+6 Agility"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":25.0,"chanceStr":"25%","bossId":3673,"bossName":"Lord Serpentis","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":10410,"name":"Leggings of the Fang","quality":3,"color":"#0070dd","ilvl":23,"req":18,"slot":"Legs (Leather)","slotFilter":"Legs","stats":["+79 Armor","+5 Strength","+4 Stamina","+9 Agility"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":20.0,"chanceStr":"20%","bossId":3669,"bossName":"Lord Cobrahn","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":6459,"name":"Savage Trodders","quality":3,"color":"#0070dd","ilvl":23,"req":18,"slot":"Feet (Mail)","slotFilter":"Feet","stats":["+134 Armor","+9 Stamina"],"roles":[],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":25.0,"chanceStr":"25%","bossId":3673,"bossName":"Lord Serpentis","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":5970,"name":"Serpent Gloves","quality":3,"color":"#0070dd","ilvl":23,"req":18,"slot":"Hands (Cloth)","slotFilter":"Hands","stats":["+25 Armor","+6 Intellect"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":25.0,"chanceStr":"25%","bossId":3673,"bossName":"Lord Serpentis","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":5404,"name":"Serpent's Shoulders","quality":3,"color":"#0070dd","ilvl":23,"req":18,"slot":"Shoulder (Leather)","slotFilter":"Shoulder","stats":["+68 Armor","+9 Agility"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":80.0,"chanceStr":"80%","bossId":3671,"bossName":"Lady Anacondra","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":7230,"name":"Smite's Mighty Hammer","quality":3,"color":"#0070dd","ilvl":23,"req":18,"slot":"Mace (2H)","slotFilter":"Two-Hand","stats":["+11 Strength","+4 Agility"],"roles":["melee"],"classes":["warrior","paladin","dk","shaman","druid"],"chance":20.0,"chanceStr":"20%","bossId":646,"bossName":"Mr. Smite","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":6629,"name":"Sporid Cape","quality":3,"color":"#0070dd","ilvl":23,"req":18,"slot":"Back","slotFilter":"Back","stats":["+20 Armor","+5 Stamina","+4 Spirit"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":20.0,"chanceStr":"20%","bossId":5775,"bossName":"Verdan the Everliving","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":2271,"name":"Staff of the Blessed Seer","quality":3,"color":"#0070dd","ilvl":23,"req":18,"slot":"Staff","slotFilter":"Two-Hand","stats":["+3 Spirit","+2 Stamina"],"roles":["melee"],"classes":["priest","shaman","mage","warlock","druid"],"chance":0.1,"chanceStr":"0.10%","bossId":12902,"bossName":"Lorgus Jett","bossLvl":24,"mapId":48,"dungeon":"Blackfathom Deeps","page":"blackfathom-deeps.html","faction":"Both","wing":null},{"id":10403,"name":"Blackened Defias Belt","quality":3,"color":"#0070dd","ilvl":22,"req":17,"slot":"Waist (Leather)","slotFilter":"Waist","stats":["+50 Armor"],"roles":[],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":30.0,"chanceStr":"30%","bossId":647,"bossName":"Captain Greenskin","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":5198,"name":"Cookie's Stirring Rod","quality":3,"color":"#0070dd","ilvl":22,"req":17,"slot":"Wand","slotFilter":"Ranged","stats":[],"roles":["ranged"],"classes":["priest","mage","warlock"],"chance":35.0,"chanceStr":"35%","bossId":645,"bossName":"Cookie","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":6449,"name":"Glowing Lizardscale Cloak","quality":3,"color":"#0070dd","ilvl":22,"req":17,"slot":"Back","slotFilter":"Back","stats":["+20 Armor","+6 Agility","+2 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":50.0,"chanceStr":"50%","bossId":3674,"bossName":"Skum","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":5200,"name":"Impaling Harpoon","quality":3,"color":"#0070dd","ilvl":22,"req":20,"slot":"Polearm","slotFilter":"Two-Hand","stats":["+12 Agility"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","druid"],"chance":30.0,"chanceStr":"30%","bossId":647,"bossName":"Captain Greenskin","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":1156,"name":"Lavishly Jeweled Ring","quality":3,"color":"#0070dd","ilvl":22,"req":17,"slot":"Finger","slotFilter":"Finger","stats":["+6 Intellect","+2 Hit"],"roles":["ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":45.0,"chanceStr":"45%","bossId":1763,"bossName":"Gilnid","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":6465,"name":"Robe of the Moccasin","quality":3,"color":"#0070dd","ilvl":22,"req":17,"slot":"Chest (Cloth)","slotFilter":"Chest","stats":["+40 Armor","+6 Spirit","+6 Stamina"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":60.0,"chanceStr":"60%","bossId":3669,"bossName":"Lord Cobrahn","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":5196,"name":"Smite's Reaver","quality":3,"color":"#0070dd","ilvl":22,"req":17,"slot":"Axe (1H)","slotFilter":"One-Hand","stats":["+2 Strength","+2 Hit","+3 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","shaman"],"chance":40.0,"chanceStr":"40%","bossId":646,"bossName":"Mr. Smite","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":6448,"name":"Tail Spike","quality":3,"color":"#0070dd","ilvl":22,"req":17,"slot":"Dagger","slotFilter":"One-Hand","stats":["+3 Agility","+4 Strength"],"roles":["melee"],"classes":["warrior","hunter","rogue","shaman","druid"],"chance":50.0,"chanceStr":"50%","bossId":3674,"bossName":"Skum","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":5192,"name":"Thief's Blade","quality":3,"color":"#0070dd","ilvl":22,"req":17,"slot":"Sword (1H)","slotFilter":"One-Hand","stats":["+7 Agility"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk"],"chance":40.0,"chanceStr":"40%","bossId":646,"bossName":"Mr. Smite","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":10412,"name":"Belt of the Fang","quality":3,"color":"#0070dd","ilvl":21,"req":16,"slot":"Waist (Leather)","slotFilter":"Waist","stats":["+49 Armor","+6 Stamina","+5 Agility"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":10.0,"chanceStr":"10%","bossId":3671,"bossName":"Lady Anacondra","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":1937,"name":"Buzz Saw","quality":3,"color":"#0070dd","ilvl":21,"req":16,"slot":"Sword (1H)","slotFilter":"One-Hand","stats":["+4 Agility","+3 Strength"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk"],"chance":10.0,"chanceStr":"10%","bossId":642,"bossName":"Sneed's Shredder","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":2169,"name":"Buzzer Blade","quality":3,"color":"#0070dd","ilvl":21,"req":16,"slot":"Dagger","slotFilter":"One-Hand","stats":["+5 Crit"],"roles":["melee"],"classes":["warrior","hunter","rogue","priest","shaman","mage","warlock","druid"],"chance":90.0,"chanceStr":"90%","bossId":642,"bossName":"Sneed's Shredder","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":5197,"name":"Cookie's Tenderizer","quality":3,"color":"#0070dd","ilvl":21,"req":16,"slot":"Mace (1H)","slotFilter":"One-Hand","stats":["+6 Strength"],"roles":["melee"],"classes":["warrior","paladin","dk","shaman","druid"],"chance":65.0,"chanceStr":"65%","bossId":645,"bossName":"Cookie","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":872,"name":"Rockslicer","quality":3,"color":"#0070dd","ilvl":21,"req":16,"slot":"Axe (2H)","slotFilter":"Two-Hand","stats":["+11 Strength"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":5.0,"chanceStr":"5%","bossId":644,"bossName":"Rhahk'Zor","bossLvl":19,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":5199,"name":"Smelting Pants","quality":3,"color":"#0070dd","ilvl":21,"req":16,"slot":"Legs (Leather)","slotFilter":"Legs","stats":["+76 Armor","+8 Stamina","+7 Crit"],"roles":[],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":55.0,"chanceStr":"55%","bossId":1763,"bossName":"Gilnid","bossLvl":20,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":6632,"name":"Feyscale Cloak","quality":3,"color":"#0070dd","ilvl":20,"req":15,"slot":"Back","slotFilter":"Back","stats":["+19 Armor","+4 Stamina"],"roles":[],"classes":["warrior","paladin","hunter","rogue","priest","dk","shaman","mage","warlock","druid"],"chance":50.0,"chanceStr":"50%","bossId":5912,"bossName":"Deviate Faerie Dragon","bossLvl":19,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":5243,"name":"Firebelcher","quality":3,"color":"#0070dd","ilvl":20,"req":15,"slot":"Wand","slotFilter":"Ranged","stats":[],"roles":["ranged"],"classes":["priest","mage","warlock"],"chance":50.0,"chanceStr":"50%","bossId":5912,"bossName":"Deviate Faerie Dragon","bossLvl":19,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":5443,"name":"Gold-plated Buckler","quality":3,"color":"#0070dd","ilvl":20,"req":15,"slot":"Shield","slotFilter":"Off-Hand","stats":["+471 Armor","+5 Stamina","+2 Agility"],"roles":["melee","tank"],"classes":["warrior","paladin","shaman"],"chance":35.0,"chanceStr":"35%","bossId":3586,"bossName":"Miner Johnson","bossLvl":19,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":13245,"name":"Kresh's Back","quality":3,"color":"#0070dd","ilvl":20,"req":15,"slot":"Shield","slotFilter":"Off-Hand","stats":["+471 Armor"],"roles":["tank"],"classes":["warrior","paladin","shaman"],"chance":10.0,"chanceStr":"10%","bossId":3653,"bossName":"Kresh","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":5187,"name":"Rhahk'Zor's Hammer","quality":3,"color":"#0070dd","ilvl":20,"req":15,"slot":"Mace (2H)","slotFilter":"Two-Hand","stats":["+11 Stamina"],"roles":["melee"],"classes":["warrior","paladin","dk","shaman","druid"],"chance":95.0,"chanceStr":"Always","bossId":644,"bossName":"Rhahk'Zor","bossLvl":19,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":5254,"name":"Rugged Spaulders","quality":3,"color":"#0070dd","ilvl":20,"req":15,"slot":"Shoulder (Leather)","slotFilter":"Shoulder","stats":["+64 Armor","+8 Agility"],"roles":["melee","ranged"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":100.0,"chanceStr":"Always","bossId":3914,"bossName":"Rethilgore","bossLvl":20,"mapId":33,"dungeon":"Shadowfang Keep","page":"shadowfang-keep.html","faction":"Both","wing":null},{"id":6447,"name":"Worn Turtle Shell Shield","quality":3,"color":"#0070dd","ilvl":20,"req":15,"slot":"Shield","slotFilter":"Off-Hand","stats":["+513 Armor"],"roles":["tank"],"classes":["warrior","paladin","shaman"],"chance":90.0,"chanceStr":"90%","bossId":3653,"bossName":"Kresh","bossLvl":20,"mapId":43,"dungeon":"Wailing Caverns","page":"wailing-caverns.html","faction":"Both","wing":null},{"id":5444,"name":"Miner's Cape","quality":3,"color":"#0070dd","ilvl":19,"req":14,"slot":"Back","slotFilter":"Back","stats":["+18 Armor","+6 Stamina"],"roles":[],"classes":["warrior","paladin","hunter","rogue","priest","dk","shaman","mage","warlock","druid"],"chance":65.0,"chanceStr":"65%","bossId":3586,"bossName":"Miner Johnson","bossLvl":19,"mapId":36,"dungeon":"The Deadmines","page":"the-deadmines.html","faction":"Alliance","wing":null},{"id":14147,"name":"Cavedweller Bracers","quality":3,"color":"#0070dd","ilvl":18,"req":13,"slot":"Wrist (Mail)","slotFilter":"Wrist","stats":["+78 Armor","+3 Strength","+4 Stamina"],"roles":["melee"],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":40.0,"chanceStr":"40%","bossId":11518,"bossName":"Jergosh the Invoker","bossLvl":16,"mapId":389,"dungeon":"Ragefire Chasm","page":"ragefire-chasm.html","faction":"Horde","wing":null},{"id":14151,"name":"Chanting Blade","quality":3,"color":"#0070dd","ilvl":18,"req":13,"slot":"Dagger","slotFilter":"One-Hand","stats":["+3 Agility","+2 Stamina"],"roles":["melee"],"classes":["warrior","hunter","rogue","shaman","druid"],"chance":20.0,"chanceStr":"20%","bossId":11518,"bossName":"Jergosh the Invoker","bossLvl":16,"mapId":389,"dungeon":"Ragefire Chasm","page":"ragefire-chasm.html","faction":"Horde","wing":null},{"id":14148,"name":"Crystalline Cuffs","quality":3,"color":"#0070dd","ilvl":18,"req":13,"slot":"Wrist (Cloth)","slotFilter":"Wrist","stats":["+15 Armor","+2 Spirit","+2 Intellect"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":11520,"bossName":"Taragaman the Hungerer","bossLvl":16,"mapId":389,"dungeon":"Ragefire Chasm","page":"ragefire-chasm.html","faction":"Horde","wing":null},{"id":14145,"name":"Cursed Felblade","quality":3,"color":"#0070dd","ilvl":18,"req":13,"slot":"Sword (1H)","slotFilter":"One-Hand","stats":[],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","mage","warlock"],"chance":20.0,"chanceStr":"20%","bossId":11520,"bossName":"Taragaman the Hungerer","bossLvl":16,"mapId":389,"dungeon":"Ragefire Chasm","page":"ragefire-chasm.html","faction":"Horde","wing":null},{"id":14150,"name":"Robe of Evocation","quality":3,"color":"#0070dd","ilvl":18,"req":13,"slot":"Chest (Cloth)","slotFilter":"Chest","stats":["+35 Armor","+5 Intellect","+4 Stamina","+5 Crit"],"roles":["heal","ranged"],"classes":["paladin","priest","shaman","mage","warlock","druid"],"chance":40.0,"chanceStr":"40%","bossId":11518,"bossName":"Jergosh the Invoker","bossLvl":16,"mapId":389,"dungeon":"Ragefire Chasm","page":"ragefire-chasm.html","faction":"Horde","wing":null},{"id":14149,"name":"Subterranean Cape","quality":3,"color":"#0070dd","ilvl":18,"req":13,"slot":"Back","slotFilter":"Back","stats":["+17 Armor","+4 Agility","+4 Strength"],"roles":["melee"],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":40.0,"chanceStr":"40%","bossId":11520,"bossName":"Taragaman the Hungerer","bossLvl":16,"mapId":389,"dungeon":"Ragefire Chasm","page":"ragefire-chasm.html","faction":"Horde","wing":null},{"id":10407,"name":"Raider's Shoulderpads","quality":1,"color":"#ffffff","ilvl":21,"req":16,"slot":"Shoulder (Mail)","slotFilter":"Shoulder","stats":["+122 Armor"],"roles":[],"classes":["warrior","paladin","hunter","dk","shaman"],"chance":0.04,"chanceStr":"0.04%","bossId":1716,"bossName":"Bazil Thredd","bossLvl":25,"mapId":34,"dungeon":"The Stockade","page":"the-stockade.html","faction":"Alliance","wing":null},{"id":3311,"name":"Ceremonial Leather Ankleguards","quality":1,"color":"#ffffff","ilvl":15,"req":10,"slot":"Feet (Leather)","slotFilter":"Feet","stats":["+45 Armor"],"roles":[],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":0.21,"chanceStr":"0.21%","bossId":11519,"bossName":"Bazzalan","bossLvl":16,"mapId":389,"dungeon":"Ragefire Chasm","page":"ragefire-chasm.html","faction":"Horde","wing":null},{"id":3311,"name":"Ceremonial Leather Ankleguards","quality":1,"color":"#ffffff","ilvl":15,"req":10,"slot":"Feet (Leather)","slotFilter":"Feet","stats":["+45 Armor"],"roles":[],"classes":["warrior","paladin","hunter","rogue","dk","shaman","druid"],"chance":0.07,"chanceStr":"0.07%","bossId":11517,"bossName":"Oggleflint","bossLvl":16,"mapId":389,"dungeon":"Ragefire Chasm","page":"ragefire-chasm.html","faction":"Horde","wing":null}]}</script>
+
+<script>
+(function() {
+    'use strict';
+
+    // ----- Constants -----
+    const QUALITY_NAMES = {0:'Poor',1:'Common',2:'Uncommon',3:'Rare',4:'Epic',5:'Legendary'};
+    const CLASS_INFO = {
+        warrior:  ['Warrior',     '#C79C6E', 'W'],
+        paladin:  ['Paladin',     '#F58CBA', 'P'],
+        hunter:   ['Hunter',      '#ABD473', 'H'],
+        rogue:    ['Rogue',       '#FFF569', 'R'],
+        priest:   ['Priest',      '#FFFFFF', 'P'],
+        dk:       ['Death Knight','#C41F3B', 'K'],
+        shaman:   ['Shaman',      '#0070DE', 'S'],
+        mage:     ['Mage',        '#69CCF0', 'M'],
+        warlock:  ['Warlock',     '#9482C9', 'W'],
+        druid:    ['Druid',       '#FF7D0A', 'D'],
+    };
+    const ROLE_PILLS = {
+        tank:   ['🛡', '#3a5a8a', '#7eb0e8'],
+        heal:   ['+',  '#2d5a3d', '#7ec896'],
+        melee:  ['⚔',  '#7a3a3a', '#e88080'],
+        ranged: ['🏹', '#7a5a2d', '#e8c87e'],
+    };
+    const SLOT_ORDER = [
+        'Head','Neck','Shoulder','Back','Chest','Wrist','Hands','Waist','Legs','Feet',
+        'Finger','Trinket',
+        'Main Hand','Off-Hand','One-Hand','Two-Hand','Held','Ranged','Thrown','Relic',
+    ];
+
+    // ----- Load data -----
+    const dataNode = document.getElementById('loot-data');
+    const data = JSON.parse(dataNode.textContent);
+    const items = data.items;
+
+    // ----- Populate filter dropdowns -----
+    const slotSel = document.getElementById('f-slot');
+    const slotsPresent = new Set(items.map(i => i.slotFilter).filter(Boolean));
+    SLOT_ORDER.forEach(s => {
+        if (slotsPresent.has(s)) {
+            const o = document.createElement('option');
+            o.value = s; o.textContent = s;
+            slotSel.appendChild(o);
+        }
+    });
+
+    const dungSel = document.getElementById('f-dungeon');
+    data.dungeons.forEach(d => {
+        const o = document.createElement('option');
+        o.value = d.id;
+        o.textContent = `${d.name} (lvl ${d.lvl} · ${d.count} items)`;
+        dungSel.appendChild(o);
+    });
+
+    // ----- State -----
+    const state = {
+        search: '', slot: '', class: '', role: '',
+        dungeon: '', quality: '', lvlMin: '', lvlMax: '',
+    };
+
+    // ----- Render -----
+    const tbody = document.getElementById('f-tbody');
+    const countEl = document.getElementById('f-count');
+    const emptyEl = document.getElementById('f-empty');
+
+    function renderRolePills(roles) {
+        return roles.map(r => {
+            const [icon, bg, fg] = ROLE_PILLS[r] || ['?','#444','#fff'];
+            return `<span class="role-pill" style="background:${bg};color:${fg};" title="${r}">${icon}</span>`;
+        }).join('');
+    }
+
+    function renderClassPills(classes) {
+        return classes.map(c => {
+            const info = CLASS_INFO[c]; if (!info) return '';
+            return `<span class="class-pill" style="background:${info[1]};" title="${info[0]}">${info[2]}</span>`;
+        }).join('');
+    }
+
+    function renderStats(stats) {
+        if (!stats || stats.length === 0) return '<span style="color:#555">—</span>';
+        return stats.map(s => `<span class="stat">${s}</span>`).join('');
+    }
+
+    function escapeHtml(s) {
+        return String(s).replace(/[<>&"']/g, c => ({
+            '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'
+        }[c]));
+    }
+
+    // Armor tiers a class can REASONABLY wear, not just is proficient with.
+    // Excludes armor types below the spec's reasonable floor — e.g. a Warrior
+    // wears plate ideally and mail while leveling, but never cloth or leather.
+    // This is class-level, not class+role, because all warrior specs share
+    // the same armor floor (mail).
+    //
+    // The list represents "OK to show" - cloaks/jewelry/weapons/shields
+    // pass through always (they're not in the armor-tier system).
+    const CLASS_ARMOR_FLOOR = {
+        warrior: ['Plate', 'Mail'],          // wears plate at 40+, mail before
+        paladin: ['Plate', 'Mail'],          // same
+        dk:      ['Plate'],                  // starts at 55 - always plate
+        hunter:  ['Mail', 'Leather'],        // mail at 40+, leather before
+        shaman:  ['Mail', 'Leather'],        // mail at 40+, leather before
+        rogue:   ['Leather'],                // never wear cloth
+        druid:   ['Leather'],                // same
+        priest:  ['Cloth'],
+        mage:    ['Cloth'],
+        warlock: ['Cloth'],
+    };
+
+    // Returns true if armor type is reasonable for the class.
+    // Cloaks/jewelry/weapons/shields always pass.
+    // For caster roles (heal/ranged), the armor floor drops to cloth - a
+    // Holy Paladin or Resto Druid leveling will wear caster cloth if it has
+    // more Int/Spi than their proficient leather/plate options (very common
+    // pre-60 because Blizzard didn't itemize int-plate or int-leather then).
+    function passesClassArmor(it, cls, role) {
+        const allowed = CLASS_ARMOR_FLOOR[cls];
+        if (!allowed) return true;
+        const m = (it.slot || '').match(/\((Cloth|Leather|Mail|Plate)\)/);
+        if (!m) return true;  // cloak/jewelry/weapon/shield/etc.
+        // Caster roles get a permissive floor: anything from cloth up
+        if (role === 'heal' || role === 'ranged') {
+            // But still gate by class proficiency (DKs can't wear cloth)
+            // Proficiency was already checked at it.classes.includes() level.
+            return true;
+        }
+        return allowed.includes(m[1]);
+    }
+
+    // Class-aware role logic. When BOTH class and role are set, this takes
+    // precedence over the simple item.roles tag - which is too restrictive
+    // for low-level dungeon gear (most pre-60 tank gear has no Defense rating
+    // because it didn't exist yet).
+    //
+    // Rules: returns true if the item is appropriate for `cls` filling `role`.
+    function classFillsRole(it, cls, role) {
+        // First gate: armor type must be reasonable for the class+role
+        if (!passesClassArmor(it, cls, role)) return false;
+
+        const slot = it.slotFilter;
+        const ic = it.slot;  // contains armor type like "Plate" / "Mail" etc.
+        const stats = (it.stats || []).join(' ');
+        const hasStat = (n) => stats.indexOf(n) >= 0;
+        const isShield = slot === 'Off-Hand' && /Shield/.test(ic);
+        const isPlate = /\(Plate\)/.test(ic);
+        const isMail = /\(Mail\)/.test(ic);
+        const isLeather = /\(Leather\)/.test(ic);
+        const isCloth = /\(Cloth\)/.test(ic);
+        const isWeapon = ['One-Hand','Two-Hand','Main Hand','Off-Hand','Ranged','Held','Thrown'].includes(slot);
+
+        // ---- TANK ----
+        if (role === 'tank') {
+            // Only tank-capable classes
+            if (!['warrior','paladin','dk','druid','shaman'].includes(cls)) return false;
+
+            // Universal: explicit tank stats always count (for tank classes)
+            if (hasStat('Defense') || hasStat('Dodge') || hasStat('Parry') ||
+                hasStat('Block') || hasStat('Resilience')) return true;
+
+            if (cls === 'warrior' || cls === 'paladin' || cls === 'dk') {
+                // Plate tanks: shields, plate, OR any item with Stam (incl. accessories)
+                if (cls !== 'dk' && isShield) return true;  // DKs don't use shields
+                if (isPlate) return true;
+                // Stamina-bearing accessories & gear (not weapons - those go to melee/heal/dps)
+                if (!isWeapon && hasStat('Stamina')) return true;
+                // 1H weapons + shields combo: 1H weapons in Prot's hand are fine
+                // but only flag them as "tank" if they have Stam or +Block
+                if (slot === 'One-Hand' && hasStat('Stamina')) return true;
+                // 2H weapons with Stamina - also tank-relevant (e.g. Mograine's Might
+                // has +17 Stam, +16 Hit). DKs and prot warriors run with 2H sometimes.
+                if (slot === 'Two-Hand' && hasStat('Stamina')) return true;
+                return false;
+            }
+            if (cls === 'druid') {
+                // Bear tanks use leather. Stam + Agi combined = bear gear.
+                if (isLeather && hasStat('Stamina')) return true;
+                return false;
+            }
+            if (cls === 'shaman') {
+                // Resto/Enh shamans can off-tank; shields and mail with avoidance.
+                if (isShield) return true;
+                // Mail with Defense/Dodge/Parry/Block already returned true above
+                // Mail with Stamina + Strength (enh-tank fallback)
+                if (isMail && hasStat('Stamina') && hasStat('Strength')) return true;
+                return false;
+            }
+            return false;  // other classes don't tank
+        }
+
+        // ---- HEAL ----
+        if (role === 'heal') {
+            // Healing classes: Priest, Paladin (Holy), Druid (Resto), Shaman (Resto)
+            if (!['priest','paladin','druid','shaman'].includes(cls)) return false;
+            // Healer stat profile: Spirit, Intellect, MP5, Spell Power
+            if (hasStat('Spirit') || hasStat('MP5') || hasStat('Spell Power')) return true;
+            if (hasStat('Intellect') && (isCloth || isLeather || isMail)) return true;
+            return false;
+        }
+
+        // ---- MELEE ----
+        if (role === 'melee') {
+            // Anyone who melees: warrior, paladin, dk, rogue, hunter, druid, shaman
+            if (!['warrior','paladin','dk','rogue','hunter','druid','shaman'].includes(cls)) return false;
+            // Hunter melee = early-level, mostly use ranged. Skip for hunter.
+            if (cls === 'hunter') return false;
+            // Reject caster-statted weapons regardless of class - Spirit/SP/MP5 = pure caster
+            if (isWeapon && (hasStat('Spirit') || hasStat('Spell Power') || hasStat('MP5'))) return false;
+            // Reject Intellect-bearing weapons unless paired with a melee stat
+            if (isWeapon && hasStat('Intellect') && !(hasStat('Strength') || hasStat('Agility') || hasStat('Attack Power'))) return false;
+            // Strength or Attack Power-bearing items
+            if (hasStat('Strength') || hasStat('Attack Power') || hasStat('Armor Pen')) return true;
+            if (hasStat('Agility') && (cls === 'rogue' || cls === 'druid' || cls === 'shaman')) return true;
+            // Melee weapons (1H/2H/Main Hand) without caster stats - already filtered above
+            if (['One-Hand','Two-Hand','Main Hand'].includes(slot)) return true;
+            return false;
+        }
+
+        // ---- RANGED ----
+        if (role === 'ranged') {
+            // Ranged-DPS classes: hunter (with bow/gun), mage, warlock, ele shaman, balance druid
+            // Plus any class using a wand/relic
+            if (slot === 'Ranged') return true;  // bows, guns, wands
+            if (cls === 'mage' || cls === 'warlock') return true;  // all their gear is ranged
+            if (cls === 'hunter') {
+                // Hunter ranged = stats good for ranged: Agility, AP, Hit
+                if (hasStat('Agility') || hasStat('Attack Power')) return true;
+                if (slot === 'Ranged') return true;
+                return false;
+            }
+            if (cls === 'priest') return true;  // all priest gear is ranged-spec friendly
+            if (cls === 'shaman' || cls === 'druid' || cls === 'paladin') {
+                // Ele/Balance/Holy ranged: caster stats
+                if (hasStat('Spell Power') || hasStat('Intellect') || hasStat('Spirit')) return true;
+                return false;
+            }
+            return false;
+        }
+
+        return false;
+    }
+
+    function applyFilters() {
+        const s = state.search.toLowerCase();
+        const lvlMin = state.lvlMin ? parseInt(state.lvlMin, 10) : null;
+        const lvlMax = state.lvlMax ? parseInt(state.lvlMax, 10) : null;
+        const qualityMin = state.quality ? parseInt(state.quality, 10) : null;
+
+        const filtered = items.filter(it => {
+            if (s) {
+                const inItem = it.name.toLowerCase().includes(s);
+                const inBoss = it.bossName.toLowerCase().includes(s);
+                if (!inItem && !inBoss) return false;
+            }
+            if (state.slot && it.slotFilter !== state.slot) return false;
+            if (state.class) {
+                if (!it.classes.includes(state.class)) return false;
+                // When ONLY class is selected (no role), still apply the strict
+                // armor floor - showing a warrior all the cloth they're "technically
+                // proficient with" is noise. The armor floor moves with role
+                // when role is selected (handled inside classFillsRole).
+                if (!state.role && !passesClassArmor(it, state.class, null)) return false;
+            }
+            if (state.role) {
+                // If a class is also selected, use class-aware role logic
+                // (catches low-level tank gear that lacks explicit Defense, etc.)
+                if (state.class) {
+                    if (!classFillsRole(it, state.class, state.role)) return false;
+                } else {
+                    // No class selected: union across all classes proficient
+                    // with this item. Show if ANY of them could use it for this role.
+                    const anyMatch = it.classes.some(c => classFillsRole(it, c, state.role));
+                    if (!anyMatch) return false;
+                }
+            }
+            if (state.dungeon && String(it.mapId) !== state.dungeon) return false;
+            if (qualityMin !== null) {
+                if (qualityMin === 4 ? it.quality !== 4 : it.quality < qualityMin) return false;
+            }
+            if (lvlMin !== null && it.req < lvlMin) return false;
+            if (lvlMax !== null && it.req > lvlMax) return false;
+            return true;
+        });
+
+        renderRows(filtered);
+        updateRoleCounts();
+    }
+
+    // Compute the effective roles to display on a row, taking into account
+    // the active class filter. When a class is selected, role pills reflect
+    // what THIS class can use the item for. With no class, pills reflect
+    // any class that could use the item in that role.
+    function effectiveRoles(it) {
+        const cls = state.class;
+        if (cls) {
+            return ['tank','heal','melee','ranged'].filter(r =>
+                classFillsRole(it, cls, r));
+        }
+        return ['tank','heal','melee','ranged'].filter(r =>
+            it.classes.some(c => classFillsRole(it, c, r)));
+    }
+
+    // Update counts shown on the role buttons. Uses the same filter as the
+    // main applyFilters(), but only varies the role param so each button
+    // reflects "if I clicked this, how many would I get?".
+    function updateRoleCounts() {
+        const s = state.search.toLowerCase();
+        const lvlMin = state.lvlMin ? parseInt(state.lvlMin, 10) : null;
+        const lvlMax = state.lvlMax ? parseInt(state.lvlMax, 10) : null;
+        const qualityMin = state.quality ? parseInt(state.quality, 10) : null;
+
+        // Pre-filter items by everything EXCEPT role - then count per role
+        const baseFiltered = items.filter(it => {
+            if (s) {
+                if (!it.name.toLowerCase().includes(s) && !it.bossName.toLowerCase().includes(s)) return false;
+            }
+            if (state.slot && it.slotFilter !== state.slot) return false;
+            if (state.class) {
+                if (!it.classes.includes(state.class)) return false;
+                if (!passesClassArmor(it, state.class, null)) return false;
+            }
+            if (state.dungeon && String(it.mapId) !== state.dungeon) return false;
+            if (qualityMin !== null) {
+                if (qualityMin === 4 ? it.quality !== 4 : it.quality < qualityMin) return false;
+            }
+            if (lvlMin !== null && it.req < lvlMin) return false;
+            if (lvlMax !== null && it.req > lvlMax) return false;
+            return true;
+        });
+
+        const matchesRole = (it, role) => {
+            if (state.class) return classFillsRole(it, state.class, role);
+            return it.classes.some(c => classFillsRole(it, c, role));
+        };
+
+        const counts = {
+            '': baseFiltered.length,
+            tank:   baseFiltered.filter(it => matchesRole(it, 'tank')).length,
+            heal:   baseFiltered.filter(it => matchesRole(it, 'heal')).length,
+            melee:  baseFiltered.filter(it => matchesRole(it, 'melee')).length,
+            ranged: baseFiltered.filter(it => matchesRole(it, 'ranged')).length,
+        };
+
+        const labels = {
+            '': 'Any',
+            tank: '🛡 Tank',
+            heal: '+ Heal',
+            melee: '⚔ Melee',
+            ranged: '🏹 Ranged',
+        };
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            const r = btn.dataset.role;
+            btn.textContent = `${labels[r]} (${counts[r]})`;
+        });
+    }
+
+    function renderRows(rows) {
+        if (rows.length === 0) {
+            tbody.innerHTML = '';
+            emptyEl.style.display = 'block';
+            countEl.innerHTML = '<strong>0</strong> items match';
+            return;
+        }
+        emptyEl.style.display = 'none';
+        countEl.innerHTML = `<strong>${rows.length}</strong> items match (of ${items.length} total)`;
+
+        const html = rows.map(it => {
+            const wing = it.wing ? ` <span style="color:#888;font-size:0.7rem">(${it.wing})</span>` : '';
+            const qtag = it.quality >= 3 ?
+                `<span class="quality-tag" style="background:${it.color}33;color:${it.color}">${QUALITY_NAMES[it.quality]}</span>` : '';
+            return `<tr>
+                <td>
+                    <span class="item-name" style="color:${it.color}">${escapeHtml(it.name)}</span>${qtag}
+                </td>
+                <td>${escapeHtml(it.slot)}</td>
+                <td class="stats-cell col-stats">${renderStats(it.stats)}</td>
+                <td class="roles">${renderRolePills(effectiveRoles(it))}</td>
+                <td class="classes">${renderClassPills(it.classes)}</td>
+                <td class="num">${it.ilvl || '—'}</td>
+                <td class="num">${it.req || '—'}</td>
+                <td>
+                    <a class="dungeon-link" href="${escapeHtml(it.page)}">${escapeHtml(it.dungeon)}</a>${wing}
+                    <span class="boss-name">${escapeHtml(it.bossName)}</span>
+                </td>
+                <td class="num">${it.chanceStr}</td>
+            </tr>`;
+        }).join('');
+        tbody.innerHTML = html;
+    }
+
+    // ----- Wire up filters -----
+    document.getElementById('f-search').addEventListener('input', e => {
+        state.search = e.target.value; applyFilters();
+    });
+    document.getElementById('f-slot').addEventListener('change', e => {
+        state.slot = e.target.value; applyFilters();
+    });
+    document.getElementById('f-class').addEventListener('change', e => {
+        state.class = e.target.value; applyFilters();
+    });
+    document.getElementById('f-dungeon').addEventListener('change', e => {
+        state.dungeon = e.target.value; applyFilters();
+    });
+    document.getElementById('f-quality').addEventListener('change', e => {
+        state.quality = e.target.value; applyFilters();
+    });
+    document.getElementById('f-lvl-min').addEventListener('input', e => {
+        state.lvlMin = e.target.value.replace(/[^0-9]/g, ''); applyFilters();
+    });
+    document.getElementById('f-lvl-max').addEventListener('input', e => {
+        state.lvlMax = e.target.value.replace(/[^0-9]/g, ''); applyFilters();
+    });
+
+    document.querySelectorAll('.role-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.role = btn.dataset.role; applyFilters();
+        });
+    });
+
+    document.getElementById('f-reset').addEventListener('click', () => {
+        state.search = state.slot = state.class = state.role = '';
+        state.dungeon = state.quality = state.lvlMin = state.lvlMax = '';
+        document.getElementById('f-search').value = '';
+        document.getElementById('f-slot').value = '';
+        document.getElementById('f-class').value = '';
+        document.getElementById('f-dungeon').value = '';
+        document.getElementById('f-quality').value = '';
+        document.getElementById('f-lvl-min').value = '';
+        document.getElementById('f-lvl-max').value = '';
+        document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.role-btn[data-role=""]').classList.add('active');
+        applyFilters();
+    });
+
+    // ----- Tab switcher -----
+    function showView(v) {
+        document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('view-' + v).classList.add('active');
+        document.querySelector(`.tab-btn[data-view="${v}"]`).classList.add('active');
+        if (history.replaceState) {
+            history.replaceState(null, '', v === 'finder' ? '#finder' : window.location.pathname);
+        }
+    }
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => showView(btn.dataset.view));
+    });
+
+    // Open finder if URL hash says so
+    if (window.location.hash === '#finder') {
+        showView('finder');
+    }
+
+    // ----- Initial render -----
+    applyFilters();
+})();
+</script>
 </body>
 </html>
