@@ -102,6 +102,17 @@
         .tab-btn.active {
             color: #ffd100; border-bottom-color: #ffd100; font-weight: 600;
         }
+        /* Armoury tab is an <a> link to a separate page, not a view-toggle.
+           Push it to the right edge to visually separate it. */
+        a.tab-btn.tab-link {
+            text-decoration: none; margin-left: auto;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        a.tab-btn.tab-link::after {
+            content: '↗'; font-size: 0.85em; opacity: 0.6;
+        }
+        a.tab-btn.tab-link:hover { color: #ffd100; }
+        a.tab-btn.tab-link:hover::after { opacity: 1; }
         .tab-view { display: none; }
         .tab-view.active { display: block; }
 
@@ -212,9 +223,6 @@
 <nav class="navbar navbar-dark">
     <div class="container">
         <a class="navbar-brand" href="index.html">⚔️ KCraft Loot Guide</a>
-        <span class="navbar-text small">
-            <a href="armoury.html" style="color:#aaa;">🛡️ Armoury</a>
-        </span>
     </div>
 </nav>
 
@@ -229,6 +237,7 @@
     <div class="tab-bar">
         <button class="tab-btn active" data-view="dungeons">📚 Browse Dungeons</button>
         <button class="tab-btn" data-view="finder">🔍 Find Loot</button>
+        <a class="tab-btn tab-link" href="armoury.html">🛡️ Armoury</a>
     </div>
 
     <section id="view-dungeons" class="tab-view active">
@@ -1673,14 +1682,14 @@
     // ----- Tab switcher -----
     function showView(v) {
         document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn[data-view]').forEach(el => el.classList.remove('active'));
         document.getElementById('view-' + v).classList.add('active');
         document.querySelector(`.tab-btn[data-view="${v}"]`).classList.add('active');
         if (history.replaceState) {
             history.replaceState(null, '', v === 'finder' ? '#finder' : window.location.pathname);
         }
     }
-    document.querySelectorAll('.tab-btn').forEach(btn => {
+    document.querySelectorAll('.tab-btn[data-view]').forEach(btn => {
         btn.addEventListener('click', () => showView(btn.dataset.view));
     });
 
