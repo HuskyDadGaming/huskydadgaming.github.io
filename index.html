@@ -39,15 +39,21 @@
             background: #232323; border: 1px solid #3a3a3a;
             border-radius: 6px; padding: 1rem; transition: all 0.15s;
         }
-        .dungeon-card.available { border-color: #4ea8de33; }
-        .dungeon-card.available:hover {
+        a.dungeon-card {
+            display: block; text-decoration: none; color: inherit;
+        }
+        a.dungeon-card:hover { text-decoration: none; }
+        .dungeon-card.available { border-color: #4ea8de33; cursor: pointer; }
+        a.dungeon-card.available:hover {
             border-color: #4ea8de; background: #2a2a2a; transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(78, 168, 222, 0.15);
         }
         .dungeon-card.coming-soon { opacity: 0.55; }
-        .dungeon-card a {
+        .dungeon-card .card-title {
             color: #ffd100; font-weight: 600; font-size: 1rem;
             display: block; margin-bottom: 0.5rem;
         }
+        a.dungeon-card:hover .card-title { color: #ffea66; }
         .dungeon-card .name-disabled {
             color: #777; font-weight: 600; font-size: 1rem;
             display: block; margin-bottom: 0.5rem;
@@ -76,7 +82,7 @@
         .lvl-value.mob.unknown { color: #555; font-style: italic; font-weight: 400; }
         .lvl-value.rec { color: #1eff00; }
         .status-tag {
-            font-size: 0.7rem; color: #1eff00; margin-left: 4px;
+            font-size: 0.7rem; color: #4ea8de; margin-left: 4px;
             font-weight: 600; display: inline-block; margin-top: 6px;
         }
         .status-tag.todo { color: #777; }
@@ -109,8 +115,8 @@
             <p>The original Azeroth dungeons · 8/19 available</p>
         </div>
         <div class="dungeon-grid">
-            <div class="dungeon-card available">
-                <a href="ragefire-chasm.html">Ragefire Chasm</a>
+            <a href="ragefire-chasm.html" class="dungeon-card available">
+                <span class="card-title">Ragefire Chasm</span>
                 <div class="lvl-row">
                     <div class="lvl-line">
                         <span class="lvl-label">Mob levels:</span>
@@ -126,9 +132,9 @@
                     <span class="pill">4 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
-            </div>
-            <div class="dungeon-card available">
-                <a href="wailing-caverns.html">Wailing Caverns</a>
+            </a>
+            <a href="wailing-caverns.html" class="dungeon-card available">
+                <span class="card-title">Wailing Caverns</span>
                 <div class="lvl-row">
                     <div class="lvl-line">
                         <span class="lvl-label">Mob levels:</span>
@@ -144,9 +150,9 @@
                     <span class="pill">9 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
-            </div>
-            <div class="dungeon-card available">
-                <a href="the-deadmines.html">The Deadmines</a>
+            </a>
+            <a href="the-deadmines.html" class="dungeon-card available">
+                <span class="card-title">The Deadmines</span>
                 <div class="lvl-row">
                     <div class="lvl-line">
                         <span class="lvl-label">Mob levels:</span>
@@ -162,9 +168,9 @@
                     <span class="pill">8 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
-            </div>
-            <div class="dungeon-card available">
-                <a href="shadowfang-keep.html">Shadowfang Keep</a>
+            </a>
+            <a href="shadowfang-keep.html" class="dungeon-card available">
+                <span class="card-title">Shadowfang Keep</span>
                 <div class="lvl-row">
                     <div class="lvl-line">
                         <span class="lvl-label">Mob levels:</span>
@@ -180,9 +186,9 @@
                     <span class="pill">9 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
-            </div>
-            <div class="dungeon-card available">
-                <a href="the-stockade.html">The Stockade</a>
+            </a>
+            <a href="the-stockade.html" class="dungeon-card available">
+                <span class="card-title">The Stockade</span>
                 <div class="lvl-row">
                     <div class="lvl-line">
                         <span class="lvl-label">Mob levels:</span>
@@ -198,9 +204,9 @@
                     <span class="pill">6 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
-            </div>
-            <div class="dungeon-card available">
-                <a href="blackfathom-deeps.html">Blackfathom Deeps</a>
+            </a>
+            <a href="blackfathom-deeps.html" class="dungeon-card available">
+                <span class="card-title">Blackfathom Deeps</span>
                 <div class="lvl-row">
                     <div class="lvl-line">
                         <span class="lvl-label">Mob levels:</span>
@@ -216,9 +222,9 @@
                     <span class="pill">7 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
-            </div>
-            <div class="dungeon-card available">
-                <a href="gnomeregan.html">Gnomeregan</a>
+            </a>
+            <a href="gnomeregan.html" class="dungeon-card available">
+                <span class="card-title">Gnomeregan</span>
                 <div class="lvl-row">
                     <div class="lvl-line">
                         <span class="lvl-label">Mob levels:</span>
@@ -234,9 +240,9 @@
                     <span class="pill">8 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
-            </div>
-            <div class="dungeon-card available">
-                <a href="razorfen-kraul.html">Razorfen Kraul</a>
+            </a>
+            <a href="razorfen-kraul.html" class="dungeon-card available">
+                <span class="card-title">Razorfen Kraul</span>
                 <div class="lvl-row">
                     <div class="lvl-line">
                         <span class="lvl-label">Mob levels:</span>
@@ -252,7 +258,7 @@
                     <span class="pill">9 bosses</span>
                 </div>
                 <span class="status-tag">✅ Available</span>
-            </div>
+            </a>
             <div class="dungeon-card coming-soon">
                 <span class="name-disabled">Scarlet Monastery</span>
                 <div class="lvl-row">
