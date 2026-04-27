@@ -1685,8 +1685,7 @@
         const lvlMax = state.lvlMax ? parseInt(state.lvlMax, 10) : null;
         const qualityMin = state.quality ? parseInt(state.quality, 10) : null;
 
-        // Pre-filter items by everything EXCEPT role and class — role counts
-        // should reflect the role's full pool, not narrow by class selection.
+        // Pre-filter items by everything except role and class — then count per role
         const baseFiltered = items.filter(it => {
             if (s) {
                 if (!it.name.toLowerCase().includes(s) && !it.bossName.toLowerCase().includes(s)) return false;
@@ -1701,12 +1700,20 @@
             return true;
         });
 
-        // Role counts ignore active class — shows total items per role.
-        const matchesRole = (it, role) =>
-            it.classes.some(c => classFillsRole(it, c, role));
+        // Role counts narrow by class when one is selected, else show full pool.
+        // "All" with class set = items the class can use in any role.
+        const matchesRole = (it, role) => {
+            if (state.class) return classFillsRole(it, state.class, role);
+            return it.classes.some(c => classFillsRole(it, c, role));
+        };
+        const matchesAll = (it) => {
+            if (!state.class) return true;
+            if (!it.classes.includes(state.class)) return false;
+            return passesClassArmor(it, state.class, null);
+        };
 
         const counts = {
-            '': baseFiltered.length,
+            '': baseFiltered.filter(matchesAll).length,
             tank:   baseFiltered.filter(it => matchesRole(it, 'tank')).length,
             heal:   baseFiltered.filter(it => matchesRole(it, 'heal')).length,
             melee:  baseFiltered.filter(it => matchesRole(it, 'melee')).length,
