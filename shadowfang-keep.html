@@ -767,7 +767,7 @@
         const isWeapon = ['One-Hand','Two-Hand','Main Hand','Off-Hand','Ranged','Held','Thrown'].includes(slot);
 
         if (role === 'tank') {
-            if (!['warrior','paladin','dk','druid','shaman'].includes(cls)) return false;
+            if (!['warrior','paladin','dk','druid'].includes(cls)) return false;
             if (hasStat('Defense') || hasStat('Dodge') || hasStat('Parry') ||
                 hasStat('Block') || hasStat('Resilience')) return true;
             if (cls === 'warrior' || cls === 'paladin' || cls === 'dk') {
@@ -780,11 +780,6 @@
             }
             if (cls === 'druid') {
                 if (isLeather && hasStat('Stamina')) return true;
-                return false;
-            }
-            if (cls === 'shaman') {
-                if (isShield) return true;
-                if (isMail && hasStat('Stamina') && hasStat('Strength')) return true;
                 return false;
             }
             return false;
@@ -810,15 +805,16 @@
 
         if (role === 'ranged') {
             if (slot === 'Ranged') return true;
-            if (cls === 'mage' || cls === 'warlock') return true;
             if (cls === 'hunter') {
                 if (hasStat('Agility') || hasStat('Attack Power')) return true;
                 if (slot === 'Ranged') return true;
                 return false;
             }
-            if (cls === 'priest') return true;
-            if (cls === 'shaman' || cls === 'druid' || cls === 'paladin') {
-                if (hasStat('Spell Power') || hasStat('Intellect') || hasStat('Spirit')) return true;
+            // Caster classes — must have actual caster DPS stats. Spirit alone
+            // (no Int/SP) is healing gear and doesn't count for ranged-DPS.
+            if (cls === 'mage' || cls === 'warlock' || cls === 'priest' ||
+                cls === 'shaman' || cls === 'druid' || cls === 'paladin') {
+                if (hasStat('Spell Power') || hasStat('Intellect')) return true;
                 return false;
             }
             return false;
@@ -857,7 +853,7 @@
     // 'all' role = all classes shown; otherwise only role-capable classes.
     const ROLE_CLASSES = {
         'all':    ['warrior','paladin','hunter','rogue','priest','dk','shaman','mage','warlock','druid'],
-        'tank':   ['warrior','paladin','dk','druid','shaman'],
+        'tank':   ['warrior','paladin','dk','druid'],
         'heal':   ['priest','paladin','druid','shaman'],
         'melee':  ['warrior','paladin','dk','rogue','druid','shaman'],
         'ranged': ['hunter','mage','warlock','priest','druid','shaman','paladin'],

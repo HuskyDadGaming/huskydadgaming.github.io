@@ -1523,7 +1523,7 @@
         // ---- TANK ----
         if (role === 'tank') {
             // Only tank-capable classes
-            if (!['warrior','paladin','dk','druid','shaman'].includes(cls)) return false;
+            if (!['warrior','paladin','dk','druid'].includes(cls)) return false;
 
             // Universal: explicit tank stats always count (for tank classes)
             if (hasStat('Defense') || hasStat('Dodge') || hasStat('Parry') ||
@@ -1546,14 +1546,6 @@
             if (cls === 'druid') {
                 // Bear tanks use leather. Stam + Agi combined = bear gear.
                 if (isLeather && hasStat('Stamina')) return true;
-                return false;
-            }
-            if (cls === 'shaman') {
-                // Resto/Enh shamans can off-tank; shields and mail with avoidance.
-                if (isShield) return true;
-                // Mail with Defense/Dodge/Parry/Block already returned true above
-                // Mail with Stamina + Strength (enh-tank fallback)
-                if (isMail && hasStat('Stamina') && hasStat('Strength')) return true;
                 return false;
             }
             return false;  // other classes don't tank
@@ -1592,17 +1584,17 @@
             // Ranged-DPS classes: hunter (with bow/gun), mage, warlock, ele shaman, balance druid
             // Plus any class using a wand/relic
             if (slot === 'Ranged') return true;  // bows, guns, wands
-            if (cls === 'mage' || cls === 'warlock') return true;  // all their gear is ranged
             if (cls === 'hunter') {
                 // Hunter ranged = stats good for ranged: Agility, AP, Hit
                 if (hasStat('Agility') || hasStat('Attack Power')) return true;
                 if (slot === 'Ranged') return true;
                 return false;
             }
-            if (cls === 'priest') return true;  // all priest gear is ranged-spec friendly
-            if (cls === 'shaman' || cls === 'druid' || cls === 'paladin') {
-                // Ele/Balance/Holy ranged: caster stats
-                if (hasStat('Spell Power') || hasStat('Intellect') || hasStat('Spirit')) return true;
+            // Caster classes — must have actual caster DPS stats. Spirit alone
+            // (no Int/SP) is healing gear and doesn't count for ranged-DPS.
+            if (cls === 'mage' || cls === 'warlock' || cls === 'priest' ||
+                cls === 'shaman' || cls === 'druid' || cls === 'paladin') {
+                if (hasStat('Spell Power') || hasStat('Intellect')) return true;
                 return false;
             }
             return false;
@@ -1811,7 +1803,7 @@
     // reset it to "Any class".
     const ROLE_CLASSES = {
         '':       ['warrior','paladin','hunter','rogue','priest','dk','shaman','mage','warlock','druid'],
-        'tank':   ['warrior','paladin','dk','druid','shaman'],
+        'tank':   ['warrior','paladin','dk','druid'],
         'heal':   ['priest','paladin','druid','shaman'],
         'melee':  ['warrior','paladin','dk','rogue','druid','shaman'],
         'ranged': ['hunter','mage','warlock','priest','druid','shaman','paladin'],
