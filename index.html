@@ -1795,9 +1795,12 @@
             document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             state.role = btn.dataset.role;
-            // Always reset class to "Any" when role changes — predictable counts.
-            state.class = '';
-            document.getElementById('f-class').value = '';
+            // Reset class only when clicking "Any" role — keeps role-specific
+            // browsing for a class smooth (e.g. Priest → Healer keeps Priest).
+            if (state.role === '') {
+                state.class = '';
+                document.getElementById('f-class').value = '';
+            }
             syncClassDropdown(state.role);
             applyFilters();
         });
