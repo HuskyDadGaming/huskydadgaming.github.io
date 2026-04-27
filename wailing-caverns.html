@@ -840,17 +840,20 @@
         }
 
         if (role === 'ranged') {
-            if (slot === 'Ranged') return true;
+            // Ranged-slot weapons only count for classes that actually use them
+            // for DPS — hunters (bows/guns/crossbows) and wand-using casters.
+            // Warriors/rogues can equip bows but they're pulling tools, not DPS.
             if (cls === 'hunter') {
                 if (hasStat('Agility') || hasStat('Attack Power')) return true;
                 if (slot === 'Ranged') return true;
                 return false;
             }
-            // Caster classes — must have actual caster DPS stats. Spirit alone
-            // (no Int/SP) is healing gear and doesn't count for ranged-DPS.
+            // Caster classes — must have actual caster DPS stats, OR a wand
+            // (which is their ranged-slot weapon).
             if (cls === 'mage' || cls === 'warlock' || cls === 'priest' ||
                 cls === 'shaman' || cls === 'druid' || cls === 'paladin') {
                 if (hasStat('Spell Power') || hasStat('Intellect')) return true;
+                if (slot === 'Ranged' && /Wand/.test(ic)) return true;
                 return false;
             }
             return false;
