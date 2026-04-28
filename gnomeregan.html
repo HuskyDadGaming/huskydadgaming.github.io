@@ -806,15 +806,60 @@
     const rowItemCache = new Map();
     rows.forEach(row => rowItemCache.set(row, rowToItem(row)));
 
-    // Compute applicable roles for an item (any role that any of its classes
-    // can fulfil according to the smart filter logic).
+    // Compute applicable roles for an item based on STAT signals, not class
+    // capability. Answers "what role do these stats serve?" rather than "can
+    // any class use this for that role?". This is what users intuit when they
+    // see role pills — "this item has tank stats" / "this is healer gear".
     function computeApplicableRoles(it) {
         const roles = [];
-        for (const role of ['tank', 'heal', 'melee', 'ranged']) {
-            if (it.classes.some(c => classFillsRole(it, c, role))) {
-                roles.push(role);
-            }
+        const stats = (it.stats || []).join(' ');
+        const has = (s) => stats.indexOf(s) >= 0;
+        const slot = it.slotFilter;
+        const ic = it.slot;
+        const isShield = slot === 'Off-Hand' && /Shield/.test(ic);
+        const isRangedSlot = slot === 'Ranged';
+        const isWand = isRangedSlot && /Wand/.test(ic);
+
+        // Tank: explicit defensive stats, OR shield, OR plate, OR Stamina-bearing
+        // non-weapon (rings/necks/cloaks for tank classes), OR melee weapon with
+        // Stamina (Mograine's Might-style threat weapons).
+        const isPlate = /\(Plate\)/.test(ic);
+        const isWeapon = ['One-Hand','Two-Hand','Main Hand','Off-Hand','Ranged','Held','Thrown'].includes(slot);
+        if (has('Defense') || has('Dodge') || has('Parry') ||
+            has('Block') || has('Resilience') || isShield ||
+            (isPlate && has('Stamina')) ||
+            (!isWeapon && has('Stamina')) ||
+            (isWeapon && has('Stamina') && (has('Strength') || has('Attack Power') || has('Hit')))) {
+            roles.push('tank');
         }
+
+        // Healer: Spirit, MP5, Spell Power, OR Intellect on cloth/leather/mail
+        const isCloth = /\(Cloth\)/.test(ic);
+        const isLeather = /\(Leather\)/.test(ic);
+        const isMail = /\(Mail\)/.test(ic);
+        if (has('Spirit') || has('MP5') ||
+            (has('Spell Power') && !roles.includes('tank')) ||
+            (has('Intellect') && (isCloth || isLeather || isMail))) {
+            roles.push('heal');
+        }
+
+        // Melee: physical-DPS stats. Includes Agility (rogue/druid/shaman use).
+        if (has('Strength') || has('Attack Power') || has('Armor Pen') ||
+            (has('Agility') && !has('Spell Power') && !has('Spirit'))) {
+            if (!roles.includes('melee')) roles.push('melee');
+        }
+
+        // Ranged: caster DPS stats (SP or Int) — but not pure healer items.
+        // Wands are always ranged.
+        if (isWand ||
+            (has('Spell Power') && !has('Spirit') && !has('MP5'))) {
+            if (!roles.includes('ranged')) roles.push('ranged');
+        }
+        // Hunter ranged-slot weapons (bow/gun/crossbow without wand)
+        if (isRangedSlot && !isWand) {
+            if (!roles.includes('ranged')) roles.push('ranged');
+        }
+
         return roles;
     }
 
