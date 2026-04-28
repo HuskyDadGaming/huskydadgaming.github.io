@@ -505,12 +505,13 @@
         if (!allowed) return true;
         const m = (it.slot || '').match(/\((Cloth|Leather|Mail|Plate)\)/);
         if (!m) return true;
-        if (role === 'heal' || role === 'ranged') return true;
         // Armor-type proficiency only applies to actual body-armor slots.
         // Back, neck, finger, trinket items can be worn by any class even
         // when displayed with an armor-type tag.
         const ARMOR_SLOTS = ['Head','Shoulder','Chest','Wrist','Hands','Waist','Legs','Feet'];
         if (!ARMOR_SLOTS.includes(it.slotFilter)) return true;
+        // Body armor: must match class proficiency regardless of role.
+        // (Paladin healer still can't wear cloth chest; mage still can't wear plate.)
         return allowed.includes(m[1]);
     }
 
