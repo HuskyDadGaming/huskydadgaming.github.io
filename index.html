@@ -1532,23 +1532,32 @@
             if (hasStat('Defense') || hasStat('Dodge') || hasStat('Parry') ||
                 hasStat('Block') || hasStat('Resilience')) return true;
 
+            // Caster stats disqualify the item as tank gear (it's healer gear)
+            const hasCasterStat = hasStat('Spirit') || hasStat('Spell Power') ||
+                                  hasStat('MP5') || hasStat('Intellect');
+
             if (cls === 'warrior' || cls === 'paladin' || cls === 'dk') {
                 // Plate tanks: shields, plate, OR any item with Stam (incl. accessories)
                 if (cls !== 'dk' && isShield) return true;  // DKs don't use shields
-                if (isPlate) return true;
+                if (isPlate && !hasCasterStat) return true;
                 // Stamina-bearing accessories & gear (not weapons - those go to melee/heal/dps)
-                if (!isWeapon && hasStat('Stamina')) return true;
-                // 1H weapons + shields combo: 1H weapons in Prot's hand are fine
-                // but only flag them as "tank" if they have Stam or +Block
-                if (slot === 'One-Hand' && hasStat('Stamina')) return true;
+                if (!isWeapon && hasStat('Stamina') && !hasCasterStat) return true;
+                // 1H weapons with Stamina (no caster stats)
+                if (slot === 'One-Hand' && hasStat('Stamina') && !hasCasterStat) return true;
                 // 2H weapons with Stamina - also tank-relevant (e.g. Mograine's Might
                 // has +17 Stam, +16 Hit). DKs and prot warriors run with 2H sometimes.
-                if (slot === 'Two-Hand' && hasStat('Stamina')) return true;
+                if (slot === 'Two-Hand' && hasStat('Stamina') && !hasCasterStat) return true;
                 return false;
             }
             if (cls === 'druid') {
+                if (isLeather && hasStat('Stamina') && !hasCasterStat) return true;
+                return false;
+            }
+            return false;
+        }
+            if (cls === 'druid') {
                 // Bear tanks use leather. Stam + Agi combined = bear gear.
-                if (isLeather && hasStat('Stamina')) return true;
+                if (isLeather && hasStat('Stamina') && !hasCasterStat) return true;
                 return false;
             }
             return false;  // other classes don't tank

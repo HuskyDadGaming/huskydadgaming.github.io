@@ -757,18 +757,22 @@
 
         if (role === 'tank') {
             if (!['warrior','paladin','dk','druid'].includes(cls)) return false;
+            // Hard tank stats always count
             if (hasStat('Defense') || hasStat('Dodge') || hasStat('Parry') ||
                 hasStat('Block') || hasStat('Resilience')) return true;
+            // Caster stats disqualify the item as tank gear (it's healer gear)
+            const hasCasterStat = hasStat('Spirit') || hasStat('Spell Power') ||
+                                  hasStat('MP5') || hasStat('Intellect');
             if (cls === 'warrior' || cls === 'paladin' || cls === 'dk') {
                 if (cls !== 'dk' && isShield) return true;
-                if (isPlate) return true;
-                if (!isWeapon && hasStat('Stamina')) return true;
-                if (slot === 'One-Hand' && hasStat('Stamina')) return true;
-                if (slot === 'Two-Hand' && hasStat('Stamina')) return true;
+                if (isPlate && !hasCasterStat) return true;
+                if (!isWeapon && hasStat('Stamina') && !hasCasterStat) return true;
+                if (slot === 'One-Hand' && hasStat('Stamina') && !hasCasterStat) return true;
+                if (slot === 'Two-Hand' && hasStat('Stamina') && !hasCasterStat) return true;
                 return false;
             }
             if (cls === 'druid') {
-                if (isLeather && hasStat('Stamina')) return true;
+                if (isLeather && hasStat('Stamina') && !hasCasterStat) return true;
                 return false;
             }
             return false;
