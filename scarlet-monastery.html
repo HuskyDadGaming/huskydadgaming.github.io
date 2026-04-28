@@ -56,6 +56,24 @@
             font-size: 0.7rem; font-weight: 700;
             color: #1a1a1a; margin-right: 2px; cursor: default;
         }
+        /* Lock column widths so boss tables align vertically */
+        .boss-card .table {
+            table-layout: fixed;
+            width: 100%;
+        }
+        .boss-card .table th, .boss-card .table td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        /* Item column allows wrapping for long names */
+        .boss-card .table td:first-child {
+            white-space: normal;
+        }
+        /* Stats column wraps onto multiple lines if needed */
+        .boss-card .table td:nth-child(3) {
+            white-space: normal;
+        }
+
         .filter-bar {
             margin-bottom: 1.5rem; padding: 1rem;
             background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
