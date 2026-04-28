@@ -831,7 +831,12 @@
         const slot = slotEl ? slotEl.textContent.trim() : '';
         const statEls = row.querySelectorAll('.stat');
         const stats = Array.from(statEls).map(el => el.textContent.trim()).filter(Boolean);
-        const classes = (row.dataset.classes || '').split(' ').filter(Boolean);
+        let classes = (row.dataset.classes || '').split(' ').filter(Boolean);
+        // Empty data-classes means no class restriction in DB — treat as ALL classes
+        // so the item gets correct role-pill detection and isn't filtered out.
+        if (classes.length === 0) {
+            classes = ['warrior','paladin','hunter','rogue','priest','dk','shaman','mage','warlock','druid'];
+        }
         return {
             slot: slot,
             slotFilter: computeSlotFilter(slot),
@@ -852,60 +857,15 @@
     const rowItemCache = new Map();
     rows.forEach(row => rowItemCache.set(row, rowToItem(row)));
 
-    // Compute applicable roles for an item based on STAT signals, not class
-    // capability. Answers "what role do these stats serve?" rather than "can
-    // any class use this for that role?". This is what users intuit when they
-    // see role pills — "this item has tank stats" / "this is healer gear".
+    // Compute applicable roles for an item (any role that any of its classes
+    // can fulfil according to the smart filter logic).
     function computeApplicableRoles(it) {
         const roles = [];
-        const stats = (it.stats || []).join(' ');
-        const has = (s) => stats.indexOf(s) >= 0;
-        const slot = it.slotFilter;
-        const ic = it.slot;
-        const isShield = slot === 'Off-Hand' && /Shield/.test(ic);
-        const isRangedSlot = slot === 'Ranged';
-        const isWand = isRangedSlot && /Wand/.test(ic);
-
-        // Tank: explicit defensive stats, OR shield, OR plate, OR Stamina-bearing
-        // non-weapon (rings/necks/cloaks for tank classes), OR melee weapon with
-        // Stamina (Mograine's Might-style threat weapons).
-        const isPlate = /\(Plate\)/.test(ic);
-        const isWeapon = ['One-Hand','Two-Hand','Main Hand','Off-Hand','Ranged','Held','Thrown'].includes(slot);
-        if (has('Defense') || has('Dodge') || has('Parry') ||
-            has('Block') || has('Resilience') || isShield ||
-            (isPlate && has('Stamina')) ||
-            (!isWeapon && has('Stamina')) ||
-            (isWeapon && has('Stamina') && (has('Strength') || has('Attack Power') || has('Hit')))) {
-            roles.push('tank');
+        for (const role of ['tank', 'heal', 'melee', 'ranged']) {
+            if (it.classes.some(c => classFillsRole(it, c, role))) {
+                roles.push(role);
+            }
         }
-
-        // Healer: Spirit, MP5, Spell Power, OR Intellect on cloth/leather/mail
-        const isCloth = /\(Cloth\)/.test(ic);
-        const isLeather = /\(Leather\)/.test(ic);
-        const isMail = /\(Mail\)/.test(ic);
-        if (has('Spirit') || has('MP5') ||
-            (has('Spell Power') && !roles.includes('tank')) ||
-            (has('Intellect') && (isCloth || isLeather || isMail))) {
-            roles.push('heal');
-        }
-
-        // Melee: physical-DPS stats. Includes Agility (rogue/druid/shaman use).
-        if (has('Strength') || has('Attack Power') || has('Armor Pen') ||
-            (has('Agility') && !has('Spell Power') && !has('Spirit'))) {
-            if (!roles.includes('melee')) roles.push('melee');
-        }
-
-        // Ranged: caster DPS stats (SP or Int) — but not pure healer items.
-        // Wands are always ranged.
-        if (isWand ||
-            (has('Spell Power') && !has('Spirit') && !has('MP5'))) {
-            if (!roles.includes('ranged')) roles.push('ranged');
-        }
-        // Hunter ranged-slot weapons (bow/gun/crossbow without wand)
-        if (isRangedSlot && !isWand) {
-            if (!roles.includes('ranged')) roles.push('ranged');
-        }
-
         return roles;
     }
 
@@ -926,14 +886,45 @@
         }).join('');
     }
 
-    // Replace each row's role-pill cell (4th <td>) with dynamically-computed
-    // pills. This makes the displayed roles match the filter logic exactly.
+    // Class pill colors (canonical WoW class colors).
+    const CLASS_PILL_STYLES = {
+        warrior: { bg: '#C79C6E', letter: 'W', title: 'Warrior' },
+        paladin: { bg: '#F58CBA', letter: 'P', title: 'Paladin' },
+        hunter:  { bg: '#ABD473', letter: 'H', title: 'Hunter' },
+        rogue:   { bg: '#FFF569', letter: 'R', title: 'Rogue' },
+        priest:  { bg: '#FFFFFF', letter: 'P', title: 'Priest' },
+        dk:      { bg: '#C41F3B', letter: 'K', title: 'Death Knight' },
+        shaman:  { bg: '#0070DE', letter: 'S', title: 'Shaman' },
+        mage:    { bg: '#69CCF0', letter: 'M', title: 'Mage' },
+        warlock: { bg: '#9482C9', letter: 'W', title: 'Warlock' },
+        druid:   { bg: '#FF7D0A', letter: 'D', title: 'Druid' },
+    };
+    const CLASS_ORDER = ['warrior','paladin','hunter','rogue','priest','dk','shaman','mage','warlock','druid'];
+    function renderClassPills(classes) {
+        return classes.map(cls => {
+            const s = CLASS_PILL_STYLES[cls];
+            if (!s) return '';
+            return `<span class="class-pill" style="background:${s.bg};" title="${s.title}">${s.letter}</span>`;
+        }).join('');
+    }
+
+    // Replace each row's role-pill cell (4th <td>) and class-pill cell (5th
+    // <td>) with dynamically-computed pills. This makes the displayed roles
+    // match the filter logic exactly, AND fixes items whose data-classes is
+    // empty (no DB restriction = all classes).
     rows.forEach(row => {
         const it = rowItemCache.get(row);
         const roles = computeApplicableRoles(it);
         const cells = row.querySelectorAll('td');
         if (cells.length >= 4) {
             cells[3].innerHTML = renderRolePills(roles);
+        }
+        if (cells.length >= 5 && (row.dataset.classes || '').trim() === '') {
+            // Only override the class cell when the original data-classes was
+            // empty — preserve hand-curated class lists otherwise.
+            // Order pills consistently.
+            const ordered = CLASS_ORDER.filter(c => it.classes.includes(c));
+            cells[4].innerHTML = renderClassPills(ordered);
         }
     });
 
