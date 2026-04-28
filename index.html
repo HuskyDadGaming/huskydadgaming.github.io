@@ -1753,12 +1753,19 @@
             return it.classes.filter(cls => classFillsRole(it, cls, role));
         }
 
-        // When a specific role is selected, only show that role's pill in
-        // the Roles column — the column reinforces the active filter.
+        // Narrow role pills to roles fillable by the active class (if any)
+        // AND further narrow to the active role filter (if any).
         function narrowRolesForFilter(it, role) {
-            const all = effectiveRoles(it);
-            if (!role) return all;
-            return all.includes(role) ? [role] : all;
+            let candidates;
+            if (state.class) {
+                candidates = ['tank','heal','melee','ranged'].filter(
+                    r => classFillsRole(it, state.class, r)
+                );
+            } else {
+                candidates = effectiveRoles(it);
+            }
+            if (!role) return candidates;
+            return candidates.includes(role) ? [role] : candidates;
         }
 
         const html = rows.map(it => {

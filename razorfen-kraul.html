@@ -922,13 +922,24 @@
     // Replace each row's role-pill cell (4th <td>) with dynamically-computed
     // pills. Class pills (5th td) are also re-rendered so they narrow to the
     // active role (e.g. selecting Heal shows only healer-capable classes).
-    // Role pills also narrow to the active role so the column reinforces
-    // the filter visually.
+    // Role pills also narrow to the active role/class so the column reinforces
+    // the active filter visually.
     function refreshPills() {
         rows.forEach(row => {
             const it = rowItemCache.get(row);
-            const roles = computeApplicableRoles(it);
             const cells = row.querySelectorAll('td');
+
+            // Compute applicable roles, narrowed by active class if one is set
+            let roles;
+            if (activeClass !== 'all') {
+                // Only show roles that the active class can fill with this item
+                roles = ['tank','heal','melee','ranged'].filter(
+                    r => classFillsRole(it, activeClass, r)
+                );
+            } else {
+                roles = computeApplicableRoles(it);
+            }
+
             if (cells.length >= 4) {
                 // When a specific role is selected, only show that pill
                 let displayRoles = roles;
@@ -1131,6 +1142,7 @@
     classSelect.addEventListener('change', () => {
         activeClass = classSelect.value;
         syncRoleButtons();  // role counts narrow to selected class
+        refreshPills();     // role pills narrow to selected class
         applyFilters();
     });
 })();
