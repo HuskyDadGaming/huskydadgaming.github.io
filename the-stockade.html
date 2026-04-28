@@ -684,9 +684,14 @@
                 cells[3].innerHTML = renderRolePills(displayRoles);
             }
             if (cells.length >= 5) {
-                // Narrow classes by active role; "all" shows all proficient
+                // Class pills:
+                //   • If a specific class is selected, only show that class
+                //   • Else if a role is selected, narrow to role-capable classes
+                //   • Else show all proficient classes
                 let displayClasses = it.classes;
-                if (activeRole !== 'all') {
+                if (activeClass !== 'all') {
+                    displayClasses = it.classes.filter(c => c === activeClass);
+                } else if (activeRole !== 'all') {
                     displayClasses = it.classes.filter(c => classFillsRole(it, c, activeRole));
                 }
                 const ordered = CLASS_ORDER.filter(c => displayClasses.includes(c));

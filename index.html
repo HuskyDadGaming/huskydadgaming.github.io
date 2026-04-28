@@ -1745,10 +1745,12 @@
         emptyEl.style.display = 'none';
         countEl.innerHTML = `<strong>${rows.length}</strong> items match (of ${items.length} total)`;
 
-        // When a role is selected, narrow each item's displayed class pills
-        // to only the classes that can fulfil that role with the item.
-        // When role is "all", show all proficient classes.
+        // Class pills:
+        //   • If a specific class is selected, only show that class
+        //   • Else if a role is selected, narrow to role-capable classes
+        //   • Else show all proficient classes
         function narrowClassesForRole(it, role) {
+            if (state.class) return it.classes.filter(c => c === state.class);
             if (!role) return it.classes;
             return it.classes.filter(cls => classFillsRole(it, cls, role));
         }
