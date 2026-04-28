@@ -952,12 +952,18 @@
                 // Class pills:
                 //   • If a specific class is selected, only show that class
                 //   • Else if a role is selected, narrow to role-capable classes
-                //   • Else show all proficient classes
+                //   • Else (no filters) hide classes whose armor proficiency
+                //     wouldn't realistically wear this. A warrior CAN equip
+                //     leather, but doesn't — so we hide it.
                 let displayClasses = it.classes;
                 if (activeClass !== 'all') {
                     displayClasses = it.classes.filter(c => c === activeClass);
                 } else if (activeRole !== 'all') {
                     displayClasses = it.classes.filter(c => classFillsRole(it, c, activeRole));
+                } else {
+                    // Default: filter out classes that wouldn't realistically
+                    // wear this armor type (warrior on leather, mage on mail).
+                    displayClasses = it.classes.filter(c => passesClassArmor(it, c, null));
                 }
                 const ordered = CLASS_ORDER.filter(c => displayClasses.includes(c));
                 cells[4].innerHTML = renderClassPills(ordered);

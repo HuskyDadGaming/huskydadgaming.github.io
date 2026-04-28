@@ -1748,10 +1748,11 @@
         // Class pills:
         //   • If a specific class is selected, only show that class
         //   • Else if a role is selected, narrow to role-capable classes
-        //   • Else show all proficient classes
+        //   • Else (no filters) hide classes whose armor proficiency
+        //     wouldn't realistically wear this (warrior on leather, etc.)
         function narrowClassesForRole(it, role) {
             if (state.class) return it.classes.filter(c => c === state.class);
-            if (!role) return it.classes;
+            if (!role) return it.classes.filter(c => passesClassArmor(it, c, null));
             return it.classes.filter(cls => classFillsRole(it, cls, role));
         }
 
