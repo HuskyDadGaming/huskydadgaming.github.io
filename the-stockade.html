@@ -363,7 +363,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin hunter shaman">
+                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin hunter dk shaman">
                         <td><span style="color:#0070dd; font-weight:600;">Jimmied Handcuffs</span></td>
                         <td><span class="slot-text">Wrist (Mail)</span></td>
                         <td><span class="stats-list"><span class="stat">+89 Armor</span><span class="stat">+3 Strength</span><span class="stat">+7 Stamina</span></span></td>
@@ -419,7 +419,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="item-row" data-roles="melee ranged" data-classes="warrior paladin hunter shaman">
+                    <tr class="item-row" data-roles="melee ranged" data-classes="warrior paladin hunter dk shaman">
                         <td><span style="color:#ffffff; font-weight:600;">Raider's Shoulderpads</span></td>
                         <td><span class="slot-text">Shoulder (Mail)</span></td>
                         <td><span class="stats-list"><span class="stat">+122 Armor</span></span></td>
@@ -567,12 +567,7 @@
         const slot = slotEl ? slotEl.textContent.trim() : '';
         const statEls = row.querySelectorAll('.stat');
         const stats = Array.from(statEls).map(el => el.textContent.trim()).filter(Boolean);
-        let classes = (row.dataset.classes || '').split(' ').filter(Boolean);
-        // Empty data-classes means no class restriction in DB — treat as ALL classes
-        // so the item gets correct role-pill detection and isn't filtered out.
-        if (classes.length === 0) {
-            classes = ['warrior','paladin','hunter','rogue','priest','dk','shaman','mage','warlock','druid'];
-        }
+        const classes = (row.dataset.classes || '').split(' ').filter(Boolean);
         return {
             slot: slot,
             slotFilter: computeSlotFilter(slot),
@@ -644,10 +639,10 @@
         }).join('');
     }
 
-    // Replace each row's role-pill cell (4th <td>) and class-pill cell (5th
-    // <td>) with dynamically-computed pills. This makes the displayed roles
-    // match the filter logic exactly, AND fixes items whose data-classes is
-    // empty (no DB restriction = all classes).
+    // Replace each row's role-pill cell (4th <td>) with dynamically-computed
+    // pills. Also re-render the class-pill cell (5th <td>) if it's empty
+    // (some build runs failed to populate class pills even when data-classes
+    // is correct).
     rows.forEach(row => {
         const it = rowItemCache.get(row);
         const roles = computeApplicableRoles(it);
@@ -655,10 +650,8 @@
         if (cells.length >= 4) {
             cells[3].innerHTML = renderRolePills(roles);
         }
-        if (cells.length >= 5 && (row.dataset.classes || '').trim() === '') {
-            // Only override the class cell when the original data-classes was
-            // empty — preserve hand-curated class lists otherwise.
-            // Order pills consistently.
+        if (cells.length >= 5 && !cells[4].textContent.trim()) {
+            // Class cell is empty; render from data-classes
             const ordered = CLASS_ORDER.filter(c => it.classes.includes(c));
             cells[4].innerHTML = renderClassPills(ordered);
         }

@@ -289,7 +289,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="item-row" data-roles="melee tank heal ranged" data-classes="hunter rogue shaman druid">
+                    <tr class="item-row" data-roles="melee tank heal ranged" data-classes="warrior paladin hunter rogue dk shaman druid">
                         <td><span style="color:#ffffff; font-weight:600;">Ceremonial Leather Ankleguards</span></td>
                         <td><span class="slot-text">Feet (Leather)</span></td>
                         <td><span class="stats-list"><span class="stat">+45 Armor</span></span></td>
@@ -327,7 +327,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="item-row" data-roles="ranged heal" data-classes="priest mage warlock">
+                    <tr class="item-row" data-roles="ranged heal" data-classes="paladin priest shaman mage warlock druid">
                         <td><span style="color:#0070dd; font-weight:600;">Crystalline Cuffs</span></td>
                         <td><span class="slot-text">Wrist (Cloth)</span></td>
                         <td><span class="stats-list"><span class="stat">+15 Armor</span><span class="stat">+2 Spirit</span><span class="stat">+2 Intellect</span></span></td>
@@ -336,7 +336,7 @@
                         <td class="text-end">18</td>
                         <td class="text-end">40.0%</td>
                     </tr>
-                    <tr class="item-row" data-roles="ranged heal" data-classes="">
+                    <tr class="item-row" data-roles="ranged heal" data-classes="warrior paladin hunter rogue dk shaman druid">
                         <td><span style="color:#0070dd; font-weight:600;">Subterranean Cape</span></td>
                         <td><span class="slot-text">Back (Cloth)</span></td>
                         <td><span class="stats-list"><span class="stat">+17 Armor</span><span class="stat">+4 Agility</span><span class="stat">+4 Strength</span></span></td>
@@ -383,7 +383,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin hunter shaman">
+                    <tr class="item-row" data-roles="melee" data-classes="warrior paladin hunter dk shaman">
                         <td><span style="color:#0070dd; font-weight:600;">Cavedweller Bracers</span></td>
                         <td><span class="slot-text">Wrist (Mail)</span></td>
                         <td><span class="stats-list"><span class="stat">+78 Armor</span><span class="stat">+3 Strength</span><span class="stat">+4 Stamina</span></span></td>
@@ -392,7 +392,7 @@
                         <td class="text-end">18</td>
                         <td class="text-end">40.0%</td>
                     </tr>
-                    <tr class="item-row" data-roles="ranged heal" data-classes="priest mage warlock">
+                    <tr class="item-row" data-roles="ranged heal" data-classes="paladin priest shaman mage warlock druid">
                         <td><span style="color:#0070dd; font-weight:600;">Robe of Evocation</span></td>
                         <td><span class="slot-text">Chest (Cloth)</span></td>
                         <td><span class="stats-list"><span class="stat">+35 Armor</span><span class="stat">+5 Intellect</span><span class="stat">+4 Stamina</span><span class="stat">+5 Crit</span></span></td>
@@ -439,7 +439,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="item-row" data-roles="melee tank heal ranged" data-classes="hunter rogue shaman druid">
+                    <tr class="item-row" data-roles="melee tank heal ranged" data-classes="warrior paladin hunter rogue dk shaman druid">
                         <td><span style="color:#ffffff; font-weight:600;">Ceremonial Leather Ankleguards</span></td>
                         <td><span class="slot-text">Feet (Leather)</span></td>
                         <td><span class="stats-list"><span class="stat">+45 Armor</span></span></td>
@@ -587,12 +587,7 @@
         const slot = slotEl ? slotEl.textContent.trim() : '';
         const statEls = row.querySelectorAll('.stat');
         const stats = Array.from(statEls).map(el => el.textContent.trim()).filter(Boolean);
-        let classes = (row.dataset.classes || '').split(' ').filter(Boolean);
-        // Empty data-classes means no class restriction in DB — treat as ALL classes
-        // so the item gets correct role-pill detection and isn't filtered out.
-        if (classes.length === 0) {
-            classes = ['warrior','paladin','hunter','rogue','priest','dk','shaman','mage','warlock','druid'];
-        }
+        const classes = (row.dataset.classes || '').split(' ').filter(Boolean);
         return {
             slot: slot,
             slotFilter: computeSlotFilter(slot),
@@ -664,10 +659,10 @@
         }).join('');
     }
 
-    // Replace each row's role-pill cell (4th <td>) and class-pill cell (5th
-    // <td>) with dynamically-computed pills. This makes the displayed roles
-    // match the filter logic exactly, AND fixes items whose data-classes is
-    // empty (no DB restriction = all classes).
+    // Replace each row's role-pill cell (4th <td>) with dynamically-computed
+    // pills. Also re-render the class-pill cell (5th <td>) if it's empty
+    // (some build runs failed to populate class pills even when data-classes
+    // is correct).
     rows.forEach(row => {
         const it = rowItemCache.get(row);
         const roles = computeApplicableRoles(it);
@@ -675,10 +670,8 @@
         if (cells.length >= 4) {
             cells[3].innerHTML = renderRolePills(roles);
         }
-        if (cells.length >= 5 && (row.dataset.classes || '').trim() === '') {
-            // Only override the class cell when the original data-classes was
-            // empty — preserve hand-curated class lists otherwise.
-            // Order pills consistently.
+        if (cells.length >= 5 && !cells[4].textContent.trim()) {
+            // Class cell is empty; render from data-classes
             const ordered = CLASS_ORDER.filter(c => it.classes.includes(c));
             cells[4].innerHTML = renderClassPills(ordered);
         }
