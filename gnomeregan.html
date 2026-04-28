@@ -864,22 +864,28 @@
     }
 
     // Replace each row's role-pill cell (4th <td>) with dynamically-computed
-    // pills. Also re-render the class-pill cell (5th <td>) if it's empty
-    // (some build runs failed to populate class pills even when data-classes
-    // is correct).
-    rows.forEach(row => {
-        const it = rowItemCache.get(row);
-        const roles = computeApplicableRoles(it);
-        const cells = row.querySelectorAll('td');
-        if (cells.length >= 4) {
-            cells[3].innerHTML = renderRolePills(roles);
-        }
-        if (cells.length >= 5 && !cells[4].textContent.trim()) {
-            // Class cell is empty; render from data-classes
-            const ordered = CLASS_ORDER.filter(c => it.classes.includes(c));
-            cells[4].innerHTML = renderClassPills(ordered);
-        }
-    });
+    // pills. Class pills (5th td) are also re-rendered so they narrow to the
+    // active role (e.g. selecting Heal shows only healer-capable classes).
+    function refreshPills() {
+        rows.forEach(row => {
+            const it = rowItemCache.get(row);
+            const roles = computeApplicableRoles(it);
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 4) {
+                cells[3].innerHTML = renderRolePills(roles);
+            }
+            if (cells.length >= 5) {
+                // Narrow classes by active role; "all" shows all proficient
+                let displayClasses = it.classes;
+                if (activeRole !== 'all') {
+                    displayClasses = it.classes.filter(c => classFillsRole(it, c, activeRole));
+                }
+                const ordered = CLASS_ORDER.filter(c => displayClasses.includes(c));
+                cells[4].innerHTML = renderClassPills(ordered);
+            }
+        });
+    }
+    refreshPills();
 
     // Restrict the class dropdown to classes capable of the active role.
     // 'all' role = all classes shown; otherwise only role-capable classes.
@@ -1055,6 +1061,7 @@
             }
             syncClassDropdown(activeRole);
             syncRoleButtons();
+            refreshPills();   // class pills narrow to selected role
             applyFilters();
         });
     });

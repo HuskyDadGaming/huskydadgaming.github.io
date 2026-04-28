@@ -1737,6 +1737,14 @@
         emptyEl.style.display = 'none';
         countEl.innerHTML = `<strong>${rows.length}</strong> items match (of ${items.length} total)`;
 
+        // When a role is selected, narrow each item's displayed class pills
+        // to only the classes that can fulfil that role with the item.
+        // When role is "all", show all proficient classes.
+        function narrowClassesForRole(it, role) {
+            if (!role) return it.classes;
+            return it.classes.filter(cls => classFillsRole(it, cls, role));
+        }
+
         const html = rows.map(it => {
             const wing = it.wing ? ` <span style="color:#888;font-size:0.7rem">(${it.wing})</span>` : '';
             const qtag = it.quality >= 3 ?
@@ -1748,7 +1756,7 @@
                 <td>${escapeHtml(it.slot)}</td>
                 <td class="stats-cell col-stats">${renderStats(it.stats)}</td>
                 <td class="roles">${renderRolePills(effectiveRoles(it))}</td>
-                <td class="classes">${renderClassPills(it.classes)}</td>
+                <td class="classes">${renderClassPills(narrowClassesForRole(it, state.role))}</td>
                 <td class="num">${it.ilvl || '—'}</td>
                 <td class="num">${it.req || '—'}</td>
                 <td>
