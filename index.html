@@ -1577,7 +1577,8 @@
             // Rogue & Druid are Agility-primary — Strength alone isn't useful
             if (cls === 'rogue' || cls === 'druid') {
                 if (hasStat('Agility') || hasStat('Attack Power') || hasStat('Armor Pen')) return true;
-                if (['One-Hand','Two-Hand','Main Hand'].includes(slot)) return true;
+                // Weapon fallback: only if NO Strength (Str = clearly a non-Agi class weapon)
+                if (['One-Hand','Two-Hand','Main Hand'].includes(slot) && !hasStat('Strength')) return true;
                 return false;
             }
             // All other melee classes: Strength/AP/ArmorPen all valid
@@ -1754,12 +1755,22 @@
         // Class pills:
         //   • If a specific class is selected, only show that class
         //   • Else if a role is selected, narrow to role-capable classes
-        //   • Else (no filters) hide classes whose armor proficiency
-        //     wouldn't realistically wear this (warrior on leather, etc.)
+        //   • Else (no filters) show classes for whom the item is actually
+        //     useful — pass armor floor AND fill at least one role (or item
+        //     has no role for anyone, e.g. generic stamina jewellery).
         function narrowClassesForRole(it, role) {
             if (state.class) return it.classes.filter(c => c === state.class);
-            if (!role) return it.classes.filter(c => passesClassArmor(it, c, null));
-            return it.classes.filter(cls => classFillsRole(it, cls, role));
+            if (role) return it.classes.filter(cls => classFillsRole(it, cls, role));
+            const anyHasRole = it.classes.some(c =>
+                ['tank','heal','melee','ranged'].some(r => classFillsRole(it, c, r))
+            );
+            return it.classes.filter(c => {
+                if (!passesClassArmor(it, c, null)) return false;
+                const fillsAny = ['tank','heal','melee','ranged'].some(
+                    r => classFillsRole(it, c, r)
+                );
+                return fillsAny || !anyHasRole;
+            });
         }
 
         // Narrow role pills to roles fillable by the active class (if any)

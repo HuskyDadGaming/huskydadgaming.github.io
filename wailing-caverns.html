@@ -845,7 +845,8 @@
             // Rogue & Druid are Agility-primary — Strength alone isn't useful
             if (cls === 'rogue' || cls === 'druid') {
                 if (hasStat('Agility') || hasStat('Attack Power') || hasStat('Armor Pen')) return true;
-                if (['One-Hand','Two-Hand','Main Hand'].includes(slot)) return true;
+                // Weapon fallback: only if NO Strength (Str = clearly a non-Agi class weapon)
+                if (['One-Hand','Two-Hand','Main Hand'].includes(slot) && !hasStat('Strength')) return true;
                 return false;
             }
             // All other melee classes: Strength/AP/ArmorPen all valid
@@ -994,18 +995,26 @@
                 // Class pills:
                 //   • If a specific class is selected, only show that class
                 //   • Else if a role is selected, narrow to role-capable classes
-                //   • Else (no filters) hide classes whose armor proficiency
-                //     wouldn't realistically wear this. A warrior CAN equip
-                //     leather, but doesn't — so we hide it.
+                //   • Else (no filters) show classes for whom the item is
+                //     actually useful (passes any role check OR is a generic
+                //     proficient slot like ring/neck/back).
                 let displayClasses = it.classes;
                 if (activeClass !== 'all') {
                     displayClasses = it.classes.filter(c => c === activeClass);
                 } else if (activeRole !== 'all') {
                     displayClasses = it.classes.filter(c => classFillsRole(it, c, activeRole));
                 } else {
-                    // Default: filter out classes that wouldn't realistically
-                    // wear this armor type (warrior on leather, mage on mail).
-                    displayClasses = it.classes.filter(c => passesClassArmor(it, c, null));
+                    // Default: hide classes whose armor floor would reject the
+                    // item AND who can't fill any role with it.
+                    displayClasses = it.classes.filter(c => {
+                        if (!passesClassArmor(it, c, null)) return false;
+                        // Show if any role works for them, OR no specific role
+                        // applies to anyone (generic stamina/jewelry items)
+                        const fillsAny = ['tank','heal','melee','ranged'].some(
+                            r => classFillsRole(it, c, r)
+                        );
+                        return fillsAny || computeApplicableRoles(it).length === 0;
+                    });
                 }
                 const ordered = CLASS_ORDER.filter(c => displayClasses.includes(c));
                 cells[4].innerHTML = renderClassPills(ordered);
