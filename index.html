@@ -1745,6 +1745,14 @@
             return it.classes.filter(cls => classFillsRole(it, cls, role));
         }
 
+        // When a specific role is selected, only show that role's pill in
+        // the Roles column — the column reinforces the active filter.
+        function narrowRolesForFilter(it, role) {
+            const all = effectiveRoles(it);
+            if (!role) return all;
+            return all.includes(role) ? [role] : all;
+        }
+
         const html = rows.map(it => {
             const wing = it.wing ? ` <span style="color:#888;font-size:0.7rem">(${it.wing})</span>` : '';
             const qtag = it.quality >= 3 ?
@@ -1755,7 +1763,7 @@
                 </td>
                 <td>${escapeHtml(it.slot)}</td>
                 <td class="stats-cell col-stats">${renderStats(it.stats)}</td>
-                <td class="roles">${renderRolePills(effectiveRoles(it))}</td>
+                <td class="roles">${renderRolePills(narrowRolesForFilter(it, state.role))}</td>
                 <td class="classes">${renderClassPills(narrowClassesForRole(it, state.role))}</td>
                 <td class="num">${it.ilvl || '—'}</td>
                 <td class="num">${it.req || '—'}</td>
