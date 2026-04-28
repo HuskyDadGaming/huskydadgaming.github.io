@@ -1555,13 +1555,6 @@
             }
             return false;
         }
-            if (cls === 'druid') {
-                // Bear tanks use leather. Stam + Agi combined = bear gear.
-                if (isLeather && hasStat('Stamina') && !hasCasterStat) return true;
-                return false;
-            }
-            return false;  // other classes don't tank
-        }
 
         // ---- HEAL ----
         if (role === 'heal') {
