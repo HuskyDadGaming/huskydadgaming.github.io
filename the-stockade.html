@@ -588,6 +588,44 @@
     const rowItemCache = new Map();
     rows.forEach(row => rowItemCache.set(row, rowToItem(row)));
 
+    // Compute applicable roles for an item (any role that any of its classes
+    // can fulfil according to the smart filter logic).
+    function computeApplicableRoles(it) {
+        const roles = [];
+        for (const role of ['tank', 'heal', 'melee', 'ranged']) {
+            if (it.classes.some(c => classFillsRole(it, c, role))) {
+                roles.push(role);
+            }
+        }
+        return roles;
+    }
+
+    // Render role pills consistent with the original markup style.
+    const ROLE_PILL_STYLES = {
+        tank:   { bg: '#3a5a8a', fg: '#7eb0e8', icon: '🛡', title: 'Tank' },
+        heal:   { bg: '#2d5a3d', fg: '#7ec896', icon: '+',  title: 'Healer' },
+        melee:  { bg: '#7a3a3a', fg: '#e88080', icon: '⚔',  title: 'Melee DPS' },
+        ranged: { bg: '#7a5a2d', fg: '#e8c87e', icon: '🏹', title: 'Ranged DPS' },
+    };
+    function renderRolePills(roles) {
+        if (!roles.length) return '<span class="text-muted small">—</span>';
+        return roles.map(r => {
+            const s = ROLE_PILL_STYLES[r];
+            return `<span class="role-pill" style="background:${s.bg};color:${s.fg};" title="${s.title}">${s.icon}</span>`;
+        }).join('');
+    }
+
+    // Replace each row's role-pill cell (4th <td>) with dynamically-computed
+    // pills. This makes the displayed roles match the filter logic exactly.
+    rows.forEach(row => {
+        const it = rowItemCache.get(row);
+        const roles = computeApplicableRoles(it);
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 4) {
+            cells[3].innerHTML = renderRolePills(roles);
+        }
+    });
+
     // Restrict the class dropdown to classes capable of the active role.
     // 'all' role = all classes shown; otherwise only role-capable classes.
     const ROLE_CLASSES = {
