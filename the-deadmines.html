@@ -799,9 +799,11 @@
                 return false;
             }
             // Caster classes — must have actual caster DPS stats, OR a wand
-            // (which is their ranged-slot weapon).
+            // (which is their ranged-slot weapon). Shields are NEVER ranged
+            // even with caster stats — they're healer/utility off-hands.
             if (cls === 'mage' || cls === 'warlock' || cls === 'priest' ||
                 cls === 'shaman' || cls === 'druid' || cls === 'paladin') {
+                if (isShield) return false;
                 if (hasStat('Spell Power') || hasStat('Intellect')) return true;
                 if (slot === 'Ranged' && /Wand/.test(ic)) return true;
                 return false;
