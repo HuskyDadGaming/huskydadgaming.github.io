@@ -850,7 +850,9 @@
         ranged: { bg: '#7a5a2d', fg: '#e8c87e', icon: '🏹', title: 'Ranged DPS' },
     };
     function renderRolePills(roles) {
-        if (!roles.length) return '<span class="text-muted small">—</span>';
+        if (!roles.length) {
+            return '<span class="role-pill role-pill-none" style="background:#3a3a3a;color:#888;font-style:italic;font-size:0.7rem;padding:1px 6px;" title="No role-specific stats — generic armor for proficient classes">Roleless</span>';
+        }
         return roles.map(r => {
             const s = ROLE_PILL_STYLES[r];
             return `<span class="role-pill" style="background:${s.bg};color:${s.fg};" title="${s.title}">${s.icon}</span>`;
