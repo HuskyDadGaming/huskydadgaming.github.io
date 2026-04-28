@@ -978,8 +978,15 @@
             if (cls === 'hunter') return false;
             if (isWeapon && (hasStat('Spirit') || hasStat('Spell Power') || hasStat('MP5'))) return false;
             if (isWeapon && hasStat('Intellect') && !(hasStat('Strength') || hasStat('Agility') || hasStat('Attack Power'))) return false;
+            // Rogue & Druid are Agility-primary — Strength alone isn't useful
+            if (cls === 'rogue' || cls === 'druid') {
+                if (hasStat('Agility') || hasStat('Attack Power') || hasStat('Armor Pen')) return true;
+                if (['One-Hand','Two-Hand','Main Hand'].includes(slot)) return true;
+                return false;
+            }
+            // All other melee classes: Strength/AP/ArmorPen all valid
             if (hasStat('Strength') || hasStat('Attack Power') || hasStat('Armor Pen')) return true;
-            if (hasStat('Agility') && (cls === 'rogue' || cls === 'druid' || cls === 'shaman')) return true;
+            if (hasStat('Agility') && cls === 'shaman') return true;
             if (['One-Hand','Two-Hand','Main Hand'].includes(slot)) return true;
             return false;
         }

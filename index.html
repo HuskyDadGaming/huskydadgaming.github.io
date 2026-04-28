@@ -1574,9 +1574,15 @@
             if (isWeapon && (hasStat('Spirit') || hasStat('Spell Power') || hasStat('MP5'))) return false;
             // Reject Intellect-bearing weapons unless paired with a melee stat
             if (isWeapon && hasStat('Intellect') && !(hasStat('Strength') || hasStat('Agility') || hasStat('Attack Power'))) return false;
-            // Strength or Attack Power-bearing items
+            // Rogue & Druid are Agility-primary — Strength alone isn't useful
+            if (cls === 'rogue' || cls === 'druid') {
+                if (hasStat('Agility') || hasStat('Attack Power') || hasStat('Armor Pen')) return true;
+                if (['One-Hand','Two-Hand','Main Hand'].includes(slot)) return true;
+                return false;
+            }
+            // All other melee classes: Strength/AP/ArmorPen all valid
             if (hasStat('Strength') || hasStat('Attack Power') || hasStat('Armor Pen')) return true;
-            if (hasStat('Agility') && (cls === 'rogue' || cls === 'druid' || cls === 'shaman')) return true;
+            if (hasStat('Agility') && cls === 'shaman') return true;
             // Melee weapons (1H/2H/Main Hand) without caster stats - already filtered above
             if (['One-Hand','Two-Hand','Main Hand'].includes(slot)) return true;
             return false;
