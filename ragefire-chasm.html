@@ -585,18 +585,24 @@
                 if (slot === 'Ranged') return true;
                 return false;
             }
-            // Caster classes — must have caster stats. Shields are NEVER
-            // ranged. Hybrid rule:
-            //   • Spell Power = clear DPS signal → ranged
-            //   • Wand = ranged-DPS weapon → ranged
-            //   • Intellect (with or without Spirit) → ranged levelling gear
-            //   • Spirit-only (no Intellect, no SP) = pure healer → not ranged
-            if (cls === 'mage' || cls === 'warlock' || cls === 'priest' ||
-                cls === 'shaman' || cls === 'druid' || cls === 'paladin') {
+            // Pure casters (mage/warlock/priest): Intellect always counts as
+            // ranged — they have no other role to itemise for. Even Spirit
+            // gear is "levelling caster gear" for them.
+            if (cls === 'mage' || cls === 'warlock' || cls === 'priest') {
                 if (isShield) return false;
                 if (hasStat('Spell Power')) return true;
                 if (slot === 'Ranged' && /Wand/.test(ic)) return true;
                 if (hasStat('Intellect')) return true;
+                return false;
+            }
+            // Hybrid classes (paladin/druid/shaman): Int+Spirit = healer gear
+            // for them, not ranged. Need explicit DPS signals (Spell Power,
+            // or Intellect WITHOUT Spirit) to count as ranged.
+            if (cls === 'shaman' || cls === 'druid' || cls === 'paladin') {
+                if (isShield) return false;
+                if (hasStat('Spell Power')) return true;
+                if (slot === 'Ranged' && /Wand/.test(ic)) return true;
+                if (hasStat('Intellect') && !hasStat('Spirit')) return true;
                 return false;
             }
             return false;
