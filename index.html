@@ -1481,6 +1481,14 @@
         warlock: ['Cloth'],
     };
 
+    // Minimum level a class can exist at. Death Knights are a hero class —
+    // they start at level 55, so any item with a lower required level is
+    // useless to them (they'll already have iLvl 70+ gear from their
+    // starting zone before they ever reach a sub-55 dungeon).
+    const CLASS_MIN_LEVEL = {
+        dk: 55,
+    };
+
     // Returns true if armor type is reasonable for the class.
     // Cloaks/jewelry/weapons/shields always pass.
     // For caster roles (heal/ranged), the armor floor drops to cloth - a
@@ -1500,6 +1508,16 @@
         // Body armor: must match class proficiency regardless of role.
         // (Paladin healer still can't wear cloth chest; mage still can't wear plate.)
         return allowed.includes(m[1]);
+    }
+
+    // Returns true if the item's required level is reachable by the class.
+    // Death Knights start at 55, so a fresh DK character will skip dozens
+    // of low-level dungeons entirely. Items below CLASS_MIN_LEVEL[cls] are
+    // hidden when that class is selected.
+    function passesClassMinLevel(it, cls) {
+        const minLvl = CLASS_MIN_LEVEL[cls];
+        if (!minLvl) return true;
+        return (it.req || 0) >= minLvl;
     }
 
     // Class-aware role logic. When BOTH class and role are set, this takes
@@ -1646,6 +1664,7 @@
             if (state.slot && it.slotFilter !== state.slot) return false;
             if (state.class) {
                 if (!it.classes.includes(state.class)) return false;
+                if (!passesClassMinLevel(it, state.class)) return false;
                 // When ONLY class is selected (no role), still apply the strict
                 // armor floor - showing a warrior all the cloth they're "technically
                 // proficient with" is noise. The armor floor moves with role
@@ -1728,6 +1747,7 @@
                 // (e.g. paladins can't use staves/wands/daggers — those should never count
                 // toward a paladin role tally even if the stat profile would otherwise fit.)
                 if (!it.classes.includes(state.class)) return false;
+                if (!passesClassMinLevel(it, state.class)) return false;
                 return classFillsRole(it, state.class, role);
             }
             return it.classes.some(c => classFillsRole(it, c, role));
@@ -1735,6 +1755,7 @@
         const matchesAll = (it) => {
             if (!state.class) return true;
             if (!it.classes.includes(state.class)) return false;
+            if (!passesClassMinLevel(it, state.class)) return false;
             return passesClassArmor(it, state.class, null);
         };
 
@@ -1904,6 +1925,8 @@
             if (lvlMax !== null && it.req > lvlMax) continue;
             // Class proficiency
             if (cls && !it.classes.includes(cls)) continue;
+            // Class min level (DK starts at 55)
+            if (cls && !passesClassMinLevel(it, cls)) continue;
             // Armor floor when class set + no role
             if (cls && !role && !passesClassArmor(it, cls, null)) continue;
             // Role check
