@@ -451,7 +451,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="item-row" data-roles="melee tank heal ranged" data-classes="warrior paladin hunter rogue dk shaman druid" data-req="16">
+                    <tr class="item-row" data-roles="melee tank heal ranged" data-classes="hunter rogue shaman druid" data-req="16">
                         <td><span style="color:#0070dd; font-weight:600;">Smelting Pants</span></td>
                         <td><span class="slot-text">Legs (Leather)</span></td>
                         <td><span class="stats-list"><span class="stat">+76 Armor</span><span class="stat">+8 Stamina</span><span class="stat">+7 Crit</span></span></td>
@@ -572,7 +572,7 @@
                         <td class="text-end">22</td>
                         <td class="text-end">30.0%</td>
                     </tr>
-                    <tr class="item-row" data-roles="melee tank heal ranged" data-classes="warrior paladin hunter rogue dk shaman druid" data-req="17">
+                    <tr class="item-row" data-roles="melee tank heal ranged" data-classes="hunter rogue shaman druid" data-req="17">
                         <td><span style="color:#0070dd; font-weight:600;">Blackened Defias Belt</span></td>
                         <td><span class="slot-text">Waist (Leather)</span></td>
                         <td><span class="stats-list"><span class="stat">+50 Armor</span></span></td>
@@ -657,7 +657,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="item-row" data-roles="ranged heal" data-classes="paladin priest shaman mage warlock druid" data-req="19">
+                    <tr class="item-row" data-roles="ranged heal" data-classes="priest mage warlock" data-req="19">
                         <td><span style="color:#0070dd; font-weight:600;">Corsair's Overshirt</span></td>
                         <td><span class="slot-text">Chest (Cloth)</span></td>
                         <td><span class="stats-list"><span class="stat">+42 Armor</span><span class="stat">+11 Spirit</span><span class="stat">+5 Stamina</span></span></td>
@@ -675,7 +675,7 @@
                         <td class="text-end">25</td>
                         <td class="text-end">30.0%</td>
                     </tr>
-                    <tr class="item-row" data-roles="melee ranged" data-classes="warrior paladin hunter rogue dk shaman druid" data-req="19">
+                    <tr class="item-row" data-roles="melee ranged" data-classes="hunter rogue shaman druid" data-req="19">
                         <td><span style="color:#0070dd; font-weight:600;">Blackened Defias Armor</span></td>
                         <td><span class="slot-text">Chest (Leather)</span></td>
                         <td><span class="stats-list"><span class="stat">+92 Armor</span><span class="stat">+11 Stamina</span><span class="stat">+3 Agility</span><span class="stat">+4 Strength</span></span></td>
@@ -711,16 +711,20 @@
 (function() {
     'use strict';
 
+    // Each class lists the armor types they can equip with a minimum level.
+    // Plate proficiency unlocks at lvl 40 for warrior/paladin (DK starts plate
+    // at 55). Mail proficiency unlocks at lvl 40 for hunter/shaman.
     const CLASS_ARMOR_FLOOR = {
-        warrior: ['Plate', 'Mail'],
-        paladin: ['Plate', 'Mail'],
-        dk:      ['Plate'],
-        hunter:  ['Mail', 'Leather'],
-        shaman:  ['Mail', 'Leather'],
-        rogue:   ['Leather'],
-        druid:   ['Leather'],
-        priest:  ['Cloth'],
-        mage:    ['Cloth'],
+        warrior: [{armor: 'Plate', minLvl: 40}, {armor: 'Mail', minLvl: 1}],
+        paladin: [{armor: 'Plate', minLvl: 40}, {armor: 'Mail', minLvl: 1}],
+        dk:      [{armor: 'Plate', minLvl: 55}],
+        hunter:  [{armor: 'Mail',  minLvl: 40}, {armor: 'Leather', minLvl: 1}],
+        shaman:  [{armor: 'Mail',  minLvl: 40}, {armor: 'Leather', minLvl: 1}],
+        rogue:   [{armor: 'Leather', minLvl: 1}],
+        druid:   [{armor: 'Leather', minLvl: 1}],
+        priest:  [{armor: 'Cloth', minLvl: 1}],
+        mage:    [{armor: 'Cloth', minLvl: 1}],
+        warlock: [{armor: 'Cloth', minLvl: 1}],
     };
 
     // Minimum level a class can exist at. Death Knights are a hero class —
@@ -752,18 +756,15 @@
     }
 
     function passesClassArmor(it, cls, role) {
-        const allowed = CLASS_ARMOR_FLOOR[cls];
-        if (!allowed) return true;
+        const tiers = CLASS_ARMOR_FLOOR[cls];
+        if (!tiers) return true;
         const m = (it.slot || '').match(/\((Cloth|Leather|Mail|Plate)\)/);
         if (!m) return true;
-        // Armor-type proficiency only applies to actual body-armor slots.
-        // Back, neck, finger, trinket items can be worn by any class even
-        // when displayed with an armor-type tag.
         const ARMOR_SLOTS = ['Head','Shoulder','Chest','Wrist','Hands','Waist','Legs','Feet'];
         if (!ARMOR_SLOTS.includes(it.slotFilter)) return true;
-        // Body armor: must match class proficiency regardless of role.
-        // (Paladin healer still can't wear cloth chest; mage still can't wear plate.)
-        return allowed.includes(m[1]);
+        const tier = tiers.find(t => t.armor === m[1]);
+        if (!tier) return false;
+        return (it.req || 0) >= tier.minLvl;
     }
 
     // Returns true if the item's required level is reachable by the class.
@@ -794,6 +795,8 @@
             // Caster stats disqualify the item as tank gear (it's healer gear)
             const hasCasterStat = hasStat('Spirit') || hasStat('Spell Power') ||
                                   hasStat('MP5') || hasStat('Intellect');
+            // Daggers are not tank weapons.
+            if (/^Dagger/.test(ic)) return false;
             if (cls === 'warrior' || cls === 'paladin' || cls === 'dk') {
                 if (cls !== 'dk' && isShield) return true;
                 if (isPlate && !hasCasterStat) return true;
