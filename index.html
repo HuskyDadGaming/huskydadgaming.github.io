@@ -1612,10 +1612,13 @@
                 if (hasStat('Intellect')) return true;
                 return false;
             }
-            // Hybrid classes (paladin/druid/shaman): Int+Spirit = healer gear
+            // Paladins have no ranged spec (Holy = healer, Ret/Prot = melee).
+            // Their caster gear is healer gear, never ranged.
+            if (cls === 'paladin') return false;
+            // Hybrid classes (druid/shaman): Int+Spirit = healer gear
             // for them, not ranged. Need explicit DPS signals (Spell Power,
             // or Intellect WITHOUT Spirit) to count as ranged.
-            if (cls === 'shaman' || cls === 'druid' || cls === 'paladin') {
+            if (cls === 'shaman' || cls === 'druid') {
                 if (isShield) return false;
                 if (hasStat('Spell Power')) return true;
                 if (slot === 'Ranged' && /Wand/.test(it.slot)) return true;
@@ -1720,7 +1723,13 @@
         // Role counts narrow by class when one is selected, else show full pool.
         // "All" with class set = items the class can use in any role.
         const matchesRole = (it, role) => {
-            if (state.class) return classFillsRole(it, state.class, role);
+            if (state.class) {
+                // Class proficiency gate: don't count items the class can't actually equip.
+                // (e.g. paladins can't use staves/wands/daggers — those should never count
+                // toward a paladin role tally even if the stat profile would otherwise fit.)
+                if (!it.classes.includes(state.class)) return false;
+                return classFillsRole(it, state.class, role);
+            }
             return it.classes.some(c => classFillsRole(it, c, role));
         };
         const matchesAll = (it) => {
@@ -1867,7 +1876,7 @@
         'tank':   ['warrior','paladin','dk','druid'],
         'heal':   ['priest','paladin','druid','shaman'],
         'melee':  ['warrior','paladin','dk','rogue','druid','shaman'],
-        'ranged': ['hunter','mage','warlock','priest','druid','shaman','paladin'],
+        'ranged': ['hunter','mage','warlock','priest','druid','shaman'],
     };
     // Snapshot the original "Warrior", "Paladin" labels (no count yet) so
     // we can append "(n)" dynamically as filters change.
