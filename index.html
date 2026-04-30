@@ -248,6 +248,19 @@
             }
             .finder-row select, .finder-row input[type=text] {
                 font-size: 0.85rem; padding: 6px 8px;
+
+            /* Talents mobile styles */
+            #view-talents [style*="grid-template-columns: 1fr 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            #view-talents [style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
+            #view-talents [style*="grid-template-columns: 1fr 1fr 1fr 1fr"] {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 0.8rem !important;
+            }
                 min-width: 0; flex: 1 1 auto;
             }
             .finder-row .quick-btn {
@@ -365,6 +378,7 @@
     <div class="tab-bar">
         <button class="tab-btn active" data-view="dungeons">📚 Browse Dungeons</button>
         <button class="tab-btn" data-view="finder">🔍 Find Loot</button>
+        <button class="tab-btn" data-view="talents">⚔️ Talents</button>
         <a class="tab-btn tab-link" href="armoury.html">🛡️ Armoury</a>
     </div>
 
@@ -1361,6 +1375,223 @@
         </div>
         <div id="f-empty" class="empty-finder" style="display:none">
             No items match your filters. Try clearing one.
+        </div>
+
+    </section>
+
+    <section id="view-talents" class="tab-view">
+        
+        <div style="background: #232323; border: 1px solid #3a3a3a; border-radius: 6px; padding: 2rem; margin-bottom: 2rem; text-align: center;">
+            <h1 style="color: #ffd100; margin-bottom: 0.5rem; font-size: 2.5rem;">The Rage Engine</h1>
+            <p style="color: #aaa; font-size: 1.2rem; margin-bottom: 0;">Tom's Protection Warrior Build Calculator</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <!-- Arms Tree -->
+            <div style="background: #232323; border: 1px solid #3a3a3a; border-radius: 6px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #4ea8de 0%, #2e8bb8 100%); color: white; padding: 1rem; text-align: center; position: relative;">
+                    <h3 style="color: white; margin-bottom: 0; font-size: 1.4rem;">Arms</h3>
+                    <div style="position: absolute; top: 50%; right: 1rem; transform: translateY(-50%); background: #1a1a1a; color: #ffd100; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: 600;">15/71</div>
+                </div>
+                <div style="padding: 1.5rem; text-align: center; color: #aaa;">
+                    <div style="margin-bottom: 1rem; font-size: 1.1rem; color: #ffd100;">Rage Engine Dip</div>
+                    <div style="font-size: 0.9rem; line-height: 1.4;">
+                        <div style="margin-bottom: 0.5rem;"><strong>Tactical Mastery 3/3</strong><br>Keep rage when switching stances</div>
+                        <div style="margin-bottom: 0.5rem;"><strong>Anger Management 3/3</strong><br>+1 rage per 3 seconds</div>
+                        <div><strong>Levels 40-51</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fury Tree -->
+            <div style="background: #232323; border: 1px solid #3a3a3a; border-radius: 6px; overflow: hidden; opacity: 0.6;">
+                <div style="background: linear-gradient(135deg, #666 0%, #444 100%); color: white; padding: 1rem; text-align: center; position: relative;">
+                    <h3 style="color: white; margin-bottom: 0; font-size: 1.4rem;">Fury</h3>
+                    <div style="position: absolute; top: 50%; right: 1rem; transform: translateY(-50%); background: #1a1a1a; color: #888; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: 600;">0/71</div>
+                </div>
+                <div style="padding: 3rem 1.5rem; text-align: center; color: #666;">
+                    <div style="font-size: 1.1rem;">No points allocated</div>
+                </div>
+            </div>
+
+            <!-- Protection Tree -->
+            <div style="background: #232323; border: 1px solid #ff6b35; border-radius: 6px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #ff6b35 0%, #cc5529 100%); color: white; padding: 1rem; text-align: center; position: relative;">
+                    <h3 style="color: white; margin-bottom: 0; font-size: 1.4rem;">Protection</h3>
+                    <div style="position: absolute; top: 50%; right: 1rem; transform: translateY(-50%); background: #1a1a1a; color: #ffd100; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: 600;">55/71</div>
+                </div>
+                <div style="padding: 1.5rem;">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
+                        <!-- Tier 1 -->
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #ffd100 0%, #cc9900 100%); border: 2px solid #ff6b35; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1a1a1a; font-size: 0.75rem; font-weight: 600;" title="Improved Bloodrage 2/2">
+                            <div>Improved</div>
+                            <div>Bloodrage</div>
+                            <div style="font-size: 0.7rem;">2/2</div>
+                        </div>
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #ffd100 0%, #cc9900 100%); border: 2px solid #ff6b35; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1a1a1a; font-size: 0.75rem; font-weight: 600;" title="Shield Specialization 5/5">
+                            <div>Shield</div>
+                            <div>Spec</div>
+                            <div style="font-size: 0.7rem;">5/5</div>
+                        </div>
+                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
+                        <div style="aspect-ratio: 1;"></div>
+
+                        <!-- Tier 2 -->
+                        <div style="aspect-ratio: 1;"></div>
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #4ea8de 0%, #2e8bb8 100%); border: 3px solid #64b5f6; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: white; font-size: 0.75rem; font-weight: 600; position: relative; box-shadow: 0 0 15px rgba(100, 181, 246, 0.6);" title="Incite - Next priority: 1/3 → 3/3">
+                            <div style="position: absolute; top: -6px; right: -6px; background: #64b5f6; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; border: 2px solid white;">20</div>
+                            <div>Incite</div>
+                            <div style="font-size: 0.7rem;">1/3</div>
+                            <div style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); font-size: 0.6rem; color: #64b5f6; font-weight: 700;">NEXT</div>
+                        </div>
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%); border: 2px solid #228B22; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1a1a1a; font-size: 0.75rem; font-weight: 600; position: relative;" title="Anticipation - Available at level 21">
+                            <div style="position: absolute; top: -6px; right: -6px; background: #228B22; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; border: 2px solid white;">21</div>
+                            <div>Antici-</div>
+                            <div>pation</div>
+                            <div style="font-size: 0.7rem;">0/5</div>
+                        </div>
+                        <div style="aspect-ratio: 1;"></div>
+
+                        <!-- Tier 3 -->
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%); border: 2px solid #228B22; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1a1a1a; font-size: 0.75rem; font-weight: 600; position: relative;" title="Last Stand - Critical defensive cooldown at level 23">
+                            <div style="position: absolute; top: -6px; right: -6px; background: #228B22; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; border: 2px solid white;">23</div>
+                            <div>Last</div>
+                            <div>Stand</div>
+                            <div style="font-size: 0.7rem;">0/1</div>
+                        </div>
+                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
+                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%); border: 2px solid #228B22; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1a1a1a; font-size: 0.75rem; font-weight: 600; position: relative;" title="Toughness - Stun resistance and armor">
+                            <div style="position: absolute; top: -6px; right: -6px; background: #228B22; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; border: 2px solid white;">24</div>
+                            <div>Tough-</div>
+                            <div>ness</div>
+                            <div style="font-size: 0.7rem;">0/5</div>
+                        </div>
+
+                        <!-- Tier 4 spacer -->
+                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
+                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
+                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
+                        <div style="aspect-ratio: 1;"></div>
+
+                        <!-- Tier 5 -->
+                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%); border: 2px solid #228B22; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1a1a1a; font-size: 0.75rem; font-weight: 600; position: relative;" title="Concussion Blow - Game-changing stun at level 28">
+                            <div style="position: absolute; top: -6px; right: -6px; background: #FFD700; color: #1a1a1a; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; border: 2px solid white; font-weight: 700;">28</div>
+                            <div>Concus-</div>
+                            <div>sion Blow</div>
+                            <div style="font-size: 0.7rem;">0/1</div>
+                        </div>
+                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
+                        <div style="aspect-ratio: 1;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Build progression -->
+        <div style="background: #232323; border: 1px solid #3a3a3a; border-radius: 6px; padding: 2rem;">
+            <h2 style="color: #ffd100; margin-bottom: 1.5rem; font-size: 2rem;">Leveling Path for Tom</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <div style="background: #1a1a1a; border: 1px solid #4ea8de; border-radius: 8px; padding: 1.5rem;">
+                    <h3 style="color: #4ea8de; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="background: #4ea8de; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">1</span>
+                        Foundation (20→28)
+                    </h3>
+                    <div style="font-size: 0.9rem; line-height: 1.5;">
+                        <div style="background: linear-gradient(90deg, rgba(255, 107, 53, 0.2) 0%, transparent 100%); border-left: 3px solid #ff6b35; padding: 0.8rem; margin-bottom: 0.8rem; border-radius: 4px;">
+                            <strong style="color: #ffd100;">Lvl 19-20:</strong> <strong>Incite 3/3</strong> ✨<br>
+                            <span style="color: #aaa;">Finish HS crit boost: 5% → 15%</span>
+                        </div>
+                        <div style="padding: 0.5rem 0; border-bottom: 1px solid #333;">
+                            <strong>Lvl 21-22:</strong> Anticipation 2/5 (+4% dodge)
+                        </div>
+                        <div style="background: linear-gradient(90deg, rgba(255, 107, 53, 0.2) 0%, transparent 100%); border-left: 3px solid #ff6b35; padding: 0.8rem; margin: 0.8rem 0; border-radius: 4px;">
+                            <strong style="color: #ffd100;">Lvl 23:</strong> <strong>Last Stand 1/1</strong> ✨<br>
+                            <span style="color: #aaa;">First major defensive CD</span>
+                        </div>
+                        <div style="padding: 0.5rem 0; border-bottom: 1px solid #333;">
+                            <strong>Lvl 24-26:</strong> Toughness 3/5 (stun resist)
+                        </div>
+                        <div style="background: linear-gradient(90deg, rgba(255, 107, 53, 0.2) 0%, transparent 100%); border-left: 3px solid #ff6b35; padding: 0.8rem; margin-top: 0.8rem; border-radius: 4px;">
+                            <strong style="color: #ffd100;">Lvl 28:</strong> <strong>Concussion Blow 1/1</strong> ✨<br>
+                            <span style="color: #aaa;">5-sec stun control</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #1a1a1a; border: 1px solid #90EE90; border-radius: 8px; padding: 1.5rem;">
+                    <h3 style="color: #90EE90; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="background: #90EE90; color: #1a1a1a; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600;">2</span>
+                        Arms Dip - "Rage Engine" (40→51)
+                    </h3>
+                    <div style="font-size: 0.9rem; line-height: 1.5;">
+                        <div style="padding: 0.5rem 0; border-bottom: 1px solid #333;">
+                            <strong>Lvl 40-42:</strong> Improved Heroic Strike 3/3
+                        </div>
+                        <div style="padding: 0.5rem 0; border-bottom: 1px solid #333;">
+                            <strong>Lvl 45:</strong> Improved Rend 2/2 (T2 gate)
+                        </div>
+                        <div style="background: linear-gradient(90deg, rgba(144, 238, 144, 0.2) 0%, transparent 100%); border-left: 3px solid #90EE90; padding: 0.8rem; margin: 0.8rem 0; border-radius: 4px;">
+                            <strong style="color: #90EE90;">Lvl 46-48:</strong> <strong>Tactical Mastery 3/3</strong> ✨<br>
+                            <span style="color: #aaa;">Keep rage when stance switching</span>
+                        </div>
+                        <div style="background: linear-gradient(90deg, rgba(144, 238, 144, 0.2) 0%, transparent 100%); border-left: 3px solid #90EE90; padding: 0.8rem; border-radius: 4px;">
+                            <strong style="color: #90EE90;">Lvl 49-51:</strong> <strong>Anger Management 3/3</strong> ✨<br>
+                            <span style="color: #aaa;">+1 rage per 3sec + rage decay reduction</span>
+                        </div>
+                        <div style="margin-top: 1rem; padding: 1rem; background: rgba(144, 238, 144, 0.1); border-radius: 6px; text-align: center;">
+                            <strong style="color: #90EE90;">This solves rage starvation forever!</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #1a1a1a; border: 1px solid #ffd100; border-radius: 8px; padding: 1.5rem;">
+                <h3 style="color: #ffd100; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="background: #ffd100; color: #1a1a1a; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600;">3</span>
+                    Deep Protection Mastery (55→80)
+                </h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                    <div>
+                        <strong>Lvl 55-57:</strong> Finish Devastate 3/3<br>
+                        <strong>Lvl 58:</strong> Vigilance 1/3<br>
+                        <strong>Lvl 59-60:</strong> Shockwave 2/3
+                    </div>
+                    <div style="text-align: right;">
+                        <strong style="color: #ffd100; font-size: 1.1rem;">End Result:</strong><br>
+                        <span style="font-size: 1.2rem; color: #ff6b35;">55</span>/<span style="color: #666;">0</span>/<span style="color: #4ea8de;">15</span><br>
+                        <span style="color: #aaa; font-size: 0.85rem;">Prot/Fury/Arms</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current status -->
+        <div style="background: #232323; border: 1px solid #ffd100; border-radius: 6px; padding: 1.5rem; margin-top: 1.5rem; text-align: center;">
+            <h3 style="color: #ffd100; margin-bottom: 1rem;">Tom's Current Status</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem;">
+                <div>
+                    <div style="font-size: 1.5rem; color: #4ea8de; font-weight: 600;">20</div>
+                    <div style="color: #aaa; font-size: 0.9rem;">Level</div>
+                </div>
+                <div>
+                    <div style="font-size: 1.5rem; color: #90EE90; font-weight: 600;">8</div>
+                    <div style="color: #aaa; font-size: 0.9rem;">Talent Points</div>
+                </div>
+                <div>
+                    <div style="font-size: 1.5rem; color: #ff6b35; font-weight: 600;">15%</div>
+                    <div style="color: #aaa; font-size: 0.9rem;">HS Crit @ 3/3</div>
+                </div>
+                <div>
+                    <div style="font-size: 1.5rem; color: #ffd100; font-weight: 600;">3</div>
+                    <div style="color: #aaa; font-size: 0.9rem;">Levels to Last Stand</div>
+                </div>
+            </div>
+            <div style="margin-top: 1rem; font-style: italic; color: #aaa;">
+                Based on actual DBC data from AzerothCore 3.3.5a
+            </div>
         </div>
 
     </section>
