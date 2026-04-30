@@ -1381,218 +1381,492 @@
 
     <section id="view-talents" class="tab-view">
         
-        <div style="background: #232323; border: 1px solid #3a3a3a; border-radius: 6px; padding: 2rem; margin-bottom: 2rem; text-align: center;">
-            <h1 style="color: #ffd100; margin-bottom: 0.5rem; font-size: 2.5rem;">The Rage Engine</h1>
-            <p style="color: #aaa; font-size: 1.2rem; margin-bottom: 0;">Tom's Protection Warrior Build Calculator</p>
+        <div style="background: #232323; border: 1px solid #3a3a3a; border-radius: 6px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
+            <h1 style="color: #ffd100; margin-bottom: 0.5rem; font-size: 2rem;">Tom's Protection Warrior</h1>
+            <p style="color: #aaa; font-size: 1rem; margin-bottom: 0.5rem;">The Rage Engine Build (55/0/15)</p>
+            <div style="color: #4ea8de; font-size: 0.9rem;">Level 20 • 8 talent points spent • Next: Incite 3/3</div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+            
             <!-- Arms Tree -->
-            <div style="background: #232323; border: 1px solid #3a3a3a; border-radius: 6px; overflow: hidden;">
-                <div style="background: linear-gradient(135deg, #4ea8de 0%, #2e8bb8 100%); color: white; padding: 1rem; text-align: center; position: relative;">
-                    <h3 style="color: white; margin-bottom: 0; font-size: 1.4rem;">Arms</h3>
-                    <div style="position: absolute; top: 50%; right: 1rem; transform: translateY(-50%); background: #1a1a1a; color: #ffd100; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: 600;">15/71</div>
+            <div class="talent-tree">
+                <div class="tree-header arms-header">
+                    <h3>Arms</h3>
+                    <div class="tree-points">15/71</div>
                 </div>
-                <div style="padding: 1.5rem; text-align: center; color: #aaa;">
-                    <div style="margin-bottom: 1rem; font-size: 1.1rem; color: #ffd100;">Rage Engine Dip</div>
-                    <div style="font-size: 0.9rem; line-height: 1.4;">
-                        <div style="margin-bottom: 0.5rem;"><strong>Tactical Mastery 3/3</strong><br>Keep rage when switching stances</div>
-                        <div style="margin-bottom: 0.5rem;"><strong>Anger Management 3/3</strong><br>+1 rage per 3 seconds</div>
-                        <div><strong>Levels 40-51</strong></div>
+                <div class="talent-grid">
+                    <div style="grid-column: span 4; text-align: center; color: #aaa; padding: 2rem; font-style: italic;">
+                        Rage Engine talents unlocked at level 40+<br>
+                        <strong style="color: #4ea8de;">Tactical Mastery</strong> + <strong style="color: #4ea8de;">Anger Management</strong>
                     </div>
                 </div>
             </div>
 
             <!-- Fury Tree -->
-            <div style="background: #232323; border: 1px solid #3a3a3a; border-radius: 6px; overflow: hidden; opacity: 0.6;">
-                <div style="background: linear-gradient(135deg, #666 0%, #444 100%); color: white; padding: 1rem; text-align: center; position: relative;">
-                    <h3 style="color: white; margin-bottom: 0; font-size: 1.4rem;">Fury</h3>
-                    <div style="position: absolute; top: 50%; right: 1rem; transform: translateY(-50%); background: #1a1a1a; color: #888; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: 600;">0/71</div>
+            <div class="talent-tree">
+                <div class="tree-header fury-header">
+                    <h3>Fury</h3>
+                    <div class="tree-points">0/71</div>
                 </div>
-                <div style="padding: 3rem 1.5rem; text-align: center; color: #666;">
-                    <div style="font-size: 1.1rem;">No points allocated</div>
+                <div class="talent-grid">
+                    <div style="grid-column: span 4; text-align: center; color: #666; padding: 3rem; font-style: italic;">
+                        No points allocated
+                    </div>
                 </div>
             </div>
 
             <!-- Protection Tree -->
-            <div style="background: #232323; border: 1px solid #ff6b35; border-radius: 6px; overflow: hidden;">
-                <div style="background: linear-gradient(135deg, #ff6b35 0%, #cc5529 100%); color: white; padding: 1rem; text-align: center; position: relative;">
-                    <h3 style="color: white; margin-bottom: 0; font-size: 1.4rem;">Protection</h3>
-                    <div style="position: absolute; top: 50%; right: 1rem; transform: translateY(-50%); background: #1a1a1a; color: #ffd100; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: 600;">55/71</div>
+            <div class="talent-tree">
+                <div class="tree-header prot-header">
+                    <h3>Protection</h3>
+                    <div class="tree-points">55/71</div>
                 </div>
-                <div style="padding: 1.5rem;">
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
-                        <!-- Tier 1 -->
-                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #ffd100 0%, #cc9900 100%); border: 2px solid #ff6b35; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1a1a1a; font-size: 0.75rem; font-weight: 600;" title="Improved Bloodrage 2/2">
-                            <div>Improved</div>
-                            <div>Bloodrage</div>
-                            <div style="font-size: 0.7rem;">2/2</div>
+                <div class="talent-grid" id="prot-tree">
+                    <!-- Tier 1 (Row 1) -->
+                    <div class="talent-slot learned" data-talent="improved-bloodrage" data-rank="2" data-max="2">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_racial_bloodrage.jpg')"></div>
+                        <div class="talent-rank">2/2</div>
+                        <div class="talent-tooltip">
+                            <div class="tooltip-header">Improved Bloodrage</div>
+                            <div class="tooltip-rank">Rank 2/2</div>
+                            <div class="tooltip-desc">Increases the instant Rage generated by your Bloodrage ability by 2, and increases the total Rage generated over the duration by 2.</div>
+                            <div class="tooltip-next">Next rank: N/A</div>
                         </div>
-                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #ffd100 0%, #cc9900 100%); border: 2px solid #ff6b35; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1a1a1a; font-size: 0.75rem; font-weight: 600;" title="Shield Specialization 5/5">
-                            <div>Shield</div>
-                            <div>Spec</div>
-                            <div style="font-size: 0.7rem;">5/5</div>
-                        </div>
-                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
-                        <div style="aspect-ratio: 1;"></div>
-
-                        <!-- Tier 2 -->
-                        <div style="aspect-ratio: 1;"></div>
-                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #4ea8de 0%, #2e8bb8 100%); border: 3px solid #64b5f6; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: white; font-size: 0.75rem; font-weight: 600; position: relative; box-shadow: 0 0 15px rgba(100, 181, 246, 0.6);" title="Incite - Next priority: 1/3 → 3/3">
-                            <div style="position: absolute; top: -6px; right: -6px; background: #64b5f6; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; border: 2px solid white;">20</div>
-                            <div>Incite</div>
-                            <div style="font-size: 0.7rem;">1/3</div>
-                            <div style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); font-size: 0.6rem; color: #64b5f6; font-weight: 700;">NEXT</div>
-                        </div>
-                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%); border: 2px solid #228B22; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1a1a1a; font-size: 0.75rem; font-weight: 600; position: relative;" title="Anticipation - Available at level 21">
-                            <div style="position: absolute; top: -6px; right: -6px; background: #228B22; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; border: 2px solid white;">21</div>
-                            <div>Antici-</div>
-                            <div>pation</div>
-                            <div style="font-size: 0.7rem;">0/5</div>
-                        </div>
-                        <div style="aspect-ratio: 1;"></div>
-
-                        <!-- Tier 3 -->
-                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%); border: 2px solid #228B22; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1a1a1a; font-size: 0.75rem; font-weight: 600; position: relative;" title="Last Stand - Critical defensive cooldown at level 23">
-                            <div style="position: absolute; top: -6px; right: -6px; background: #228B22; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; border: 2px solid white;">23</div>
-                            <div>Last</div>
-                            <div>Stand</div>
-                            <div style="font-size: 0.7rem;">0/1</div>
-                        </div>
-                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
-                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
-                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%); border: 2px solid #228B22; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1a1a1a; font-size: 0.75rem; font-weight: 600; position: relative;" title="Toughness - Stun resistance and armor">
-                            <div style="position: absolute; top: -6px; right: -6px; background: #228B22; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; border: 2px solid white;">24</div>
-                            <div>Tough-</div>
-                            <div>ness</div>
-                            <div style="font-size: 0.7rem;">0/5</div>
-                        </div>
-
-                        <!-- Tier 4 spacer -->
-                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
-                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
-                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
-                        <div style="aspect-ratio: 1;"></div>
-
-                        <!-- Tier 5 -->
-                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
-                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%); border: 2px solid #228B22; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1a1a1a; font-size: 0.75rem; font-weight: 600; position: relative;" title="Concussion Blow - Game-changing stun at level 28">
-                            <div style="position: absolute; top: -6px; right: -6px; background: #FFD700; color: #1a1a1a; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; border: 2px solid white; font-weight: 700;">28</div>
-                            <div>Concus-</div>
-                            <div>sion Blow</div>
-                            <div style="font-size: 0.7rem;">0/1</div>
-                        </div>
-                        <div style="aspect-ratio: 1; background: #3a3a3a; border: 2px solid #666; border-radius: 8px; opacity: 0.4;"></div>
-                        <div style="aspect-ratio: 1;"></div>
                     </div>
+                    
+                    <div class="talent-slot learned" data-talent="shield-spec" data-rank="5" data-max="5">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_defend.jpg')"></div>
+                        <div class="talent-rank">5/5</div>
+                        <div class="talent-tooltip">
+                            <div class="tooltip-header">Shield Specialization</div>
+                            <div class="tooltip-rank">Rank 5/5</div>
+                            <div class="tooltip-desc">Gives you a 100% chance to generate 1 Rage when a block occurs, and increases your chance to block by 5%.</div>
+                            <div class="tooltip-next">Next rank: N/A</div>
+                        </div>
+                    </div>
+                    
+                    <div class="talent-slot unavailable">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_reincarnation.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                        <div class="talent-tooltip">
+                            <div class="tooltip-header">Improved Thunder Clap</div>
+                            <div class="tooltip-rank">Rank 0/3</div>
+                            <div class="tooltip-desc">Increases the damage done by your Thunder Clap by 60% and increases the slowing effect by 30%.</div>
+                            <div class="tooltip-req">Requires 15 points in Protection</div>
+                        </div>
+                    </div>
+                    
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 2 (Row 2) -->
+                    <div class="talent-slot empty"></div>
+                    
+                    <div class="talent-slot current" data-talent="incite" data-rank="1" data-max="3">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_punishingblow.jpg')"></div>
+                        <div class="talent-rank">1/3</div>
+                        <div class="level-badge">20</div>
+                        <div class="next-badge">NEXT</div>
+                        <div class="talent-tooltip">
+                            <div class="tooltip-header">Incite</div>
+                            <div class="tooltip-rank">Rank 1/3</div>
+                            <div class="tooltip-desc">Increases the critical strike chance of your Heroic Strike and Cleave abilities by 5%.</div>
+                            <div class="tooltip-next">Next rank: Increases critical strike chance by 10% (total 10%)</div>
+                            <div class="tooltip-max">Max rank: 15% critical strike chance</div>
+                        </div>
+                    </div>
+                    
+                    <div class="talent-slot available" data-talent="anticipation" data-rank="0" data-max="5">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_mirrorimage.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                        <div class="level-badge">21</div>
+                        <div class="talent-tooltip">
+                            <div class="tooltip-header">Anticipation</div>
+                            <div class="tooltip-rank">Rank 0/5</div>
+                            <div class="tooltip-desc">Increases your Dodge chance by 4%.</div>
+                            <div class="tooltip-next">Next rank: Increases Dodge chance by 1% (total 1%)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 3 (Row 3) -->
+                    <div class="talent-slot available" data-talent="last-stand" data-rank="0" data-max="1">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_ashestoashes.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                        <div class="level-badge">23</div>
+                        <div class="talent-tooltip">
+                            <div class="tooltip-header">Last Stand</div>
+                            <div class="tooltip-rank">Rank 0/1</div>
+                            <div class="tooltip-desc">When activated, this ability temporarily grants you 30% of your maximum hit points for 20 sec. After the effect expires, the hit points are lost.</div>
+                            <div class="tooltip-cooldown">8 minute cooldown</div>
+                        </div>
+                    </div>
+                    
+                    <div class="talent-slot unavailable">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_revenge.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                        <div class="talent-tooltip">
+                            <div class="tooltip-header">Improved Revenge</div>
+                            <div class="tooltip-rank">Rank 0/2</div>
+                            <div class="tooltip-desc">Gives your Revenge ability a 50% chance to stun the target for 1 sec.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="talent-slot unavailable">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_defend.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                        <div class="talent-tooltip">
+                            <div class="tooltip-header">Shield Mastery</div>
+                            <div class="tooltip-rank">Rank 0/2</div>
+                            <div class="tooltip-desc">Increases the amount of damage absorbed by your shield by 30%.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="talent-slot available" data-talent="toughness" data-rank="0" data-max="5">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_devotion.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                        <div class="level-badge">24</div>
+                        <div class="talent-tooltip">
+                            <div class="tooltip-header">Toughness</div>
+                            <div class="tooltip-rank">Rank 0/5</div>
+                            <div class="tooltip-desc">Reduces the duration of movement impairing effects by 30% and increases your armor by 10%.</div>
+                            <div class="tooltip-next">Next rank: Reduces duration by 6% and increases armor by 2% (total 6% and 2%)</div>
+                        </div>
+                    </div>
+
+                    <!-- Spacer row -->
+                    <div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 5 (Row 5) -->
+                    <div class="talent-slot empty"></div>
+                    
+                    <div class="talent-slot future" data-talent="concussion-blow" data-rank="0" data-max="1">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_thunderbolt.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                        <div class="level-badge special">28</div>
+                        <div class="talent-tooltip">
+                            <div class="tooltip-header">Concussion Blow</div>
+                            <div class="tooltip-rank">Rank 0/1</div>
+                            <div class="tooltip-desc">Stuns the opponent for 5 sec.</div>
+                            <div class="tooltip-cooldown">45 second cooldown</div>
+                            <div class="tooltip-special">Game-changing control ability</div>
+                        </div>
+                    </div>
+                    
+                    <div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Build progression -->
-        <div style="background: #232323; border: 1px solid #3a3a3a; border-radius: 6px; padding: 2rem;">
-            <h2 style="color: #ffd100; margin-bottom: 1.5rem; font-size: 2rem;">Leveling Path for Tom</h2>
+        <!-- Build summary -->
+        <div class="build-summary">
+            <h3>The Rage Engine Build Summary</h3>
+            <div class="build-phases">
+                <div class="phase phase-1">
+                    <div class="phase-title">Phase 1: Foundation (20→28)</div>
+                    <div class="phase-content">Complete Incite → Anticipation → Last Stand → Toughness → Concussion Blow</div>
+                </div>
+                <div class="phase phase-2">
+                    <div class="phase-title">Phase 2: Arms Dip (40→51)</div>
+                    <div class="phase-content">Tactical Mastery + Anger Management = infinite rage sustainability</div>
+                </div>
+                <div class="phase phase-3">
+                    <div class="phase-title">Phase 3: Deep Protection (55→80)</div>
+                    <div class="phase-content">Devastate, Shockwave, Vigilance — raid-ready tanking tools</div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+        .talent-tree {
+            background: linear-gradient(145deg, #2a241d 0%, #1e1914 100%);
+            border: 2px solid #5a4a3a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        
+        .tree-header {
+            padding: 12px 16px;
+            position: relative;
+            text-align: center;
+            border-bottom: 1px solid #5a4a3a;
+        }
+        
+        .tree-header h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+        
+        .tree-points {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.8);
+            color: #ffd100;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .arms-header { background: linear-gradient(135deg, #8B4513 0%, #654321 100%); }
+        .fury-header { background: linear-gradient(135deg, #696969 0%, #444444 100%); }
+        .prot-header { background: linear-gradient(135deg, #B22222 0%, #8B1A1A 100%); }
+        
+        .talent-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            padding: 12px;
+            background: linear-gradient(145deg, #1a1611 0%, #141209 100%);
+        }
+        
+        .talent-slot {
+            aspect-ratio: 1;
+            position: relative;
+            border: 2px solid #444;
+            border-radius: 6px;
+            background: linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 100%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+        
+        .talent-slot.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+        
+        .talent-slot.learned {
+            border-color: #ffd700;
+            background: linear-gradient(145deg, #4a4a00 0%, #3a3a00 100%);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+        }
+        
+        .talent-slot.current {
+            border-color: #00bfff;
+            background: linear-gradient(145deg, #003a5f 0%, #002a4f 100%);
+            box-shadow: 0 0 12px rgba(0, 191, 255, 0.6);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .talent-slot.available {
+            border-color: #90EE90;
+            background: linear-gradient(145deg, #2a4a2a 0%, #1a3a1a 100%);
+        }
+        
+        .talent-slot.future {
+            border-color: #ff6b35;
+            background: linear-gradient(145deg, #4a2a1a 0%, #3a1a0a 100%);
+        }
+        
+        .talent-slot.unavailable {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 12px rgba(0, 191, 255, 0.6); }
+            50% { box-shadow: 0 0 20px rgba(0, 191, 255, 1); }
+        }
+        
+        .talent-icon {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 4px;
+        }
+        
+        .talent-rank {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.8);
+            color: #ffd100;
+            padding: 1px 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 2px;
+        }
+        
+        .level-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #4ea8de;
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        
+        .level-badge.special {
+            background: #ff6b35;
+        }
+        
+        .next-badge {
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #00bfff;
+            color: white;
+            padding: 1px 6px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            border-radius: 8px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.8);
+        }
+        
+        .talent-tooltip {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 2px solid #ffd100;
+            border-radius: 6px;
+            padding: 12px;
+            min-width: 250px;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+        }
+        
+        .talent-slot:hover .talent-tooltip {
+            opacity: 1;
+        }
+        
+        .tooltip-header {
+            color: #ffd100;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        
+        .tooltip-rank {
+            color: #4ea8de;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        
+        .tooltip-desc {
+            color: #ddd;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+        
+        .tooltip-next {
+            color: #90EE90;
+            font-size: 0.85rem;
+            font-style: italic;
+            margin-bottom: 4px;
+        }
+        
+        .tooltip-max {
+            color: #ff6b35;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .tooltip-cooldown {
+            color: #aaa;
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+        
+        .tooltip-req {
+            color: #ff6b6b;
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+        
+        .tooltip-special {
+            color: #ff6b35;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        
+        .build-summary {
+            background: #232323;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .build-summary h3 {
+            color: #ffd100;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .build-phases {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .phase {
+            background: #1a1a1a;
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .phase-1 { border-top: 3px solid #4ea8de; }
+        .phase-2 { border-top: 3px solid #90EE90; }
+        .phase-3 { border-top: 3px solid #ffd100; }
+        
+        .phase-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .phase-1 .phase-title { color: #4ea8de; }
+        .phase-2 .phase-title { color: #90EE90; }
+        .phase-3 .phase-title { color: #ffd100; }
+        
+        .phase-content {
+            color: #aaa;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 900px) {
+            .talent-tree {
+                margin-bottom: 1rem;
+            }
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
-                <div style="background: #1a1a1a; border: 1px solid #4ea8de; border-radius: 8px; padding: 1.5rem;">
-                    <h3 style="color: #4ea8de; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="background: #4ea8de; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">1</span>
-                        Foundation (20→28)
-                    </h3>
-                    <div style="font-size: 0.9rem; line-height: 1.5;">
-                        <div style="background: linear-gradient(90deg, rgba(255, 107, 53, 0.2) 0%, transparent 100%); border-left: 3px solid #ff6b35; padding: 0.8rem; margin-bottom: 0.8rem; border-radius: 4px;">
-                            <strong style="color: #ffd100;">Lvl 19-20:</strong> <strong>Incite 3/3</strong> ✨<br>
-                            <span style="color: #aaa;">Finish HS crit boost: 5% → 15%</span>
-                        </div>
-                        <div style="padding: 0.5rem 0; border-bottom: 1px solid #333;">
-                            <strong>Lvl 21-22:</strong> Anticipation 2/5 (+4% dodge)
-                        </div>
-                        <div style="background: linear-gradient(90deg, rgba(255, 107, 53, 0.2) 0%, transparent 100%); border-left: 3px solid #ff6b35; padding: 0.8rem; margin: 0.8rem 0; border-radius: 4px;">
-                            <strong style="color: #ffd100;">Lvl 23:</strong> <strong>Last Stand 1/1</strong> ✨<br>
-                            <span style="color: #aaa;">First major defensive CD</span>
-                        </div>
-                        <div style="padding: 0.5rem 0; border-bottom: 1px solid #333;">
-                            <strong>Lvl 24-26:</strong> Toughness 3/5 (stun resist)
-                        </div>
-                        <div style="background: linear-gradient(90deg, rgba(255, 107, 53, 0.2) 0%, transparent 100%); border-left: 3px solid #ff6b35; padding: 0.8rem; margin-top: 0.8rem; border-radius: 4px;">
-                            <strong style="color: #ffd100;">Lvl 28:</strong> <strong>Concussion Blow 1/1</strong> ✨<br>
-                            <span style="color: #aaa;">5-sec stun control</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="background: #1a1a1a; border: 1px solid #90EE90; border-radius: 8px; padding: 1.5rem;">
-                    <h3 style="color: #90EE90; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="background: #90EE90; color: #1a1a1a; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600;">2</span>
-                        Arms Dip - "Rage Engine" (40→51)
-                    </h3>
-                    <div style="font-size: 0.9rem; line-height: 1.5;">
-                        <div style="padding: 0.5rem 0; border-bottom: 1px solid #333;">
-                            <strong>Lvl 40-42:</strong> Improved Heroic Strike 3/3
-                        </div>
-                        <div style="padding: 0.5rem 0; border-bottom: 1px solid #333;">
-                            <strong>Lvl 45:</strong> Improved Rend 2/2 (T2 gate)
-                        </div>
-                        <div style="background: linear-gradient(90deg, rgba(144, 238, 144, 0.2) 0%, transparent 100%); border-left: 3px solid #90EE90; padding: 0.8rem; margin: 0.8rem 0; border-radius: 4px;">
-                            <strong style="color: #90EE90;">Lvl 46-48:</strong> <strong>Tactical Mastery 3/3</strong> ✨<br>
-                            <span style="color: #aaa;">Keep rage when stance switching</span>
-                        </div>
-                        <div style="background: linear-gradient(90deg, rgba(144, 238, 144, 0.2) 0%, transparent 100%); border-left: 3px solid #90EE90; padding: 0.8rem; border-radius: 4px;">
-                            <strong style="color: #90EE90;">Lvl 49-51:</strong> <strong>Anger Management 3/3</strong> ✨<br>
-                            <span style="color: #aaa;">+1 rage per 3sec + rage decay reduction</span>
-                        </div>
-                        <div style="margin-top: 1rem; padding: 1rem; background: rgba(144, 238, 144, 0.1); border-radius: 6px; text-align: center;">
-                            <strong style="color: #90EE90;">This solves rage starvation forever!</strong>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="background: #1a1a1a; border: 1px solid #ffd100; border-radius: 8px; padding: 1.5rem;">
-                <h3 style="color: #ffd100; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="background: #ffd100; color: #1a1a1a; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600;">3</span>
-                    Deep Protection Mastery (55→80)
-                </h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
-                    <div>
-                        <strong>Lvl 55-57:</strong> Finish Devastate 3/3<br>
-                        <strong>Lvl 58:</strong> Vigilance 1/3<br>
-                        <strong>Lvl 59-60:</strong> Shockwave 2/3
-                    </div>
-                    <div style="text-align: right;">
-                        <strong style="color: #ffd100; font-size: 1.1rem;">End Result:</strong><br>
-                        <span style="font-size: 1.2rem; color: #ff6b35;">55</span>/<span style="color: #666;">0</span>/<span style="color: #4ea8de;">15</span><br>
-                        <span style="color: #aaa; font-size: 0.85rem;">Prot/Fury/Arms</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Current status -->
-        <div style="background: #232323; border: 1px solid #ffd100; border-radius: 6px; padding: 1.5rem; margin-top: 1.5rem; text-align: center;">
-            <h3 style="color: #ffd100; margin-bottom: 1rem;">Tom's Current Status</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem;">
-                <div>
-                    <div style="font-size: 1.5rem; color: #4ea8de; font-weight: 600;">20</div>
-                    <div style="color: #aaa; font-size: 0.9rem;">Level</div>
-                </div>
-                <div>
-                    <div style="font-size: 1.5rem; color: #90EE90; font-weight: 600;">8</div>
-                    <div style="color: #aaa; font-size: 0.9rem;">Talent Points</div>
-                </div>
-                <div>
-                    <div style="font-size: 1.5rem; color: #ff6b35; font-weight: 600;">15%</div>
-                    <div style="color: #aaa; font-size: 0.9rem;">HS Crit @ 3/3</div>
-                </div>
-                <div>
-                    <div style="font-size: 1.5rem; color: #ffd100; font-weight: 600;">3</div>
-                    <div style="color: #aaa; font-size: 0.9rem;">Levels to Last Stand</div>
-                </div>
-            </div>
-            <div style="margin-top: 1rem; font-style: italic; color: #aaa;">
-                Based on actual DBC data from AzerothCore 3.3.5a
-            </div>
-        </div>
+            .build-phases {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+        }
+        </style>
 
     </section>
 
