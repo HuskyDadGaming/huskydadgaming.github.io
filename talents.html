@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Warrior Talent Calculator | KCraft</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚔️</text></svg>">
+    <style>
+        body { 
+            background: #1a1a1a; 
+            color: #ddd; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1, h2, h3 { color: #ffd100; }
+        
+        .header {
+            background: #232323; 
+            border: 1px solid #3a3a3a; 
+            border-radius: 6px; 
+            padding: 1.5rem; 
+            margin-bottom: 1.5rem; 
+            text-align: center;
+        }
+        
+        .header h1 { 
+            margin-bottom: 0.5rem; 
+            font-size: 2rem; 
+        }
+        
+        .header p { 
+            color: #aaa; 
+            font-size: 1rem; 
+            margin-bottom: 0.5rem; 
+        }
+        
+        #talent-status { 
+            color: #4ea8de; 
+            font-size: 0.9rem; 
+        }
+        
+        #reset-talents {
+            margin-top: 1rem; 
+            background: #ff6b35; 
+            color: white; 
+            border: none; 
+            padding: 8px 16px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: 600;
+        }
+        
+        #reset-talents:hover { 
+            background: #ff8555; 
+        }
+        
+        .instructions {
+            background: #232323;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .talent-trees { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr; 
+            gap: 1rem; 
+            margin-bottom: 2rem; 
+        }
+        
+        .talent-tree {
+            background: linear-gradient(145deg, #2a241d 0%, #1e1914 100%);
+            border: 2px solid #5a4a3a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        
+        .tree-header {
+            padding: 12px 16px;
+            position: relative;
+            text-align: center;
+            border-bottom: 1px solid #5a4a3a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .tree-icon {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px;
+            border: 1px solid #5a4a3a;
+        }
+        
+        .tree-header h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            flex: 1;
+            text-align: left;
+        }
+        
+        .tree-points {
+            background: rgba(0,0,0,0.8);
+            color: #ffd100;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .arms-header { background: linear-gradient(135deg, #8B4513 0%, #654321 100%); }
+        .fury-header { background: linear-gradient(135deg, #696969 0%, #444444 100%); }
+        .prot-header { background: linear-gradient(135deg, #B22222 0%, #8B1A1A 100%); }
+        
+        .talent-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            padding: 12px;
+            background: linear-gradient(145deg, #1a1611 0%, #141209 100%);
+            min-height: 420px;
+        }
+        
+        .talent-slot {
+            aspect-ratio: 1;
+            position: relative;
+            border: 2px solid #444;
+            border-radius: 6px;
+            background: linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 100%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+        
+        .talent-slot.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+        
+        .talent-slot.learned {
+            border-color: #ffd700;
+            background: linear-gradient(145deg, #4a4a00 0%, #3a3a00 100%);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+        }
+        
+        .talent-slot.available {
+            border-color: #90EE90;
+            background: linear-gradient(145deg, #2a4a2a 0%, #1a3a1a 100%);
+        }
+        
+        .talent-slot.available:hover {
+            border-color: #aaffaa;
+            background: linear-gradient(145deg, #3a5a3a 0%, #2a4a2a 100%);
+        }
+        
+        .talent-slot.unavailable {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .talent-icon {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 4px;
+        }
+        
+        .talent-rank {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.8);
+            color: #ffd100;
+            padding: 1px 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 2px;
+        }
+        
+        /* Exact armoury-style tooltip from armoury.html */
+        #talent-tooltip {
+            position: fixed;
+            z-index: 9999;
+            background: #000000;
+            color: #ffffff;
+            border: 1px solid #444;
+            border-radius: 3px;
+            padding: 8px 12px;
+            font-size: 0.82rem;
+            line-height: 1.4;
+            min-width: 180px;
+            max-width: 280px;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.08s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        }
+        
+        #talent-tooltip.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #talent-tooltip .tt-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        #talent-tooltip .tt-bind {
+            color: #ffffff;
+            font-size: 0.78rem;
+        }
+        
+        #talent-tooltip .tt-slot-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+        
+        #talent-tooltip .tt-slot-row .tt-slot {
+            color: #ffffff;
+        }
+        
+        #talent-tooltip .tt-stat {
+            color: #ffffff;
+        }
+        
+        #talent-tooltip .tt-bonus {
+            color: #1eff00;
+        }
+        
+        #talent-tooltip .tt-required {
+            color: #ff6b6b;
+            margin-top: 4px;
+        }
+        
+        @media (max-width: 900px) {
+            .talent-trees { 
+                grid-template-columns: 1fr; 
+                gap: 1rem; 
+            }
+            
+            .talent-grid { 
+                grid-template-columns: repeat(4, 1fr); 
+                gap: 3px; 
+                padding: 8px; 
+                min-height: 350px; 
+            }
+            
+            .tree-header { 
+                padding: 8px 12px; 
+                gap: 8px; 
+            }
+            
+            .tree-icon { 
+                width: 24px; 
+                height: 24px; 
+            }
+            
+            .tree-header h3 { 
+                font-size: 1.1rem; 
+            }
+            
+            #talent-tooltip {
+                max-width: calc(100vw - 24px);
+                min-width: 0;
+                font-size: 0.78rem;
+                padding: 6px 10px;
+            }
+            
+            #talent-tooltip .tt-name { 
+                font-size: 0.88rem; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚔️ Interactive Warrior Talent Calculator</h1>
+            <p>The Rage Engine Build (55/0/15)</p>
+            <div id="talent-status">Level 18 • 8 talent points spent • 63 points remaining</div>
+            <button id="reset-talents">Reset All Talents</button>
+        </div>
+
+        <div class="instructions">
+            <strong>Left-click</strong> to add talent points • <strong>Right-click</strong> to remove points • Hover for tooltips
+        </div>
+
+        <div class="talent-trees">
+            <!-- Arms Tree -->
+            <div class="talent-tree" data-tree="arms">
+                <div class="tree-header arms-header">
+                    <div class="tree-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_rogue_eviscerate.jpg')"></div>
+                    <h3>Arms</h3>
+                    <div class="tree-points" data-points="0">0/71</div>
+                </div>
+                <div class="talent-grid">
+                    <!-- Tier 1 -->
+                    <div class="talent-slot" data-talent="imp-heroic-strike" data-tree="arms" data-tier="1" data-max-rank="3" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_rogue_sliceanddice.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="deflection" data-tree="arms" data-tier="1" data-max-rank="5" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_parry.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="imp-rend" data-tree="arms" data-tier="1" data-max-rank="2" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_gouge.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 2 -->
+                    <div class="talent-slot" data-talent="imp-charge" data-tree="arms" data-tier="2" data-max-rank="2" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_enchantarmor.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="iron-will" data-tree="arms" data-tier="2" data-max-rank="3" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_magic_magearmor.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="tactical-mastery" data-tree="arms" data-tier="2" data-max-rank="3" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_innerrage.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 3 -->
+                    <div class="talent-slot" data-talent="imp-overpower" data-tree="arms" data-tier="3" data-max-rank="2" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_unholyfrenzy.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="anger-management" data-tree="arms" data-tier="3" data-max-rank="1" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_racial_avatar.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="deep-wounds" data-tree="arms" data-tier="3" data-max-rank="3" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_backstab.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="2h-weapon-spec" data-tree="arms" data-tier="3" data-max-rank="3" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_weaponmastery.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+
+                    <!-- Continue for more tiers... -->
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                </div>
+            </div>
+
+            <!-- Fury Tree -->
+            <div class="talent-tree" data-tree="fury">
+                <div class="tree-header fury-header">
+                    <div class="tree-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_innerrage.jpg')"></div>
+                    <h3>Fury</h3>
+                    <div class="tree-points" data-points="0">0/71</div>
+                </div>
+                <div class="talent-grid">
+                    <!-- Tier 1 -->
+                    <div class="talent-slot" data-talent="armored-to-teeth" data-tree="fury" data-tier="1" data-max-rank="3" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/inv_chest_leather_03.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="booming-voice" data-tree="fury" data-tier="1" data-max-rank="2" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_purge.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="cruelty" data-tree="fury" data-tier="1" data-max-rank="5" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_rogue_eviscerate.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Continue for more tiers... -->
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                </div>
+            </div>
+
+            <!-- Protection Tree -->
+            <div class="talent-tree" data-tree="protection">
+                <div class="tree-header prot-header">
+                    <div class="tree-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_defensivestance.jpg')"></div>
+                    <h3>Protection</h3>
+                    <div class="tree-points" data-points="8">8/71</div>
+                </div>
+                <div class="talent-grid">
+                    <!-- Tier 1 -->
+                    <div class="talent-slot learned" data-talent="imp-bloodrage" data-tree="protection" data-tier="1" data-max-rank="2" data-current-rank="2">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_racial_bloodrage.jpg')"></div>
+                        <div class="talent-rank">2/2</div>
+                    </div>
+                    <div class="talent-slot learned" data-talent="shield-spec" data-tree="protection" data-tier="1" data-max-rank="5" data-current-rank="5">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_defend.jpg')"></div>
+                        <div class="talent-rank">5/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="imp-thunder-clap" data-tree="protection" data-tier="1" data-max-rank="3" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_reincarnation.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 2 -->
+                    <div class="talent-slot empty"></div>
+                    <div class="talent-slot learned" data-talent="incite" data-tree="protection" data-tier="2" data-max-rank="3" data-current-rank="1">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_punishingblow.jpg')"></div>
+                        <div class="talent-rank">1/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="anticipation" data-tree="protection" data-tier="2" data-max-rank="5" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_mirrorimage.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 3 -->
+                    <div class="talent-slot" data-talent="last-stand" data-tree="protection" data-tier="3" data-max-rank="1" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_ashestoashes.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="imp-revenge" data-tree="protection" data-tier="3" data-max-rank="2" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_revenge.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="shield-mastery" data-tree="protection" data-tier="3" data-max-rank="2" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_shieldwall.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="toughness" data-tree="protection" data-tier="3" data-max-rank="5" data-current-rank="0">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_devotion.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+
+                    <!-- Continue for more tiers... -->
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div><div class="talent-slot empty"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom tooltip for talents -->
+        <div id="talent-tooltip" role="tooltip" aria-hidden="true"></div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+            
+            // Talent data with descriptions
+            const TALENT_DATA = {
+                // Arms talents
+                'imp-heroic-strike': {
+                    name: 'Improved Heroic Strike',
+                    description: 'Reduces the cost of your Heroic Strike ability by 1 Rage.',
+                    rankDescription: ['1 Rage', '2 Rage', '3 Rage']
+                },
+                'deflection': {
+                    name: 'Deflection',
+                    description: 'Increases your Parry chance by 1%.',
+                    rankDescription: ['1%', '2%', '3%', '4%', '5%']
+                },
+                'imp-rend': {
+                    name: 'Improved Rend',
+                    description: 'Increases the bleed damage done by your Rend ability by 10%.',
+                    rankDescription: ['10%', '20%']
+                },
+                'imp-charge': {
+                    name: 'Improved Charge',
+                    description: 'Increases the amount of Rage generated by your Charge ability by 3.',
+                    rankDescription: ['3 Rage', '6 Rage']
+                },
+                'iron-will': {
+                    name: 'Iron Will',
+                    description: 'Reduces the duration of all Stun and Charm effects by 10%.',
+                    rankDescription: ['10%', '20%', '30%']
+                },
+                'tactical-mastery': {
+                    name: 'Tactical Mastery',
+                    description: 'You retain up to 5 of your Rage points when you change stances.',
+                    rankDescription: ['5 Rage', '15 Rage', '25 Rage']
+                },
+                'imp-overpower': {
+                    name: 'Improved Overpower',
+                    description: 'Increases the critical strike chance of your Overpower ability by 25%.',
+                    rankDescription: ['25%', '50%']
+                },
+                'anger-management': {
+                    name: 'Anger Management',
+                    description: 'Increases the time required for your Rage to begin decaying while out of combat by 30% and increases your total Rage by 1.'
+                },
+                'deep-wounds': {
+                    name: 'Deep Wounds',
+                    description: 'Your critical strikes cause the opponent to bleed for 20% of your melee weapon\'s average damage.',
+                    rankDescription: ['20%', '40%', '60%']
+                },
+                '2h-weapon-spec': {
+                    name: 'Two-Handed Weapon Specialization',
+                    description: 'Increases the damage you deal with two-handed melee weapons by 5%.',
+                    rankDescription: ['5%', '10%', '15%']
+                },
+                
+                // Fury talents
+                'armored-to-teeth': {
+                    name: 'Armored to the Teeth',
+                    description: 'Increases your attack power by 1 for every 180 armor value you have.',
+                    rankDescription: ['1 per 180', '2 per 180', '3 per 180']
+                },
+                'booming-voice': {
+                    name: 'Booming Voice',
+                    description: 'Increases the area of effect and duration of your Battle Shout by 25%.',
+                    rankDescription: ['25%', '50%']
+                },
+                'cruelty': {
+                    name: 'Cruelty',
+                    description: 'Increases your chance to get a critical strike by 1%.',
+                    rankDescription: ['1%', '2%', '3%', '4%', '5%']
+                },
+                
+                // Protection talents
+                'imp-bloodrage': {
+                    name: 'Improved Bloodrage',
+                    description: 'Increases the instant Rage generated by your Bloodrage ability by 1.',
+                    rankDescription: ['1 Rage', '2 Rage']
+                },
+                'shield-spec': {
+                    name: 'Shield Specialization',
+                    description: 'Gives you a 20% chance to generate 1 Rage when a block occurs and increases your chance to block by 1%.',
+                    rankDescription: ['20%, 1%', '40%, 2%', '60%, 3%', '80%, 4%', '100%, 5%']
+                },
+                'imp-thunder-clap': {
+                    name: 'Improved Thunder Clap',
+                    description: 'Increases the damage done by your Thunder Clap by 20%.',
+                    rankDescription: ['20%', '40%', '60%']
+                },
+                'incite': {
+                    name: 'Incite',
+                    description: 'Increases the critical strike chance of your Heroic Strike and Cleave abilities by 5%.',
+                    rankDescription: ['5%', '10%', '15%']
+                },
+                'anticipation': {
+                    name: 'Anticipation',
+                    description: 'Increases your Dodge chance by 1%.',
+                    rankDescription: ['1%', '2%', '3%', '4%', '5%']
+                },
+                'last-stand': {
+                    name: 'Last Stand',
+                    description: 'When activated, this ability temporarily grants you 30% of your maximum hit points for 20 sec. After the effect expires, the hit points are lost.'
+                },
+                'imp-revenge': {
+                    name: 'Improved Revenge',
+                    description: 'Gives your Revenge ability a 25% chance to stun the target for 1 sec.',
+                    rankDescription: ['25%', '50%']
+                },
+                'shield-mastery': {
+                    name: 'Shield Mastery',
+                    description: 'Increases the amount of damage absorbed by your shield by 15%.',
+                    rankDescription: ['15%', '30%']
+                },
+                'toughness': {
+                    name: 'Toughness',
+                    description: 'Reduces the duration of movement impairing effects by 6% and increases your armor by 2%.',
+                    rankDescription: ['6%, 2%', '12%, 4%', '18%, 6%', '24%, 8%', '30%, 10%']
+                }
+            };
+            
+            // Track talent points
+            let talentPoints = {
+                available: 63,
+                spent: 8,
+                trees: { arms: 0, fury: 0, protection: 8 }
+            };
+            
+            // Initialize with current build
+            function initializeTalents() {
+                updateAllTalentStates();
+            }
+            
+            function updateTalentState(slot) {
+                const currentRank = parseInt(slot.dataset.currentRank);
+                
+                slot.classList.remove('learned', 'available', 'unavailable');
+                
+                if (currentRank > 0) {
+                    slot.classList.add('learned');
+                } else if (canLearnTalent(slot)) {
+                    slot.classList.add('available');
+                } else {
+                    slot.classList.add('unavailable');
+                }
+            }
+            
+            function canLearnTalent(slot) {
+                const tier = parseInt(slot.dataset.tier);
+                const tree = slot.dataset.tree;
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                
+                // Can't learn if already maxed
+                if (currentRank >= maxRank) return false;
+                
+                // Can't learn if no available points
+                if (talentPoints.available <= 0) return false;
+                
+                // Tier 1 is always available
+                if (tier <= 1) return true;
+                
+                // Check if enough points spent in this tree for this tier
+                const requiredPoints = (tier - 1) * 5;
+                return talentPoints.trees[tree] >= requiredPoints;
+            }
+            
+            function updateAllTalentStates() {
+                document.querySelectorAll('.talent-slot[data-talent]').forEach(updateTalentState);
+                
+                // Update tree point counters
+                Object.keys(talentPoints.trees).forEach(tree => {
+                    const counter = document.querySelector(`[data-tree="${tree}"] .tree-points`);
+                    if (counter) {
+                        counter.textContent = `${talentPoints.trees[tree]}/71`;
+                        counter.dataset.points = talentPoints.trees[tree];
+                    }
+                });
+                
+                // Update status
+                updateStatus();
+            }
+            
+            function updateStatus() {
+                const status = document.getElementById('talent-status');
+                const level = 10 + talentPoints.spent;
+                status.textContent = `Level ${level} • ${talentPoints.spent} talent points spent • ${talentPoints.available} points remaining`;
+            }
+            
+            function addTalentPoint(slot) {
+                if (!canLearnTalent(slot)) return;
+                
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const newRank = currentRank + 1;
+                const tree = slot.dataset.tree;
+                
+                // Update talent
+                slot.dataset.currentRank = newRank;
+                slot.querySelector('.talent-rank').textContent = `${newRank}/${slot.dataset.maxRank}`;
+                
+                // Update point counters
+                talentPoints.available--;
+                talentPoints.spent++;
+                talentPoints.trees[tree]++;
+                
+                updateAllTalentStates();
+            }
+            
+            function removeTalentPoint(slot) {
+                const currentRank = parseInt(slot.dataset.currentRank);
+                if (currentRank <= 0) return;
+                
+                const newRank = currentRank - 1;
+                const tree = slot.dataset.tree;
+                
+                // Update talent
+                slot.dataset.currentRank = newRank;
+                slot.querySelector('.talent-rank').textContent = `${newRank}/${slot.dataset.maxRank}`;
+                
+                // Update point counters
+                talentPoints.available++;
+                talentPoints.spent--;
+                talentPoints.trees[tree]--;
+                
+                updateAllTalentStates();
+            }
+            
+            function resetAllTalents() {
+                // Reset all talents to 0
+                document.querySelectorAll('.talent-slot[data-talent]').forEach(slot => {
+                    slot.dataset.currentRank = '0';
+                    slot.querySelector('.talent-rank').textContent = `0/${slot.dataset.maxRank}`;
+                });
+                
+                // Reset counters
+                talentPoints = {
+                    available: 71,
+                    spent: 0,
+                    trees: { arms: 0, fury: 0, protection: 0 }
+                };
+                
+                updateAllTalentStates();
+            }
+            
+            // Tooltip functionality (exact armoury-style)
+            const tooltipEl = document.getElementById('talent-tooltip');
+            let tooltipShownFor = null;
+            
+            function buildTooltipHTML(talentData, currentRank, maxRank, canLearn, tier, tree) {
+                let html = `<div class="tt-name" style="color: ${currentRank > 0 ? '#ffd700' : '#ffffff'}">${talentData.name}</div>`;
+                html += `<div class="tt-bind">Rank ${currentRank}/${maxRank}</div>`;
+                
+                if (currentRank > 0 && talentData.rankDescription && talentData.rankDescription[currentRank - 1]) {
+                    html += `<div class="tt-stat">${talentData.description.replace(/\d+%?/, talentData.rankDescription[currentRank - 1])}</div>`;
+                } else {
+                    html += `<div class="tt-stat">${talentData.description}</div>`;
+                }
+                
+                if (talentData.rankDescription && currentRank < maxRank) {
+                    html += `<div class="tt-bonus">Next rank: ${talentData.rankDescription[currentRank]}</div>`;
+                }
+                
+                if (!canLearn && currentRank === 0 && tier > 1) {
+                    const requiredPoints = (tier - 1) * 5;
+                    html += `<div class="tt-required">Requires ${requiredPoints} points in ${tree.charAt(0).toUpperCase() + tree.slice(1)}</div>`;
+                }
+                
+                return html;
+            }
+            
+            function showTooltip(slot, ev) {
+                const talentId = slot.dataset.talent;
+                const talentData = TALENT_DATA[talentId];
+                if (!talentData) return;
+                
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                const canLearn = canLearnTalent(slot);
+                const tier = parseInt(slot.dataset.tier);
+                const tree = slot.dataset.tree;
+                
+                tooltipEl.innerHTML = buildTooltipHTML(talentData, currentRank, maxRank, canLearn, tier, tree);
+                tooltipEl.classList.add('visible');
+                tooltipEl.setAttribute('aria-hidden', 'false');
+                positionTooltip(ev);
+                tooltipShownFor = slot;
+            }
+            
+            function hideTooltip() {
+                tooltipEl.classList.remove('visible');
+                tooltipEl.setAttribute('aria-hidden', 'true');
+                tooltipShownFor = null;
+            }
+            
+            function positionTooltip(ev) {
+                const pad = 14;
+                const tw = tooltipEl.offsetWidth;
+                const th = tooltipEl.offsetHeight;
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                let x = ev.clientX + pad;
+                let y = ev.clientY + pad;
+                if (x + tw + 8 > vw) x = ev.clientX - tw - pad;
+                if (y + th + 8 > vh) y = ev.clientY - th - pad;
+                if (x < 4) x = 4;
+                if (y < 4) y = 4;
+                tooltipEl.style.left = x + 'px';
+                tooltipEl.style.top = y + 'px';
+            }
+            
+            // Event listeners
+            document.addEventListener('click', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (!slot) return;
+                
+                if (ev.ctrlKey || ev.metaKey) {
+                    removeTalentPoint(slot);
+                } else {
+                    addTalentPoint(slot);
+                }
+            });
+            
+            document.addEventListener('contextmenu', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot) {
+                    ev.preventDefault();
+                    removeTalentPoint(slot);
+                }
+            });
+            
+            document.addEventListener('mouseover', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot && tooltipShownFor !== slot) {
+                    showTooltip(slot, ev);
+                }
+            });
+            
+            document.addEventListener('mousemove', (ev) => {
+                if (tooltipShownFor) {
+                    positionTooltip(ev);
+                }
+            });
+            
+            document.addEventListener('mouseout', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot === tooltipShownFor && !slot.contains(ev.relatedTarget)) {
+                    hideTooltip();
+                }
+            });
+            
+            document.getElementById('reset-talents').addEventListener('click', resetAllTalents);
+            
+            // Initialize
+            initializeTalents();
+        })();
+    </script>
+</body>
+</html>
