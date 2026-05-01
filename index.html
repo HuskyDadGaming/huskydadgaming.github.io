@@ -1367,36 +1367,6 @@
     </section>
 
     <section id="view-talents" class="tab-view">
-        <style>
-        .talent-calc { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 2rem 0; }
-        .talent-tree { background: linear-gradient(145deg, #2a241d 0%, #1e1914 100%); border: 2px solid #5a4a3a; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
-        .tree-header { padding: 12px 16px; position: relative; text-align: center; border-bottom: 1px solid #5a4a3a; display: flex; align-items: center; gap: 12px; justify-content: center; }
-        .tree-icon { width: 32px; height: 32px; background-size: cover; background-position: center; border-radius: 4px; border: 1px solid #5a4a3a; }
-        .tree-header h3 { color: white; font-size: 1.3rem; margin: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); flex: 1; text-align: left; }
-        .tree-points { background: rgba(0,0,0,0.8); color: #ffd100; padding: 4px 8px; border-radius: 4px; font-weight: 600; font-size: 0.9rem; }
-        .arms-header { background: linear-gradient(135deg, #8B4513 0%, #654321 100%); }
-        .fury-header { background: linear-gradient(135deg, #696969 0%, #444444 100%); }
-        .prot-header { background: linear-gradient(135deg, #B22222 0%, #8B1A1A 100%); }
-        .talent-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 12px; background: linear-gradient(145deg, #1a1611 0%, #141209 100%); min-height: 400px; }
-        .talent-slot { aspect-ratio: 1; position: relative; border: 2px solid #444; border-radius: 6px; background: linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 100%); cursor: pointer; transition: all 0.2s ease; overflow: hidden; }
-        .talent-slot.empty { background: transparent; border: none; cursor: default; }
-        .talent-slot.learned { border-color: #ffd700; background: linear-gradient(145deg, #4a4a00 0%, #3a3a00 100%); box-shadow: 0 0 8px rgba(255, 215, 0, 0.4); }
-        .talent-slot.current { border-color: #00bfff; background: linear-gradient(145deg, #003a5f 0%, #002a4f 100%); box-shadow: 0 0 12px rgba(0, 191, 255, 0.6); animation: pulse 2s ease-in-out infinite; }
-        .talent-slot.available { border-color: #90EE90; background: linear-gradient(145deg, #2a4a2a 0%, #1a3a1a 100%); }
-        .talent-slot.future { border-color: #ff6b35; background: linear-gradient(145deg, #4a2a1a 0%, #3a1a0a 100%); }
-        .talent-slot.unavailable { opacity: 0.4; cursor: not-allowed; }
-        @keyframes pulse { 0%, 100% { box-shadow: 0 0 12px rgba(0, 191, 255, 0.6); } 50% { box-shadow: 0 0 20px rgba(0, 191, 255, 1); } }
-        .talent-icon { width: 100%; height: 100%; background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 4px; }
-        .talent-rank { position: absolute; bottom: 2px; right: 2px; background: rgba(0,0,0,0.8); color: #ffd100; padding: 1px 4px; font-size: 0.75rem; font-weight: 600; border-radius: 2px; }
-        .level-badge { position: absolute; top: -6px; right: -6px; background: #4ea8de; color: white; border: 2px solid white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; }
-        .level-badge.special { background: #ff6b35; }
-        .next-badge { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); background: #00bfff; color: white; padding: 1px 6px; font-size: 0.6rem; font-weight: 700; border-radius: 8px; text-shadow: 1px 1px 1px rgba(0,0,0,0.8); }
-        .talent-tooltip { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%); border: 2px solid #ffd100; border-radius: 6px; padding: 12px; min-width: 250px; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.8); }
-        .talent-slot:hover .talent-tooltip { opacity: 1; }
-        .tooltip-header { color: #ffd100; font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
-        .tooltip-desc { color: #ddd; font-size: 0.9rem; line-height: 1.4; }
-        @media (max-width: 900px) { .talent-calc { grid-template-columns: 1fr; gap: 1rem; } .talent-grid { grid-template-columns: repeat(4, 1fr); gap: 3px; padding: 8px; } .tree-header { padding: 8px 12px; gap: 8px; } .tree-icon { width: 24px; height: 24px; } .tree-header h3 { font-size: 1.1rem; } }
-        </style>
         
         <div style="background: #232323; border: 1px solid #3a3a3a; border-radius: 6px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
             <h1 style="color: #ffd100; margin-bottom: 0.5rem; font-size: 2rem;">Protection Warrior</h1>
@@ -1404,7 +1374,8 @@
             <div style="color: #4ea8de; font-size: 0.9rem;">Level 20 • 8 talent points spent • Next: Incite 3/3</div>
         </div>
 
-        <div class="talent-calc">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+            
             <!-- Arms Tree -->
             <div class="talent-tree">
                 <div class="tree-header arms-header">
@@ -1413,13 +1384,116 @@
                     <div class="tree-points">0/71</div>
                 </div>
                 <div class="talent-grid">
-                    <!-- T1 --> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_rogue_sliceanddice.jpg')"></div><div class="talent-rank">0/3</div><div class="talent-tooltip"><div class="tooltip-header">Improved Heroic Strike</div><div class="tooltip-desc">Reduces the cost of your Heroic Strike ability by 3 Rage.</div></div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_parry.jpg')"></div><div class="talent-rank">0/5</div><div class="talent-tooltip"><div class="tooltip-header">Deflection</div><div class="tooltip-desc">Increases your Parry chance by 5%.</div></div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_gouge.jpg')"></div><div class="talent-rank">0/2</div><div class="talent-tooltip"><div class="tooltip-header">Improved Rend</div><div class="tooltip-desc">Increases the bleed damage done by your Rend ability by 20%.</div></div></div> <div class="talent-slot empty"></div>
-                    <!-- T2 --> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_enchantarmor.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_innerrage.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_unholyfrenzy.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot empty"></div>
-                    <!-- T3 --> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_racial_avatar.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_savageblow.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_hunter_swiftstrike.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_weaponmastery.jpg')"></div><div class="talent-rank">0/3</div></div>
-                    <!-- T4+ --> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_decisivestrike.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_cleave.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_revenge.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_lightning.jpg')"></div><div class="talent-rank">0/1</div></div>
-                    <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_weaponmastery.jpg')"></div><div class="talent-rank">0/5</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot empty"></div> <div class="talent-slot empty"></div>
-                    <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_intensifyrage.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_deathpact.jpg')"></div><div class="talent-rank">0/1</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_summonimp.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot empty"></div>
-                    <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_swordandboard.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot empty"></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_battleshout.jpg')"></div><div class="talent-rank">0/1</div></div> <div class="talent-slot empty"></div>
+                    <!-- Tier 1 -->
+                    <div class="talent-slot unavailable" title="Improved Heroic Strike - Reduces the cost of your Heroic Strike ability by 3 Rage.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_rogue_sliceanddice.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Deflection - Increases your Parry chance by 5%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_parry.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Improved Rend - Increases the bleed damage done by your Rend ability by 20%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_gouge.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 2 -->
+                    <div class="talent-slot unavailable" title="Improved Charge - Increases the amount of Rage generated by your Charge ability by 5.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_enchantarmor.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Iron Will - Reduces the duration of all Stun and Charm effects used against you by 30%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_magic_magearmor.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Tactical Mastery - You retain up to 25 of your Rage points when you change stances.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_innerrage.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 3 -->
+                    <div class="talent-slot unavailable" title="Improved Overpower - Increases the critical strike chance of your Overpower ability by 50%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_unholyfrenzy.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Anger Management - Increases the time required for your Rage to begin decaying while out of combat by 30%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_racial_avatar.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Deep Wounds - Your critical strikes cause the opponent to bleed.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_backstab.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Two-Handed Weapon Specialization - Increases the damage you deal with two-handed melee weapons by 10%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_weaponmastery.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+
+                    <!-- Tier 4 -->
+                    <div class="talent-slot empty"></div>
+                    <div class="talent-slot unavailable" title="Impale - Increases the critical strike damage of your abilities by 20%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_savageblow.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Taste for Blood - Whenever your Rend ability deals damage, you have a chance for your next Heroic Strike to cost no rage.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_bloodbath.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 5 -->
+                    <div class="talent-slot unavailable" title="Mace Specialization - Gives you a chance to stun your target for 3 sec with every successful hit with a Mace.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_macespecialization.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Sweeping Strikes - Your next 5 melee attacks strike an additional nearby opponent.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_rogue_sliceanddice.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Sword Specialization - Gives you a chance to get an extra attack on the same target after dealing damage with your Sword.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_meleedamage.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Poleaxe Specialization - Increases your chance to get a critical strike with Polearms and Axes by 5%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_hunter_swiftstrike.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+
+                    <!-- Tier 6 -->
+                    <div class="talent-slot unavailable" title="Weapon Mastery - Reduces the chance for your attacks to be dodged by 5%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_weaponmastery.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+                    <div class="talent-slot unavailable" title="Improved Hamstring - Gives your Hamstring ability a 30% chance to immobilize the target.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_shockwave.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Trauma - Your normal melee critical strikes make your target bleed.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_lifedrain.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+
+                    <!-- Tier 7 -->
+                    <div class="talent-slot unavailable" title="Second Wind - Regenerates your Health when you are below 35% health.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_hibernation.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Mortal Strike - A vicious strike that deals weapon damage and wounds the target.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_savageblow.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Strength of Arms - Increases your Expertise by 4 and your total Stamina by 8%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_victorious.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Improved Slam - Reduces the cast time of your Slam ability by 1 sec.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_decisivestrike.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
                 </div>
             </div>
 
@@ -1431,13 +1505,107 @@
                     <div class="tree-points">0/71</div>
                 </div>
                 <div class="talent-grid">
-                    <!-- T1 --> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_purge.jpg')"></div><div class="talent-rank">0/5</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_innerrage.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_cleave.jpg')"></div><div class="talent-rank">0/5</div></div> <div class="talent-slot empty"></div>
-                    <!-- T2+ --> <div class="talent-slot empty"></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg')"></div><div class="talent-rank">0/5</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_unholyfrenzy.jpg')"></div><div class="talent-rank">0/5</div></div> <div class="talent-slot empty"></div>
-                    <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_summonimp.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_savageblow.jpg')"></div><div class="talent-rank">0/1</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_lifedrain.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_weaponmastery.jpg')"></div><div class="talent-rank">0/5</div></div>
-                    <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_weaponmastery.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_summonfelhunter.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_challange.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_lifedrain.jpg')"></div><div class="talent-rank">0/5</div></div>
-                    <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_battleshout.jpg')"></div><div class="talent-rank">0/1</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_punishingblow.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_teleport.jpg')"></div><div class="talent-rank">0/5</div></div> <div class="talent-slot empty"></div>
-                    <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_intensifyrage.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_bloodbath.jpg')"></div><div class="talent-rank">0/1</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_shieldwall.jpg')"></div><div class="talent-rank">0/5</div></div> <div class="talent-slot empty"></div>
-                    <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_summonimp.jpg')"></div><div class="talent-rank">0/5</div></div> <div class="talent-slot empty"></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_whirlwind.jpg')"></div><div class="talent-rank">0/1</div></div> <div class="talent-slot empty"></div>
+                    <!-- Tier 1 -->
+                    <div class="talent-slot unavailable" title="Armored to the Teeth - Increases your attack power by 3 for every 180 armor value you have.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/inv_chest_leather_03.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Booming Voice - Increases the area of effect and duration of your Battle Shout.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_purge.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Cruelty - Increases your chance to get a critical strike by 5%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_rogue_eviscerate.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 2 -->
+                    <div class="talent-slot empty"></div>
+                    <div class="talent-slot unavailable" title="Unbridled Wrath - Gives you a chance to generate 1 additional Rage when you deal melee damage.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_stoneclawtotem.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Improved Demoralizing Shout - Increases the melee attack power reduction of your Demoralizing Shout.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_warcry.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 3 -->
+                    <div class="talent-slot unavailable" title="Improved Cleave - Increases the bonus damage done by your Cleave ability by 40%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_cleave.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Piercing Howl - The warrior howls, causing all enemies within 10 yards to be dazed.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_deathscream.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Blood Craze - Regenerates 3% of your total Health over 6 sec after being the victim of a critical strike.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_summonimp.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Commanding Presence - Increases the melee and ranged attack power bonus of your Battle Shout.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_commandingshout.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+
+                    <!-- Tier 4 -->
+                    <div class="talent-slot unavailable" title="Dual Wield Specialization - Increases the damage done by your offhand weapon by 50%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_dualwield.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Improved Execute - Reduces the Rage cost of your Execute ability by 5.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/inv_sword_48.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Enrage - Gives you a chance to generate 2 Rage every time you take any damage.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_unholyfrenzy.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 5 -->
+                    <div class="talent-slot unavailable" title="Precision - Reduces the chance that your attacks will be dodged and increases your chance to hit with spells.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_marksmanship.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Death Wish - When activated, increases your physical damage by 20%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_deathpact.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Improved Intercept - Reduces the cooldown of your Intercept ability by 10 sec.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_rogue_sprint.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 6 -->
+                    <div class="talent-slot unavailable" title="Improved Berserker Rage - The Berserker Rage ability will also break Fear effects.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_ancestralguardian.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+                    <div class="talent-slot unavailable" title="Flurry - Increases your attack speed by 30% for your next 3 swings after dealing a critical strike.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_ghoulfrenzy.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 7 -->
+                    <div class="talent-slot unavailable" title="Intensify Rage - Reduces all Rage costs by 3 while you are Berserking.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_focusedmind.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Bloodthirst - Instantly attack the target causing damage equal to 50% of your attack power.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+                    <div class="talent-slot unavailable" title="Improved Whirlwind - Reduces the cooldown of your Whirlwind ability by 2 sec.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_whirlwind.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
                 </div>
             </div>
 
@@ -1449,13 +1617,110 @@
                     <div class="tree-points">55/71</div>
                 </div>
                 <div class="talent-grid">
-                    <!-- T1 --> <div class="talent-slot learned"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_racial_bloodrage.jpg')"></div><div class="talent-rank">2/2</div><div class="talent-tooltip"><div class="tooltip-header">Improved Bloodrage</div><div class="tooltip-desc">Increases the instant Rage generated by your Bloodrage ability by 2, and increases the total Rage generated over the duration by 2.</div></div></div> <div class="talent-slot learned"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_defend.jpg')"></div><div class="talent-rank">5/5</div><div class="talent-tooltip"><div class="tooltip-header">Shield Specialization</div><div class="tooltip-desc">Gives you a 100% chance to generate 1 Rage when a block occurs, and increases your chance to block by 5%.</div></div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_reincarnation.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot empty"></div>
-                    <!-- T2 --> <div class="talent-slot empty"></div> <div class="talent-slot current"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_punishingblow.jpg')"></div><div class="talent-rank">1/3</div><div class="level-badge">20</div><div class="next-badge">NEXT</div><div class="talent-tooltip"><div class="tooltip-header">Incite</div><div class="tooltip-desc">Increases the critical strike chance of your Heroic Strike and Cleave abilities by 5%.</div></div></div> <div class="talent-slot available"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_mirrorimage.jpg')"></div><div class="talent-rank">0/5</div><div class="level-badge">21</div><div class="talent-tooltip"><div class="tooltip-header">Anticipation</div><div class="tooltip-desc">Increases your Dodge chance by 4%.</div></div></div> <div class="talent-slot empty"></div>
-                    <!-- T3 --> <div class="talent-slot available"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_ashestoashes.jpg')"></div><div class="talent-rank">0/1</div><div class="level-badge">23</div><div class="talent-tooltip"><div class="tooltip-header">Last Stand</div><div class="tooltip-desc">When activated, this ability temporarily grants you 30% of your maximum hit points for 20 sec.</div></div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_revenge.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_shieldwall.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot available"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_devotion.jpg')"></div><div class="talent-rank">0/5</div><div class="level-badge">24</div><div class="talent-tooltip"><div class="tooltip-header">Toughness</div><div class="tooltip-desc">Reduces the duration of movement impairing effects by 30% and increases your armor by 10%.</div></div></div>
-                    <!-- T4 --> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_frost_frostward.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_disarm.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_criticalstrike.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot empty"></div>
-                    <!-- T5 --> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_reincarnation.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot future"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_thunderbolt.jpg')"></div><div class="talent-rank">0/1</div><div class="level-badge special">28</div><div class="talent-tooltip"><div class="tooltip-header">Concussion Blow</div><div class="tooltip-desc">Stuns the opponent for 5 sec.</div></div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_silence.jpg')"></div><div class="talent-rank">0/2</div></div> <div class="talent-slot empty"></div>
-                    <!-- T6 --> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_magic_magearmor.jpg')"></div><div class="talent-rank">0/1</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_focusedmind.jpg')"></div><div class="talent-rank">0/5</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_shieldslam.jpg')"></div><div class="talent-rank">0/1</div></div> <div class="talent-slot empty"></div>
-                    <!-- T7 --> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_sunder.jpg')"></div><div class="talent-rank">0/3</div></div> <div class="talent-slot unavailable"><div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_shockwave.jpg')"></div><div class="talent-rank">0/1</div></div> <div class="talent-slot empty"></div> <div class="talent-slot empty"></div>
+                    <!-- Tier 1 -->
+                    <div class="talent-slot learned" title="Improved Bloodrage - Increases the instant Rage generated by your Bloodrage ability by 2.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_racial_bloodrage.jpg')"></div>
+                        <div class="talent-rank">2/2</div>
+                    </div>
+                    <div class="talent-slot learned" title="Shield Specialization - Gives you a 100% chance to generate 1 Rage when a block occurs.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_defend.jpg')"></div>
+                        <div class="talent-rank">5/5</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Improved Thunder Clap - Increases the damage done by your Thunder Clap by 60%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_reincarnation.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 2 -->
+                    <div class="talent-slot empty"></div>
+                    <div class="talent-slot current" title="Incite - Increases the critical strike chance of your Heroic Strike and Cleave abilities by 5%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_punishingblow.jpg')"></div>
+                        <div class="talent-rank">1/3</div>
+                        <div class="level-badge">20</div>
+                        <div class="next-badge">NEXT</div>
+                    </div>
+                    <div class="talent-slot available" title="Anticipation - Increases your Dodge chance by 4%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_mirrorimage.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                        <div class="level-badge">21</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 3 -->
+                    <div class="talent-slot available" title="Last Stand - When activated, temporarily grants you 30% of your maximum hit points for 20 sec.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_ashestoashes.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                        <div class="level-badge">23</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Improved Revenge - Gives your Revenge ability a 50% chance to stun the target for 1 sec.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_revenge.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Shield Mastery - Increases the amount of damage absorbed by your shield by 30%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_shieldwall.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot available" title="Toughness - Reduces the duration of movement impairing effects by 30% and increases your armor by 10%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_devotion.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                        <div class="level-badge">24</div>
+                    </div>
+
+                    <!-- Tier 4 -->
+                    <div class="talent-slot unavailable" title="Improved Spell Reflection - Gives your Spell Reflection ability a 50% chance to reflect an additional spell.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_frost_frostward.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Improved Disarm - Increases the duration of your Disarm ability by 2 sec.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_disarm.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Puncture - Increases your critical strike chance with Rend, Heroic Strike and Devastate.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_criticalstrike.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 5 -->
+                    <div class="talent-slot unavailable" title="Improved Disciplines - Reduces the cooldown of your Shield Wall, Retaliation and Recklessness abilities.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_unbreakable.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot future" title="Concussion Blow - Stuns the opponent for 5 sec.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_thunderbolt.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                        <div class="level-badge special">28</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Gag Order - Gives your Shield Bash and Pummel abilities a 100% chance to silence the target.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_silence.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 6 -->
+                    <div class="talent-slot empty"></div>
+                    <div class="talent-slot unavailable" title="Focused Rage - Reduces the Rage cost of your offensive abilities by 1.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_focusedmind.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
+                    <div class="talent-slot empty"></div>
+
+                    <!-- Tier 7 -->
+                    <div class="talent-slot unavailable" title="Vitality - Increases your total Health by 10% and your total Stamina by 15%.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_lifedrain.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Safeguard - When you use Intervene, the target takes 30% less damage for 6 sec.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_victoryrush.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot unavailable" title="Warbringer - Your Charge, Intercept and Intervene abilities are no longer affected by movement impairing effects.">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_charge.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot empty"></div>
                 </div>
             </div>
         </div>
@@ -1478,6 +1743,204 @@
                 </div>
             </div>
         </div>
+
+        <style>
+        .talent-tree {
+            background: linear-gradient(145deg, #2a241d 0%, #1e1914 100%);
+            border: 2px solid #5a4a3a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        
+        .tree-header {
+            padding: 12px 16px;
+            position: relative;
+            text-align: center;
+            border-bottom: 1px solid #5a4a3a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .tree-icon {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px;
+            border: 1px solid #5a4a3a;
+        }
+        
+        .tree-header h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            flex: 1;
+            text-align: left;
+        }
+        
+        .tree-points {
+            background: rgba(0,0,0,0.8);
+            color: #ffd100;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .arms-header { background: linear-gradient(135deg, #8B4513 0%, #654321 100%); }
+        .fury-header { background: linear-gradient(135deg, #696969 0%, #444444 100%); }
+        .prot-header { background: linear-gradient(135deg, #B22222 0%, #8B1A1A 100%); }
+        
+        .talent-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            padding: 12px;
+            background: linear-gradient(145deg, #1a1611 0%, #141209 100%);
+            min-height: 420px;
+        }
+        
+        .talent-slot {
+            aspect-ratio: 1;
+            position: relative;
+            border: 2px solid #444;
+            border-radius: 6px;
+            background: linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 100%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+        
+        .talent-slot.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+        
+        .talent-slot.learned {
+            border-color: #ffd700;
+            background: linear-gradient(145deg, #4a4a00 0%, #3a3a00 100%);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+        }
+        
+        .talent-slot.current {
+            border-color: #00bfff;
+            background: linear-gradient(145deg, #003a5f 0%, #002a4f 100%);
+            box-shadow: 0 0 12px rgba(0, 191, 255, 0.6);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .talent-slot.available {
+            border-color: #90EE90;
+            background: linear-gradient(145deg, #2a4a2a 0%, #1a3a1a 100%);
+        }
+        
+        .talent-slot.future {
+            border-color: #ff6b35;
+            background: linear-gradient(145deg, #4a2a1a 0%, #3a1a0a 100%);
+        }
+        
+        .talent-slot.unavailable {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 12px rgba(0, 191, 255, 0.6); }
+            50% { box-shadow: 0 0 20px rgba(0, 191, 255, 1); }
+        }
+        
+        .talent-icon {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 4px;
+        }
+        
+        .talent-rank {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.8);
+            color: #ffd100;
+            padding: 1px 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 2px;
+        }
+        
+        .level-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #4ea8de;
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        
+        .level-badge.special {
+            background: #ff6b35;
+        }
+        
+        .next-badge {
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #00bfff;
+            color: white;
+            padding: 1px 6px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            border-radius: 8px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.8);
+        }
+        
+        /* Working tooltips using title attributes */
+        .talent-slot[title]:hover::after {
+            content: attr(title);
+            position: absolute;
+            top: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 2px solid #ffd100;
+            border-radius: 6px;
+            padding: 8px 12px;
+            min-width: 200px;
+            max-width: 300px;
+            z-index: 1000;
+            color: #ddd;
+            font-size: 0.85rem;
+            line-height: 1.3;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 900px) {
+            .talent-calc { grid-template-columns: 1fr; gap: 1rem; }
+            .talent-grid { grid-template-columns: repeat(4, 1fr); gap: 3px; padding: 8px; min-height: 350px; }
+            .tree-header { padding: 8px 12px; gap: 8px; }
+            .tree-icon { width: 24px; height: 24px; }
+            .tree-header h3 { font-size: 1.1rem; }
+        }
+        </style>
 
     </section>
 
