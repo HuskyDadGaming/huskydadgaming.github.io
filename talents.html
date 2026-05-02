@@ -145,15 +145,17 @@
         .talent-grid {
             position: relative;
             width: 100%;
+            max-width: 280px;
             height: 720px;
             background: linear-gradient(145deg, #1a1611 0%, #141209 100%);
             padding: 16px;
+            margin: 0 auto;
         }
         
         .talent-slot {
             position: absolute;
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
             border: 2px solid #444;
             border-radius: 6px;
             background: linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 100%);
@@ -335,8 +337,8 @@
     <div class="main-content">
         <div class="header">
             <h1>⚔️ Interactive Warrior Talent Calculator</h1>
-            <p>The Rage Engine Build (55/0/15)</p>
-            <div id="talent-status">Level 18 • 8 talent points spent • 63 points remaining</div>
+            <p>WotLK 3.3.5a DBC-Accurate Build</p>
+            <div id="talent-status">Level 10 • 0 talent points spent • 71 points remaining</div>
             <button id="reset-talents">Reset All Talents</button>
         </div>
 
@@ -646,131 +648,131 @@
                 <div class="tree-header prot-header">
                     <div class="tree-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_defensivestance.jpg')"></div>
                     <h3>Protection</h3>
-                    <div class="tree-points" data-points="8">8/71</div>
+                    <div class="tree-points" data-points="0">0/71</div>
                 </div>
                 <div class="talent-grid">
                     <!-- Row 1: 3 talents -->
-                    <div class="talent-slot learned" data-talent="imp-bloodrage" data-tree="protection" data-tier="0" data-max-rank="2" data-current-rank="2" style="left: 16px; top: 16px;">
+                    <div class="talent-slot" data-talent="imp-bloodrage" data-tree="protection" data-tier="0" data-max-rank="2" data-current-rank="0" style="left: 20px; top: 20px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_racial_bloodrage.jpg')"></div>
-                        <div class="talent-rank">2/2</div>
+                        <div class="talent-rank">0/2</div>
                     </div>
-                    <div class="talent-slot learned" data-talent="shield-spec" data-tree="protection" data-tier="0" data-max-rank="5" data-current-rank="5" style="left: 80px; top: 16px;">
+                    <div class="talent-slot" data-talent="shield-spec" data-tree="protection" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 85px; top: 20px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/inv_shield_06.jpg')"></div>
-                        <div class="talent-rank">5/5</div>
+                        <div class="talent-rank">0/5</div>
                     </div>
-                    <div class="talent-slot" data-talent="imp-thunder-clap" data-tree="protection" data-tier="0" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 16px;">
+                    <div class="talent-slot" data-talent="imp-thunder-clap" data-tree="protection" data-tier="0" data-max-rank="3" data-current-rank="0" style="left: 150px; top: 20px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_thunderclap.jpg')"></div>
                         <div class="talent-rank">0/3</div>
                     </div>
 
                     <!-- Row 2: 2 talents centered -->
-                    <div class="talent-slot learned" data-talent="incite" data-tree="protection" data-tier="1" data-max-rank="3" data-current-rank="1" style="left: 80px; top: 80px;">
+                    <div class="talent-slot" data-talent="incite" data-tree="protection" data-tier="1" data-max-rank="3" data-current-rank="0" style="left: 85px; top: 85px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_incite.jpg')"></div>
-                        <div class="talent-rank">1/3</div>
+                        <div class="talent-rank">0/3</div>
                     </div>
-                    <div class="talent-slot" data-talent="anticipation" data-tree="protection" data-tier="1" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 80px;">
+                    <div class="talent-slot" data-talent="anticipation" data-tree="protection" data-tier="1" data-max-rank="5" data-current-rank="0" style="left: 150px; top: 85px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_mirrorimage.jpg')"></div>
                         <div class="talent-rank">0/5</div>
                     </div>
 
                     <!-- Row 3: 4 talents -->
-                    <div class="talent-slot" data-talent="last-stand" data-tree="protection" data-tier="2" data-max-rank="1" data-current-rank="0" style="left: 16px; top: 144px;">
+                    <div class="talent-slot" data-talent="last-stand" data-tree="protection" data-tier="2" data-max-rank="1" data-current-rank="0" style="left: 20px; top: 150px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_ashestoashes.jpg')"></div>
                         <div class="talent-rank">0/1</div>
                     </div>
-                    <div class="talent-slot" data-talent="imp-revenge" data-tree="protection" data-tier="2" data-max-rank="2" data-current-rank="0" style="left: 80px; top: 144px;">
+                    <div class="talent-slot" data-talent="imp-revenge" data-tree="protection" data-tier="2" data-max-rank="2" data-current-rank="0" style="left: 85px; top: 150px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_revenge.jpg')"></div>
                         <div class="talent-rank">0/2</div>
                     </div>
-                    <div class="talent-slot" data-talent="shield-mastery" data-tree="protection" data-tier="2" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 144px;">
+                    <div class="talent-slot" data-talent="shield-mastery" data-tree="protection" data-tier="2" data-max-rank="2" data-current-rank="0" style="left: 150px; top: 150px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_shieldmastery.jpg')"></div>
                         <div class="talent-rank">0/2</div>
                     </div>
-                    <div class="talent-slot" data-talent="toughness" data-tree="protection" data-tier="2" data-max-rank="5" data-current-rank="0" style="left: 208px; top: 144px;">
+                    <div class="talent-slot" data-talent="toughness" data-tree="protection" data-tier="2" data-max-rank="5" data-current-rank="0" style="left: 215px; top: 150px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_devotion.jpg')"></div>
                         <div class="talent-rank">0/5</div>
                     </div>
 
                     <!-- Row 4: 3 talents -->
-                    <div class="talent-slot" data-talent="imp-spell-reflection" data-tree="protection" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 208px;">
+                    <div class="talent-slot" data-talent="imp-spell-reflection" data-tree="protection" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 20px; top: 215px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_shieldreflection.jpg')"></div>
                         <div class="talent-rank">0/2</div>
                     </div>
-                    <div class="talent-slot" data-talent="imp-disarm" data-tree="protection" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 80px; top: 208px;">
+                    <div class="talent-slot" data-talent="imp-disarm" data-tree="protection" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 85px; top: 215px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_disarm.jpg')"></div>
                         <div class="talent-rank">0/2</div>
                     </div>
-                    <div class="talent-slot" data-talent="puncture" data-tree="protection" data-tier="3" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 208px;">
+                    <div class="talent-slot" data-talent="puncture" data-tree="protection" data-tier="3" data-max-rank="3" data-current-rank="0" style="left: 150px; top: 215px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_sunder.jpg')"></div>
                         <div class="talent-rank">0/3</div>
                     </div>
 
                     <!-- Row 5: 3 talents -->
-                    <div class="talent-slot" data-talent="imp-disciplines" data-tree="protection" data-tier="4" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 272px;">
+                    <div class="talent-slot" data-talent="imp-disciplines" data-tree="protection" data-tier="4" data-max-rank="2" data-current-rank="0" style="left: 20px; top: 280px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_innerrage.jpg')"></div>
                         <div class="talent-rank">0/2</div>
                     </div>
-                    <div class="talent-slot" data-talent="concussion-blow" data-tree="protection" data-tier="4" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 272px;">
+                    <div class="talent-slot" data-talent="concussion-blow" data-tree="protection" data-tier="4" data-max-rank="1" data-current-rank="0" style="left: 85px; top: 280px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_thunderbolt.jpg')"></div>
                         <div class="talent-rank">0/1</div>
                     </div>
-                    <div class="talent-slot" data-talent="gag-order" data-tree="protection" data-tier="4" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 272px;">
+                    <div class="talent-slot" data-talent="gag-order" data-tree="protection" data-tier="4" data-max-rank="2" data-current-rank="0" style="left: 150px; top: 280px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_silentrage.jpg')"></div>
                         <div class="talent-rank">0/2</div>
                     </div>
 
                     <!-- Row 6: 1 talent centered -->
-                    <div class="talent-slot" data-talent="focused-rage" data-tree="protection" data-tier="5" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 336px;">
+                    <div class="talent-slot" data-talent="focused-rage" data-tree="protection" data-tier="5" data-max-rank="5" data-current-rank="0" style="left: 150px; top: 345px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_focusedrage.jpg')"></div>
                         <div class="talent-rank">0/5</div>
                     </div>
 
                     <!-- Row 7: 3 talents -->
-                    <div class="talent-slot" data-talent="vitality" data-tree="protection" data-tier="6" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 400px;">
+                    <div class="talent-slot" data-talent="vitality" data-tree="protection" data-tier="6" data-max-rank="2" data-current-rank="0" style="left: 20px; top: 410px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_lifedrain.jpg')"></div>
                         <div class="talent-rank">0/2</div>
                     </div>
-                    <div class="talent-slot" data-talent="safeguard" data-tree="protection" data-tier="6" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 400px;">
+                    <div class="talent-slot" data-talent="safeguard" data-tree="protection" data-tier="6" data-max-rank="1" data-current-rank="0" style="left: 85px; top: 410px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_victorious.jpg')"></div>
                         <div class="talent-rank">0/1</div>
                     </div>
-                    <div class="talent-slot" data-talent="warbringer" data-tree="protection" data-tier="6" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 400px;">
+                    <div class="talent-slot" data-talent="warbringer" data-tree="protection" data-tier="6" data-max-rank="3" data-current-rank="0" style="left: 150px; top: 410px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_charge.jpg')"></div>
                         <div class="talent-rank">0/3</div>
                     </div>
 
                     <!-- Row 8: 2 talents centered -->
-                    <div class="talent-slot" data-talent="devastate" data-tree="protection" data-tier="7" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 464px;">
-                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_devastate.jpg')"></div>
+                    <div class="talent-slot" data-talent="devastate" data-tree="protection" data-tier="7" data-max-rank="3" data-current-rank="0" style="left: 85px; top: 475px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/inv_sword_11.jpg')"></div>
                         <div class="talent-rank">0/3</div>
                     </div>
-                    <div class="talent-slot" data-talent="critical-block" data-tree="protection" data-tier="7" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 464px;">
+                    <div class="talent-slot" data-talent="critical-block" data-tree="protection" data-tier="7" data-max-rank="2" data-current-rank="0" style="left: 150px; top: 475px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_criticalblock.jpg')"></div>
                         <div class="talent-rank">0/2</div>
                     </div>
 
                     <!-- Row 9: 3 talents -->
-                    <div class="talent-slot" data-talent="sword-and-board" data-tree="protection" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 16px; top: 528px;">
+                    <div class="talent-slot" data-talent="sword-and-board" data-tree="protection" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 20px; top: 540px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_swordandboard.jpg')"></div>
                         <div class="talent-rank">0/1</div>
                     </div>
-                    <div class="talent-slot" data-talent="damage-shield" data-tree="protection" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 528px;">
+                    <div class="talent-slot" data-talent="damage-shield" data-tree="protection" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 85px; top: 540px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_reincarnation.jpg')"></div>
                         <div class="talent-rank">0/1</div>
                     </div>
-                    <div class="talent-slot" data-talent="shockwave" data-tree="protection" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 528px;">
+                    <div class="talent-slot" data-talent="shockwave" data-tree="protection" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 150px; top: 540px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_shockwave.jpg')"></div>
                         <div class="talent-rank">0/3</div>
                     </div>
 
                     <!-- Row 10: 1 talent centered -->
-                    <div class="talent-slot" data-talent="shield-slam" data-tree="protection" data-tier="9" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 592px;">
+                    <div class="talent-slot" data-talent="shield-slam" data-tree="protection" data-tier="9" data-max-rank="5" data-current-rank="0" style="left: 85px; top: 605px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_shieldslam.jpg')"></div>
                         <div class="talent-rank">0/5</div>
                     </div>
 
                     <!-- Row 11: 1 talent centered -->
-                    <div class="talent-slot" data-talent="vigilance" data-tree="protection" data-tier="10" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 656px;">
+                    <div class="talent-slot" data-talent="vigilance" data-tree="protection" data-tier="10" data-max-rank="1" data-current-rank="0" style="left: 85px; top: 670px;">
                         <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_vigilance.jpg')"></div>
                         <div class="talent-rank">0/1</div>
                     </div>
@@ -787,37 +789,205 @@
         (function() {
             'use strict';
             
-            // Talent data with descriptions
+            // Complete talent data with descriptions based on DBC data
             const TALENT_DATA = {
                 // Protection talents
                 'imp-bloodrage': {
                     name: 'Improved Bloodrage',
-                    description: 'Increases the instant rage generated by your Bloodrage ability by 3/6.'
+                    description: 'Increases the instant rage generated by your Bloodrage ability by 3/6.',
+                    maxRank: 2,
+                    prereq: null
                 },
                 'shield-spec': {
                     name: 'Shield Specialization',
-                    description: 'Increases your chance to block attacks with a shield by 1/2/3/4/5% and has a 20/40/60/80/100% chance to generate 1 rage when a block occurs.'
+                    description: 'Increases your chance to block attacks with a shield by 1/2/3/4/5% and has a 20/40/60/80/100% chance to generate 1 rage when a block occurs.',
+                    maxRank: 5,
+                    prereq: null
+                },
+                'imp-thunder-clap': {
+                    name: 'Improved Thunder Clap',
+                    description: 'Reduces the cost of your Thunder Clap ability by 1/2/3 rage.',
+                    maxRank: 3,
+                    prereq: null
                 },
                 'incite': {
                     name: 'Incite',
-                    description: 'Increases the critical strike chance of your Heroic Strike, Thunder Clap and Cleave abilities by 5/10/15%.'
+                    description: 'Increases the critical strike chance of your Heroic Strike, Thunder Clap and Cleave abilities by 5/10/15%.',
+                    maxRank: 3,
+                    prereq: null
+                },
+                'anticipation': {
+                    name: 'Anticipation',
+                    description: 'Increases your Dodge chance by 1/2/3/4/5%.',
+                    maxRank: 5,
+                    prereq: null
+                },
+                'last-stand': {
+                    name: 'Last Stand',
+                    description: 'When activated, this ability temporarily grants you 30% of your maximum health for 20 sec. After the effect expires, the health is lost.',
+                    maxRank: 1,
+                    prereq: null
+                },
+                'imp-revenge': {
+                    name: 'Improved Revenge',
+                    description: 'Gives your Revenge ability a 25/50% chance to stun the target for 3 sec.',
+                    maxRank: 2,
+                    prereq: null
+                },
+                'shield-mastery': {
+                    name: 'Shield Mastery',
+                    description: 'Increases the amount of damage absorbed by your shield by 15/30%.',
+                    maxRank: 2,
+                    prereq: null
+                },
+                'toughness': {
+                    name: 'Toughness',
+                    description: 'Increases your armor value from items by 2/4/6/8/10% and reduces the duration of all movement slowing effects by 6/12/18/24/30%.',
+                    maxRank: 5,
+                    prereq: null
+                },
+                'imp-spell-reflection': {
+                    name: 'Improved Spell Reflection',
+                    description: 'Reduces the cooldown of your Spell Reflection ability by 1/2 sec.',
+                    maxRank: 2,
+                    prereq: null
+                },
+                'imp-disarm': {
+                    name: 'Improved Disarm',
+                    description: 'Increases the duration of your Disarm ability by 1/2 sec.',
+                    maxRank: 2,
+                    prereq: null
+                },
+                'puncture': {
+                    name: 'Puncture',
+                    description: 'Gives your Sunder Armor ability a 17/33/50% chance to inflict a bleeding wound that causes additional damage over 18 sec.',
+                    maxRank: 3,
+                    prereq: null
+                },
+                'imp-disciplines': {
+                    name: 'Improved Disciplines',
+                    description: 'Reduces the cooldown of your Challenging Shout, Mocking Blow and Taunt abilities by 15/30%.',
+                    maxRank: 2,
+                    prereq: null
+                },
+                'concussion-blow': {
+                    name: 'Concussion Blow',
+                    description: 'Stuns the opponent for 5 sec and deals weapon damage plus 50. Requires a shield.',
+                    maxRank: 1,
+                    prereq: null
+                },
+                'gag-order': {
+                    name: 'Gag Order',
+                    description: 'Gives your Shield Bash and Pummel abilities a 50/100% chance to silence the target for 3 sec.',
+                    maxRank: 2,
+                    prereq: null
+                },
+                'focused-rage': {
+                    name: 'Focused Rage',
+                    description: 'Reduces the rage cost of your offensive abilities by 1/2/3/4/5.',
+                    maxRank: 5,
+                    prereq: null
+                },
+                'vitality': {
+                    name: 'Vitality',
+                    description: 'Increases your total Health by 2/4% and your total Stamina by 3/6%.',
+                    maxRank: 2,
+                    prereq: null
+                },
+                'safeguard': {
+                    name: 'Safeguard',
+                    description: 'When you Intercept or Intervene, you reduce all damage taken by the target by 20% for 6 sec.',
+                    maxRank: 1,
+                    prereq: null
+                },
+                'warbringer': {
+                    name: 'Warbringer',
+                    description: 'Your Charge, Intercept and Intervene abilities are now usable while in combat and in any stance, but the stunning effect of Charge is removed. In addition, your Charge and Intercept do not have a minimum range requirement and reduce the target\'s movement speed by 15/25/50% for 8 sec.',
+                    maxRank: 3,
+                    prereq: null
+                },
+                'devastate': {
+                    name: 'Devastate',
+                    description: 'Sunder the target\'s armor causing the Sunder Armor effect. In addition, causes weapon damage plus damage based on the number of Sunder Armor effects on the target.',
+                    maxRank: 3,
+                    prereq: null
+                },
+                'critical-block': {
+                    name: 'Critical Block',
+                    description: 'Your successful blocks have a 10/20% chance to block 100% of the damage and render you immune to critical strikes for 10 sec.',
+                    maxRank: 2,
+                    prereq: null
+                },
+                'sword-and-board': {
+                    name: 'Sword and Board',
+                    description: 'When your Devastate and Revenge abilities deal damage they have a chance to refresh the cooldown of your Shield Slam ability and reduce its rage cost by 100% for 5 sec.',
+                    maxRank: 1,
+                    prereq: null
+                },
+                'damage-shield': {
+                    name: 'Damage Shield',
+                    description: 'When you block, parry, or dodge an attack you have a chance to deal damage to your attacker.',
+                    maxRank: 1,
+                    prereq: null
+                },
+                'shockwave': {
+                    name: 'Shockwave',
+                    description: 'Sends a wave of force in front of the warrior, causing damage and stunning all enemies within 10 yards in a frontal cone for 4 sec.',
+                    maxRank: 3,
+                    prereq: null
+                },
+                'shield-slam': {
+                    name: 'Shield Slam',
+                    description: 'Slam the target with your shield, causing damage plus additional damage based on shield\'s block value. Also dispels 1 magic effect on the target. Requires a shield.',
+                    maxRank: 5,
+                    prereq: null
+                },
+                'vigilance': {
+                    name: 'Vigilance',
+                    description: 'Focus your protective gaze on a party or raid member, reducing their damage taken by 3% and transferring 10% of the damage taken to you. In addition, each time they are hit by an attack your Taunt cooldown is refreshed. Lasts 30 min.',
+                    maxRank: 1,
+                    prereq: null
                 }
             };
             
             // Track talent points
             let talentPoints = {
-                available: 63,
-                spent: 8,
-                trees: { arms: 0, fury: 0, protection: 8 }
+                available: 71,
+                spent: 0,
+                trees: { arms: 0, fury: 0, protection: 0 }
             };
             
             // Initialize with current build
             function initializeTalents() {
+                resetAllTalents();
+                updateAllTalentStates();
+            }
+            
+            function resetAllTalents() {
+                // Reset all talent slots to 0
+                document.querySelectorAll('.talent-slot[data-talent]').forEach(slot => {
+                    slot.dataset.currentRank = '0';
+                    const rankEl = slot.querySelector('.talent-rank');
+                    if (rankEl) {
+                        const maxRank = parseInt(slot.dataset.maxRank);
+                        rankEl.textContent = `0/${maxRank}`;
+                    }
+                    slot.classList.remove('learned');
+                });
+                
+                // Reset point counters
+                talentPoints = {
+                    available: 71,
+                    spent: 0,
+                    trees: { arms: 0, fury: 0, protection: 0 }
+                };
+                
                 updateAllTalentStates();
             }
             
             function updateTalentState(slot) {
                 const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
                 
                 slot.classList.remove('learned', 'available', 'unavailable');
                 
@@ -851,6 +1021,54 @@
                 return talentPoints.trees[tree] >= requiredPoints;
             }
             
+            function addTalentPoint(slot) {
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                const tree = slot.dataset.tree;
+                
+                if (currentRank < maxRank && talentPoints.available > 0) {
+                    // Add point
+                    slot.dataset.currentRank = currentRank + 1;
+                    const rankEl = slot.querySelector('.talent-rank');
+                    if (rankEl) {
+                        rankEl.textContent = `${currentRank + 1}/${maxRank}`;
+                    }
+                    
+                    // Update counters
+                    talentPoints.available--;
+                    talentPoints.spent++;
+                    talentPoints.trees[tree]++;
+                    
+                    updateAllTalentStates();
+                    return true;
+                }
+                return false;
+            }
+            
+            function removeTalentPoint(slot) {
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                const tree = slot.dataset.tree;
+                
+                if (currentRank > 0) {
+                    // Remove point
+                    slot.dataset.currentRank = currentRank - 1;
+                    const rankEl = slot.querySelector('.talent-rank');
+                    if (rankEl) {
+                        rankEl.textContent = `${currentRank - 1}/${maxRank}`;
+                    }
+                    
+                    // Update counters
+                    talentPoints.available++;
+                    talentPoints.spent--;
+                    talentPoints.trees[tree]--;
+                    
+                    updateAllTalentStates();
+                    return true;
+                }
+                return false;
+            }
+            
             function updateAllTalentStates() {
                 document.querySelectorAll('.talent-slot[data-talent]').forEach(updateTalentState);
                 
@@ -873,7 +1091,7 @@
                 status.textContent = `Level ${level} • ${talentPoints.spent} talent points spent • ${talentPoints.available} points remaining`;
             }
             
-            // Basic tooltip functionality
+            // Tooltip functionality
             const tooltipEl = document.getElementById('talent-tooltip');
             let tooltipShownFor = null;
             
@@ -888,6 +1106,24 @@
                 let html = `<div class="tt-name" style="color: ${currentRank > 0 ? '#ffd700' : '#ffffff'}">${talentData.name}</div>`;
                 html += `<div class="tt-bind">Rank ${currentRank}/${maxRank}</div>`;
                 html += `<div class="tt-stat">${talentData.description}</div>`;
+                
+                if (currentRank === 0) {
+                    if (canLearnTalent(slot)) {
+                        html += `<div class="tt-bonus">Left-click to learn</div>`;
+                    } else {
+                        const tier = parseInt(slot.dataset.tier);
+                        if (tier > 0) {
+                            const requiredPoints = tier * 5;
+                            const tree = slot.dataset.tree;
+                            const currentPoints = talentPoints.trees[tree];
+                            if (currentPoints < requiredPoints) {
+                                html += `<div class="tt-required">Requires ${requiredPoints} points in ${tree.charAt(0).toUpperCase() + tree.slice(1)}</div>`;
+                            }
+                        }
+                    }
+                } else if (currentRank > 0) {
+                    html += `<div class="tt-bonus">Right-click to remove point</div>`;
+                }
                 
                 tooltipEl.innerHTML = html;
                 tooltipEl.classList.add('visible');
@@ -935,6 +1171,28 @@
                 if (slot === tooltipShownFor && !slot.contains(ev.relatedTarget)) {
                     hideTooltip();
                 }
+            });
+            
+            // Click handlers for talent interaction
+            document.addEventListener('click', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot) {
+                    ev.preventDefault();
+                    addTalentPoint(slot);
+                }
+            });
+            
+            document.addEventListener('contextmenu', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot) {
+                    ev.preventDefault();
+                    removeTalentPoint(slot);
+                }
+            });
+            
+            // Reset button
+            document.getElementById('reset-talents').addEventListener('click', () => {
+                resetAllTalents();
             });
             
             // Initialize
