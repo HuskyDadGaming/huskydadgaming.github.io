@@ -59,33 +59,26 @@
         }
         .filter-row:last-child { margin-bottom: 0; }
         .filter-row > .label { color: #999; font-size: 0.9rem; min-width: 90px; }
+        .filter-btn {
+            padding: 6px 12px; background: #2d2d2d; color: #ddd;
+            border: 1px solid #3a3a3a; border-radius: 4px;
+            cursor: pointer; font-size: 0.85rem; transition: all 0.15s;
+        }
+        .filter-btn:hover { background: #3d3d3d; }
+        .filter-btn.active {
+            background: #ffd100; color: #1a1a1a;
+            border-color: #ffd100; font-weight: 600;
+        }
+        .class-select {
+            padding: 6px 12px; background: #2d2d2d; color: #ddd;
+            border: 1px solid #3a3a3a; border-radius: 4px;
+            font-size: 0.9rem; min-width: 200px; cursor: pointer;
+        }
+        .class-select:focus { outline: none; border-color: #ffd100; }
+        .legend { font-size: 0.7rem; line-height: 1.7; }
+        .legend .class-pill { font-size: 0.65rem; width: 16px; height: 16px; line-height: 16px; }
         
-        .filter-pill {
-            padding: 6px 12px; border-radius: 4px; cursor: pointer;
-            font-size: 0.85rem; transition: all 0.15s; font-weight: 600;
-            border: 2px solid transparent;
-            user-select: none;
-        }
-        .filter-pill:hover { 
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        .filter-pill.active {
-            border-color: #ffd100;
-            box-shadow: 0 0 0 1px #ffd100, 0 4px 12px rgba(255, 209, 0, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .role-pill.filter-pill {
-            min-width: 65px; text-align: center;
-        }
-        .class-pill.filter-pill {
-            width: 28px; height: 28px; line-height: 16px;
-            text-align: center; font-weight: 700;
-            display: inline-flex; align-items: center; justify-content: center;
-        }
-        
-        /* Item display pills (smaller, non-clickable) */
+        /* Item display pills (non-clickable) */
         table .role-pill {
             display: inline-block; padding: 2px 7px; border-radius: 4px;
             font-size: 0.75rem; margin-right: 3px; cursor: default;
@@ -96,7 +89,6 @@
             line-height: 18px; text-align: center; border-radius: 3px;
             font-size: 0.7rem; font-weight: 700;
             color: #1a1a1a; margin-right: 2px; cursor: default;
-            transition: all 0.15s ease;
         }
         
         .no-loot { color: #777; font-style: italic; text-align: center; padding: 1rem; }
@@ -132,25 +124,30 @@
     <div class="filter-bar">
         <div class="filter-row">
             <span class="label">Role:</span>
-            <span class="role-pill filter-pill active" data-role="all" style="background:#2d2d2d;color:#ddd;">All (6)</span>
-            <span class="role-pill filter-pill" data-role="tank" style="background:#3a5a7a;color:#87ceeb;">🛡 Tank (0)</span>
-            <span class="role-pill filter-pill" data-role="heal" style="background:#2d5a3d;color:#7ec896;">+ Heal (2)</span>
-            <span class="role-pill filter-pill" data-role="melee" style="background:#7a3a3a;color:#e88080;">⚔ Melee (4)</span>
-            <span class="role-pill filter-pill" data-role="ranged" style="background:#7a5a2d;color:#e8c87e;">🏹 Ranged (2)</span>
+            <button class="filter-btn role-btn active" data-role="all">All (6)</button>
+            <button class="filter-btn role-btn" data-role="tank">🛡 Tank (0)</button>
+            <button class="filter-btn role-btn" data-role="heal">+ Healer (2)</button>
+            <button class="filter-btn role-btn" data-role="melee">⚔ Melee (4)</button>
+            <button class="filter-btn role-btn" data-role="ranged">🏹 Ranged (2)</button>
         </div>
         <div class="filter-row">
             <span class="label">Class:</span>
-            <span class="class-pill filter-pill active" data-class="all" style="background:#2d2d2d;color:#ddd;">All (6)</span>
-            <span class="class-pill filter-pill" data-class="warrior" style="background:#C79C6E;color:#1a1a1a;">W</span>
-            <span class="class-pill filter-pill" data-class="paladin" style="background:#F58CBA;color:#1a1a1a;">P</span>
-            <span class="class-pill filter-pill" data-class="hunter" style="background:#ABD473;color:#1a1a1a;">H</span>
-            <span class="class-pill filter-pill" data-class="rogue" style="background:#FFF569;color:#1a1a1a;">R</span>
-            <span class="class-pill filter-pill" data-class="priest" style="background:#FFFFFF;color:#1a1a1a;">P</span>
-            <span class="class-pill filter-pill" data-class="dk" style="background:#C41F3B;color:#ffffff;">K</span>
-            <span class="class-pill filter-pill" data-class="shaman" style="background:#0070DE;color:#ffffff;">S</span>
-            <span class="class-pill filter-pill" data-class="mage" style="background:#69CCF0;color:#1a1a1a;">M</span>
-            <span class="class-pill filter-pill" data-class="warlock" style="background:#9482C9;color:#1a1a1a;">W</span>
-            <span class="class-pill filter-pill" data-class="druid" style="background:#FF7D0A;color:#1a1a1a;">D</span>
+            <select class="class-select" id="class-filter">
+                <option value="all">All classes (6)</option>
+                <option value="warrior">Warrior</option>
+                <option value="paladin">Paladin</option>
+                <option value="hunter">Hunter</option>
+                <option value="rogue">Rogue</option>
+                <option value="priest">Priest</option>
+                <option value="dk">Death Knight</option>
+                <option value="shaman">Shaman</option>
+                <option value="mage">Mage</option>
+                <option value="warlock">Warlock</option>
+                <option value="druid">Druid</option>
+            </select>
+        </div>
+        <div class="legend">
+            Class colours: <span class="class-pill" style="background:#C79C6E;color:#1a1a1a;">W</span>Warrior <span class="class-pill" style="background:#F58CBA;color:#1a1a1a;">P</span>Paladin <span class="class-pill" style="background:#ABD473;color:#1a1a1a;">H</span>Hunter <span class="class-pill" style="background:#FFF569;color:#1a1a1a;">R</span>Rogue <span class="class-pill" style="background:#FFFFFF;color:#1a1a1a;">P</span>Priest <span class="class-pill" style="background:#C41F3B;color:#ffffff;">K</span>Death Knight <span class="class-pill" style="background:#0070DE;color:#ffffff;">S</span>Shaman <span class="class-pill" style="background:#69CCF0;color:#1a1a1a;">M</span>Mage <span class="class-pill" style="background:#9482C9;color:#1a1a1a;">W</span>Warlock <span class="class-pill" style="background:#FF7D0A;color:#1a1a1a;">D</span>Druid 
         </div>
     </div>
 
@@ -337,8 +334,8 @@
 <script>
 // RFC Filtering Logic
 (function() {
-    const roleFilterPills = document.querySelectorAll('.filter-pill[data-role]');
-    const classFilterPills = document.querySelectorAll('.filter-pill[data-class]');
+    const roleButtons = document.querySelectorAll('.role-btn');
+    const classSelect = document.getElementById('class-filter');
     const rows = document.querySelectorAll('.item-row');
     const bossCards = document.querySelectorAll('.card');
     let activeRole = 'all';
@@ -391,43 +388,12 @@
         return n;
     }
 
-    function countForClass(targetClass) {
-        let n = 0;
-        rows.forEach(row => {
-            const it = rowItemCache.get(row);
-            if (targetClass === 'all') {
-                if (activeRole !== 'all') {
-                    if (!it.classes.some(c => classFillsRole(it, c, activeRole))) return;
-                }
-                n++;
-                return;
-            }
-            if (!it.classes.includes(targetClass)) return;
-            if (!passesClassMinLevel(it, targetClass)) return;
-            if (activeRole !== 'all') {
-                if (!classFillsRole(it, targetClass, activeRole)) return;
-            }
-            n++;
-        });
-        return n;
-    }
-
-    function updateFilterCounts() {
-        // Update role pill counts
-        roleFilterPills.forEach(pill => {
-            const role = pill.dataset.role;
+    function syncRoleButtons() {
+        roleButtons.forEach(btn => {
+            const role = btn.dataset.role;
             const count = countForRole(role);
-            const baseText = pill.textContent.replace(/\s*\(\d+\)\s*$/, '');
-            pill.textContent = `${baseText} (${count})`;
-        });
-
-        // Update class pill counts (only for "All" pill)
-        classFilterPills.forEach(pill => {
-            const className = pill.dataset.class;
-            if (className === 'all') {
-                const count = countForClass(className);
-                pill.textContent = `All (${count})`;
-            }
+            const baseLabel = btn.textContent.replace(/\s*\(\d+\)\s*$/, '');
+            btn.textContent = `${baseLabel} (${count})`;
         });
     }
 
@@ -488,32 +454,27 @@
                 }
             }
         });
-
-        updateFilterCounts();
     }
 
-    // Event listeners for role filter pills
-    roleFilterPills.forEach(pill => {
-        pill.addEventListener('click', () => {
-            roleFilterPills.forEach(p => p.classList.remove('active'));
-            pill.classList.add('active');
-            activeRole = pill.dataset.role;
+    // Event listeners
+    roleButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            roleButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeRole = btn.dataset.role;
+            syncRoleButtons();
             applyFilters();
         });
     });
 
-    // Event listeners for class filter pills  
-    classFilterPills.forEach(pill => {
-        pill.addEventListener('click', () => {
-            classFilterPills.forEach(p => p.classList.remove('active'));
-            pill.classList.add('active');
-            activeClass = pill.dataset.class;
-            applyFilters();
-        });
+    classSelect.addEventListener('change', () => {
+        activeClass = classSelect.value;
+        syncRoleButtons();
+        applyFilters();
     });
 
     // Initialize
-    updateFilterCounts();
+    syncRoleButtons();
 })();
 </script>
 
