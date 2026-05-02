@@ -161,10 +161,12 @@
         .talent-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(11, 1fr);
             gap: 4px;
             padding: 12px;
             background: linear-gradient(145deg, #1a1611 0%, #141209 100%);
-            min-height: 420px;
+            min-height: 600px;
+            max-height: 700px;
         }
         
         .talent-slot {
@@ -295,7 +297,8 @@
                 grid-template-columns: repeat(4, 1fr); 
                 gap: 3px; 
                 padding: 8px; 
-                min-height: 350px; 
+                min-height: 500px;
+                max-height: 600px;
             }
             
             .tree-header { 
