@@ -161,16 +161,15 @@
         .talent-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(11, 1fr);
-            gap: 4px;
-            padding: 12px;
+            gap: 8px;
+            padding: 16px;
             background: linear-gradient(145deg, #1a1611 0%, #141209 100%);
             min-height: 600px;
-            max-height: 700px;
         }
         
         .talent-slot {
-            aspect-ratio: 1;
+            width: 56px;
+            height: 56px;
             position: relative;
             border: 2px solid #444;
             border-radius: 6px;
@@ -178,6 +177,9 @@
             cursor: pointer;
             transition: all 0.2s ease;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .talent-slot.empty {
@@ -294,11 +296,14 @@
             }
             
             .talent-grid { 
-                grid-template-columns: repeat(4, 1fr); 
-                gap: 3px; 
-                padding: 8px; 
-                min-height: 500px;
-                max-height: 600px;
+                gap: 6px; 
+                padding: 12px; 
+                min-height: 400px;
+            }
+            
+            .talent-slot {
+                width: 48px;
+                height: 48px;
             }
             
             .tree-header { 
