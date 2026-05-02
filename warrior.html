@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warrior Rage Tank Build Guide | KCraft - WotLK 3.3.5a</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚔️</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { 
+            background: #1a1a1a; 
+            color: #ddd; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+            padding: 0;
+            padding-bottom: 3rem;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1, h2, h3 { color: #ffd100; }
+        a { color: #4ea8de; text-decoration: none; }
+        a:hover { color: #88c5f0; }
+        
+        /* Navigation styles matching index.html */
+        .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
+        
+        /* Tab switcher */
+        .tab-bar {
+            display: flex; gap: 4px; margin-bottom: 2rem;
+            border-bottom: 1px solid #3a3a3a;
+        }
+        .tab-btn {
+            padding: 10px 20px; background: transparent; color: #888;
+            border: none; border-bottom: 3px solid transparent;
+            cursor: pointer; font-size: 0.95rem; font-weight: 500;
+            transition: all 0.15s; margin-bottom: -1px;
+        }
+        .tab-btn:hover { color: #ddd; background: #2326; }
+        .tab-btn.active {
+            color: #ffd100; border-bottom-color: #ffd100;
+        }
+        /* Tab links (to other pages) */
+        a.tab-btn.tab-link {
+            text-decoration: none; color: #888;
+            display: inline-block;
+        }
+        a.tab-btn.tab-link:hover { color: #ffd100; }
+        a.tab-btn.tab-link.active { color: #ffd100; border-bottom-color: #ffd100; }
+        
+        .main-content {
+            padding: 0 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .build-overview {
+            background: rgba(255, 209, 0, 0.1);
+            border: 1px solid rgba(255, 209, 0, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .level-progression {
+            background: #2a2a2a;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .level-header {
+            background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
+            color: white;
+            padding: 0.75rem 1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .level-content {
+            padding: 1rem;
+        }
+        
+        .talent-pick {
+            background: #333;
+            border-left: 4px solid #ffd100;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .talent-name {
+            color: #ffd100;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .talent-rank {
+            color: #88c5f0;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+        
+        .talent-justification {
+            color: #ccc;
+            margin-top: 0.5rem;
+            line-height: 1.4;
+        }
+        
+        .milestone {
+            background: linear-gradient(135deg, #B22222 0%, #8B1A1A 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+        
+        .milestone-title {
+            color: #ffd100;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tree-badge {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffd100;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .arms-badge { background: rgba(139, 69, 19, 0.6); }
+        .prot-badge { background: rgba(178, 34, 34, 0.6); }
+        .fury-badge { background: rgba(105, 105, 105, 0.6); }
+        
+        .final-build {
+            background: #1a3a1a;
+            border: 2px solid #2d5a2d;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .ability-unlock {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+        }
+        
+        .ability-name {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .level-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+            
+            .main-content {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html" style="color: #ffd100;">⚔️ KCraft Loot Guide</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="tab-bar">
+        <a class="tab-btn tab-link" href="index.html">📚 Browse Dungeons</a>
+        <a class="tab-btn tab-link" href="index.html#finder">🔍 Find Loot</a>
+        <a class="tab-btn tab-link" href="armoury.html">🛡️ Armoury</a>
+        <a class="tab-btn tab-link active" href="warrior.html">⚔️ Warrior</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>⚔️ Warrior Rage Tank Build Guide</h1>
+            <p>Complete Level 10-80 Progression | WotLK 3.3.5a DBC Accurate</p>
+        </div>
+
+        <div class="build-overview">
+            <h2>🛡️ The Rage Tank Build (15/5/51)</h2>
+            <p><strong>Philosophy:</strong> Maximum threat generation through rage efficiency and damage output, while maintaining core survivability. This build focuses on generating and maintaining threat through high damage rather than pure mitigation.</p>
+            <p><strong>Final Distribution:</strong> 15 Arms / 5 Fury / 51 Protection</p>
+            <p><strong>Key Features:</strong> Deep Wounds for DoT threat, weapon specialization for damage, full Protection tree for essential tanking abilities.</p>
+        </div>
+
+        <!-- Level 10-15: Foundation -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 10-15: Building the Foundation</span>
+                <span class="tree-badge prot-badge">Protection Focus</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Shield Specialization <span class="talent-rank">1/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 10:</strong> Essential for rage generation. Every block gives you a chance for 5 rage, which is crucial for maintaining threat rotations. Start here immediately.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Shield Specialization <span class="talent-rank">2/5, 3/5, 4/5, 5/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 11-14:</strong> Max this first. +5% block chance and 100% chance for rage on block. This is your rage engine - without this, you'll be rage starved and lose threat.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Improved Bloodrage <span class="talent-rank">1/2</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 15:</strong> Start improving your pull opener. More initial rage means better threat establishment at the start of fights.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 16-20: Early Threat -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 16-20: Threat Establishment</span>
+                <span class="tree-badge prot-badge">Protection Continued</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Improved Bloodrage <span class="talent-rank">2/2</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 16:</strong> Complete the opener improvement. 25% more rage from Bloodrage gives you a strong start to every pull.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Incite <span class="talent-rank">1/3, 2/3, 3/3</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 17-19:</strong> +15% crit chance on Heroic Strike, Thunder Clap, and Cleave. These are your main rage-dump threat abilities, so more crits = more threat and rage return.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Anticipation <span class="talent-rank">1/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 20:</strong> Begin building avoidance. Every 1% dodge is significant survival improvement, and avoidance scales well throughout the game.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 21-25: Survivability Base -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 21-25: Survivability Foundation</span>
+                <span class="tree-badge prot-badge">Protection Tree</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Anticipation <span class="talent-rank">2/5, 3/5, 4/5, 5/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 21-24:</strong> Complete for +5% total dodge. This is a substantial survivability increase and the foundation of your avoidance tanking.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Toughness <span class="talent-rank">1/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 25:</strong> Unlock Tier 3. +2% armor and -6% movement impair duration. Armor scales excellently, and the snare resistance is quality of life.
+                    </div>
+                </div>
+                
+                <div class="milestone">
+                    <div class="milestone-title">🎯 Milestone Unlocked: Tier 3 Talents (15 points)</div>
+                    You can now access powerful Tier 3 Protection talents including Last Stand, Improved Revenge, and Shield Mastery.
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 26-30: Armor and Major Cooldowns -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 26-30: Armor and Emergency Tools</span>
+                <span class="tree-badge prot-badge">Tier 3 Protection</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Toughness <span class="talent-rank">2/5, 3/5, 4/5, 5/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 26-29:</strong> +10% armor total and -30% movement impair duration. Armor is incredibly valuable for physical damage reduction.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Last Stand <span class="talent-rank">1/1</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 30:</strong> <strong>MAJOR ABILITY UNLOCK!</strong> Emergency +30% health for 20 seconds. This is a game-changing "oh shit" button that will save you countless times.
+                    </div>
+                </div>
+                
+                <div class="ability-unlock">
+                    <span class="ability-name">New Ability:</span> Last Stand - Your first major tank cooldown! Use when health drops below 40%.
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 31-35: Revenge Mastery -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 31-35: Revenge and Block Mastery</span>
+                <span class="tree-badge prot-badge">Tier 3 Continued</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Improved Revenge <span class="talent-rank">1/2, 2/2</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 31-32:</strong> +60% Revenge damage and hits an additional target for 50% damage. Massive threat increase for your main reactive ability.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Shield Mastery <span class="talent-rank">1/2, 2/2</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 33-34:</strong> +30% block value and -20 seconds on Shield Block cooldown. Makes your active mitigation much stronger and more available.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Improved Disciplines <span class="talent-rank">1/2</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 35:</strong> Unlock Tier 4. -15% cooldown on Shield Wall, Retaliation, and Recklessness. Start preparing for major defensive improvements.
+                    </div>
+                </div>
+                
+                <div class="milestone">
+                    <div class="milestone-title">🎯 Milestone Unlocked: Tier 4 Talents (20 points)</div>
+                    Access to Concussion Blow, Gag Order, and other utility talents.
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 36-40: Tier 4 Foundation -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 36-40: Utility and Control</span>
+                <span class="tree-badge prot-badge">Tier 4 Protection</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Improved Disciplines <span class="talent-rank">2/2</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 36:</strong> -30% cooldown on major defensive abilities. Your Shield Wall becomes much more available for dangerous encounters.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Concussion Blow <span class="talent-rank">1/1</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 37:</strong> <strong>MAJOR ABILITY UNLOCK!</strong> 5-second stun that deals weapon damage. Essential for interrupting casters and controlling dangerous enemies.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Gag Order <span class="talent-rank">1/2, 2/2</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 38-39:</strong> Shield Bash and Pummel gain 100% chance to silence for 3 seconds. Critical for caster control and pulling ranged mobs to you.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Focused Rage <span class="talent-rank">1/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 40:</strong> Unlock Tier 5. Begin rage efficiency improvements - every point of rage saved is more threat you can generate.
+                    </div>
+                </div>
+                
+                <div class="ability-unlock">
+                    <span class="ability-name">New Ability:</span> Concussion Blow - 5-second stun for dangerous situations!
+                </div>
+                
+                <div class="milestone">
+                    <div class="milestone-title">🎯 Milestone Unlocked: Tier 5 Talents (25 points)</div>
+                    You can now access Focused Rage for better resource management.
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 41-45: Rage Efficiency -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 41-45: Rage Efficiency Mastery</span>
+                <span class="tree-badge prot-badge">Tier 5 Protection</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Focused Rage <span class="talent-rank">2/5, 3/5, 4/5, 5/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 41-44:</strong> -5 rage cost on ALL offensive abilities. This is massive - every Heroic Strike, Revenge, Devastate, etc. costs 5 less rage. More abilities = more threat.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Vitality <span class="talent-rank">1/2</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 45:</strong> Unlock Tier 6. +2% health and +3% stamina. Health and stamina are the foundation of survivability.
+                    </div>
+                </div>
+                
+                <div class="milestone">
+                    <div class="milestone-title">🎯 Milestone Unlocked: Tier 6 Talents (30 points)</div>
+                    Access to Vitality, Safeguard, and Warbringer.
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 46-50: Mobility and Health -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 46-50: Mobility and Survivability</span>
+                <span class="tree-badge prot-badge">Tier 6 Protection</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Vitality <span class="talent-rank">2/2</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 46:</strong> +4% health and +6% stamina total. Significant survivability boost that scales with all your gear.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Warbringer <span class="talent-rank">1/3, 2/3, 3/3</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 47-49:</strong> <strong>GAME CHANGER!</strong> Charge/Intercept usable in combat and any stance. 50% movement speed reduction on targets. Incredible mobility for positioning and gap closing.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Devastate <span class="talent-rank">1/3</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 50:</strong> Unlock Tier 7. <strong>SIGNATURE PROTECTION ABILITY!</strong> Your main single-target threat generator that applies Sunder Armor while dealing weapon damage + scaling damage.
+                    </div>
+                </div>
+                
+                <div class="ability-unlock">
+                    <span class="ability-name">New Ability:</span> Devastate - Your signature tanking ability! Replaces Sunder Armor in most situations.
+                </div>
+                
+                <div class="milestone">
+                    <div class="milestone-title">🎯 Milestone Unlocked: Tier 7 Talents (35 points)</div>
+                    Devastate and Critical Block available. This is where Protection tanking truly begins.
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 51-55: Devastate Mastery -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 51-55: Devastate and Critical Block</span>
+                <span class="tree-badge prot-badge">Tier 7 Protection</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Devastate <span class="talent-rank">2/3, 3/3</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 51-52:</strong> Max your signature ability. Higher damage scaling makes this your go-to threat generator for single targets.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Critical Block <span class="talent-rank">1/2, 2/2</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 53-54:</strong> 20% chance on block to block 100% damage and become immune to crits for 10 seconds. Powerful defensive proc.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Sword and Board <span class="talent-rank">1/1</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 55:</strong> Unlock Tier 8. Devastate and Revenge can reset Shield Slam cooldown and make it free. This creates your core threat rotation.
+                    </div>
+                </div>
+                
+                <div class="milestone">
+                    <div class="milestone-title">🎯 Milestone Unlocked: Tier 8 Talents (40 points)</div>
+                    Sword and Board, Damage Shield, and Shockwave become available.
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 56-60: Tier 8 and Arms Dip -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 56-60: AoE Control and Arms Foundation</span>
+                <span class="tree-badge prot-badge">Tier 8</span> <span class="tree-badge arms-badge">Arms Entry</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Shockwave <span class="talent-rank">1/3</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 56:</strong> <strong>MAJOR AoE ABILITY!</strong> Frontal cone damage and 4-second stun. Essential for AoE threat and crowd control.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Deflection <span class="talent-rank">1/5, 2/5, 3/5, 4/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 57-60:</strong> <em>Switch to Arms tree.</em> +4% parry chance. Parry is excellent avoidance that also allows riposte attacks for threat.
+                    </div>
+                </div>
+                
+                <div class="ability-unlock">
+                    <span class="ability-name">New Ability:</span> Shockwave - AoE stun and damage for multiple enemy situations!
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 61-65: Arms Deep Wounds -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 61-65: Deep Wounds Threat Engine</span>
+                <span class="tree-badge arms-badge">Arms Tree</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Deflection <span class="talent-rank">5/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 61:</strong> Complete +5% parry. Parry is valuable both for avoidance and for enabling counterattacks.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Improved Heroic Strike <span class="talent-rank">1/3, 2/3, 3/3</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 62-64:</strong> -3 rage cost on Heroic Strike. Combined with Focused Rage (-5), Heroic Strike costs 8 rage instead of 15. Massive efficiency gain.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Deep Wounds <span class="talent-rank">1/3</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 65:</strong> Unlock Tier 3 Arms. Critical strikes cause bleeding for 48% of the crit damage over 6 seconds. This is continuous threat generation.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 66-70: Complete the Engine -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 66-70: Completing the Threat Engine</span>
+                <span class="tree-badge arms-badge">Arms Continued</span> <span class="tree-badge fury-badge">Fury Dip</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Deep Wounds <span class="talent-rank">2/3, 3/3</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 66-67:</strong> 72% then 96% of critical hit damage as DoT. With Incite giving +15% crit, this provides substantial passive threat.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Cruelty <span class="talent-rank">1/5, 2/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 68-69:</strong> <em>Switch to Fury tree.</em> +2% critical hit chance. More crits = more Deep Wounds = more threat. Simple and effective.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Shockwave <span class="talent-rank">2/3</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 70:</strong> <em>Return to Protection.</em> Improve your AoE ability's damage and threat generation.
+                    </div>
+                </div>
+                
+                <div class="milestone">
+                    <div class="milestone-title">🎯 Milestone Reached: Level 70 Endgame Ready</div>
+                    Your core threat engine is complete: Deep Wounds + Cruelty + Incite + Focused Rage + efficient Heroic Strike.
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 71-75: Final Optimization -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 71-75: Final Optimization</span>
+                <span class="tree-badge prot-badge">Protection</span> <span class="tree-badge fury-badge">Fury</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Shockwave <span class="talent-rank">3/3</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 71:</strong> Maximum AoE threat and control. Essential for multi-mob situations in Northrend content.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Cruelty <span class="talent-rank">3/5, 4/5, 5/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 72-74:</strong> +5% total critical hit chance. This feeds into Deep Wounds for consistent passive threat on everything you fight.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Shield Slam <span class="talent-rank">1/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 75:</strong> Unlock Tier 9. <strong>MAJOR ABILITY UNLOCK!</strong> High threat ability that scales with shield block value and dispels magic effects.
+                    </div>
+                </div>
+                
+                <div class="ability-unlock">
+                    <span class="ability-name">New Ability:</span> Shield Slam - High-threat ability that scales with your shield!
+                </div>
+                
+                <div class="milestone">
+                    <div class="milestone-title">🎯 Milestone Unlocked: Tier 9 Talents (45 points)</div>
+                    Shield Slam available - this becomes a cornerstone of your rotation.
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 76-80: The Capstone -->
+        <div class="level-progression">
+            <div class="level-header">
+                <span>Level 76-80: Reaching the Pinnacle</span>
+                <span class="tree-badge prot-badge">Protection Mastery</span>
+            </div>
+            <div class="level-content">
+                <div class="talent-pick">
+                    <div class="talent-name">Shield Slam <span class="talent-rank">2/5, 3/5, 4/5, 5/5</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 76-79:</strong> Max your signature threat ability. Shield Slam becomes your highest threat-per-rage ability and works with Sword and Board procs.
+                    </div>
+                </div>
+                <div class="talent-pick">
+                    <div class="talent-name">Vigilance <span class="talent-rank">1/1</span></div>
+                    <div class="talent-justification">
+                        <strong>Level 80:</strong> <strong>51-POINT CAPSTONE!</strong> Reduce party member damage by 3%, transfer 10% to you, refresh Taunt on their hits. Perfect for protecting squishier players.
+                    </div>
+                </div>
+                
+                <div class="ability-unlock">
+                    <span class="ability-name">Capstone Unlocked:</span> Vigilance - Protect your allies while gaining Taunt resets!
+                </div>
+            </div>
+        </div>
+
+        <div class="final-build">
+            <h3>🏆 Final Build: The Complete Rage Tank (15/5/51)</h3>
+            <p><strong>Arms (15 points):</strong> Deflection 5/5, Improved Heroic Strike 3/3, Deep Wounds 3/3, Anger Management 1/1</p>
+            <p><strong>Fury (5 points):</strong> Cruelty 5/5</p>
+            <p><strong>Protection (51 points):</strong> All core tanking abilities including Shield Slam, Shockwave, Devastate, Last Stand, and Vigilance</p>
+            
+            <h4>🎯 Why This Build Dominates:</h4>
+            <div class="talent-justification">
+                <strong>Maximum Threat Generation:</strong> Deep Wounds + Cruelty provides passive threat on every critical hit. Incite + efficient Heroic Strike gives you reliable active threat.<br><br>
+                <strong>Superior Rage Efficiency:</strong> Focused Rage (-5 rage) + Improved Heroic Strike (-3 rage) means your main rage dump costs only 7 rage instead of 15.<br><br>
+                <strong>Complete Tanking Toolkit:</strong> Last Stand, Shield Wall (improved), Concussion Blow, Shockwave, and Vigilance give you answers to every tanking situation.<br><br>
+                <strong>Scaling Power:</strong> Deep Wounds and Shield Slam both scale with your gear, making this build stronger as you get better equipment.
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
