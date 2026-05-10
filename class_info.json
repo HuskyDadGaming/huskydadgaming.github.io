@@ -1,0 +1,16 @@
+{
+    "_comment": "Single source of truth for class display data (color/letter/name). Both build_pages.py (for dungeon HTMLs) and index.html (for Find Loot) consume this. Order in `all` is the canonical render order — change here to change everywhere.",
+    "all": ["warrior", "paladin", "hunter", "rogue", "priest", "dk", "shaman", "mage", "warlock", "druid"],
+    "classes": {
+        "warrior": { "display": "Warrior",      "color": "#C79C6E", "letter": "W" },
+        "paladin": { "display": "Paladin",      "color": "#F58CBA", "letter": "P" },
+        "hunter":  { "display": "Hunter",       "color": "#ABD473", "letter": "H" },
+        "rogue":   { "display": "Rogue",        "color": "#FFF569", "letter": "R" },
+        "priest":  { "display": "Priest",       "color": "#FFFFFF", "letter": "P" },
+        "dk":      { "display": "Death Knight", "color": "#C41F3B", "letter": "K" },
+        "shaman":  { "display": "Shaman",       "color": "#0070DE", "letter": "S" },
+        "mage":    { "display": "Mage",         "color": "#69CCF0", "letter": "M" },
+        "warlock": { "display": "Warlock",      "color": "#9482C9", "letter": "W" },
+        "druid":   { "display": "Druid",        "color": "#FF7D0A", "letter": "D" }
+    }
+}

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KCraft Armoury</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚔️</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #1a1a1a; color: #ddd; padding-bottom: 3rem; }
+        .container { max-width: 1100px; }
+        h1, h2, h3 { color: #ffd100; }
+        a { color: #4ea8de; text-decoration: none; }
+        a:hover { color: #88c5f0; }
+        .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Login screen */
+        .login-card {
+            background: #232323; border: 1px solid #3a3a3a; border-radius: 8px;
+            padding: 2rem; margin: 2rem auto; max-width: 540px;
+        }
+        .login-card label { display: block; color: #999; font-size: 0.85rem; margin-bottom: 4px; }
+        .login-card input {
+            width: 100%; background: #2d2d2d; border: 1px solid #3a3a3a; color: #ddd;
+            padding: 8px 12px; border-radius: 4px; margin-bottom: 12px;
+            font-size: 0.9rem; font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        }
+        .login-card input:focus { outline: none; border-color: #ffd100; }
+        .login-card button {
+            background: #ffd100; color: #1a1a1a; border: none; padding: 10px 20px;
+            border-radius: 4px; cursor: pointer; font-weight: 600;
+        }
+        .login-card button:hover { background: #ffea66; }
+        .login-card .help {
+            color: #888; font-size: 0.82rem; margin-top: 12px; line-height: 1.5;
+        }
+        .login-card .help code {
+            background: #2d2d2d; padding: 1px 5px; border-radius: 3px;
+            color: #ffd100; font-size: 0.78rem;
+        }
+        .login-error {
+            background: #4a1818; color: #ff9b9b; padding: 8px 12px;
+            border-radius: 4px; margin-bottom: 12px; font-size: 0.85rem;
+        }
+
+        /* Character roster */
+        .character-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+        .squad-section {
+            margin-bottom: 2rem;
+        }
+        .squad-header {
+            color: #ddd; font-size: 1.05rem; font-weight: 600;
+            padding-bottom: 6px; margin-bottom: 0.8rem;
+            border-bottom: 1px solid #3a3a3a;
+        }
+        .squad-header .squad-meta {
+            color: #888; font-weight: 400; font-size: 0.9em;
+        }
+        .character-card {
+            background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
+            padding: 1rem; cursor: pointer; transition: all 0.15s;
+            display: block; text-decoration: none; color: inherit;
+        }
+        .character-card:hover {
+            border-color: #ffd100; transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 209, 0, 0.1);
+            color: inherit;
+        }
+        .character-card .char-name {
+            font-size: 1.1rem; font-weight: 600; margin-bottom: 6px;
+        }
+        .character-card .char-meta {
+            color: #aaa; font-size: 0.82rem;
+        }
+        .character-card .level-badge {
+            display: inline-block; background: #2d2d2d; color: #ffd100;
+            padding: 2px 8px; border-radius: 3px; font-size: 0.78rem;
+            font-weight: 600; margin-right: 6px;
+        }
+
+        /* Character page */
+        .char-header {
+            background: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
+            padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;
+            border: 1px solid #3a3a3a;
+        }
+        .char-header h1 { margin-bottom: 4px; }
+        .char-header .subline { color: #aaa; font-size: 0.95rem; margin-bottom: 0.5rem; }
+        .char-stats {
+            display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+        .char-stats .stat { color: #999; }
+        .char-stats .stat strong { color: #ffd100; font-weight: 600; }
+        .online-dot {
+            display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+            background: #1eff00; margin-right: 6px; box-shadow: 0 0 6px #1eff00;
+        }
+        .offline-dot {
+            display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+            background: #cc3333; margin-right: 6px;
+        }
+        .status-online {
+            color: #1eff00; font-size: 0.78rem; font-weight: 500;
+            margin-left: 4px;
+        }
+        .status-offline {
+            color: #888; font-size: 0.78rem; font-weight: 500;
+            margin-left: 4px;
+        }
+
+        /* Roster online/offline section dividers */
+        .roster-section-header {
+            display: flex; align-items: baseline; gap: 10px;
+            margin-top: 2rem; margin-bottom: 0.5rem;
+            padding-bottom: 6px; border-bottom: 1px solid #3a3a3a;
+        }
+        .roster-section-header:first-child { margin-top: 0; }
+        .roster-section-header h2 { font-size: 1.05rem; margin: 0; font-weight: 600; }
+        .roster-section-header .roster-section-count { color: #777; font-size: 0.82rem; }
+        .roster-section-online h2 { color: #1eff00; }
+        .roster-section-offline h2 { color: #888; }
+
+        /* Section headings */
+        .section-header {
+            display: flex; align-items: baseline; justify-content: space-between;
+            margin-top: 2rem; margin-bottom: 0.75rem;
+            padding-bottom: 6px; border-bottom: 1px solid #3a3a3a;
+        }
+        .section-header h2 { font-size: 1.2rem; margin: 0; }
+        .section-header .count { color: #888; font-size: 0.85rem; }
+
+        /* Item lists */
+        .item-list {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 8px;
+        }
+        .item-row {
+            background: #232323; border: 1px solid #2d2d2d; border-radius: 4px;
+            padding: 8px 12px; display: flex; align-items: center; gap: 12px;
+            font-size: 0.85rem;
+        }
+        .item-row.tooltip-active {
+            background: #2d2d2d; border-color: #ffd100;
+            box-shadow: 0 0 0 1px #ffd100;
+        }
+        .item-row.empty {
+            opacity: 0.4; font-style: italic; color: #666;
+            justify-content: center;
+        }
+        .item-row .slot-label {
+            min-width: 90px; color: #888; font-size: 0.75rem; text-transform: uppercase;
+            letter-spacing: 0.5px; flex-shrink: 0;
+        }
+        .item-row .item-info { flex: 1; min-width: 0; }
+        .item-row .item-name { font-weight: 600; }
+        .item-row .item-stats {
+            color: #999; font-size: 0.78rem; margin-top: 2px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .item-row .item-stats .stat-pip { margin-right: 8px; }
+        .item-row .req-level {
+            color: #666; font-size: 0.72rem; flex-shrink: 0;
+        }
+        .item-row .item-count {
+            background: #2d2d2d; color: #ffd100; padding: 1px 6px; border-radius: 3px;
+            font-size: 0.7rem; font-weight: 600; flex-shrink: 0;
+        }
+
+        /* Money display */
+        .money { font-variant-numeric: tabular-nums; }
+        .gold { color: #ffd100; }
+        .silver { color: #c8c8c8; }
+        .copper { color: #c97a36; }
+
+        /* Logout link */
+        .logout {
+            font-size: 0.8rem; color: #888; cursor: pointer;
+        }
+        .logout:hover { color: #ff9b9b; }
+
+        /* Auth state in navbar — same span, two states. The .is-loggedout
+           variant is informational only (no click, no hover red). */
+        .auth-state {
+            font-size: 0.8rem; color: #888;
+        }
+        .auth-state.is-loggedin { cursor: pointer; }
+        .auth-state.is-loggedin:hover { color: #ff9b9b; }
+        .auth-state.is-loggedout { cursor: default; }
+
+        /* Tab bar — matches index.html exactly so navigation feels uniform */
+        .tab-bar {
+            display: flex; gap: 4px; margin-bottom: 2rem;
+            border-bottom: 1px solid #3a3a3a;
+        }
+        .tab-btn {
+            padding: 10px 20px; background: transparent; color: #888;
+            border: none; border-bottom: 3px solid transparent;
+            cursor: pointer; font-size: 0.95rem; font-weight: 500;
+            transition: all 0.15s; margin-bottom: -1px;
+        }
+        .tab-btn:hover { color: #ddd; background: #2326; }
+        .tab-btn.active {
+            color: #ffd100; border-bottom-color: #ffd100; font-weight: 600;
+        }
+        a.tab-btn.tab-link {
+            text-decoration: none;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        a.tab-btn.tab-link:hover { color: #ffd100; }
+
+        /* Loading */
+        .loading {
+            text-align: center; padding: 3rem; color: #888; font-style: italic;
+        }
+        .loading::after {
+            content: ''; display: inline-block; width: 1em;
+            animation: dots 1.5s infinite steps(4);
+        }
+        @keyframes dots {
+            0% { content: ''; } 25% { content: '.'; }
+            50% { content: '..'; } 75% { content: '...'; }
+        }
+
+        .timestamp {
+            color: #666; font-size: 0.75rem; text-align: right; margin-top: 1rem;
+        }
+
+        /* Tooltip styles are injected by tooltip.js — see /tooltip.js */
+
+        /* ============================================================
+           Mobile-friendly responsive styles
+           Tablet:  ≤900px
+           Phone:   ≤600px
+           Tiny:    ≤400px
+           ============================================================ */
+
+        /* Tablet — tighten container padding, reduce header bulk */
+        @media (max-width: 900px) {
+            .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+            .char-header { padding: 1rem; margin-bottom: 1rem; }
+            .char-header h1 { font-size: 1.5rem; }
+            .char-stats { gap: 1rem; }
+            .item-list {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 6px;
+            }
+            .character-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+
+        /* Phone — single-column lists, stacked headers, smaller fonts */
+        @media (max-width: 600px) {
+            body { padding-bottom: 2rem; font-size: 0.92rem; }
+            .container { padding-left: 0.5rem; padding-right: 0.5rem; }
+            .navbar { margin-bottom: 1rem; }
+
+            /* Tab bar: horizontal scroll instead of wrapping. Same approach
+               as index.html — labels stay on one line each. */
+            .tab-bar {
+                overflow-x: auto;
+                flex-wrap: nowrap !important;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .tab-bar::-webkit-scrollbar { display: none; }
+            .tab-btn, a.tab-btn {
+                padding: 6px 10px;
+                font-size: 0.85rem;
+                white-space: nowrap !important;
+                flex-shrink: 0;
+            }
+
+            /* Login screen */
+            .login-card { padding: 1.25rem; margin: 1rem auto; }
+            .login-card h1 { font-size: 1.4rem; }
+
+            /* Character header — compact */
+            .char-header { padding: 0.85rem; border-radius: 6px; margin-bottom: 0.85rem; }
+            .char-header h1 { font-size: 1.25rem; }
+            .char-header .subline { font-size: 0.85rem; }
+            .char-stats {
+                flex-direction: column; gap: 0.35rem;
+                font-size: 0.8rem; margin-top: 0.5rem;
+            }
+
+            /* Section headers — compact */
+            .section-header { margin-top: 1.25rem; margin-bottom: 0.5rem; }
+            .section-header h2 { font-size: 1.05rem; }
+            .section-header .count { font-size: 0.78rem; }
+
+            /* Roster — 1 to 2 cards per row */
+            .character-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 0.6rem;
+            }
+            .character-card { padding: 0.7rem; }
+            .character-card .char-name { font-size: 1rem; margin-bottom: 4px; }
+            .character-card .char-meta { font-size: 0.75rem; }
+            .roster-section-header { margin-top: 1.25rem; }
+            .roster-section-header h2 { font-size: 0.95rem; }
+            .roster-section-header .roster-section-count { font-size: 0.75rem; }
+
+            /* Item rows — single column, slot label above */
+            .item-list {
+                grid-template-columns: 1fr; gap: 5px;
+            }
+            .item-row {
+                padding: 6px 9px; gap: 8px; font-size: 0.82rem;
+            }
+            .item-row .slot-label {
+                min-width: 64px; font-size: 0.68rem;
+            }
+            .item-row .item-stats {
+                font-size: 0.72rem;
+                /* Allow stat list to wrap on tiny screens for full visibility */
+                white-space: normal;
+            }
+            .item-row .req-level { font-size: 0.68rem; }
+            .item-row .item-count { font-size: 0.66rem; }
+        }
+
+        /* Tiny phones — push everything tighter */
+        @media (max-width: 400px) {
+            body { font-size: 0.88rem; }
+            .character-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+            }
+            .character-card { padding: 0.55rem; }
+            .character-card .char-name { font-size: 0.92rem; }
+            .character-card .level-badge { font-size: 0.7rem; padding: 1px 5px; }
+            .char-header h1 { font-size: 1.15rem; }
+            .item-row .slot-label { min-width: 56px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html" style="color: #ffd100;">⚔️ KCraft</a>
+        <span class="navbar-text small">
+            <span id="auth-state" class="auth-state is-loggedout">Signed out</span>
+        </span>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="tab-bar">
+        <a class="tab-btn tab-link" href="index.html">📚 Browse Dungeons</a>
+        <a class="tab-btn tab-link" href="index.html#finder">🔍 Find Loot</a>
+        <a class="tab-btn tab-link active" href="armoury.html">🛡️ Armoury</a>
+        <a class="tab-btn tab-link" href="talents.html">📜 Talents</a>
+        <a class="tab-btn tab-link" href="warrior.html">⚔️ Warrior</a>
+    </div>
+
+    <!-- Login screen -->
+    <div id="view-login" style="display:none;">
+        <div class="login-card">
+            <h2 style="margin-bottom:1rem; font-size:1.3rem;">⚔️ Armoury access</h2>
+            <div id="login-error" class="login-error" style="display:none;"></div>
+
+            <label for="api-base">API URL</label>
+            <input id="api-base" autocomplete="off">
+
+            <label for="api-key">API key</label>
+            <input id="api-key" type="password" autocomplete="off">
+
+            <button onclick="login()">Connect</button>
+        </div>
+    </div>
+
+    <!-- Character roster -->
+    <div id="view-roster" style="display:none;">
+        <h1 style="margin-bottom:1rem;">Characters</h1>
+        <div id="roster-loading" class="loading">Loading characters</div>
+        <div id="roster-grid" class="roster-squads" style="display:none;"></div>
+        <p id="roster-empty" style="display:none; color:#888;">No characters found.</p>
+    </div>
+
+    <!-- Single character view -->
+    <div id="view-character" style="display:none;">
+        <p style="margin-bottom:0.5rem;">
+            <a href="#" onclick="showRoster(); return false;">← All characters</a>
+        </p>
+        <div id="char-loading" class="loading">Loading character</div>
+        <div id="char-content" style="display:none;"></div>
+    </div>
+
+</div>
+
+<!-- Item tooltip — created and managed by tooltip.js -->
+<script src="tooltip.js"></script>
+
+<script>
+(function() {
+    'use strict';
+
+    // ----- Storage helpers -----
+    const STORAGE = { base: 'kcraft.armoury.base', key: 'kcraft.armoury.key' };
+
+    function getCreds() {
+        return {
+            base: localStorage.getItem(STORAGE.base) || '',
+            key:  localStorage.getItem(STORAGE.key)  || '',
+        };
+    }
+    function setCreds(base, key) {
+        // Strip trailing slash to keep URL building simple.
+        localStorage.setItem(STORAGE.base, base.replace(/\/$/, ''));
+        localStorage.setItem(STORAGE.key, key);
+    }
+    function clearCreds() {
+        localStorage.removeItem(STORAGE.base);
+        localStorage.removeItem(STORAGE.key);
+    }
+
+    // ----- API client -----
+    async function api(path) {
+        const { base, key } = getCreds();
+        if (!base || !key) throw new Error('Not logged in');
+        const r = await fetch(base + path, {
+            headers: { 'X-API-Key': key },
+            credentials: 'omit',
+        });
+        if (r.status === 401) throw new Error('Bad API key');
+        if (r.status === 404) throw new Error('Not found');
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+    }
+
+    // ----- View management -----
+    function showView(name) {
+        ['login', 'roster', 'character'].forEach(v => {
+            document.getElementById('view-' + v).style.display = (v === name) ? '' : 'none';
+        });
+        // Reflect auth state in the navbar. 'login' view = not signed in
+        // (informational "Signed out" label). Anything else = signed in
+        // ("Sign out" button, clickable to log out).
+        const auth = document.getElementById('auth-state');
+        if (auth) {
+            const loggedIn = name !== 'login';
+            auth.textContent = loggedIn ? 'Sign out' : 'Signed out';
+            auth.classList.toggle('is-loggedin',  loggedIn);
+            auth.classList.toggle('is-loggedout', !loggedIn);
+            auth.onclick = loggedIn ? logout : null;
+        }
+    }
+
+    function showError(msg) {
+        const el = document.getElementById('login-error');
+        el.textContent = msg;
+        el.style.display = msg ? '' : 'none';
+    }
+
+    // ----- Login flow -----
+    window.login = async function() {
+        const base = document.getElementById('api-base').value.trim();
+        const key  = document.getElementById('api-key').value.trim();
+        if (!base || !key) { showError('Fill in both fields'); return; }
+        if (!/^https?:\/\//.test(base)) { showError('URL must start with http:// or https://'); return; }
+
+        setCreds(base, key);
+        showError('');
+
+        // Validate by hitting /armoury
+        try {
+            await api('/armoury');
+            showRoster();
+        } catch (e) {
+            showError(e.message + '. If this is a self-signed cert, visit ' + base + '/healthz once and accept the warning, then try again.');
+            clearCreds();
+        }
+    };
+
+    window.logout = function() {
+        clearCreds();
+        document.getElementById('api-base').value = '';
+        document.getElementById('api-key').value = '';
+        showView('login');
+    };
+
+    // ----- Character roster -----
+    /**
+     * Group characters into squads.
+     * 1. Group by accountId.
+     * 2. Within an account, split into sub-squads where there's a level gap >= 5.
+     * Characters arrive sorted by account, then level DESC.
+     */
+    function groupIntoSquads(characters) {
+        const LEVEL_GAP_THRESHOLD = 5;
+        const byAccount = {};
+        for (const c of characters) {
+            (byAccount[c.accountId] = byAccount[c.accountId] || {
+                accountId: c.accountId,
+                accountName: c.accountName,
+                chars: [],
+            }).chars.push(c);
+        }
+
+        const squads = [];
+        for (const acct of Object.values(byAccount)) {
+            // chars already sorted by level DESC within an account.
+            // Walk and split at gaps.
+            let current = [];
+            for (const c of acct.chars) {
+                if (current.length === 0) {
+                    current.push(c);
+                    continue;
+                }
+                const prevLevel = current[current.length - 1].level;
+                if (prevLevel - c.level >= LEVEL_GAP_THRESHOLD) {
+                    squads.push({ accountName: acct.accountName, chars: current });
+                    current = [c];
+                } else {
+                    current.push(c);
+                }
+            }
+            if (current.length) squads.push({ accountName: acct.accountName, chars: current });
+        }
+
+        // Sort squads alphabetically by account, then highest-level squad first
+        // within an account (so e.g. Tom's lvl 19 squad shows before Tom's lvl 8).
+        squads.sort((a, b) => {
+            const cmp = a.accountName.localeCompare(b.accountName);
+            if (cmp !== 0) return cmp;
+            return b.chars[0].level - a.chars[0].level;
+        });
+        return squads;
+    }
+
+    function renderSquad(squad) {
+        const top = squad.chars[0].level;
+        const bottom = squad.chars[squad.chars.length - 1].level;
+        const lvlLabel = (top === bottom) ? `Lvl ${top}` : `Lvl ${bottom}-${top}`;
+        // Squad is "online" if ANY member is online
+        const anyOnline = squad.chars.some(c => c.online);
+        const squadStatus = anyOnline
+            ? '<span class="status-online">● Online</span>'
+            : '<span class="status-offline">● Offline</span>';
+        const cards = squad.chars.map(c => {
+            const dot = c.online
+                ? '<span class="online-dot" title="Online"></span>'
+                : '<span class="offline-dot" title="Offline"></span>';
+            const status = c.online
+                ? '<span class="status-online">Online</span>'
+                : '<span class="status-offline">Offline</span>';
+            return `
+                <a class="character-card" href="#" onclick="showCharacter('${escape(c.name)}'); return false;">
+                    <div class="char-name">
+                        ${dot}${escape(c.name)}${status}
+                    </div>
+                    <div class="char-meta">
+                        <span class="level-badge">Lvl ${c.level}</span>
+                        ${escape(c.race)} ${escape(c.class)}
+                    </div>
+                </a>
+            `;
+        }).join('');
+        return `
+            <div class="squad-section">
+                <h2 class="squad-header">${escape(squad.accountName)}'s squad ${squadStatus} <span class="squad-meta">— ${lvlLabel}</span></h2>
+                <div class="character-grid">${cards}</div>
+            </div>
+        `;
+    }
+
+    // Render the full roster with online/offline section dividers.
+    function renderRoster(squads) {
+        const onlineSquads = squads.filter(s => s.chars.some(c => c.online));
+        const offlineSquads = squads.filter(s => !s.chars.some(c => c.online));
+        const html = [];
+        if (onlineSquads.length) {
+            const onlineCount = onlineSquads.reduce((n, s) => n + s.chars.filter(c => c.online).length, 0);
+            html.push(`
+                <div class="roster-section-header roster-section-online">
+                    <h2>🟢 Online</h2>
+                    <span class="roster-section-count">${onlineCount} online · ${onlineSquads.length} squad${onlineSquads.length === 1 ? '' : 's'}</span>
+                </div>
+            `);
+            html.push(...onlineSquads.map(renderSquad));
+        }
+        if (offlineSquads.length) {
+            const offlineCount = offlineSquads.reduce((n, s) => n + s.chars.length, 0);
+            html.push(`
+                <div class="roster-section-header roster-section-offline">
+                    <h2>🔴 Offline</h2>
+                    <span class="roster-section-count">${offlineCount} character${offlineCount === 1 ? '' : 's'} · ${offlineSquads.length} squad${offlineSquads.length === 1 ? '' : 's'}</span>
+                </div>
+            `);
+            html.push(...offlineSquads.map(renderSquad));
+        }
+        return html.join('');
+    }
+
+    window.showRoster = async function() {
+        showView('roster');
+        const loading = document.getElementById('roster-loading');
+        const grid = document.getElementById('roster-grid');
+        const empty = document.getElementById('roster-empty');
+        loading.style.display = '';
+        grid.style.display = 'none';
+        empty.style.display = 'none';
+        grid.innerHTML = '';
+
+        try {
+            const data = await api('/armoury');
+            loading.style.display = 'none';
+            if (!data.characters || data.characters.length === 0) {
+                empty.style.display = '';
+                return;
+            }
+            grid.style.display = '';
+            const squads = groupIntoSquads(data.characters);
+            grid.innerHTML = renderRoster(squads);
+        } catch (e) {
+            loading.style.display = 'none';
+            if (e.message === 'Bad API key') { showView('login'); showError('Session expired'); return; }
+            empty.textContent = 'Failed to load: ' + e.message;
+            empty.style.display = '';
+        }
+    };
+
+    // ----- Single character view -----
+    window.showCharacter = async function(name) {
+        showView('character');
+        const loading = document.getElementById('char-loading');
+        const content = document.getElementById('char-content');
+        loading.style.display = '';
+        content.style.display = 'none';
+        content.innerHTML = '';
+
+        try {
+            const c = await api('/armoury/' + encodeURIComponent(name));
+            loading.style.display = 'none';
+            content.style.display = '';
+            content.innerHTML = renderCharacter(c);
+        } catch (e) {
+            loading.style.display = 'none';
+            content.style.display = '';
+            content.innerHTML = `<p style="color:#ff9b9b;">Failed to load: ${escape(e.message)}</p>`;
+        }
+    };
+
+    // ----- Rendering helpers -----
+    function escape(s) {
+        return String(s == null ? '' : s).replace(/[<>&"']/g, c => ({
+            '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'
+        }[c]));
+    }
+
+    // ----- Tooltip handling lives in tooltip.js (loaded above) -----
+
+    function renderItem(it, slotLabel) {
+        if (!it) {
+            return `<div class="item-row empty">
+                <span class="slot-label">${escape(slotLabel || '')}</span>
+                <span>(empty)</span>
+            </div>`;
+        }
+        const stats = (it.stats || []).map(s =>
+            `<span class="stat-pip">${escape(s)}</span>`
+        ).join('');
+        const count = (it.count > 1) ? `<span class="item-count">×${it.count}</span>` : '';
+        const req = it.reqLevel ? `<span class="req-level">Lvl ${it.reqLevel}</span>` : '';
+        // Stash full item data on the row so the global hover handler can use it
+        // (HTML-escape the JSON for safe attribute embedding).
+        const itemJson = JSON.stringify(it).replace(/"/g, '&quot;');
+        return `<div class="item-row" data-item-id="${it.id || ''}" data-item-json="${itemJson}">
+            <span class="slot-label">${escape(slotLabel || it.invType || '')}</span>
+            <div class="item-info">
+                <div class="item-name" style="color:${it.color}">${escape(it.name)}</div>
+                ${stats ? `<div class="item-stats">${stats}</div>` : ''}
+            </div>
+            ${count}
+            ${req}
+        </div>`;
+    }
+
+    function renderCharacter(c) {
+        // Equipped items in canonical order
+        const equippedOrder = [
+            [0, 'Head'], [1, 'Neck'], [2, 'Shoulder'], [14, 'Back'], [4, 'Chest'],
+            [3, 'Shirt'], [18, 'Tabard'], [8, 'Wrist'], [9, 'Hands'], [5, 'Waist'],
+            [6, 'Legs'], [7, 'Feet'],
+            [10, 'Finger 1'], [11, 'Finger 2'],
+            [12, 'Trinket 1'], [13, 'Trinket 2'],
+            [15, 'Main Hand'], [16, 'Off Hand'], [17, 'Ranged'],
+        ];
+        const equippedHtml = equippedOrder.map(([slot, label]) =>
+            renderItem(c.equipped[slot], label)
+        ).join('');
+
+        // Backpack — array of 16, may have nulls for empty slots
+        const backpackHtml = (c.backpack || []).map((it, i) =>
+            renderItem(it, `Slot ${i + 1}`)
+        ).join('');
+        const backpackFilled = (c.backpack || []).filter(x => x).length;
+
+        // Items inside equipped bags (additional bag slots)
+        let bagsHtml = '';
+        let bagsCount = 0;
+        if (c.bagItems && Object.keys(c.bagItems).length > 0) {
+            for (const bagGuid of Object.keys(c.bagItems)) {
+                const items = c.bagItems[bagGuid];
+                bagsCount += items.length;
+                bagsHtml += items.map(it =>
+                    renderItem(it, `Bag slot ${(it.bagSlot ?? 0) + 1}`)
+                ).join('');
+            }
+        }
+
+        // Bank — array of 28
+        const bankHtml = (c.bank || []).map((it, i) =>
+            renderItem(it, `Slot ${i + 1}`)
+        ).join('');
+        const bankFilled = (c.bank || []).filter(x => x).length;
+
+        const onlineBadge = c.online
+            ? `<span class="online-dot" title="Online"></span><span style="color:#1eff00;">Online</span>`
+            : `<span style="color:#666;">Offline</span>`;
+
+        return `
+            <div class="char-header">
+                <h1>${escape(c.name)}</h1>
+                <div class="subline">
+                    Level ${c.level} ${escape(c.race)} ${escape(c.class)}
+                    &nbsp;·&nbsp; ${onlineBadge}
+                </div>
+                <div class="char-stats">
+                    <div class="stat">
+                        <strong class="money">
+                            <span class="gold">${c.gold}g</span>
+                            <span class="silver">${c.silver}s</span>
+                            <span class="copper">${c.copper}c</span>
+                        </strong>
+                    </div>
+                    <div class="stat">Played: <strong>${c.totalPlayedHours} hours</strong></div>
+                    <div class="stat">At ${c.level}: <strong>${c.levelPlayedHours} hours</strong></div>
+                    <div class="stat">Kills: <strong>${c.kills.toLocaleString()}</strong></div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>Equipped</h2>
+                <span class="count">${equippedOrder.filter(([s]) => c.equipped[s]).length} / 19</span>
+            </div>
+            <div class="item-list">${equippedHtml}</div>
+
+            <div class="section-header">
+                <h2>Backpack</h2>
+                <span class="count">${backpackFilled} / 16</span>
+            </div>
+            <div class="item-list">${backpackHtml}</div>
+
+            ${bagsHtml ? `
+                <div class="section-header">
+                    <h2>Bags</h2>
+                    <span class="count">${bagsCount} items</span>
+                </div>
+                <div class="item-list">${bagsHtml}</div>
+            ` : ''}
+
+            <div class="section-header">
+                <h2>Bank</h2>
+                <span class="count">${bankFilled} / 28</span>
+            </div>
+            <div class="item-list">${bankHtml}</div>
+
+            <p class="timestamp">Snapshot taken: ${new Date().toLocaleString()}</p>
+        `;
+    }
+
+    // ----- Boot -----
+    const { base, key } = getCreds();
+    if (base && key) {
+        // Pre-fill the form values in case auth fails and they need to retry
+        document.getElementById('api-base').value = base;
+        document.getElementById('api-key').value = key;
+        showRoster();
+    } else {
+        showView('login');
+    }
+})();
+</script>
+
+<script src="tab-scroll.js"></script>
+</body>
+</html>

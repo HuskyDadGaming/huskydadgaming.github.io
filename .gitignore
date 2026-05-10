@@ -1,0 +1,18 @@
+# Backups created by the build script (--update-index) and ad-hoc copies.
+# *.bak* catches .bak, .bak1, .bak.2026-05-11, etc.
+*.bak*
+
+# Python bytecode cache
+__pycache__/
+*.pyc
+
+# Helper scripts and temp outputs I create during sessions (convention:
+# any file starting with an underscore is throwaway diagnostic stuff)
+_*.py
+_*.json
+_*.yaml
+
+# Environment / secret files (defensive — nothing here today but if any
+# .env or .pem ever ends up in this folder it stays local)
+*.env
+*.pem

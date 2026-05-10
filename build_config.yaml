@@ -1,0 +1,1637 @@
+dungeons:
+  shadowfang-keep:
+    mapid: 33
+    title: Shadowfang Keep
+    page: shadowfang-keep.html
+    faction: Both
+    recommended_level: 22-30
+    mob_level: 18-21
+    emoji: 🌒
+    flavour: An ancient worgen-cursed keep in Silverpine Forest, ruled by the Archmage who created the affliction.
+    summary:
+      heading: 🎯 SFK Loot Summary
+      intro: 'Equipment Focus: Worgen-themed gear in a haunted keep — caster blue trinkets, the Black Wolf set pieces, and
+        unique daggers.'
+      bullets:
+      - label: Best for
+        text: Level 17-22
+      - label: Run time
+        text: 30-45 minutes
+      - label: Famous for
+        text: Robes of Arugal, Meteor Shard, Witching Stave
+      - label: Includes
+        text: Multiple rare-spawn bosses (Fel Steed, Deathsworn Captain)
+    bosses:
+    - id: 3914
+      name: Rethilgore
+      type: boss
+      description: First boss; worgen blade master
+      notable: Soul Drain channel
+    - id: 3886
+      name: Razorclaw the Butcher
+      type: boss
+      description: Worgen brute butcher
+      notable: Heavy melee cleaves
+    - id: 3887
+      name: Baron Silverlaine
+      type: boss
+      description: Former lord of the keep, now worgen-cursed
+      notable: Veil of Shadow, melee burst
+    - id: 4278
+      name: Commander Springvale
+      type: boss
+      description: Undead Scarlet Crusade commander
+      notable: Holy Strike, self-buffs
+    - id: 4279
+      name: Odo the Blindwatcher
+      type: boss
+      description: Worgen brute guarding the inner halls
+      notable: Howling Rage frenzy
+    - id: 4274
+      name: Fenrus the Devourer
+      type: boss
+      description: Massive worgen pet of Arugal — event-summoned
+      notable: Heavy melee, no special mechanics
+    - id: 3927
+      name: Wolf Master Nandos
+      type: boss
+      description: Worgen lord with wolf companions
+      notable: Summons Bleak Worgs — kill adds first
+    - id: 4275
+      name: Archmage Arugal
+      type: boss
+      description: Final boss; necromancer who cursed the keep
+      notable: Voidwalker summon, Shadow Bolt, Arcane Missiles
+    - id: 3872
+      name: Deathsworn Captain
+      type: rare
+      description: Rare elite undead
+      notable: Heavy melee strikes
+  the-stockade:
+    mapid: 34
+    title: The Stockade
+    page: the-stockade.html
+    faction: Alliance
+    recommended_level: 22-30
+    mob_level: 23-25
+    emoji: ⛓️
+    flavour: Stormwind's underground prison, overrun by escaped Defias prisoners after a riot.
+    summary:
+      heading: 🎯 Stockade Loot Summary
+      intro: 'Equipment Focus: Stormwind''s underground prison — small Alliance dungeon. Mostly modest loot but quick reps
+        and a notable rare spawn.'
+      bullets:
+      - label: Best for
+        text: Alliance level 24-28
+      - label: Run time
+        text: 20-30 minutes (smallest dungeon)
+      - label: Famous for
+        text: Iron Knuckles, Kam's Walking Stick, Defias Renegade Ring
+      - label: Includes
+        text: Bruegal Ironknuckle rare elite ⭐
+      - label: Note
+        text: Most non-rare bosses have poor loot — primarily run for quests
+    bosses:
+    - id: 1696
+      name: Targorr the Dread
+      type: boss
+      description: First boss; Blackrock orc executioner
+      notable: Thrash + Enrage (extra attacks)
+    - id: 1666
+      name: Kam Deepfury
+      type: boss
+      description: Renegade dwarf executioner
+      notable: Heavy axe cleaves
+    - id: 1717
+      name: Hamhock
+      type: boss
+      description: Two-headed ogre prisoner
+      notable: Bloodlust + Chain Lightning
+    - id: 1716
+      name: Bazil Thredd
+      type: boss
+      description: Final boss; renegade Defias leader
+      notable: Summons rifts and inmate adds
+    - id: 1663
+      name: Dextren Ward
+      type: boss
+      description: Defias necromancer
+      notable: Fear — counter with Tremor Totem / Fear Ward
+    - id: 1720
+      name: Bruegal Ironknuckle
+      type: rare
+      description: Rare elite human brawler
+      notable: Pummel interrupt
+  the-deadmines:
+    mapid: 36
+    title: The Deadmines
+    page: the-deadmines.html
+    faction: Alliance
+    recommended_level: 17-24
+    mob_level: 17-20
+    emoji: 🏴‍☠️
+    flavour: A sprawling underground mine complex beneath Westfall, overrun by the notorious Defias Brotherhood. Home to iconic
+      bosses and some of the most memorable loot in classic WoW.
+    summary:
+      heading: 🎯 DM Loot Summary
+      intro: 'Equipment Focus: Complete dungeon with 24 high-quality blue equipment drops across 8 bosses! Perfect for Alliance
+        players level 17-26.'
+      bullets:
+      - label: Best for
+        text: Players level 17-26
+      - label: Run time
+        text: 30-45 minutes
+      - label: Famous for
+        text: Defias Brotherhood storyline, Edwin VanCleef finale
+      - label: Boss loot
+        text: 24 blues across 8 encounters with excellent drop rates
+      - label: Includes
+        text: Miner Johnson rare spawn ⭐
+    bosses:
+    - id: 644
+      name: Rhahk'Zor
+      type: boss
+      description: Pirate captain of the Defias fleet
+      notable: Cleaves, sounds party-buff horn
+    - id: 642
+      name: Sneed's Shredder
+      type: boss
+      description: Sneed in harvester mech
+      notable: Two-phase encounter
+    - id: 643
+      name: Sneed
+      type: boss
+      description: Goblin shredder pilot — two phases
+      notable: 'Phase 2: escapes wreck and fights solo'
+      note: spawns from Sneed's Shredder
+    - id: 1763
+      name: Gilnid
+      type: boss
+      description: Goblin inventor
+      notable: Mechanical contraptions
+    - id: 646
+      name: Mr. Smite
+      type: boss
+      description: Final boss; founder of the Defias Brotherhood
+      notable: Two bodyguards spawn at 50% HP
+    - id: 647
+      name: Captain Greenskin
+      type: boss
+      description: Goblin engineer; cannon master
+      notable: Summons Defias trash adds
+    - id: 639
+      name: Edwin VanCleef
+      type: boss
+      description: Defias Brotherhood leader
+      notable: Final boss
+    - id: 645
+      name: Cookie
+      type: boss
+      description: Murloc cook of the pirate ship
+      notable: Tainted Food debuff
+    - id: 3586
+      name: Miner Johnson
+      type: rare
+      description: Rare elite spawn
+      notable: Mining rare
+      rare: true
+    notable_trash:
+    - title: Notable Trash
+      description: Useful green equipment from Defias Brotherhood and goblin crafters
+      notable: Mid-tier gear
+  wailing-caverns:
+    mapid: 43
+    title: Wailing Caverns
+    page: wailing-caverns.html
+    faction: Both
+    recommended_level: 17-24
+    mob_level: 17-20
+    emoji: 🌿
+    flavour: A sprawling underground maze in the Barrens, corrupted by druidic magic gone wrong. Features multiple bosses
+      with the coveted 'of the Fang' gear sets that define many leveling builds.
+    summary:
+      heading: 🎯 WC Loot Summary
+      intro: 'Equipment Focus: Complete dungeon with 24 blue equipment drops across 8 encounters! Home of the legendary "of
+        the Fang" sets.'
+      bullets:
+      - label: Best for
+        text: Players level 17-24
+      - label: Run time
+        text: 45-60 minutes (large dungeon)
+      - label: Famous for
+        text: '"of the Fang" leather set, caster items'
+      - label: Includes
+        text: Deviate Faerie Dragon rare spawn ⭐
+      - label: Notable trash
+        text: Druid of the Fang blue equipment
+    bosses:
+    - id: 3671
+      name: Lady Anacondra
+      type: boss
+      description: First Fang Lord; corrupted druid
+      notable: Sleep cast, Lightning Bolt
+    - id: 3669
+      name: Lord Cobrahn
+      type: boss
+      description: Fang Lord; nature caster + healer
+      notable: Healing Touch (interrupt), Lightning Bolt
+    - id: 3653
+      name: Kresh
+      type: boss
+      description: Optional first boss; giant turtle
+      notable: Shell Shield damage reduction
+    - id: 3670
+      name: Lord Pythas
+      type: boss
+      description: Fang Lord; toughest of the four
+      notable: Thunderclap, Sleep, Healing Touch
+    - id: 3674
+      name: Skum
+      type: boss
+      description: Mutated turtle abomination
+      notable: Chained Lightning AoE
+    - id: 3673
+      name: Lord Serpentis
+      type: boss
+      description: Final Fang Lord; shapeshifting druid
+      notable: Druid form changes, Wrath
+    - id: 5775
+      name: Verdan the Everliving
+      type: boss
+      description: Corrupted treant guardian
+      notable: Grasping Roots immobilize
+      note: hidden boss
+    - id: 3654
+      name: Mutanus the Devourer
+      type: boss
+      description: Final boss; massive murloc abomination
+      notable: Mind Sleep + heavy melee
+      note: event-summoned at end of Naralex awakening
+    - id: 5912
+      name: Deviate Faerie Dragon
+      type: rare
+      description: Rare elite spawn
+      notable: Polymorph abilities
+      rare: true
+    - id: 3840
+      name: Druid of the Fang
+      type: notable_trash
+      description: Notable elite trash — Druid of the Fang
+      notable: Sleep + cobra-form melee
+    notable_trash:
+    - title: Notable Trash
+      description: Elite trash with blue equipment
+      notable: Druid of the Fang
+  razorfen-kraul:
+    mapid: 47
+    title: Razorfen Kraul
+    page: razorfen-kraul.html
+    faction: Both
+    recommended_level: 30-40
+    mob_level: 24-27
+    emoji: 🐗
+    flavour: A maze of thorns in the Barrens, home to the savage Quilboar tribes who worship Agamaggan.
+    summary:
+      heading: 🎯 RFK Loot Summary
+      intro: 'Equipment Focus: Quilboar thorn maze in the Barrens. Strong drops for melee/leather and the iconic Razorflank
+        loot.'
+      bullets:
+      - label: Best for
+        text: Level 25-30
+      - label: Run time
+        text: 30-45 minutes
+      - label: Famous for
+        text: Charlga's Stave, Stoneslayer Hammer, Tusken Helm
+      - label: Includes
+        text: Blind Hunter rare elite ⭐
+      - label: Note
+        text: Wave-spawning Aggem Thorncurse fight is the trickiest
+    bosses:
+    - id: 6168
+      name: Roogug
+      type: boss
+      description: First boss; rabid quilboar
+      notable: Quick frenzy
+    - id: 4424
+      name: Aggem Thorncurse
+      type: boss
+      description: Quilboar warlord; wave-based fight
+      notable: Adds spawn in waves; Lightning Bolt
+    - id: 4428
+      name: Death Speaker Jargba
+      type: boss
+      description: Quilboar fanatic warlord
+      notable: Healing Wave + Lightning Bolt
+    - id: 4420
+      name: Overlord Ramtusk
+      type: boss
+      description: Quilboar warlord; tusked twin
+      notable: Brutal cleaves
+    - id: 4422
+      name: Agathelos the Raging
+      type: boss
+      description: Massive corrupted boar
+      notable: Knockdown charge
+    - id: 4421
+      name: Charlga Razorflank
+      type: boss
+      description: Final boss; matriarch of the Razorflank
+      notable: Demoralizing Shout, Battle Shout, Strike
+      note: final boss
+    - id: 4842
+      name: Earthcaller Halmgar
+      type: rare
+      description: Quilboar earth-shaman
+      notable: Earth Shock + Stoneclaw Totem
+    - id: 4425
+      name: Blind Hunter
+      type: rare
+      description: Rare elite blind owl-beast
+      notable: Sonic AoE blast
+  blackfathom-deeps:
+    mapid: 48
+    title: Blackfathom Deeps
+    page: blackfathom-deeps.html
+    faction: Both
+    recommended_level: 24-32
+    mob_level: 22-24
+    emoji: 🌊
+    flavour: A flooded elven temple in Ashenvale, now home to Twilight cultists and corrupted naga.
+    summary:
+      heading: 🎯 BFD Loot Summary
+      intro: 'Equipment Focus: Drowned elven temple in Ashenvale. Naga and Twilight cultist drops with caster-friendly nature
+        gear.'
+      bullets:
+      - label: Best for
+        text: Level 22-26
+      - label: Run time
+        text: 60+ minutes (large, partially submerged)
+      - label: Famous for
+        text: Aquatic Sash, Slime-encrusted Pads, Reef Axe
+      - label: Includes
+        text: Twilight Pickaxe quest chain summons Baron Aquanis
+      - label: Note
+        text: Bring underwater breathing — large sections are submerged
+    bosses:
+    - id: 4887
+      name: Ghamoo-ra
+      type: boss
+      description: First boss; giant turtle guardian
+      notable: Shell Reflect — interrupt or burn
+    - id: 4831
+      name: Lady Sarevess
+      type: boss
+      description: Naga sorceress; second boss
+      notable: Forked Lightning AoE
+    - id: 6243
+      name: Gelihast
+      type: boss
+      description: Naga warrior commander
+      notable: Frost Shock + Earthgrab
+    - id: 4830
+      name: Old Serra'kis
+      type: boss
+      description: Massive shark; circle-pull
+      notable: Bleeding Strike
+    - id: 4832
+      name: Twilight Lord Kelris
+      type: boss
+      description: Twilight Hammer cultist boss
+      notable: Mind Blast + Mind Sleep
+    - id: 4829
+      name: Aku'mai
+      type: boss
+      description: Final boss; multi-headed water serpent
+      notable: Acid breath AoE, Frost Nova
+    - id: 12876
+      name: Baron Aquanis
+      type: rare
+      description: Naga elemental — quest-summoned
+      notable: Water-based AoE caster
+      note: quest-summoned
+    - id: 12902
+      name: Lorgus Jett
+      type: rare
+      description: Twilight cultist — event-summoned
+      notable: Frost magic
+  gnomeregan:
+    mapid: 90
+    title: Gnomeregan
+    page: gnomeregan.html
+    faction: Both
+    recommended_level: 29-38
+    mob_level: 24-28
+    emoji: ⚙️
+    flavour: The lost capital of the gnomes — irradiated and overrun by trogg invaders and rogue mechs.
+    summary:
+      heading: 🎯 Gnomeregan Loot Summary
+      intro: 'Equipment Focus: Irradiated gnomish capital overrun by troggs. Tech-themed loot and notoriously long runs with
+        maze-like layout.'
+      bullets:
+      - label: Best for
+        text: Level 27-32
+      - label: Run time
+        text: 60-90 minutes (long, maze-like)
+      - label: Famous for
+        text: Workshop Assistant's Pail, Spidertank Oilrag, Mind-Expanding Mushroom
+      - label: Includes
+        text: Dark Iron Ambassador rare elite ⭐
+      - label: Note
+        text: Very easy to get lost — final boss is Mekgineer Thermaplugg
+    bosses:
+    - id: 7361
+      name: Grubbis
+      type: boss
+      description: Trogg leader — quest-summoned
+      notable: Summons Trogg adds in waves
+      note: event-summoned
+    - id: 7079
+      name: Viscous Fallout
+      type: boss
+      description: Toxic ooze elemental
+      notable: Toxic Volley AoE — cleansable poison
+    - id: 6235
+      name: Electrocutioner 6000
+      type: boss
+      description: Lightning maintenance bot
+      notable: Chain Lightning AoE
+    - id: 6229
+      name: Crowd Pummeler 9-60
+      type: boss
+      description: Mechanical hammer-bot
+      notable: Tantrum knockback, Pummel stun
+    - id: 7800
+      name: Mekgineer Thermaplugg
+      type: boss
+      description: Final boss; mad gnomish engineer
+      notable: Bombs from podium, Walking Bomb adds
+      note: final boss
+    - id: 6228
+      name: Dark Iron Ambassador
+      type: rare
+      description: Rare Dark Iron diplomat
+      notable: Fire spells
+  scarlet-monastery:
+    mapid: 189
+    title: Scarlet Monastery
+    page: scarlet-monastery.html
+    faction: Both
+    recommended_level: 28-45
+    mob_level: 30-40
+    emoji: ⚔️
+    flavour: 'The fanatical Scarlet Crusade''s stronghold — four wings: Graveyard, Library, Armory, and Cathedral.'
+    summary:
+      heading: 🎯 Scarlet Monastery Loot Summary
+      intro: 'Equipment Focus: The Scarlet Crusade''s stronghold — four wings with distinct loot tables. Premier dungeon for
+        leveling 30s and 40s.'
+      bullets:
+      - label: Best for
+        text: Levels 28-40 (varies by wing)
+      - label: Wings
+        text: Graveyard (~28-30), Library (~30-34), Armory (~33-37), Cathedral (~38-42)
+      - label: Famous for
+        text: Whitemane's Chapeau, Herod's Shoulder, Mograine's Might, Hand of Righteousness
+      - label: Note
+        text: Mograine + Whitemane two-stage fight in the Cathedral is the highlight
+    bosses:
+    - id: 3983
+      name: Interrogator Vishas
+      type: boss
+      description: Library mid-boss; sadistic inquisitor
+      notable: Holy Fire single-target burst
+      wing: graveyard
+    - id: 4543
+      name: Bloodmage Thalnos
+      type: boss
+      description: Graveyard final boss; necromancer
+      notable: Fireball + Frostbolt + raises skeletons
+      wing: graveyard
+    - id: 3974
+      name: Houndmaster Loksey
+      type: boss
+      description: Armory first boss; commands Scarlet hounds
+      notable: Summons two Scarlet Tracking Hounds
+      wing: library
+    - id: 6487
+      name: Arcanist Doan
+      type: boss
+      description: Library final boss; arcane mage
+      notable: Detonates Arcane Explosion at 50% HP — interrupt
+      wing: library
+    - id: 3975
+      name: Herod
+      type: boss
+      description: Armory final boss; Crusade champion
+      notable: Whirlwind cleave + summons trainees
+      wing: armory
+    - id: 4542
+      name: High Inquisitor Fairbanks
+      type: boss
+      description: Optional Cathedral mid-boss
+      notable: Curse of Blood (must remove before Mograine)
+      wing: cathedral
+    - id: 3976
+      name: Scarlet Commander Mograine
+      type: boss
+      description: Cathedral co-boss; phase 1 of Whitemane fight
+      notable: Two-phase — dies and Whitemane revives
+      wing: cathedral
+    - id: 3977
+      name: High Inquisitor Whitemane
+      type: boss
+      description: Cathedral final boss; revives Mograine
+      notable: Holy heals, raises Mograine at 50% HP
+      wing: cathedral
+    - id: 6490
+      name: Azshir the Sleepless
+      type: rare
+      description: Graveyard rare; banshee
+      notable: Mind Vision, Banshee Wail fear
+      wing: graveyard
+    - id: 6489
+      name: Ironspine
+      type: rare
+      description: Graveyard rare; undead caster
+      notable: Bone shatter shadowbolts
+      wing: graveyard
+    - id: 6488
+      name: Fallen Champion
+      type: rare
+      description: Graveyard rare; undead warrior
+      notable: Heavy strikes
+      wing: graveyard
+  ragefire-chasm:
+    mapid: 389
+    title: Ragefire Chasm
+    page: ragefire-chasm.html
+    faction: Horde
+    recommended_level: 13-18
+    mob_level: 13-16
+    emoji: 🔥
+    flavour: A volcanic dungeon beneath Orgrimmar's Cleft of Shadow. The first dungeon many Horde players experience, offering
+      solid starter gear with fire-themed encounters.
+    summary:
+      heading: 🎯 RFC Loot Summary
+      intro: 'Equipment Focus: RFC has 6 high-quality blue drops from bosses, plus 8 useful green items from trash mobs! Perfect
+        for new Horde players.'
+      bullets:
+      - label: Best for
+        text: New players (level 13-18)
+      - label: Run time
+        text: 15-20 minutes
+      - label: Boss drops
+        text: 6 blues with high rates (20-40%)
+      - label: Trash drops
+        text: 8 greens with lower rates (5-9%)
+      - label: Note
+        text: Only 2 bosses drop equipment; others drop gems/materials/consumables
+    bosses:
+    - id: 11517
+      name: Oggleflint
+      type: boss
+      description: First boss; Ragefire trogg chieftain
+      notable: Cleave + melee burst
+    - id: 11520
+      name: Taragaman the Hungerer
+      type: boss
+      description: Felguard demon; Searing Blade enforcer
+      notable: Fire Nova + Knock Away
+    - id: 11518
+      name: Jergosh the Invoker
+      type: boss
+      description: Searing Blade lieutenant; orc warlock
+      notable: Immolate + Curse of Weakness
+    - id: 11519
+      name: Bazzalan
+      type: boss
+      description: Final boss; satyr rogue (Searing Blade lieutenant)
+      notable: Sinister Strike + Deadly Poison
+    notable_trash:
+    - title: Notable Trash
+      description: Elite trash mobs in RFC
+      notable: Fire-themed creatures
+  razorfen-downs:
+    mapid: 129
+    title: Razorfen Downs
+    page: razorfen-downs.html
+    faction: Both
+    recommended_level: 37-46
+    mob_level: 34-37
+    emoji: 💀
+    flavour: Quilboar holy ground in the Barrens — once the Razorfen tribes' burial mound, now overrun by undead serving Amnennar
+      the Coldbringer.
+    summary:
+      heading: 🎯 RD Loot Summary
+      intro: 'Equipment Focus: Quilboar undead in a frozen tomb — Death''s Head sect casters, the Plaguemaw set chain, and
+        Amnennar''s blue caster gear at the top.'
+      bullets:
+      - label: Best for
+        text: Level 37-46
+      - label: Run time
+        text: 40-60 minutes
+      - label: Mob levels
+        text: 34-37
+      - label: Famous for
+        text: Glutton's Cleaver, Coldbringer's set drops, the Plaguemaw quest reward
+      - label: Includes
+        text: Death's Head sect casters, frozen quilboar, Amnennar event
+    bosses:
+    - id: 7354
+      name: Ragglesnout
+      type: rare
+      description: Rare elite quilboar tusker hidden in the upper warrens
+      notable: Heavy melee charge
+    - id: 7358
+      name: Amnennar the Coldbringer
+      type: boss
+      description: Final boss — undead lich revenant of a quilboar shaman
+      notable: Frost Volley, Frostbolt, summons Coldbringer's Skeletons
+    - id: 8567
+      name: Glutton
+      type: boss
+      description: Massive corrupted ghoul; gluttonous brute
+      notable: Diseased Slime cleave, Frenzied Charge
+    - id: 14686
+      name: Lady Falther'ess
+      type: boss
+      description: Banshee — corrupted quilboar matriarch
+      notable: Banshee Curse silence, Frost Shock
+    - id: 7357
+      name: Mordresh Fire Eye
+      type: boss
+      description: Lich apprentice of Amnennar
+      notable: Fire Nova, Burning Spirit
+  uldaman:
+    mapid: 70
+    title: Uldaman
+    page: uldaman.html
+    faction: Both
+    recommended_level: 41-51
+    mob_level: 37-40
+    emoji: 🗿
+    flavour: Ancient Titan vault beneath the Badlands — sealed by the Stonekeepers, broken open by Dark Iron prospectors who
+      awoke far worse than they expected.
+    summary:
+      heading: 🎯 U Loot Summary
+      intro: 'Equipment Focus: Titan-vault loot — Stoneweaver Blade, the Cracked Sash, Stoneslayer two-handers, and the Norgannon''s
+        Shield reward chain via Ironaya.'
+      bullets:
+      - label: Best for
+        text: Level 41-51
+      - label: Run time
+        text: 60-90 minutes
+      - label: Mob levels
+        text: 37-40
+      - label: Famous for
+        text: Stoneslayer, Stoneweaver Blade, the Vibroblade reward, Ironaya's quest chain
+      - label: Includes
+        text: Viking trio mini-bosses, Stonekeeper construct waves, final Archaedas event
+    bosses:
+    - id: 7206
+      name: Ancient Stone Keeper
+      type: boss
+      description: Stone construct boss; ambushes from the Hall of Crafting
+      notable: Ground Stomp AoE stun, Trample
+    - id: 2748
+      name: Archaedas
+      type: boss
+      description: Final boss — Titan-forged construct overseer; awakens Earthen guards in waves
+      notable: Stoneblood Summon, Awaken Vault Warder, Ground Slam knockback
+    - id: 7291
+      name: Galgann Firehammer
+      type: boss
+      description: Dark Iron firecaster overseer
+      notable: Fire Nova, Pyroblast
+    - id: 4854
+      name: Grimlok
+      type: boss
+      description: Ogre-priest leader; smaller but mean caster
+      notable: Heal, Shadow Bolt
+    - id: 7023
+      name: Obsidian Sentinel
+      type: boss
+      description: Massive obsidian sentinel construct guarding the inner halls
+      notable: Heavy melee, Shadow Bolt Volley
+    - id: 6906
+      name: Baelog
+      type: boss
+      description: Viking trio — Warrior; opens the dwarven crypt
+      notable: Cleave, Frost Trap pet (with Olaf)
+    - id: 6907
+      name: Eric "The Swift"
+      type: boss
+      description: Viking trio — Rogue brother
+      notable: Slow Poison, Backstab burst
+    - id: 7228
+      name: Ironaya
+      type: boss
+      description: Ancient Earthen guardian; opens Archaedas' chamber once defeated
+      notable: Knock Away, Massive Tremor stun
+    - id: 6908
+      name: Olaf
+      type: boss
+      description: Viking trio — Healer brother
+      notable: Healing Wave on his brothers, Frost Shock
+    - id: 6910
+      name: Revelosh
+      type: boss
+      description: Troll-themed orc shaman boss
+      notable: Lightning Bolt, Heal, Shock chains
+  zulfarrak:
+    mapid: 209
+    title: Zul'Farrak
+    page: zulfarrak.html
+    faction: Both
+    recommended_level: 44-54
+    mob_level: 43-46
+    emoji: ⚱️
+    flavour: Sandfury troll capital in Tanaris — a fortified ziggurat city culminating in the pyramid event where Sergeant
+      Bly and the prisoners hold the troll horde at bay.
+    summary:
+      heading: 🎯 Z Loot Summary
+      intro: 'Equipment Focus: Sandfury troll patterns and the pyramid event — Sang''thraze and Jang''thraze sword pair, Carrot
+        on a Stick, and a rare Zulian Tiger mount from Chief Ukorz.'
+      bullets:
+      - label: Best for
+        text: Level 44-54
+      - label: Run time
+        text: 50-75 minutes
+      - label: Mob levels
+        text: 43-46
+      - label: Famous for
+        text: Carrot on a Stick (Ukorz), the dual swords, Sandfury Tiger mount, Mudsprocket quests
+      - label: Includes
+        text: Sandfury Executioner stairs, the pyramid event (Bly+prisoners hold off troll waves), Hydromancer pool
+    bosses:
+    - id: 10081
+      name: Dustwraith
+      type: rare
+      description: Rare elite wind serpent outside the dungeon (pre-entry)
+      notable: Lightning Breath
+    - id: 8127
+      name: Antu'sul
+      type: boss
+      description: Hakkari avatar boss; summons three Sul'lithuz Broodlings on a timer
+      notable: Healing Ward, Earthgrab Totem
+    - id: 7267
+      name: Chief Ukorz Sandscalp
+      type: boss
+      description: Final boss — Chief of the Sandfury; drops the rare Tiger mount
+      notable: Whirlwind, Hammer of Justice stun, summons two Zealots
+    - id: 7795
+      name: Hydromancer Velratha
+      type: boss
+      description: Troll hydromancer at the central pool
+      notable: Frost Nova, Frostbolt
+    - id: 7274
+      name: Sandfury Executioner
+      type: boss
+      description: Stairs ascent finale — giant troll with the executioner's axe
+      notable: Cleave, Mortal Strike, Sweeping Strikes
+    - id: 7272
+      name: Theka the Martyr
+      type: boss
+      description: Mummy-troll on a stone altar; raises Theka's Acolytes on death
+      notable: Curse of Weakness, summons skeletons mid-fight
+    - id: 7271
+      name: Witch Doctor Zum'rah
+      type: boss
+      description: Witch doctor at the gauntlet entrance
+      notable: Hex (turns target into a frog), Shrink, Healing Wave
+    - id: 10080
+      name: Sandarr Dunereaver
+      type: rare
+      description: Rare elite Sandfury commander roaming the upper terraces
+      notable: Holy Smite, Lay on Hands
+    - id: 10082
+      name: Zerillis
+      type: rare
+      description: Rare elite wind serpent boss above the pool
+      notable: Lightning Breath, Sand Buffet
+    - id: 7797
+      name: Ruuzlu
+      type: boss
+      description: Pyramid event participant; troll quest-giver
+      notable: Cleave, Demoralizing Shout
+    - id: 7604
+      name: Sergeant Bly
+      type: boss
+      description: Pyramid event leader — quest-starter NPC; commands the prisoners
+      notable: Cleave, Heroic Strike
+    - id: 7608
+      name: Murta Grimgut
+      type: boss
+      description: Pyramid event ally — DPS prisoner
+      notable: Cleave, Mortal Strike
+    - id: 7606
+      name: Oro Eyegouge
+      type: boss
+      description: Pyramid event ally — DPS prisoner
+      notable: Cleave, Sweeping Strikes
+    - id: 7605
+      name: Raven
+      type: boss
+      description: Pyramid event ally — Ranged DPS prisoner
+      notable: Shoot, Aimed Shot
+    - id: 7607
+      name: Weegli Blastfuse
+      type: boss
+      description: Pyramid event ally — Engineer; blows the front gate at the end
+      notable: Bomb throw, Goblin Sapper
+  maraudon:
+    mapid: 349
+    title: Maraudon
+    page: maraudon.html
+    faction: Both
+    recommended_level: 46-55
+    mob_level: 42-48
+    emoji: 🌿
+    flavour: Centaur ancestor caverns beneath Desolace — a three-wing labyrinth holding Princess Theradras' fallen court and
+      the cursed Celebras.
+    summary:
+      heading: 🎯 M Loot Summary
+      intro: 'Equipment Focus: Three wings (Orange / Purple / Princess) of nature and earth-themed gear — Cloudkeeper Legplates,
+        Charstone Dirk, Therazane shoulders, and the Celebras teleport reward.'
+      bullets:
+      - label: Best for
+        text: Level 46-55
+      - label: Run time
+        text: 45-60 minutes per wing
+      - label: Mob levels
+        text: 42-48
+      - label: Famous for
+        text: Princess Theradras' Therazane gear, Celebras teleport from the back entrance, Diamond Hall
+      - label: Includes
+        text: Three colour-coded wings, Celebras transformation quest, Princess and Landslide finale
+    bosses:
+    - id: 12203
+      name: Landslide
+      type: boss
+      description: Earth elemental boss in the antechamber to Princess
+      notable: Knockback, Trample, Landslide AoE
+    - id: 12201
+      name: Princess Theradras
+      type: boss
+      description: Final boss — earth elemental princess; drops Therazane shoulder/leg patterns
+      notable: Repulse knockback, Boulder, Dust Field DoT
+    - id: 13596
+      name: Rotgrip
+      type: boss
+      description: Massive crocolisk swimming the lake before Princess
+      notable: Crippling Wound, Tail Sweep
+    - id: 13601
+      name: Tinkerer Gizlock
+      type: boss
+      description: Mid-boss — goblin engineer trapped in the caverns
+      notable: Bomb, Cluster Rockets, Shrink Ray
+    - id: 12237
+      name: Meshlok the Harvester
+      type: rare
+      description: Rare elite plant boss in the upper orange caverns
+      notable: Vine Trash, Trample
+    - id: 12225
+      name: Celebras the Cursed
+      type: boss
+      description: Cursed centaur former-keeper; quest-giver before turning hostile
+      notable: Nature Channel, Wrath, Healing Touch
+    - id: 13282
+      name: Noxxion
+      type: boss
+      description: Splits into smaller Noxxion Spawn slimes on damage
+      notable: Toxic Volley poison, Uppercut, summons Noxxion Spawns
+    - id: 12258
+      name: Razorlash
+      type: boss
+      description: Plant-creature boss — vine grasper at the orange wing entrance
+      notable: Trample, Hooked Net root
+    - id: 12236
+      name: Lord Vyletongue
+      type: boss
+      description: Naga lord in the purple wing's pool
+      notable: Poison Bolt Volley, Charm Hold
+    - id: 12242
+      name: Spirit of Maraudos
+      type: boss
+      description: Spirit boss — purple wing ancestor
+      notable: Spirit Strike, Shadow Bolt Volley
+    - id: 12243
+      name: Spirit of Veng
+      type: boss
+      description: Spirit boss — purple wing ancestor pair with Maraudos
+      notable: Lightning Cloud, Lightning Bolt
+  sunken-temple:
+    mapid: 109
+    title: Sunken Temple
+    page: sunken-temple.html
+    faction: Both
+    recommended_level: 50-60
+    mob_level: 47-50
+    emoji: 🐍
+    flavour: Atal'Hakkar temple drowned in the Swamp of Sorrows — Hakkari and dragonkin halls around the central well where
+      the Eranikus prison was sealed.
+    summary:
+      heading: 🎯 ST Loot Summary
+      intro: 'Equipment Focus: Hakkari troll patterns and the four Dragonkin guardians of the central altar — Jammal''an''s
+        set drops, the Atal''ai Defenders gauntlet, Eranikus event reward.'
+      bullets:
+      - label: Best for
+        text: Level 50-60
+      - label: Run time
+        text: 60-90 minutes
+      - label: Mob levels
+        text: 47-50
+      - label: Famous for
+        text: Jammal'an's robes, the Atal'ai Defenders set chain, Eranikus' green dragonkin patterns
+      - label: Includes
+        text: Six-statue altar puzzle, four-dragonkin wave fight, six Atal'ai Defenders mini-bosses, Eranikus finale
+    bosses:
+    - id: 5721
+      name: Dreamscythe
+      type: boss
+      description: Green dragonkin guardian — central altar; spawns on statue activation
+      notable: Acid Breath, Wing Buffet
+    - id: 5722
+      name: Hazzas
+      type: boss
+      description: Green dragonkin guardian — central altar
+      notable: Sleep, Acid Spit
+    - id: 5710
+      name: Jammal'an the Prophet
+      type: boss
+      description: Final boss — Atal'Hakkar high prophet; works with the Weaver consort
+      notable: Earth Shock, Hex, Mind Flay
+    - id: 5719
+      name: Morphaz
+      type: boss
+      description: Green dragonkin guardian — central altar
+      notable: Frost Breath, Wing Buffet
+    - id: 5709
+      name: Shade of Eranikus
+      type: boss
+      description: Eranikus' shade — green dragon prison guardian; final boss in the event chain
+      notable: Sleep, Acid Breath, Deep Sleep curse
+    - id: 5720
+      name: Weaver
+      type: boss
+      description: Jammal'an's consort; Atal'Hakkar Weaver caster
+      notable: Curse of Weakness, Mind Flay, Heal Jammal'an
+    - id: 8580
+      name: Atal'alarion
+      type: boss
+      description: Earth elemental event boss; summoned by completing the statue circuit
+      notable: Cleave, Massive Stomp AoE
+    - id: 5713
+      name: Gasher
+      type: boss
+      description: Atal'ai Defender — six-circle gauntlet boss
+      notable: Cleave, Demoralizing Shout
+    - id: 5715
+      name: Hukku
+      type: boss
+      description: Atal'ai Defender — six-circle gauntlet boss; caster
+      notable: Fireball, Frost Nova
+    - id: 5714
+      name: Loro
+      type: boss
+      description: Atal'ai Defender — six-circle gauntlet boss
+      notable: Cleave, Sweeping Strikes
+    - id: 5717
+      name: Mijan
+      type: boss
+      description: Atal'ai Defender — six-circle gauntlet boss
+      notable: Mortal Strike, Cleave
+    - id: 5711
+      name: Ogom the Wretched
+      type: boss
+      description: Atal'ai Defender — six-circle gauntlet leader
+      notable: Curse of Weakness, Mind Blast
+    - id: 5712
+      name: Zolo
+      type: boss
+      description: Atal'ai Defender — six-circle gauntlet boss
+      notable: Healing Wave, Cleave
+    - id: 5716
+      name: Zul'Lor
+      type: boss
+      description: Atal'ai Defender — six-circle gauntlet boss; caster
+      notable: Shadow Bolt, Curse of Tongues
+  blackrock-depths:
+    mapid: 230
+    title: Blackrock Depths
+    page: blackrock-depths.html
+    faction: Both
+    recommended_level: 52-60
+    mob_level: 48-80
+    emoji: 🔥
+    flavour: Dark Iron dwarf capital deep inside Blackrock Mountain — a sprawling underground city of forges, prison cells,
+      the Grim Guzzler tavern, and the Black Anvil throne.
+    summary:
+      heading: 🎯 BD Loot Summary
+      intro: 'Equipment Focus: Pre-raid blue gear stop for almost every spec — Tier-0.5 mat sources, the Black Iron weapons
+        line, Bar event, Ironfoe two-handers, Emperor Thaurissan finale.'
+      bullets:
+      - label: Best for
+        text: Level 52-60
+      - label: Run time
+        text: 90-150 minutes (full clear)
+      - label: Mob levels
+        text: 48-80
+      - label: Famous for
+        text: Ironfoe, Black Iron Tongs (quest), Plugger's Bar event, the Lyceum, Thaurissan's drops, Coren Direbrew (Brewfest)
+      - label: Includes
+        text: Detention Block, Lyceum/Throne wing, Vault key, Mole Machine taxi, the Grim Guzzler tavern event
+    bosses:
+    - id: 23872
+      name: Coren Direbrew
+      type: boss
+      description: Brewfest seasonal boss — drops mounts and Direbrew Hops
+      notable: Hurl Mug, Direbrew's Disarm — Brewfest only (Sep-Oct event)
+    - id: 8923
+      name: Panzor the Invincible
+      type: rare
+      description: Rare elite — chained construct opposite the Detention Block stairs
+      notable: Heavy Whirlwind cleave, very high damage burst
+    - id: 9019
+      name: Emperor Dagran Thaurissan
+      type: boss
+      description: Final boss — Dark Iron emperor; husband of Princess Moira
+      notable: Hand of Thaurissan curse, Cleave, Knock Away
+    - id: 9938
+      name: Magmus
+      type: boss
+      description: Penultimate boss — fire titan construct guarding the Throne
+      notable: Cleave, Mighty Blow, summons Molten War Golems
+    - id: 9156
+      name: Ambassador Flamelash
+      type: boss
+      description: Fire elemental envoy of Ragnaros
+      notable: Fireball Volley, Burning Spirit
+    - id: 9033
+      name: General Angerforge
+      type: boss
+      description: Dark Iron foundry boss — wave fight, summons reinforcements
+      notable: Cleave, Sunder Armor, summons Mole Machines with Anvilrage adds
+    - id: 8983
+      name: Golem Lord Argelmach
+      type: boss
+      description: Steam-tank engineer boss with golems
+      notable: Lightning Discharge, Crackle, summons Golem Spawns
+    - id: 9537
+      name: Hurley Blackbreath
+      type: boss
+      description: Bar event boss — fire-breathing brewmaster
+      notable: Drunken Rage, Flame Breath
+    - id: 9502
+      name: Phalanx
+      type: boss
+      description: Construct guardian in the Lyceum
+      notable: Cleave, Mighty Blow
+    - id: 9499
+      name: Plugger Spazzring
+      type: boss
+      description: Bar event trigger — accidental Black Iron Ale tap pulls him hostile
+      notable: Demoralizing Shout, Cleave
+    - id: 8929
+      name: Princess Moira Bronzebeard
+      type: boss
+      description: Princess of the Dark Irons; cinematic kill grants the Imperial Plate Mail set quest
+      notable: 'Smite, Heal, Power Word: Shield, Shadow Word: Pain'
+    - id: 9041
+      name: Warder Stilgiss
+      type: rare
+      description: Rare elite Warder — works with Verek pet pair in the prison
+      notable: Cleave, Frost Shock, Verek fights alongside
+    - id: 8907
+      name: Wrath Hammer Construct
+      type: boss
+      description: Construct boss; Vault-side fight
+      notable: Cleave, Massive Stomp
+    - id: 9042
+      name: Verek
+      type: rare
+      description: Rare elite — Warder Stilgiss' core hound pet
+      notable: Charge, Cleave, Frenzy
+    - id: 9056
+      name: Fineous Darkvire
+      type: boss
+      description: Stonemason boss — caster in the Mason corridor
+      notable: Fireball Volley, Pyroblast
+    - id: 9017
+      name: Lord Incendius
+      type: boss
+      description: Fire lord boss — patrols the Lyceum
+      notable: Fire Shield, Pyroblast
+    - id: 9677
+      name: Ograbisi
+      type: boss
+      description: Detention Block guard captain — drops the cell key
+      notable: Cleave, Disarm
+    - id: 9543
+      name: Ribbly Screwspigot
+      type: boss
+      description: Bar event boss — Ribbly's bodyguards intervene if attacked
+      notable: Cleave, Demoralizing Shout
+    - id: 9678
+      name: Shill Dinger
+      type: boss
+      description: Detention Block jailor
+      notable: Cleave, Knock Away
+    - id: 9024
+      name: Pyromancer Loregrain
+      type: rare
+      description: Rare elite caster in the Shadowforge City paths
+      notable: Fireball Volley, Pyroblast
+    - id: 9016
+      name: Bael'Gar
+      type: boss
+      description: Detention Block fire lord; near Pyromancer Loregrain
+      notable: Wave of Pyro, Fire Nova
+    - id: 9680
+      name: Crest Killer
+      type: boss
+      description: Bar quest target — pickpocket mob with a key drop
+      notable: Backstab, Eviscerate
+    - id: 9018
+      name: High Interrogator Gerstahn
+      type: boss
+      description: Detention Block warden — drops Prison Cell Key
+      notable: Fear, Mind Blast
+    - id: 9319
+      name: Houndmaster Grebmar
+      type: boss
+      description: Houndmaster — opens cells with his beasts
+      notable: Trample, Charge, leashes War Hounds
+    - id: 9681
+      name: Jaz
+      type: boss
+      description: Quest target — Ribbly's nephew
+      notable: Backstab, Eviscerate
+    - id: 9025
+      name: Lord Roccor
+      type: boss
+      description: Mid-boss — Detention Block lieutenant
+      notable: Cleave, Sweeping Strikes
+  dire-maul:
+    mapid: 429
+    title: Dire Maul
+    page: dire-maul.html
+    faction: Both
+    recommended_level: 55-60
+    mob_level: 54-62
+    emoji: 🌳
+    flavour: 'Ruined Highborne city of Eldre''Thalas in Feralas — three separate wings, each a self-contained dungeon: East
+      (jungle Highborne ruins), West (cursed library), North (ogre Gordok arena and Tribute run).'
+    summary:
+      heading: 🎯 DM Loot Summary
+      intro: 'Equipment Focus: Three independent wings — DM-East nature drops + Pusillin chase, DM-West library books and
+        Prince Tortheldrin, DM-North Tribute run for max rewards.'
+      bullets:
+      - label: Best for
+        text: Level 55-60
+      - label: Run time
+        text: 40-60 minutes per wing
+      - label: Mob levels
+        text: 54-62
+      - label: Famous for
+        text: DM-North Tribute run, Prince Tortheldrin's drops (Felheart belt mats), the King's Wing-Wand, the Ogre Suit
+      - label: Includes
+        text: Three wings (East/West/North), Tribute system in DM-N, Pusillin imp chase in DM-E, the library books in DM-W
+    bosses:
+    - id: 11501
+      name: King Gordok
+      type: boss
+      description: DM-North final boss — Gordok king; Tribute run skips most of his court
+      notable: Mortal Cleave, Mighty Kick, War Stomp AoE stun
+    - id: 14325
+      name: Captain Kromcrush
+      type: boss
+      description: DM-North inner court ogre captain
+      notable: Cleave, Disarm, Demoralizing Shout
+    - id: 11496
+      name: Immol'thar
+      type: boss
+      description: DM-West final boss — gigantic eye demon; final phase after the four Highborne
+      notable: Shadow Bolt Volley, Trample, Eye Blast
+    - id: 11486
+      name: Prince Tortheldrin
+      type: boss
+      description: DM-West side boss — Highborne prince; drops Felheart belt patterns and key drop
+      notable: Arcane Explosion, Counterspell, Blink
+    - id: 14324
+      name: Cho'Rush the Observer
+      type: boss
+      description: DM-North inner court advisor
+      notable: Shadow Bolt Volley, Mind Flay
+    - id: 14308
+      name: Ferra
+      type: boss
+      description: DM-North inner court pet — Pusillin's deer pet, summoned on Cho'Rush
+      notable: Bite, Charge
+    - id: 11488
+      name: Illyanna Ravenoak
+      type: boss
+      description: DM-West Highborne — Ravenoak sister, archer caster pair with Magister Kalendris
+      notable: Shoot, Aimed Shot, summons spider pet
+    - id: 11487
+      name: Magister Kalendris
+      type: boss
+      description: DM-West Highborne — mage caster brother
+      notable: Frostbolt Volley, Polymorph, Counterspell
+    - id: 14690
+      name: Revanchion
+      type: boss
+      description: DM-West Highborne — third Pylon shadow boss
+      notable: Shadow Bolt, Curse of Tongues
+    - id: 11489
+      name: Tendris Warpwood
+      type: boss
+      description: DM-East tree boss — ancient corrupted
+      notable: Wrath, Root, Trample
+    - id: 11467
+      name: Tsu'zee
+      type: rare
+      description: DM-West/East rare elite faerie dragon
+      notable: Mana Burn, Slow
+    - id: 14321
+      name: Guard Fengus
+      type: boss
+      description: DM-North outer Tribute guard
+      notable: Cleave, Pummel
+    - id: 14326
+      name: Guard Mol'dar
+      type: boss
+      description: DM-North outer Tribute guard berserker
+      notable: Whirlwind, Knockdown
+    - id: 14323
+      name: Guard Slip'kik
+      type: boss
+      description: DM-North outer Tribute guard caster
+      notable: Polymorph (Sheep), Frost Nova
+    - id: 14322
+      name: Stomper Kreeg
+      type: boss
+      description: DM-North outer Tribute drunk ogre
+      notable: Mortal Strike, Drunken Rage
+    - id: 11492
+      name: Alzzin the Wildshaper
+      type: boss
+      description: DM-East final boss — corrupted satyr in the inner sanctum
+      notable: Curse of Tongues, Wither, summons Felhound pets
+    - id: 13280
+      name: Hydrospawn
+      type: boss
+      description: DM-East water elemental in the central pool
+      notable: Frostbolt, Frost Volley
+    - id: 14327
+      name: Lethtendris
+      type: boss
+      description: DM-East necromancer caster
+      notable: Shadow Bolt, Curse of Agony
+    - id: 14354
+      name: Pusillin
+      type: boss
+      description: DM-East mini-boss — Pusillin the imp; chase him through the corridors for a key
+      notable: Fireball, Counterspell, blink-flees on health threshold
+    - id: 11490
+      name: Zevrim Thornhoof
+      type: boss
+      description: DM-East satyr boss in the upper jungle paths
+      notable: Lightning Cloud, Wing Clip
+    - id: 14349
+      name: Pimgib
+      type: boss
+      description: DM-North ogre slave
+      notable: Backstab, Sap
+  lower-blackrock-spire:
+    mapid: 229
+    title: Lower Blackrock Spire
+    page: lower-blackrock-spire.html
+    faction: Both
+    recommended_level: 55-60
+    mob_level: 54-62
+    emoji: ⚒️
+    flavour: Orc Spire fortress controlled by the Blackrock clan — the muster yard before Nefarian's keep above, defended
+      by Warchief Rend's troops and the Beast.
+    summary:
+      heading: 🎯 LBS Loot Summary
+      intro: 'Equipment Focus: Pre-raid blue gear for most specs — Bloodtinged set parts, the Plate of the Shaman King, Rend
+        Blackhand event reward.'
+      bullets:
+      - label: Best for
+        text: Level 55-60
+      - label: Run time
+        text: 60-100 minutes
+      - label: Mob levels
+        text: 54-62
+      - label: Famous for
+        text: Rend Blackhand event, the Beast (UBRS attunement gate), Pre-raid BiS items for many specs
+      - label: Includes
+        text: Spirestone/Smolderthorn/Bloodaxe orc clans, the Beast's cage, Halycon+Gizrul, Mother Smolderweb spider lair
+    bosses:
+    - id: 10430
+      name: The Beast
+      type: boss
+      description: UBRS attunement gate — gigantic core hound; required kill for Rend's chamber
+      notable: Mortal Strike, Berserker Charge, Terrifying Roar fear
+    - id: 10363
+      name: General Drakkisath
+      type: boss
+      description: UBRS access — final UBRS boss; final BRS boss when run as one full clear
+      notable: Cleave, Conflagration, summons Chromatic Drakonid
+    - id: 10429
+      name: Warchief Rend Blackhand
+      type: boss
+      description: LBRS final boss — Warchief of the Blackrock clan; cinematic event
+      notable: Whirlwind, Mortal Strike, Battle Shout, summons Honor Guard
+    - id: 10899
+      name: Goraluk Anvilcrack
+      type: rare
+      description: Rare elite — anvil orc smith in the back alleys
+      notable: Mortal Strike, Disarm, Sunder Armor
+    - id: 10376
+      name: Crystal Fang
+      type: rare
+      description: Rare elite — crystal hound in the slime pit
+      notable: Crystal Strike, Frenzy
+    - id: 10447
+      name: Chromatic Dragonspawn
+      type: boss
+      description: Chromatic Dragonspawn — Goraluk's helpers
+      notable: Cleave, Knock Away
+    - id: 9568
+      name: Overlord Wyrmthalak
+      type: boss
+      description: Spirestone clan chief — final clan-leader before the orc waves
+      notable: Cleave, Knock Away, summons adds
+    - id: 9816
+      name: Pyroguard Emberseer
+      type: boss
+      description: Fire summoning boss — channels in front of the orange flame circle; interruptible
+      notable: Pyroguard Emberseer Strike, Fire Volley — requires channel interrupt mechanic
+    - id: 9596
+      name: Bannok Grimaxe
+      type: rare
+      description: Rare elite Bloodaxe orc — high physical damage
+      notable: Cleave, Mortal Strike
+    - id: 9718
+      name: Ghok Bashguud
+      type: rare
+      description: Rare elite Smolderthorn shadow priest
+      notable: Mind Blast, Shadow Bolt
+    - id: 10509
+      name: Jed Runewatcher
+      type: rare
+      description: Rare elite Warlock — appears in the Beast area
+      notable: Shadow Bolt, Curse of Tongues, summons Voidwalker
+    - id: 10220
+      name: Halycon
+      type: boss
+      description: Halycon's pen — giant core hound
+      notable: Trample, Frenzy, summons Gizrul on death
+    - id: 10596
+      name: Mother Smolderweb
+      type: boss
+      description: Spider matriarch — drops the Smolderweb Heart, summons broodlings
+      notable: Crystallize stun, summons Smolderweb Hatchlings
+    - id: 9736
+      name: Quartermaster Zigris
+      type: boss
+      description: LBRS Quartermaster — drops important pre-raid keys
+      notable: Cleave, Throw, summons Bloodaxe Veteran
+    - id: 9218
+      name: Spirestone Battle Lord
+      type: rare
+      description: Rare elite Spirestone orc
+      notable: Cleave, Heroic Strike
+    - id: 9217
+      name: Spirestone Lord Magus
+      type: rare
+      description: Rare elite Spirestone caster
+      notable: Fireball, Pyroblast
+    - id: 9236
+      name: Shadow Hunter Vosh'gajin
+      type: boss
+      description: Hexxer — caster boss in the Hall of Binding
+      notable: Hex (toad polymorph), Healing Wave, Earth Shock
+    - id: 9237
+      name: War Master Voone
+      type: boss
+      description: Warmaster — wave-fight boss; summons reinforcements
+      notable: Cleave, Mortal Strike, summons Bloodaxe Veteran
+    - id: 10263
+      name: Burning Felguard
+      type: rare
+      description: Rare elite Felguard summon in Vosh'gajin's area
+      notable: Cleave, Mortal Strike
+    - id: 9219
+      name: Spirestone Butcher
+      type: rare
+      description: Rare elite Spirestone butcher
+      notable: Cleave, Mortal Strike
+    - id: 9196
+      name: Highlord Omokk
+      type: boss
+      description: Highlord of the Spirestone orcs — first major boss
+      notable: Cleave, Mortal Strike, summons Spirestone Battle Lord pair
+  scholomance:
+    mapid: 289
+    title: Scholomance
+    page: scholomance.html
+    faction: Both
+    recommended_level: 58-60
+    mob_level: 57-62
+    emoji: 📚
+    flavour: Necromancy school in Caer Darrow — run by Darkmaster Gandling and a circle of liches. The Mograine quest chain,
+      the Krastinov 'butcher' story, and pre-raid Tier-0 set drops live here.
+    summary:
+      heading: 🎯 S Loot Summary
+      intro: 'Equipment Focus: Pre-raid Tier-0 set pieces (Necropile / Cadaverous / Bloodmail / Magister''s), Gandling''s
+        pop-quiz teleports, Kirtonos summoning ritual.'
+      bullets:
+      - label: Best for
+        text: Level 58-60
+      - label: Run time
+        text: 60-90 minutes
+      - label: Mob levels
+        text: 57-62
+      - label: Famous for
+        text: Tier-0 set pieces, Headmaster's Charge (Gandling staff), Kirtonos the Herald summon
+      - label: Includes
+        text: Six classroom mini-bosses, Kirtonos summon ritual at the porch, Gandling final exam with teleports
+    bosses:
+    - id: 10508
+      name: Ras Frostwhisper
+      type: boss
+      description: Penultimate boss — apprentice lich of Kel'Thuzad
+      notable: Frostbolt, Frost Volley, Ice Tomb, Frost Trap
+    - id: 14861
+      name: Blood Steward of Kirtonos
+      type: boss
+      description: Pre-Kirtonos boss; summoned during the Kirtonos ritual
+      notable: Drink Blood (heal), Cleave
+    - id: 1853
+      name: Darkmaster Gandling
+      type: boss
+      description: Final boss — headmaster of the school; teleports targets into side rooms each phase
+      notable: Death Coil, Mortal Cleave, Curse of the Necropolis teleport
+    - id: 10503
+      name: Jandice Barov
+      type: boss
+      description: Caster boss — illusionist; turns invisible periodically
+      notable: Curse of Blood, Illusion (clones), Curse of Tongues
+    - id: 11622
+      name: Rattlegore
+      type: boss
+      description: Massive bone golem in the Crypts; pull is the entire pile around him
+      notable: Bone Shield, Cleave, Demoralizing Shout
+    - id: 11261
+      name: Doctor Theolen Krastinov
+      type: boss
+      description: '''The Butcher'' — quest boss for the Death''s Edge questline'
+      notable: Mortal Cleave, Backhand, Frenzy
+    - id: 10505
+      name: Instructor Malicia
+      type: boss
+      description: Caster boss — classroom boss in the medical wing
+      notable: Call of the Grave, Curse of the Eye, Polymorph
+    - id: 10502
+      name: Lady Illucia Barov
+      type: boss
+      description: Barov family — Lady; caster
+      notable: Shadow Shock, Curse of Agony, Renew
+    - id: 10504
+      name: Lord Alexei Barov
+      type: boss
+      description: Barov family — Lord; melee
+      notable: Cleave, Pain Spike, Shadow Bolt
+    - id: 14695
+      name: Lord Blackwood
+      type: boss
+      description: Caster mini-boss in the upper library
+      notable: Shadow Bolt, Curse of Agony
+    - id: 10901
+      name: Lorekeeper Polkelt
+      type: boss
+      description: Caster boss in the Library; drops the Tome quest item
+      notable: Corpse Explosion, Volatile Infection, Boil Blood
+    - id: 10507
+      name: The Ravenian
+      type: boss
+      description: Massive corrupted gorilla in the lower lab
+      notable: Pierce Armor, Knockdown
+    - id: 10432
+      name: Vectus
+      type: boss
+      description: Caster boss — necromancer who controls the Plagueheart students
+      notable: Death Coil, summons Vectus Pet
+    - id: 10433
+      name: Marduk Blackpool
+      type: boss
+      description: Caster boss — Death's Edge quest target
+      notable: Shadow Bolt Volley, Curse of Weakness
+  stratholme:
+    mapid: 329
+    title: Stratholme
+    page: stratholme.html
+    faction: Both
+    recommended_level: 58-60
+    mob_level: 55-62
+    emoji: 🏛️
+    flavour: The cursed city of Lordaeron — Scarlet Crusade in the west streets, Baron Rivendare and the Scourge in the east.
+      The Culling memorial lives here; two completely separate wings sharing the same map.
+    summary:
+      heading: 🎯 S Loot Summary
+      intro: 'Equipment Focus: Two wings — Live/Scarlet (west) for Tier-0 cloth/leather and the Postmaster event, Undead/Baron
+        (east) for Tier-0 plate, Deathcharger mount, and Scourge gear.'
+      bullets:
+      - label: Best for
+        text: Level 58-60
+      - label: Run time
+        text: 50-80 minutes per wing
+      - label: Mob levels
+        text: 55-62
+      - label: Famous for
+        text: Baron's Deathcharger mount (rare drop), Tier-0 set pieces, Postmaster Malown summon, Crusader's Square pull
+      - label: Includes
+        text: Live wing (Scarlet/Postmaster), Undead wing (Baron timed run), four crypt-lord mini-bosses, Magistrate event
+    bosses:
+    - id: 10440
+      name: Baron Rivendare
+      type: boss
+      description: Undead final boss — Lord of Stratholme; rare Deathcharger mount drop
+      notable: Cleave, Mortal Strike, Raise Dead, Unholy Aura
+    - id: 10438
+      name: Maleki the Pallid
+      type: boss
+      description: Undead crypt-lord mini-boss; caster
+      notable: Frostbolt Volley, Ice Tomb
+    - id: 10809
+      name: Stonespine
+      type: rare
+      description: Rare elite — gargoyle in the eastern alleys
+      notable: Acid Spit, Stoneform DR phase
+    - id: 10811
+      name: Archivist Galford
+      type: boss
+      description: Live wing — caster boss; archivist in the Scarlet library
+      notable: Fireball, Pyroblast, Curse of Weakness
+    - id: 14684
+      name: Balzaphon
+      type: boss
+      description: Undead wing — necromancer; companion to Maleki
+      notable: Shadow Bolt, Summon Skeletons
+    - id: 10997
+      name: Cannon Master Willey
+      type: boss
+      description: Live wing — Scarlet artillery boss
+      notable: Cannon Shot AoE, Knock Away
+    - id: 11032
+      name: Malor the Zealous
+      type: boss
+      description: Live wing — Scarlet zealot
+      notable: Smite, Holy Smite, Lay on Hands
+    - id: 10437
+      name: Nerub'enkan
+      type: boss
+      description: Undead crypt-lord mini-boss; web/silence caster
+      notable: Crypt Scarabs, Pierce Armor
+    - id: 10436
+      name: Baroness Anastari
+      type: boss
+      description: Undead crypt-lord mini-boss — Banshee; possesses party members
+      notable: Possess, Banshee Wail, Curse of Tongues
+    - id: 10409
+      name: Rockwing Screecher
+      type: boss
+      description: Live wing — flying mob; ambushes from above
+      notable: Aerial Sweep, Sound of Madness
+    - id: 10393
+      name: Skul
+      type: rare
+      description: Rare elite — undead in the eastern courtyards
+      notable: Cleave, Charge
+    - id: 10435
+      name: Magistrate Barthilas
+      type: boss
+      description: Live wing — Crusader Square boss; bell trigger summons him
+      notable: Mortal Strike, Cleave, Intimidating Shout
+    - id: 10808
+      name: Timmy the Cruel
+      type: boss
+      description: Live wing — Scarlet executioner
+      notable: Mortal Cleave, Demoralizing Shout
+    - id: 10558
+      name: Hearthsinger Forresten
+      type: rare
+      description: Rare elite — Scarlet bard; charms party
+      notable: Holy Fire, Mind Soothe
+    - id: 11082
+      name: Stratholme Courier
+      type: boss
+      description: Postmaster event — courier; first wave of the Postmaster ring of stones
+      notable: Throw, Cleave
+    - id: 10516
+      name: The Unforgiven
+      type: boss
+      description: Live wing — undead apparition; quest target
+      notable: 'Curse of Tongues, Shadow Word: Pain'

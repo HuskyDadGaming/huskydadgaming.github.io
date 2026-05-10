@@ -1,0 +1,4 @@
+Loaded 33,456 spell descriptions
+Set 161 not found in itemset_dbc
+
+Done.
