@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ragefire Chasm — KCraft</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #1a1a1a; color: #ddd; padding-bottom: 3rem; }
+        .container { max-width: 1100px; }
+        h1, h2, h3 { color: #ffd100; }
+        a { color: #4ea8de; text-decoration: none; }
+        a:hover { color: #88c5f0; }
+        .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .card { background: #232323; border: 1px solid #3a3a3a; margin-bottom: 1.5rem; }
+        .card-title { color: #ffd100; margin-bottom: 0.25rem; }
+        .boss-meta { color: #777; font-size: 0.85rem; margin-bottom: 1rem; }
+
+        /* Collapsible boss cards. The whole card is a <details> element;
+           clicking the summary header toggles the items table below.
+           Defaults to open so the page reads exactly like before — the
+           collapse is opt-in, useful when scrolling through a dungeon
+           with many bosses. The trash section's inner cards inherit
+           this behavior since they share render_boss_card.
+           Arrow is anchored to the top-right corner of the card via
+           absolute positioning so it lines up consistently regardless
+           of how long the boss-meta line wraps. */
+        .boss-card {
+            display: block;  /* override Bootstrap card flex */
+            padding: 0;
+            position: relative;
+        }
+        .boss-card > summary {
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            /* Right padding leaves room for the absolutely-positioned arrow */
+            padding: 0.85rem 2.5rem 0.85rem 1rem;
+            transition: background 0.15s;
+        }
+        .boss-card > summary:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .boss-card > summary::-webkit-details-marker { display: none; }
+        .boss-card::after {
+            content: '▼';
+            position: absolute;
+            top: 0.95rem;
+            right: 1rem;
+            color: #888;
+            font-size: 0.95em;
+            pointer-events: none;  /* let the click pass through to summary */
+            transition: color 0.15s;
+        }
+        .boss-card[open]::after { content: '▲'; color: #ffd100; }
+        /* Title is the only line in summary now — meta moved into content
+           so it collapses with the table. No bottom margin needed. */
+        .boss-card > summary .card-title { margin-bottom: 0; }
+        .boss-card > .boss-card-content {
+            padding: 0.5rem 1rem 1rem;
+        }
+        .boss-card > .boss-card-content .boss-meta {
+            margin-top: 0;
+            margin-bottom: 0.85rem;
+        }
+        table.table { color: #ddd; margin-bottom: 0; }
+        table.table > :not(caption) > * > * {
+            background-color: transparent; color: #ddd;
+            border-bottom-color: #3a3a3a; vertical-align: middle;
+        }
+        table.table > thead {
+            color: #999; font-size: 0.78rem;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        table.table tbody tr:hover { background: #2a2a2a; }
+
+        .filter-bar {
+            margin-bottom: 1.5rem; padding: 1rem;
+            background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        /* Collapsible filter wrapper. The whole <details> sticks to the top
+           of the viewport on scroll so users can change filters from
+           anywhere on a long dungeon page without scrolling back up.
+           Desktop: summary is hidden, content always visible. Mobile:
+           closed by default (set by dungeon_filter.js on init), summary
+           shown as a single-line summary that toggles the filter content.
+           The HTML defaults to <details open> so non-JS users get the
+           working default of expanded. */
+        .filter-bar-collapsible {
+            margin-bottom: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #1a1a1a;  /* matches body so scrolled content doesn't peek through */
+        }
+        .filter-bar-collapsible > .filter-bar {
+            margin-bottom: 0;  /* details element provides outer spacing */
+        }
+        .filter-bar-collapsible > summary {
+            display: none;  /* hidden on desktop */
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            padding: 0.7rem 0.9rem;
+            background: #232323;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            color: #ccc;
+            font-size: 0.92rem;
+        }
+        .filter-bar-collapsible > summary::-webkit-details-marker { display: none; }
+        .filter-bar-collapsible > summary::after {
+            content: ' ▼';
+            color: #888;
+            float: right;
+            font-size: 0.85em;
+        }
+        .filter-bar-collapsible[open] > summary::after { content: ' ▲'; }
+        .filter-bar-collapsible[open] > summary {
+            border-radius: 6px 6px 0 0;
+            border-bottom: 0;
+            margin-bottom: 0;
+        }
+        .filter-bar-collapsible[open] > .filter-bar {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+        .filter-row {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            align-items: center; margin-bottom: 8px;
+        }
+        .filter-row:last-child { margin-bottom: 0; }
+        .filter-row > .label { color: #999; font-size: 0.9rem; min-width: 90px; }
+        .filter-btn {
+            padding: 8px 14px; border-radius: 5px; border: 2px solid #555;
+            background: #2a2a2a; color: #ccc; cursor: pointer;
+            font-size: 0.85rem; transition: all 0.2s ease;
+        }
+        .filter-btn:hover { background: #3a3a3a; border-color: #777; }
+        .filter-btn.active {
+            background: #ffd100; color: #1a1a1a; border-color: #ffd100;
+            font-weight: 600;
+        }
+        /* Apply / Reset buttons. Visually identical across all pages
+           (Find Loot tab on index.html uses the same .reset-btn spec).
+           Apply is the primary action (brand yellow); Reset is destructive
+           but stays subtle so it doesn't shout for attention.
+           Override .filter-btn padding/border so these read as polished
+           action buttons rather than the chunky role-toggle base style.
+           Apply is hidden on desktop — the filter bar is always visible
+           there so collapsing-via-Apply isn't useful — and only shown
+           inside the mobile @media block below. */
+        .filter-btn.apply-btn {
+            display: none;
+            margin-left: 10px; padding: 6px 14px;
+            background: #ffd100; color: #1a1a1a;
+            border: 1px solid #ffd100; border-radius: 4px;
+            font-size: 0.85rem; font-weight: 600;
+        }
+        .filter-btn.apply-btn:hover { background: #ffe14d; border-color: #ffe14d; }
+        .filter-btn.reset-btn {
+            margin-left: 10px; padding: 6px 14px;
+            background: #4a1818; color: #ff9b9b;
+            border: 1px solid #6a2828; border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        .filter-btn.reset-btn:hover { background: #6a2828; border-color: #6a2828; }
+
+        /* Expand all / Collapse all controls — sit between the filter
+           bar and the first boss card so they're always reachable. */
+        .expand-controls {
+            display: flex; gap: 0.5rem; flex-wrap: wrap;
+            margin: 0 0 1rem 0;
+        }
+        .expand-controls .expand-btn {
+            padding: 6px 12px; background: #2d2d2d; color: #ccc;
+            border: 1px solid #3a3a3a; border-radius: 4px;
+            cursor: pointer; font-size: 0.85rem;
+            transition: color 0.1s ease, border-color 0.1s ease;
+        }
+        .expand-controls .expand-btn:hover {
+            color: #ffd100; border-color: #ffd100;
+        }
+
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown select {
+            padding: 8px 12px; background: #2a2a2a; color: #ccc;
+            border: 2px solid #555; border-radius: 5px; font-size: 0.85rem;
+            min-width: 150px;
+        }
+
+        .role-pill {
+            display: inline-block; padding: 2px 7px; border-radius: 4px;
+            font-size: 0.75rem; margin-right: 3px; cursor: default;
+            font-weight: 600;
+        }
+        .class-pill {
+            display: inline-block; width: 18px; height: 18px;
+            line-height: 18px; text-align: center; border-radius: 3px;
+            font-size: 0.7rem; font-weight: 700;
+            color: #1a1a1a; margin-right: 2px; cursor: default;
+        }
+        .pill-empty {
+            color: #555; font-size: 1rem; font-weight: 400; cursor: default;
+        }
+
+        .no-loot { color: #777; font-style: italic; text-align: center; padding: 1rem; }
+        .stat-text { color: #4ea8de; font-size: 0.85rem; }
+        .slot-text { color: #bbb; font-size: 0.85rem; }
+
+        /* Notable trash collapsible — secondary content, visually quieter */
+        .trash-section {
+            margin-top: 1.5rem;
+            border-top: 1px solid #333;
+            padding-top: 1rem;
+        }
+        .trash-section > summary {
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ddd;
+            padding: 0.5rem 0;
+            list-style: none;
+            user-select: none;
+        }
+        .trash-section > summary::-webkit-details-marker { display: none; }
+        .trash-section > summary::before {
+            content: '▶';
+            display: inline-block;
+            margin-right: 8px;
+            color: #888;
+            transition: transform 0.15s ease;
+        }
+        .trash-section[open] > summary::before { transform: rotate(90deg); }
+        .trash-section > summary:hover { color: #ffd100; }
+        .trash-section .trash-count { color: #888; font-weight: normal; font-size: 0.95rem; }
+        .trash-section .trash-blurb {
+            color: #999; font-size: 0.85rem; font-style: italic;
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        /* Sortable headers (sortable.js wires up clicks) */
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.1s ease;
+            white-space: nowrap;  /* keep header text + indicator on one line */
+        }
+        th.sortable:hover { color: #ffd100; }
+        th.sortable::after {
+            content: ' ⇅';
+            color: #444;
+            font-size: 0.75em;
+            margin-left: 4px;
+        }
+        th.sortable.sort-asc::after  { content: ' ▲'; color: #ffd100; }
+        th.sortable.sort-desc::after { content: ' ▼'; color: #ffd100; }
+
+        /* ============================================================
+           Mobile (≤600px): boss-card tables become labeled cards.
+           Mirrors the Find Loot card pattern for consistency.
+           Column order: 1=ITEM 2=SLOT 3=STATS 4=ROLES 5=CLASSES 6=ILVL 7=DROP
+           ============================================================ */
+        @media (max-width: 600px) {
+            body { font-size: 0.92rem; }
+            .container { padding: 0 0.5rem; }
+
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.2rem; }
+            .summary-block { padding: 0.7rem 0.8rem; font-size: 0.88rem; }
+
+            /* Filter bar: each row stacks (label on top, controls below).
+               Role buttons go into a 2-col grid for a uniform look — when
+               there's an odd count (we have 5 roles) the last button spans
+               both columns so nothing is stranded as a half-width cell.
+               Class/Quality/Reset stack vertically as full-width controls. */
+            /* Filter bar layout. Each row gets a named class (.row-class,
+               .row-role, .row-quality, .row-buttons, .row-legend) for
+               targeted styling. HTML order is the visual order on mobile:
+               Class → Role → Quality → Apply/Reset → Legend. */
+            .filter-bar { padding: 0.75rem; }
+
+            /* Collapsible summary visible on mobile only */
+            .filter-bar-collapsible > summary {
+                display: block;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+                margin-bottom: 12px;
+            }
+            .filter-row > .label {
+                min-width: 0 !important;
+                font-size: 0.85rem;
+                margin-bottom: 0;
+                /* Override inline margin-left:18px on the Quality label */
+                margin-left: 0 !important;
+            }
+
+            /* Class & Quality dropdown rows: full-width selects */
+            .filter-row.row-class .dropdown,
+            .filter-row.row-quality .dropdown {
+                width: 100%;
+            }
+            .filter-row.row-class select,
+            .filter-row.row-quality select {
+                width: 100%;
+                font-size: 0.9rem;
+                padding: 8px 10px;
+            }
+
+            /* Role row: 2-col button grid, label spans full width.
+               5 buttons total — the lone last one (odd-position) spans
+               both cols so nothing is stranded as a half-width cell. */
+            .filter-row.row-role {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+                align-items: stretch;
+            }
+            .filter-row.row-role > .label {
+                grid-column: 1 / -1;
+            }
+            .filter-row.row-role > .filter-btn {
+                font-size: 0.82rem;
+                padding: 8px 10px;
+                margin: 0;
+            }
+            .filter-row.row-role > .filter-btn:last-child:nth-child(odd) {
+                grid-column: 1 / -1;
+            }
+
+            /* Apply + Reset row: side-by-side 50/50 split with Apply on
+               the left. Apply is hidden on desktop (display:none on the
+               base rule); on mobile we show it and stretch both buttons
+               to share the row evenly. */
+            .filter-row.row-buttons {
+                flex-direction: row;
+                gap: 6px;
+            }
+            .filter-row.row-buttons .filter-btn.apply-btn {
+                display: block;
+            }
+            .filter-row.row-buttons .filter-btn.apply-btn,
+            .filter-row.row-buttons .filter-btn.reset-btn {
+                flex: 1 1 0;
+                margin-left: 0;
+                padding: 10px;
+            }
+
+            /* Legend: pills wrap naturally, just make text smaller. Each
+               entry is a .legend-item that holds the pill + name together
+               so multi-word classes (e.g. Death Knight) never split. */
+            .filter-row.row-legend .legend {
+                font-size: 0.8rem !important;
+                line-height: 1.7;
+            }
+            .filter-row.row-legend .legend-item {
+                white-space: nowrap;
+                display: inline-block;
+                margin-right: 8px;
+            }
+
+            /* Boss cards: tighter, full-width. Padding lives on summary
+               and content children (the card is a <details>). */
+            .boss-card { padding: 0; margin-bottom: 1rem; }
+            .boss-card > summary { padding: 0.7rem 0.85rem; }
+            .boss-card > .boss-card-content { padding: 0 0.85rem 0.85rem; }
+            .boss-card h3 { font-size: 1.1rem; }
+            .boss-meta { font-size: 0.8rem; }
+
+            /* Table → card list. Sortable headers don't help on mobile
+               since each row is a card with labeled fields. */
+            .boss-card table,
+            .boss-card thead,
+            .boss-card tbody,
+            .boss-card tr,
+            .boss-card td { display: block; width: 100%; }
+            .boss-card thead { display: none; }
+
+            .boss-card tbody tr {
+                background: #232323; border: 1px solid #2d2d2d;
+                border-radius: 6px;
+                padding: 0.65rem 0.85rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .boss-card tbody tr td {
+                padding: 4px 0; border: 0;
+                font-size: 0.85rem; line-height: 1.5;
+            }
+            .boss-card tbody tr td::before {
+                display: block;
+                color: #777; font-size: 0.7rem;
+                text-transform: uppercase; letter-spacing: 0.5px;
+                margin-bottom: 2px;
+            }
+            .boss-card tbody tr td:nth-child(2)::before { content: 'Slot'; }
+            .boss-card tbody tr td:nth-child(3)::before { content: 'Stats'; }
+            .boss-card tbody tr td:nth-child(4)::before { content: 'Roles'; }
+            .boss-card tbody tr td:nth-child(5)::before { content: 'Classes'; }
+            .boss-card tbody tr td:nth-child(6)::before { content: 'iLvl'; }
+            .boss-card tbody tr td:nth-child(7)::before { content: 'Drop'; }
+
+            /* Stats list: inline with spacing */
+            .boss-card .stat-text {
+                font-size: 0.82rem;
+            }
+            .boss-card .role-pill, .boss-card .class-pill {
+                margin: 0 2px 2px 0; vertical-align: middle;
+            }
+
+            /* Item name as full-width header */
+            .boss-card tbody tr td:nth-child(1) {
+                font-size: 0.95rem; font-weight: 600;
+                margin-bottom: 6px; padding: 0 0 6px 0;
+                border-bottom: 1px solid #2d2d2d;
+            }
+            .boss-card tbody tr td:nth-child(1)::before { content: none; }
+
+            /* Inline label/value for short fields: Slot, iLvl, Drop.
+               Override .text-end which would right-align the value. */
+            .boss-card tbody tr td:nth-child(2),
+            .boss-card tbody tr td:nth-child(6),
+            .boss-card tbody tr td:nth-child(7) {
+                display: flex; gap: 12px;
+                align-items: baseline;
+                font-size: 0.82rem;
+                text-align: left !important;
+            }
+            .boss-card tbody tr td:nth-child(2)::before,
+            .boss-card tbody tr td:nth-child(6)::before,
+            .boss-card tbody tr td:nth-child(7)::before {
+                display: inline-block; margin-bottom: 0;
+            }
+
+            /* Trash section: tighten */
+            .trash-section > summary { font-size: 1rem; }
+            .trash-section .trash-blurb {
+                margin: 0.5rem 0 0.75rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html" style="color: #ffd100;">⚔️ KCraft</a>
+    </div>
+</nav>
+
+<div class="container">
+    <p class="mb-2"><a href="index.html">← All dungeons</a></p>
+
+    <h1>🔥 Ragefire Chasm</h1>
+    <p class="mb-3" style="color:#bbb; font-style:italic;">"A volcanic dungeon beneath Orgrimmar's Cleft of Shadow. The first dungeon many Horde players experience, offering solid starter gear with fire-themed encounters."</p>
+
+    <div class="alert alert-dark mt-3 mb-4" style="background:#232323; border:1px solid #3a3a3a; color:#ddd;">
+        <h5 class="alert-heading" style="color:#ffd100;">🎯 RFC Loot Summary</h5>
+        <p class="mb-2"><strong style="color:#4ea8de;">Equipment Focus:</strong> RFC has 6 high-quality blue drops from bosses, plus 8 useful green items from trash mobs! Perfect for new Horde players.</p>
+        <ul class="mb-0" style="margin-left: 0; padding-left: 1.2rem;">
+            <li><strong style="color:#4ea8de;">Best for:</strong> New players (level 13-18)</li>
+            <li><strong style="color:#4ea8de;">Run time:</strong> 15-20 minutes</li>
+            <li><strong style="color:#4ea8de;">Boss drops:</strong> 6 blues with high rates (20-40%)</li>
+            <li><strong style="color:#4ea8de;">Trash drops:</strong> 8 greens with lower rates (5-9%)</li>
+            <li><strong style="color:#4ea8de;">Note:</strong> Only 2 bosses drop equipment; others drop gems/materials/consumables</li>
+        </ul>
+    </div>
+
+    <details class="filter-bar-collapsible" open>
+    <summary class="filter-summary">🔧 Filters · all 6 items</summary>
+    <div class="filter-bar">
+        <div class="filter-row row-class">
+            <span class="label">Class:</span>
+            <div class="dropdown">
+                <select id="class-dropdown">
+                    <option value="all">All classes (6)</option>
+                    <option value="warrior">Warrior (4)</option>
+                    <option value="paladin">Paladin (3)</option>
+                    <option value="hunter">Hunter (2)</option>
+                    <option value="rogue">Rogue (3)</option>
+                    <option value="priest">Priest (2)</option>
+                    <option value="shaman">Shaman (3)</option>
+                    <option value="mage">Mage (2)</option>
+                    <option value="warlock">Warlock (2)</option>
+                    <option value="druid">Druid (2)</option>
+                </select>
+            </div>
+        </div>
+        <div class="filter-row row-role">
+            <span class="label">Role:</span>
+            <button class="filter-btn active" data-role="all">All (<span id="count-all">6</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">2</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">2</span>)</button>
+            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">4</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">4</span>)</button>
+        </div>
+        <div class="filter-row row-quality">
+            <span class="label">Quality:</span>
+            <div class="dropdown">
+                <select id="quality-dropdown">
+                    <option value="">Any quality</option>
+                    <option value="2" style="color:#1eff00">Uncommon and above</option>
+                    <option value="3" style="color:#0070dd">Rare and above</option>
+                    <option value="4" style="color:#a335ee">Epic only</option>
+                </select>
+            </div>
+        </div>
+        <div class="filter-row row-buttons">
+            <button class="filter-btn apply-btn" id="apply-filters">Apply</button>
+            <button class="filter-btn reset-btn" id="reset-filters">Reset</button>
+        </div>
+        <div class="filter-row row-legend">
+            <span class="label">Legend:</span>
+            <div class="legend" style="font-size: 0.85rem;">
+                <span class="legend-item"><span class="class-pill" style="background:#C79C6E;color:#1a1a1a;">W</span> Warrior</span>
+                <span class="legend-item"><span class="class-pill" style="background:#F58CBA;color:#1a1a1a;">P</span> Paladin</span>
+                <span class="legend-item"><span class="class-pill" style="background:#ABD473;color:#1a1a1a;">H</span> Hunter</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FFF569;color:#1a1a1a;">R</span> Rogue</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FFFFFF;color:#1a1a1a;">P</span> Priest</span>
+                <span class="legend-item"><span class="class-pill" style="background:#C41F3B;color:#1a1a1a;">K</span> Death Knight</span>
+                <span class="legend-item"><span class="class-pill" style="background:#0070DE;color:#1a1a1a;">S</span> Shaman</span>
+                <span class="legend-item"><span class="class-pill" style="background:#69CCF0;color:#1a1a1a;">M</span> Mage</span>
+                <span class="legend-item"><span class="class-pill" style="background:#9482C9;color:#1a1a1a;">W</span> Warlock</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FF7D0A;color:#1a1a1a;">D</span> Druid</span>
+            </div>
+        </div>
+    </div>
+    </details>
+
+    <div class="expand-controls">
+        <button class="expand-btn" id="expand-all">▼ Expand all</button>
+        <button class="expand-btn" id="collapse-all">▲ Collapse all</button>
+    </div>
+
+
+    <!-- Oggleflint -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Oggleflint</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">First boss; Ragefire trogg chieftain · Cleave + melee burst · Level 16 Elite · Entry 11517</p>
+            <p class="no-equipment-drops" style="color:#777; font-style:italic; text-align:center; padding:1rem 0;">
+                No equipment drops at this quality level.
+            </p>
+        </div>
+    </details>
+
+    <!-- Taragaman the Hungerer -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Taragaman the Hungerer</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Felguard demon; Searing Blade enforcer · Fire Nova + Knock Away · Level 16 Elite · Entry 11520</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="13"
+                        data-item-id="14148"
+                        data-item-json="{&quot;id&quot;:14148,&quot;name&quot;:&quot;Crystalline Cuffs&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;Wrist (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+2 Spirit&quot;,&quot;+2 Intellect&quot;,&quot;+15 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 4.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:20,&quot;sellPrice&quot;:250,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:11520,&quot;bossName&quot;:&quot;Taragaman the Hungerer&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Crystalline Cuffs</span></td>
+                        <td><span class="slot-text">Wrist (Cloth)</span></td>
+                        <td><span class="stat-text">+2 Spirit, +2 Intellect, +15 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">18</td>
+                        <td class="text-end">40.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee ranged"
+                        data-classes="warrior paladin hunter rogue shaman druid"
+                        data-req="13"
+                        data-item-id="14149"
+                        data-item-json="{&quot;id&quot;:14149,&quot;name&quot;:&quot;Subterranean Cape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+4 Agility&quot;,&quot;+4 Strength&quot;,&quot;+17 Armor&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:377,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:3,&quot;sellCopper&quot;:77,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:11520,&quot;bossName&quot;:&quot;Taragaman the Hungerer&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Subterranean Cape</span></td>
+                        <td><span class="slot-text">Back</span></td>
+                        <td><span class="stat-text">+4 Agility, +4 Strength, +17 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">18</td>
+                        <td class="text-end">40.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin rogue"
+                        data-req="13"
+                        data-item-id="14145"
+                        data-item-json="{&quot;id&quot;:14145,&quot;name&quot;:&quot;Cursed Felblade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:7,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;22–42 Damage&quot;,&quot;speed&quot;:2.6,&quot;dps&quot;:12.3,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Chance on hit&quot;,&quot;text&quot;:&quot;Reduces target enemy&#x27;s attack power by 25 for 30 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:1238,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:12,&quot;sellCopper&quot;:38,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;rogue&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:11520,&quot;bossName&quot;:&quot;Taragaman the Hungerer&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Cursed Felblade</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                        </td>
+                        <td class="text-end">18</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Jergosh the Invoker -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Jergosh the Invoker</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Searing Blade lieutenant; orc warlock · Immolate + Curse of Weakness · Level 16 Elite · Entry 11518</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="13"
+                        data-item-id="14147"
+                        data-item-json="{&quot;id&quot;:14147,&quot;name&quot;:&quot;Cavedweller Bracers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;Wrist (Mail)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+3 Strength&quot;,&quot;+4 Stamina&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:374,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:3,&quot;sellCopper&quot;:74,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:11518,&quot;bossName&quot;:&quot;Jergosh the Invoker&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Cavedweller Bracers</span></td>
+                        <td><span class="slot-text">Wrist (Mail)</span></td>
+                        <td><span class="stat-text">+3 Strength, +4 Stamina, +78 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">18</td>
+                        <td class="text-end">40.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="13"
+                        data-item-id="14150"
+                        data-item-json="{&quot;id&quot;:14150,&quot;name&quot;:&quot;Robe of Evocation&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;Chest (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+5 Intellect&quot;,&quot;+4 Stamina&quot;,&quot;+35 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 5.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:504,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:5,&quot;sellCopper&quot;:4,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:11518,&quot;bossName&quot;:&quot;Jergosh the Invoker&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Robe of Evocation</span></td>
+                        <td><span class="slot-text">Chest (Cloth)</span></td>
+                        <td><span class="stat-text">+5 Intellect, +4 Stamina, +35 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">18</td>
+                        <td class="text-end">40.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior hunter rogue shaman druid"
+                        data-req="13"
+                        data-item-id="14151"
+                        data-item-json="{&quot;id&quot;:14151,&quot;name&quot;:&quot;Chanting Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;12–24 Damage&quot;,&quot;speed&quot;:1.5,&quot;dps&quot;:12.0,&quot;stats&quot;:[&quot;+3 Agility&quot;,&quot;+2 Stamina&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:1267,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:12,&quot;sellCopper&quot;:67,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:11518,&quot;bossName&quot;:&quot;Jergosh the Invoker&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Chanting Blade</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+3 Agility, +2 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">18</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Bazzalan -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Bazzalan</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Final boss; satyr rogue (Searing Blade lieutenant) · Sinister Strike + Deadly Poison · Level 16 Elite · Entry 11519</p>
+            <p class="no-equipment-drops" style="color:#777; font-style:italic; text-align:center; padding:1rem 0;">
+                No equipment drops at this quality level.
+            </p>
+        </div>
+    </details>
+
+
+
+</div>
+
+<script src="tooltip.js"></script>
+<script src="smart_filter_block.js"></script>
+<script src="kcraft_pills.js"></script>
+<script src="dungeon_filter.js"></script>
+<script src="sortable.js"></script>
+
+</body>
+</html>

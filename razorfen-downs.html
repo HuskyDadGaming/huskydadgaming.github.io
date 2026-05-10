@@ -1,0 +1,2100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Razorfen Downs — KCraft</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💀</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #1a1a1a; color: #ddd; padding-bottom: 3rem; }
+        .container { max-width: 1100px; }
+        h1, h2, h3 { color: #ffd100; }
+        a { color: #4ea8de; text-decoration: none; }
+        a:hover { color: #88c5f0; }
+        .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .card { background: #232323; border: 1px solid #3a3a3a; margin-bottom: 1.5rem; }
+        .card-title { color: #ffd100; margin-bottom: 0.25rem; }
+        .boss-meta { color: #777; font-size: 0.85rem; margin-bottom: 1rem; }
+
+        /* Collapsible boss cards. The whole card is a <details> element;
+           clicking the summary header toggles the items table below.
+           Defaults to open so the page reads exactly like before — the
+           collapse is opt-in, useful when scrolling through a dungeon
+           with many bosses. The trash section's inner cards inherit
+           this behavior since they share render_boss_card.
+           Arrow is anchored to the top-right corner of the card via
+           absolute positioning so it lines up consistently regardless
+           of how long the boss-meta line wraps. */
+        .boss-card {
+            display: block;  /* override Bootstrap card flex */
+            padding: 0;
+            position: relative;
+        }
+        .boss-card > summary {
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            /* Right padding leaves room for the absolutely-positioned arrow */
+            padding: 0.85rem 2.5rem 0.85rem 1rem;
+            transition: background 0.15s;
+        }
+        .boss-card > summary:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .boss-card > summary::-webkit-details-marker { display: none; }
+        .boss-card::after {
+            content: '▼';
+            position: absolute;
+            top: 0.95rem;
+            right: 1rem;
+            color: #888;
+            font-size: 0.95em;
+            pointer-events: none;  /* let the click pass through to summary */
+            transition: color 0.15s;
+        }
+        .boss-card[open]::after { content: '▲'; color: #ffd100; }
+        /* Title is the only line in summary now — meta moved into content
+           so it collapses with the table. No bottom margin needed. */
+        .boss-card > summary .card-title { margin-bottom: 0; }
+        .boss-card > .boss-card-content {
+            padding: 0.5rem 1rem 1rem;
+        }
+        .boss-card > .boss-card-content .boss-meta {
+            margin-top: 0;
+            margin-bottom: 0.85rem;
+        }
+        table.table { color: #ddd; margin-bottom: 0; }
+        table.table > :not(caption) > * > * {
+            background-color: transparent; color: #ddd;
+            border-bottom-color: #3a3a3a; vertical-align: middle;
+        }
+        table.table > thead {
+            color: #999; font-size: 0.78rem;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        table.table tbody tr:hover { background: #2a2a2a; }
+
+        .filter-bar {
+            margin-bottom: 1.5rem; padding: 1rem;
+            background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        /* Collapsible filter wrapper. The whole <details> sticks to the top
+           of the viewport on scroll so users can change filters from
+           anywhere on a long dungeon page without scrolling back up.
+           Desktop: summary is hidden, content always visible. Mobile:
+           closed by default (set by dungeon_filter.js on init), summary
+           shown as a single-line summary that toggles the filter content.
+           The HTML defaults to <details open> so non-JS users get the
+           working default of expanded. */
+        .filter-bar-collapsible {
+            margin-bottom: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #1a1a1a;  /* matches body so scrolled content doesn't peek through */
+        }
+        .filter-bar-collapsible > .filter-bar {
+            margin-bottom: 0;  /* details element provides outer spacing */
+        }
+        .filter-bar-collapsible > summary {
+            display: none;  /* hidden on desktop */
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            padding: 0.7rem 0.9rem;
+            background: #232323;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            color: #ccc;
+            font-size: 0.92rem;
+        }
+        .filter-bar-collapsible > summary::-webkit-details-marker { display: none; }
+        .filter-bar-collapsible > summary::after {
+            content: ' ▼';
+            color: #888;
+            float: right;
+            font-size: 0.85em;
+        }
+        .filter-bar-collapsible[open] > summary::after { content: ' ▲'; }
+        .filter-bar-collapsible[open] > summary {
+            border-radius: 6px 6px 0 0;
+            border-bottom: 0;
+            margin-bottom: 0;
+        }
+        .filter-bar-collapsible[open] > .filter-bar {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+        .filter-row {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            align-items: center; margin-bottom: 8px;
+        }
+        .filter-row:last-child { margin-bottom: 0; }
+        .filter-row > .label { color: #999; font-size: 0.9rem; min-width: 90px; }
+        .filter-btn {
+            padding: 8px 14px; border-radius: 5px; border: 2px solid #555;
+            background: #2a2a2a; color: #ccc; cursor: pointer;
+            font-size: 0.85rem; transition: all 0.2s ease;
+        }
+        .filter-btn:hover { background: #3a3a3a; border-color: #777; }
+        .filter-btn.active {
+            background: #ffd100; color: #1a1a1a; border-color: #ffd100;
+            font-weight: 600;
+        }
+        /* Apply / Reset buttons. Visually identical across all pages
+           (Find Loot tab on index.html uses the same .reset-btn spec).
+           Apply is the primary action (brand yellow); Reset is destructive
+           but stays subtle so it doesn't shout for attention.
+           Override .filter-btn padding/border so these read as polished
+           action buttons rather than the chunky role-toggle base style.
+           Apply is hidden on desktop — the filter bar is always visible
+           there so collapsing-via-Apply isn't useful — and only shown
+           inside the mobile @media block below. */
+        .filter-btn.apply-btn {
+            display: none;
+            margin-left: 10px; padding: 6px 14px;
+            background: #ffd100; color: #1a1a1a;
+            border: 1px solid #ffd100; border-radius: 4px;
+            font-size: 0.85rem; font-weight: 600;
+        }
+        .filter-btn.apply-btn:hover { background: #ffe14d; border-color: #ffe14d; }
+        .filter-btn.reset-btn {
+            margin-left: 10px; padding: 6px 14px;
+            background: #4a1818; color: #ff9b9b;
+            border: 1px solid #6a2828; border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        .filter-btn.reset-btn:hover { background: #6a2828; border-color: #6a2828; }
+
+        /* Expand all / Collapse all controls — sit between the filter
+           bar and the first boss card so they're always reachable. */
+        .expand-controls {
+            display: flex; gap: 0.5rem; flex-wrap: wrap;
+            margin: 0 0 1rem 0;
+        }
+        .expand-controls .expand-btn {
+            padding: 6px 12px; background: #2d2d2d; color: #ccc;
+            border: 1px solid #3a3a3a; border-radius: 4px;
+            cursor: pointer; font-size: 0.85rem;
+            transition: color 0.1s ease, border-color 0.1s ease;
+        }
+        .expand-controls .expand-btn:hover {
+            color: #ffd100; border-color: #ffd100;
+        }
+
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown select {
+            padding: 8px 12px; background: #2a2a2a; color: #ccc;
+            border: 2px solid #555; border-radius: 5px; font-size: 0.85rem;
+            min-width: 150px;
+        }
+
+        .role-pill {
+            display: inline-block; padding: 2px 7px; border-radius: 4px;
+            font-size: 0.75rem; margin-right: 3px; cursor: default;
+            font-weight: 600;
+        }
+        .class-pill {
+            display: inline-block; width: 18px; height: 18px;
+            line-height: 18px; text-align: center; border-radius: 3px;
+            font-size: 0.7rem; font-weight: 700;
+            color: #1a1a1a; margin-right: 2px; cursor: default;
+        }
+        .pill-empty {
+            color: #555; font-size: 1rem; font-weight: 400; cursor: default;
+        }
+
+        .no-loot { color: #777; font-style: italic; text-align: center; padding: 1rem; }
+        .stat-text { color: #4ea8de; font-size: 0.85rem; }
+        .slot-text { color: #bbb; font-size: 0.85rem; }
+
+        /* Notable trash collapsible — secondary content, visually quieter */
+        .trash-section {
+            margin-top: 1.5rem;
+            border-top: 1px solid #333;
+            padding-top: 1rem;
+        }
+        .trash-section > summary {
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ddd;
+            padding: 0.5rem 0;
+            list-style: none;
+            user-select: none;
+        }
+        .trash-section > summary::-webkit-details-marker { display: none; }
+        .trash-section > summary::before {
+            content: '▶';
+            display: inline-block;
+            margin-right: 8px;
+            color: #888;
+            transition: transform 0.15s ease;
+        }
+        .trash-section[open] > summary::before { transform: rotate(90deg); }
+        .trash-section > summary:hover { color: #ffd100; }
+        .trash-section .trash-count { color: #888; font-weight: normal; font-size: 0.95rem; }
+        .trash-section .trash-blurb {
+            color: #999; font-size: 0.85rem; font-style: italic;
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        /* Sortable headers (sortable.js wires up clicks) */
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.1s ease;
+            white-space: nowrap;  /* keep header text + indicator on one line */
+        }
+        th.sortable:hover { color: #ffd100; }
+        th.sortable::after {
+            content: ' ⇅';
+            color: #444;
+            font-size: 0.75em;
+            margin-left: 4px;
+        }
+        th.sortable.sort-asc::after  { content: ' ▲'; color: #ffd100; }
+        th.sortable.sort-desc::after { content: ' ▼'; color: #ffd100; }
+
+        /* ============================================================
+           Mobile (≤600px): boss-card tables become labeled cards.
+           Mirrors the Find Loot card pattern for consistency.
+           Column order: 1=ITEM 2=SLOT 3=STATS 4=ROLES 5=CLASSES 6=ILVL 7=DROP
+           ============================================================ */
+        @media (max-width: 600px) {
+            body { font-size: 0.92rem; }
+            .container { padding: 0 0.5rem; }
+
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.2rem; }
+            .summary-block { padding: 0.7rem 0.8rem; font-size: 0.88rem; }
+
+            /* Filter bar: each row stacks (label on top, controls below).
+               Role buttons go into a 2-col grid for a uniform look — when
+               there's an odd count (we have 5 roles) the last button spans
+               both columns so nothing is stranded as a half-width cell.
+               Class/Quality/Reset stack vertically as full-width controls. */
+            /* Filter bar layout. Each row gets a named class (.row-class,
+               .row-role, .row-quality, .row-buttons, .row-legend) for
+               targeted styling. HTML order is the visual order on mobile:
+               Class → Role → Quality → Apply/Reset → Legend. */
+            .filter-bar { padding: 0.75rem; }
+
+            /* Collapsible summary visible on mobile only */
+            .filter-bar-collapsible > summary {
+                display: block;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+                margin-bottom: 12px;
+            }
+            .filter-row > .label {
+                min-width: 0 !important;
+                font-size: 0.85rem;
+                margin-bottom: 0;
+                /* Override inline margin-left:18px on the Quality label */
+                margin-left: 0 !important;
+            }
+
+            /* Class & Quality dropdown rows: full-width selects */
+            .filter-row.row-class .dropdown,
+            .filter-row.row-quality .dropdown {
+                width: 100%;
+            }
+            .filter-row.row-class select,
+            .filter-row.row-quality select {
+                width: 100%;
+                font-size: 0.9rem;
+                padding: 8px 10px;
+            }
+
+            /* Role row: 2-col button grid, label spans full width.
+               5 buttons total — the lone last one (odd-position) spans
+               both cols so nothing is stranded as a half-width cell. */
+            .filter-row.row-role {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+                align-items: stretch;
+            }
+            .filter-row.row-role > .label {
+                grid-column: 1 / -1;
+            }
+            .filter-row.row-role > .filter-btn {
+                font-size: 0.82rem;
+                padding: 8px 10px;
+                margin: 0;
+            }
+            .filter-row.row-role > .filter-btn:last-child:nth-child(odd) {
+                grid-column: 1 / -1;
+            }
+
+            /* Apply + Reset row: side-by-side 50/50 split with Apply on
+               the left. Apply is hidden on desktop (display:none on the
+               base rule); on mobile we show it and stretch both buttons
+               to share the row evenly. */
+            .filter-row.row-buttons {
+                flex-direction: row;
+                gap: 6px;
+            }
+            .filter-row.row-buttons .filter-btn.apply-btn {
+                display: block;
+            }
+            .filter-row.row-buttons .filter-btn.apply-btn,
+            .filter-row.row-buttons .filter-btn.reset-btn {
+                flex: 1 1 0;
+                margin-left: 0;
+                padding: 10px;
+            }
+
+            /* Legend: pills wrap naturally, just make text smaller. Each
+               entry is a .legend-item that holds the pill + name together
+               so multi-word classes (e.g. Death Knight) never split. */
+            .filter-row.row-legend .legend {
+                font-size: 0.8rem !important;
+                line-height: 1.7;
+            }
+            .filter-row.row-legend .legend-item {
+                white-space: nowrap;
+                display: inline-block;
+                margin-right: 8px;
+            }
+
+            /* Boss cards: tighter, full-width. Padding lives on summary
+               and content children (the card is a <details>). */
+            .boss-card { padding: 0; margin-bottom: 1rem; }
+            .boss-card > summary { padding: 0.7rem 0.85rem; }
+            .boss-card > .boss-card-content { padding: 0 0.85rem 0.85rem; }
+            .boss-card h3 { font-size: 1.1rem; }
+            .boss-meta { font-size: 0.8rem; }
+
+            /* Table → card list. Sortable headers don't help on mobile
+               since each row is a card with labeled fields. */
+            .boss-card table,
+            .boss-card thead,
+            .boss-card tbody,
+            .boss-card tr,
+            .boss-card td { display: block; width: 100%; }
+            .boss-card thead { display: none; }
+
+            .boss-card tbody tr {
+                background: #232323; border: 1px solid #2d2d2d;
+                border-radius: 6px;
+                padding: 0.65rem 0.85rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .boss-card tbody tr td {
+                padding: 4px 0; border: 0;
+                font-size: 0.85rem; line-height: 1.5;
+            }
+            .boss-card tbody tr td::before {
+                display: block;
+                color: #777; font-size: 0.7rem;
+                text-transform: uppercase; letter-spacing: 0.5px;
+                margin-bottom: 2px;
+            }
+            .boss-card tbody tr td:nth-child(2)::before { content: 'Slot'; }
+            .boss-card tbody tr td:nth-child(3)::before { content: 'Stats'; }
+            .boss-card tbody tr td:nth-child(4)::before { content: 'Roles'; }
+            .boss-card tbody tr td:nth-child(5)::before { content: 'Classes'; }
+            .boss-card tbody tr td:nth-child(6)::before { content: 'iLvl'; }
+            .boss-card tbody tr td:nth-child(7)::before { content: 'Drop'; }
+
+            /* Stats list: inline with spacing */
+            .boss-card .stat-text {
+                font-size: 0.82rem;
+            }
+            .boss-card .role-pill, .boss-card .class-pill {
+                margin: 0 2px 2px 0; vertical-align: middle;
+            }
+
+            /* Item name as full-width header */
+            .boss-card tbody tr td:nth-child(1) {
+                font-size: 0.95rem; font-weight: 600;
+                margin-bottom: 6px; padding: 0 0 6px 0;
+                border-bottom: 1px solid #2d2d2d;
+            }
+            .boss-card tbody tr td:nth-child(1)::before { content: none; }
+
+            /* Inline label/value for short fields: Slot, iLvl, Drop.
+               Override .text-end which would right-align the value. */
+            .boss-card tbody tr td:nth-child(2),
+            .boss-card tbody tr td:nth-child(6),
+            .boss-card tbody tr td:nth-child(7) {
+                display: flex; gap: 12px;
+                align-items: baseline;
+                font-size: 0.82rem;
+                text-align: left !important;
+            }
+            .boss-card tbody tr td:nth-child(2)::before,
+            .boss-card tbody tr td:nth-child(6)::before,
+            .boss-card tbody tr td:nth-child(7)::before {
+                display: inline-block; margin-bottom: 0;
+            }
+
+            /* Trash section: tighten */
+            .trash-section > summary { font-size: 1rem; }
+            .trash-section .trash-blurb {
+                margin: 0.5rem 0 0.75rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html" style="color: #ffd100;">⚔️ KCraft</a>
+    </div>
+</nav>
+
+<div class="container">
+    <p class="mb-2"><a href="index.html">← All dungeons</a></p>
+
+    <h1>💀 Razorfen Downs</h1>
+    <p class="mb-3" style="color:#bbb; font-style:italic;">"Quilboar holy ground in the Barrens — once the Razorfen tribes' burial mound, now overrun by undead serving Amnennar the Coldbringer."</p>
+
+    <div class="alert alert-dark mt-3 mb-4" style="background:#232323; border:1px solid #3a3a3a; color:#ddd;">
+        <h5 class="alert-heading" style="color:#ffd100;">🎯 RD Loot Summary</h5>
+        <p class="mb-2"><strong style="color:#4ea8de;">Equipment Focus:</strong> Quilboar undead in a frozen tomb — Death's Head sect casters, the Plaguemaw set chain, and Amnennar's blue caster gear at the top.</p>
+        <ul class="mb-0" style="margin-left: 0; padding-left: 1.2rem;">
+            <li><strong style="color:#4ea8de;">Best for:</strong> Level 37-46</li>
+            <li><strong style="color:#4ea8de;">Run time:</strong> 40-60 minutes</li>
+            <li><strong style="color:#4ea8de;">Mob levels:</strong> 34-37</li>
+            <li><strong style="color:#4ea8de;">Famous for:</strong> Glutton's Cleaver, Coldbringer's set drops, the Plaguemaw quest reward</li>
+            <li><strong style="color:#4ea8de;">Includes:</strong> Death's Head sect casters, frozen quilboar, Amnennar event</li>
+        </ul>
+    </div>
+
+    <details class="filter-bar-collapsible" open>
+    <summary class="filter-summary">🔧 Filters · all 53 items</summary>
+    <div class="filter-bar">
+        <div class="filter-row row-class">
+            <span class="label">Class:</span>
+            <div class="dropdown">
+                <select id="class-dropdown">
+                    <option value="all">All classes (53)</option>
+                    <option value="warrior">Warrior (32)</option>
+                    <option value="paladin">Paladin (32)</option>
+                    <option value="hunter">Hunter (1)</option>
+                    <option value="rogue">Rogue (3)</option>
+                    <option value="priest">Priest (4)</option>
+                    <option value="shaman">Shaman (46)</option>
+                    <option value="mage">Mage (4)</option>
+                    <option value="warlock">Warlock (4)</option>
+                    <option value="druid">Druid (16)</option>
+                </select>
+            </div>
+        </div>
+        <div class="filter-row row-role">
+            <span class="label">Role:</span>
+            <button class="filter-btn active" data-role="all">All (<span id="count-all">53</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">18</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">16</span>)</button>
+            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">33</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">7</span>)</button>
+        </div>
+        <div class="filter-row row-quality">
+            <span class="label">Quality:</span>
+            <div class="dropdown">
+                <select id="quality-dropdown">
+                    <option value="">Any quality</option>
+                    <option value="2" style="color:#1eff00">Uncommon and above</option>
+                    <option value="3" style="color:#0070dd">Rare and above</option>
+                    <option value="4" style="color:#a335ee">Epic only</option>
+                </select>
+            </div>
+        </div>
+        <div class="filter-row row-buttons">
+            <button class="filter-btn apply-btn" id="apply-filters">Apply</button>
+            <button class="filter-btn reset-btn" id="reset-filters">Reset</button>
+        </div>
+        <div class="filter-row row-legend">
+            <span class="label">Legend:</span>
+            <div class="legend" style="font-size: 0.85rem;">
+                <span class="legend-item"><span class="class-pill" style="background:#C79C6E;color:#1a1a1a;">W</span> Warrior</span>
+                <span class="legend-item"><span class="class-pill" style="background:#F58CBA;color:#1a1a1a;">P</span> Paladin</span>
+                <span class="legend-item"><span class="class-pill" style="background:#ABD473;color:#1a1a1a;">H</span> Hunter</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FFF569;color:#1a1a1a;">R</span> Rogue</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FFFFFF;color:#1a1a1a;">P</span> Priest</span>
+                <span class="legend-item"><span class="class-pill" style="background:#C41F3B;color:#1a1a1a;">K</span> Death Knight</span>
+                <span class="legend-item"><span class="class-pill" style="background:#0070DE;color:#1a1a1a;">S</span> Shaman</span>
+                <span class="legend-item"><span class="class-pill" style="background:#69CCF0;color:#1a1a1a;">M</span> Mage</span>
+                <span class="legend-item"><span class="class-pill" style="background:#9482C9;color:#1a1a1a;">W</span> Warlock</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FF7D0A;color:#1a1a1a;">D</span> Druid</span>
+            </div>
+        </div>
+    </div>
+    </details>
+
+    <div class="expand-controls">
+        <button class="expand-btn" id="expand-all">▼ Expand all</button>
+        <button class="expand-btn" id="collapse-all">▲ Collapse all</button>
+    </div>
+
+
+    <!-- Ragglesnout -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">⭐ Ragglesnout</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Rare elite quilboar tusker hidden in the upper warrens · Heavy melee charge · Level 37 Elite · Entry 7354</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="37"
+                        data-item-id="10768"
+                        data-item-json="{&quot;id&quot;:10768,&quot;name&quot;:&quot;Boar Champion&#x27;s Belt&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:42,&quot;req&quot;:37,&quot;slot&quot;:&quot;Waist (Mail)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+15 Strength&quot;,&quot;+6 Stamina&quot;,&quot;+147 Armor&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:4541,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:45,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:7354,&quot;bossName&quot;:&quot;Ragglesnout&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Boar Champion's Belt</span></td>
+                        <td><span class="slot-text">Waist (Mail)</span></td>
+                        <td><span class="stat-text">+15 Strength, +6 Stamina, +147 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">42</td>
+                        <td class="text-end">40.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="37"
+                        data-item-id="10767"
+                        data-item-json="{&quot;id&quot;:10767,&quot;name&quot;:&quot;Savage Boar&#x27;s Guard&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:42,&quot;req&quot;:37,&quot;slot&quot;:&quot;Off-Hand (Shield)&quot;,&quot;slotFilter&quot;:&quot;Off-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:6,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Shield&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+11 Strength&quot;,&quot;+6 Stamina&quot;,&quot;+1287 Armor&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:9652,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:96,&quot;sellCopper&quot;:52,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:7354,&quot;bossName&quot;:&quot;Ragglesnout&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Savage Boar's Guard</span></td>
+                        <td><span class="slot-text">Off-Hand (Shield)</span></td>
+                        <td><span class="stat-text">+11 Strength, +6 Stamina, +1287 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">42</td>
+                        <td class="text-end">40.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin"
+                        data-req="35"
+                        data-item-id="10758"
+                        data-item-json="{&quot;id&quot;:10758,&quot;name&quot;:&quot;X&#x27;caliboar&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:42,&quot;req&quot;:35,&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;98–148 Damage&quot;,&quot;speed&quot;:3.3,&quot;dps&quot;:37.3,&quot;stats&quot;:[&quot;+20 Strength&quot;,&quot;+8 Stamina&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:20144,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:1,&quot;sellCopper&quot;:44,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:7354,&quot;bossName&quot;:&quot;Ragglesnout&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">X'caliboar</span></td>
+                        <td><span class="slot-text">Two-Hand</span></td>
+                        <td><span class="stat-text">+20 Strength, +8 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                        </td>
+                        <td class="text-end">42</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Amnennar the Coldbringer -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Amnennar the Coldbringer</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Final boss — undead lich revenant of a quilboar shaman · Frost Volley, Frostbolt, summons Coldbringer's Skeletons · Level 37 Elite · Entry 7358</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="shaman druid"
+                        data-req="37"
+                        data-item-id="10765"
+                        data-item-json="{&quot;id&quot;:10765,&quot;name&quot;:&quot;Bonefingers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:43,&quot;req&quot;:37,&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+9 Stamina&quot;,&quot;+9 Intellect&quot;,&quot;+81 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:4041,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:7358,&quot;bossName&quot;:&quot;Amnennar the Coldbringer&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Bonefingers</span></td>
+                        <td><span class="slot-text">Hands (Leather)</span></td>
+                        <td><span class="stat-text">+9 Stamina, +9 Intellect, +81 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">43</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior rogue shaman druid"
+                        data-req="37"
+                        data-item-id="10761"
+                        data-item-json="{&quot;id&quot;:10761,&quot;name&quot;:&quot;Coldrage Dagger&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:44,&quot;req&quot;:37,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;31–58 Damage&quot;,&quot;speed&quot;:1.5,&quot;dps&quot;:29.7,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Chance on hit&quot;,&quot;text&quot;:&quot;Launches a bolt of frost at the enemy causing 20 to 30 Frost damage and slowing movement speed by 50% for 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:17193,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:71,&quot;sellCopper&quot;:93,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:7358,&quot;bossName&quot;:&quot;Amnennar the Coldbringer&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Coldrage Dagger</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">44</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="37"
+                        data-item-id="10764"
+                        data-item-json="{&quot;id&quot;:10764,&quot;name&quot;:&quot;Deathchill Armor&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:44,&quot;req&quot;:37,&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+3 Stamina&quot;,&quot;+9 Intellect&quot;,&quot;+270 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 10 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:10434,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:4,&quot;sellCopper&quot;:34,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:7358,&quot;bossName&quot;:&quot;Amnennar the Coldbringer&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Deathchill Armor</span></td>
+                        <td><span class="slot-text">Chest (Mail)</span></td>
+                        <td><span class="stat-text">+3 Stamina, +9 Intellect, +270 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">44</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin"
+                        data-req="40"
+                        data-item-id="10763"
+                        data-item-json="{&quot;id&quot;:10763,&quot;name&quot;:&quot;Icemetal Barbute&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:44,&quot;req&quot;:40,&quot;slot&quot;:&quot;Head (Plate)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+15 Strength&quot;,&quot;+7 Agility&quot;,&quot;+10 Stamina&quot;,&quot;+383 Armor&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:9079,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:90,&quot;sellCopper&quot;:79,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:7358,&quot;bossName&quot;:&quot;Amnennar the Coldbringer&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Icemetal Barbute</span></td>
+                        <td><span class="slot-text">Head (Plate)</span></td>
+                        <td><span class="stat-text">+15 Strength, +7 Agility, +10 Stamina, +383 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                        </td>
+                        <td class="text-end">44</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="37"
+                        data-item-id="10762"
+                        data-item-json="{&quot;id&quot;:10762,&quot;name&quot;:&quot;Robes of the Lich&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:44,&quot;req&quot;:37,&quot;slot&quot;:&quot;Chest (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Intellect&quot;,&quot;+13 Stamina&quot;,&quot;+64 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:6903,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:69,&quot;sellCopper&quot;:3,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:7358,&quot;bossName&quot;:&quot;Amnennar the Coldbringer&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Robes of the Lich</span></td>
+                        <td><span class="slot-text">Chest (Cloth)</span></td>
+                        <td><span class="stat-text">+10 Intellect, +13 Stamina, +64 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">44</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Glutton -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Glutton</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Massive corrupted ghoul; gluttonous brute · Diseased Slime cleave, Frenzied Charge · Level 37 Elite · Entry 8567</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="37"
+                        data-item-id="10774"
+                        data-item-json="{&quot;id&quot;:10774,&quot;name&quot;:&quot;Fleshhide Shoulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:42,&quot;req&quot;:37,&quot;slot&quot;:&quot;Shoulder (Leather)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+5 Strength&quot;,&quot;+15 Stamina&quot;,&quot;+6 Agility&quot;,&quot;+95 Armor&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:5957,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:59,&quot;sellCopper&quot;:57,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:50.0,&quot;chanceStr&quot;:&quot;50.0%&quot;,&quot;bossId&quot;:8567,&quot;bossName&quot;:&quot;Glutton&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Fleshhide Shoulders</span></td>
+                        <td><span class="slot-text">Shoulder (Leather)</span></td>
+                        <td><span class="stat-text">+5 Strength, +15 Stamina, +6 Agility, +95 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">42</td>
+                        <td class="text-end">50.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin rogue shaman"
+                        data-req="36"
+                        data-item-id="10772"
+                        data-item-json="{&quot;id&quot;:10772,&quot;name&quot;:&quot;Glutton&#x27;s Cleaver&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;39–73 Damage&quot;,&quot;speed&quot;:2.0,&quot;dps&quot;:28.0,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Chance on hit&quot;,&quot;text&quot;:&quot;Wounds the target causing them to bleed for $o1 damage over 30 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:14604,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:46,&quot;sellCopper&quot;:4,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;rogue&quot;,&quot;shaman&quot;],&quot;chance&quot;:50.0,&quot;chanceStr&quot;:&quot;50.0%&quot;,&quot;bossId&quot;:8567,&quot;bossName&quot;:&quot;Glutton&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Glutton's Cleaver</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">41</td>
+                        <td class="text-end">50.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Lady Falther'ess -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Lady Falther'ess</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Banshee — corrupted quilboar matriarch · Banshee Curse silence, Frost Shock · Level 37 Elite · Entry 14686</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="ranged"
+                        data-classes="priest mage warlock"
+                        data-req="36"
+                        data-item-id="23177"
+                        data-item-json="{&quot;id&quot;:23177,&quot;name&quot;:&quot;Lady Falther&#x27;ess&#x27; Finger&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:true,&quot;itemClass&quot;:2,&quot;subclass&quot;:19,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Wand&quot;,&quot;damage&quot;:&quot;34–65 Damage&quot;,&quot;speed&quot;:1.3,&quot;dps&quot;:38.1,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 8.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:10536,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:5,&quot;sellCopper&quot;:36,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:50.0,&quot;chanceStr&quot;:&quot;50.0%&quot;,&quot;bossId&quot;:14686,&quot;bossName&quot;:&quot;Lady Falther&#x27;ess&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Lady Falther'ess' Finger</span></td>
+                        <td><span class="slot-text">Ranged</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">41</td>
+                        <td class="text-end">50.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="ranged"
+                        data-classes="priest shaman mage warlock druid"
+                        data-req="36"
+                        data-item-id="23178"
+                        data-item-json="{&quot;id&quot;:23178,&quot;name&quot;:&quot;Mantle of Lady Falther&#x27;ess&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+9 Intellect&quot;,&quot;+30 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:4230,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:42,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:50.0,&quot;chanceStr&quot;:&quot;50.0%&quot;,&quot;bossId&quot;:14686,&quot;bossName&quot;:&quot;Lady Falther&#x27;ess&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Mantle of Lady Falther'ess</span></td>
+                        <td><span class="slot-text">Back</span></td>
+                        <td><span class="stat-text">+9 Intellect, +30 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">41</td>
+                        <td class="text-end">50.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Mordresh Fire Eye -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Mordresh Fire Eye</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Lich apprentice of Amnennar · Fire Nova, Burning Spirit · Level 37 Elite · Entry 7357</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="36"
+                        data-item-id="10771"
+                        data-item-json="{&quot;id&quot;:10771,&quot;name&quot;:&quot;Deathmage Sash&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;slot&quot;:&quot;Waist (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Intellect&quot;,&quot;+6 Stamina&quot;,&quot;+33 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:2910,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:10,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:7357,&quot;bossName&quot;:&quot;Mordresh Fire Eye&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Deathmage Sash</span></td>
+                        <td><span class="slot-text">Waist (Cloth)</span></td>
+                        <td><span class="stat-text">+10 Intellect, +6 Stamina, +33 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">41</td>
+                        <td class="text-end">33.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles=""
+                        data-classes=""
+                        data-req="36"
+                        data-item-id="10769"
+                        data-item-json="{&quot;id&quot;:10769,&quot;name&quot;:&quot;Glowing Eye of Mordresh&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 11.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:5277,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:52,&quot;sellCopper&quot;:77,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:7357,&quot;bossName&quot;:&quot;Mordresh Fire Eye&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Glowing Eye of Mordresh</span></td>
+                        <td><span class="slot-text">Neck</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td class="text-end">41</td>
+                        <td class="text-end">33.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles=""
+                        data-classes=""
+                        data-req="36"
+                        data-item-id="10770"
+                        data-item-json="{&quot;id&quot;:10770,&quot;name&quot;:&quot;Mordresh&#x27;s Lifeless Skull&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+5 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 13.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:7835,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:78,&quot;sellCopper&quot;:35,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:7357,&quot;bossName&quot;:&quot;Mordresh Fire Eye&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Mordresh's Lifeless Skull</span></td>
+                        <td><span class="slot-text">Held</span></td>
+                        <td><span class="stat-text">+5 Stamina</span></td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td class="text-end">41</td>
+                        <td class="text-end">33.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+
+<details class="trash-section">
+    <summary>🗡️ Trash drops <span class="trash-count">(13 mobs)</span></summary>
+    <p class="trash-blurb">Trash mobs you encounter clearing the dungeon —
+       set pieces, world drops, and miscellaneous gear from non-boss
+       creatures. They respawn, so multiple kills per run are possible.</p>
+    
+    <!-- Withered Warrior -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Withered Warrior</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 35 Elite · Entry 7327</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="31"
+                        data-item-id="10584"
+                        data-item-json="{&quot;id&quot;:10584,&quot;name&quot;:&quot;Stormgale Fists&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Strength&quot;,&quot;+3 Stamina&quot;,&quot;+149 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2905,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.04,&quot;chanceStr&quot;:&quot;0.04%&quot;,&quot;bossId&quot;:7327,&quot;bossName&quot;:&quot;Withered Warrior&quot;,&quot;bossLvl&quot;:35,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormgale Fists</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+10 Strength, +3 Stamina, +149 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.04%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="32"
+                        data-item-id="10571"
+                        data-item-json="{&quot;id&quot;:10571,&quot;name&quot;:&quot;Ebony Boneclub&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:37,&quot;req&quot;:32,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–59 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:25.0,&quot;stats&quot;:[&quot;+5 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:10927,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7327,&quot;bossName&quot;:&quot;Withered Warrior&quot;,&quot;bossLvl&quot;:35,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebony Boneclub</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+5 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">37</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="31"
+                        data-item-id="10582"
+                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.012,&quot;chanceStr&quot;:&quot;0.01%&quot;,&quot;bossId&quot;:7327,&quot;bossName&quot;:&quot;Withered Warrior&quot;,&quot;bossLvl&quot;:35,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Briar Tredders</span></td>
+                        <td><span class="slot-text">Feet (Leather)</span></td>
+                        <td><span class="stat-text">+8 Spirit, +9 Intellect, +78 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.01%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Withered Spearhide -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Withered Spearhide</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 35 Elite · Entry 7332</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="32"
+                        data-item-id="10571"
+                        data-item-json="{&quot;id&quot;:10571,&quot;name&quot;:&quot;Ebony Boneclub&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:37,&quot;req&quot;:32,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–59 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:25.0,&quot;stats&quot;:[&quot;+5 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:10927,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.06,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7332,&quot;bossName&quot;:&quot;Withered Spearhide&quot;,&quot;bossLvl&quot;:35,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebony Boneclub</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+5 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">37</td>
+                        <td class="text-end">0.06%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="31"
+                        data-item-id="10584"
+                        data-item-json="{&quot;id&quot;:10584,&quot;name&quot;:&quot;Stormgale Fists&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Strength&quot;,&quot;+3 Stamina&quot;,&quot;+149 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2905,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.03,&quot;chanceStr&quot;:&quot;0.03%&quot;,&quot;bossId&quot;:7332,&quot;bossName&quot;:&quot;Withered Spearhide&quot;,&quot;bossLvl&quot;:35,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormgale Fists</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+10 Strength, +3 Stamina, +149 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.03%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="31"
+                        data-item-id="10582"
+                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.0112,&quot;chanceStr&quot;:&quot;0.01%&quot;,&quot;bossId&quot;:7332,&quot;bossName&quot;:&quot;Withered Spearhide&quot;,&quot;bossLvl&quot;:35,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Briar Tredders</span></td>
+                        <td><span class="slot-text">Feet (Leather)</span></td>
+                        <td><span class="stat-text">+8 Spirit, +9 Intellect, +78 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.01%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Withered Reaver -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Withered Reaver</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 36 Elite · Entry 7328</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="31"
+                        data-item-id="10584"
+                        data-item-json="{&quot;id&quot;:10584,&quot;name&quot;:&quot;Stormgale Fists&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Strength&quot;,&quot;+3 Stamina&quot;,&quot;+149 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2905,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.04,&quot;chanceStr&quot;:&quot;0.04%&quot;,&quot;bossId&quot;:7328,&quot;bossName&quot;:&quot;Withered Reaver&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormgale Fists</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+10 Strength, +3 Stamina, +149 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.04%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="32"
+                        data-item-id="10571"
+                        data-item-json="{&quot;id&quot;:10571,&quot;name&quot;:&quot;Ebony Boneclub&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:37,&quot;req&quot;:32,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–59 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:25.0,&quot;stats&quot;:[&quot;+5 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:10927,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7328,&quot;bossName&quot;:&quot;Withered Reaver&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebony Boneclub</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+5 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">37</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="31"
+                        data-item-id="10582"
+                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.0102,&quot;chanceStr&quot;:&quot;0.01%&quot;,&quot;bossId&quot;:7328,&quot;bossName&quot;:&quot;Withered Reaver&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Briar Tredders</span></td>
+                        <td><span class="slot-text">Feet (Leather)</span></td>
+                        <td><span class="stat-text">+8 Spirit, +9 Intellect, +78 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.01%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Withered Quilguard -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Withered Quilguard</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 36 Elite · Entry 7329</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="32"
+                        data-item-id="10571"
+                        data-item-json="{&quot;id&quot;:10571,&quot;name&quot;:&quot;Ebony Boneclub&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:37,&quot;req&quot;:32,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–59 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:25.0,&quot;stats&quot;:[&quot;+5 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:10927,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.04,&quot;chanceStr&quot;:&quot;0.04%&quot;,&quot;bossId&quot;:7329,&quot;bossName&quot;:&quot;Withered Quilguard&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebony Boneclub</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+5 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">37</td>
+                        <td class="text-end">0.04%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="31"
+                        data-item-id="10582"
+                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.0346,&quot;chanceStr&quot;:&quot;0.03%&quot;,&quot;bossId&quot;:7329,&quot;bossName&quot;:&quot;Withered Quilguard&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Briar Tredders</span></td>
+                        <td><span class="slot-text">Feet (Leather)</span></td>
+                        <td><span class="stat-text">+8 Spirit, +9 Intellect, +78 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.03%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="31"
+                        data-item-id="10584"
+                        data-item-json="{&quot;id&quot;:10584,&quot;name&quot;:&quot;Stormgale Fists&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Strength&quot;,&quot;+3 Stamina&quot;,&quot;+149 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2905,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0346,&quot;chanceStr&quot;:&quot;0.03%&quot;,&quot;bossId&quot;:7329,&quot;bossName&quot;:&quot;Withered Quilguard&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormgale Fists</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+10 Strength, +3 Stamina, +149 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.03%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Death's Head Geomancer -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Death's Head Geomancer</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 35 Elite · Entry 7335</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="32"
+                        data-item-id="10571"
+                        data-item-json="{&quot;id&quot;:10571,&quot;name&quot;:&quot;Ebony Boneclub&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:37,&quot;req&quot;:32,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–59 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:25.0,&quot;stats&quot;:[&quot;+5 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:10927,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.04,&quot;chanceStr&quot;:&quot;0.04%&quot;,&quot;bossId&quot;:7335,&quot;bossName&quot;:&quot;Death&#x27;s Head Geomancer&quot;,&quot;bossLvl&quot;:35,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebony Boneclub</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+5 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">37</td>
+                        <td class="text-end">0.04%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="31"
+                        data-item-id="10584"
+                        data-item-json="{&quot;id&quot;:10584,&quot;name&quot;:&quot;Stormgale Fists&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Strength&quot;,&quot;+3 Stamina&quot;,&quot;+149 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2905,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0234,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7335,&quot;bossName&quot;:&quot;Death&#x27;s Head Geomancer&quot;,&quot;bossLvl&quot;:35,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormgale Fists</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+10 Strength, +3 Stamina, +149 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="31"
+                        data-item-id="10582"
+                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.0117,&quot;chanceStr&quot;:&quot;0.01%&quot;,&quot;bossId&quot;:7335,&quot;bossName&quot;:&quot;Death&#x27;s Head Geomancer&quot;,&quot;bossLvl&quot;:35,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Briar Tredders</span></td>
+                        <td><span class="slot-text">Feet (Leather)</span></td>
+                        <td><span class="stat-text">+8 Spirit, +9 Intellect, +78 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.01%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Death's Head Necromancer -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Death's Head Necromancer</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 35 Elite · Entry 7337</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="31"
+                        data-item-id="10584"
+                        data-item-json="{&quot;id&quot;:10584,&quot;name&quot;:&quot;Stormgale Fists&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Strength&quot;,&quot;+3 Stamina&quot;,&quot;+149 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2905,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0429,&quot;chanceStr&quot;:&quot;0.04%&quot;,&quot;bossId&quot;:7337,&quot;bossName&quot;:&quot;Death&#x27;s Head Necromancer&quot;,&quot;bossLvl&quot;:35,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormgale Fists</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+10 Strength, +3 Stamina, +149 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.04%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="31"
+                        data-item-id="10582"
+                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.0322,&quot;chanceStr&quot;:&quot;0.03%&quot;,&quot;bossId&quot;:7337,&quot;bossName&quot;:&quot;Death&#x27;s Head Necromancer&quot;,&quot;bossLvl&quot;:35,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Briar Tredders</span></td>
+                        <td><span class="slot-text">Feet (Leather)</span></td>
+                        <td><span class="stat-text">+8 Spirit, +9 Intellect, +78 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.03%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="32"
+                        data-item-id="10571"
+                        data-item-json="{&quot;id&quot;:10571,&quot;name&quot;:&quot;Ebony Boneclub&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:37,&quot;req&quot;:32,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–59 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:25.0,&quot;stats&quot;:[&quot;+5 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:10927,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7337,&quot;bossName&quot;:&quot;Death&#x27;s Head Necromancer&quot;,&quot;bossLvl&quot;:35,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebony Boneclub</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+5 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">37</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Skeletal Frostweaver -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Skeletal Frostweaver</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 36 Elite · Entry 7341</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="32"
+                        data-item-id="10571"
+                        data-item-json="{&quot;id&quot;:10571,&quot;name&quot;:&quot;Ebony Boneclub&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:37,&quot;req&quot;:32,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–59 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:25.0,&quot;stats&quot;:[&quot;+5 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:10927,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.08,&quot;chanceStr&quot;:&quot;0.08%&quot;,&quot;bossId&quot;:7341,&quot;bossName&quot;:&quot;Skeletal Frostweaver&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebony Boneclub</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+5 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">37</td>
+                        <td class="text-end">0.08%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="31"
+                        data-item-id="10582"
+                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7341,&quot;bossName&quot;:&quot;Skeletal Frostweaver&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Briar Tredders</span></td>
+                        <td><span class="slot-text">Feet (Leather)</span></td>
+                        <td><span class="stat-text">+8 Spirit, +9 Intellect, +78 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="31"
+                        data-item-id="10584"
+                        data-item-json="{&quot;id&quot;:10584,&quot;name&quot;:&quot;Stormgale Fists&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Strength&quot;,&quot;+3 Stamina&quot;,&quot;+149 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2905,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0199,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7341,&quot;bossName&quot;:&quot;Skeletal Frostweaver&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormgale Fists</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+10 Strength, +3 Stamina, +149 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Thorn Eater Ghoul -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Thorn Eater Ghoul</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 36 Elite · Entry 7348</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="32"
+                        data-item-id="10571"
+                        data-item-json="{&quot;id&quot;:10571,&quot;name&quot;:&quot;Ebony Boneclub&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:37,&quot;req&quot;:32,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–59 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:25.0,&quot;stats&quot;:[&quot;+5 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:10927,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.06,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7348,&quot;bossName&quot;:&quot;Thorn Eater Ghoul&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebony Boneclub</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+5 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">37</td>
+                        <td class="text-end">0.06%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="31"
+                        data-item-id="10582"
+                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.0205,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7348,&quot;bossName&quot;:&quot;Thorn Eater Ghoul&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Briar Tredders</span></td>
+                        <td><span class="slot-text">Feet (Leather)</span></td>
+                        <td><span class="stat-text">+8 Spirit, +9 Intellect, +78 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="31"
+                        data-item-id="10584"
+                        data-item-json="{&quot;id&quot;:10584,&quot;name&quot;:&quot;Stormgale Fists&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Strength&quot;,&quot;+3 Stamina&quot;,&quot;+149 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2905,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0205,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7348,&quot;bossName&quot;:&quot;Thorn Eater Ghoul&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormgale Fists</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+10 Strength, +3 Stamina, +149 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Frozen Soul -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Frozen Soul</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 36 Elite · Entry 7352</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="31"
+                        data-item-id="10584"
+                        data-item-json="{&quot;id&quot;:10584,&quot;name&quot;:&quot;Stormgale Fists&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Strength&quot;,&quot;+3 Stamina&quot;,&quot;+149 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2905,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:7352,&quot;bossName&quot;:&quot;Frozen Soul&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormgale Fists</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+10 Strength, +3 Stamina, +149 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.05%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="31"
+                        data-item-id="10582"
+                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7352,&quot;bossName&quot;:&quot;Frozen Soul&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Briar Tredders</span></td>
+                        <td><span class="slot-text">Feet (Leather)</span></td>
+                        <td><span class="stat-text">+8 Spirit, +9 Intellect, +78 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="32"
+                        data-item-id="10571"
+                        data-item-json="{&quot;id&quot;:10571,&quot;name&quot;:&quot;Ebony Boneclub&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:37,&quot;req&quot;:32,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–59 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:25.0,&quot;stats&quot;:[&quot;+5 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:10927,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7352,&quot;bossName&quot;:&quot;Frozen Soul&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebony Boneclub</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+5 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">37</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Skeletal Summoner -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Skeletal Summoner</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 36 Elite · Entry 7342</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="32"
+                        data-item-id="10571"
+                        data-item-json="{&quot;id&quot;:10571,&quot;name&quot;:&quot;Ebony Boneclub&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:37,&quot;req&quot;:32,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–59 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:25.0,&quot;stats&quot;:[&quot;+5 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:10927,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.06,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7342,&quot;bossName&quot;:&quot;Skeletal Summoner&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebony Boneclub</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+5 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">37</td>
+                        <td class="text-end">0.06%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="31"
+                        data-item-id="10582"
+                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.0248,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7342,&quot;bossName&quot;:&quot;Skeletal Summoner&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Briar Tredders</span></td>
+                        <td><span class="slot-text">Feet (Leather)</span></td>
+                        <td><span class="stat-text">+8 Spirit, +9 Intellect, +78 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="31"
+                        data-item-id="10584"
+                        data-item-json="{&quot;id&quot;:10584,&quot;name&quot;:&quot;Stormgale Fists&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Strength&quot;,&quot;+3 Stamina&quot;,&quot;+149 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2905,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7342,&quot;bossName&quot;:&quot;Skeletal Summoner&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormgale Fists</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+10 Strength, +3 Stamina, +149 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Splinterbone Captain -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Splinterbone Captain</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 36 Elite · Entry 7345</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="32"
+                        data-item-id="10571"
+                        data-item-json="{&quot;id&quot;:10571,&quot;name&quot;:&quot;Ebony Boneclub&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:37,&quot;req&quot;:32,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–59 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:25.0,&quot;stats&quot;:[&quot;+5 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:10927,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.12,&quot;chanceStr&quot;:&quot;0.12%&quot;,&quot;bossId&quot;:7345,&quot;bossName&quot;:&quot;Splinterbone Captain&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebony Boneclub</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+5 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">37</td>
+                        <td class="text-end">0.12%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="31"
+                        data-item-id="10584"
+                        data-item-json="{&quot;id&quot;:10584,&quot;name&quot;:&quot;Stormgale Fists&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Strength&quot;,&quot;+3 Stamina&quot;,&quot;+149 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2905,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0561,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7345,&quot;bossName&quot;:&quot;Splinterbone Captain&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormgale Fists</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+10 Strength, +3 Stamina, +149 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.06%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Boneflayer Ghoul -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Boneflayer Ghoul</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 36 Elite · Entry 7347</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="31"
+                        data-item-id="10584"
+                        data-item-json="{&quot;id&quot;:10584,&quot;name&quot;:&quot;Stormgale Fists&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Strength&quot;,&quot;+3 Stamina&quot;,&quot;+149 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2905,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0268,&quot;chanceStr&quot;:&quot;0.03%&quot;,&quot;bossId&quot;:7347,&quot;bossName&quot;:&quot;Boneflayer Ghoul&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormgale Fists</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+10 Strength, +3 Stamina, +149 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.03%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="32"
+                        data-item-id="10571"
+                        data-item-json="{&quot;id&quot;:10571,&quot;name&quot;:&quot;Ebony Boneclub&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:37,&quot;req&quot;:32,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–59 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:25.0,&quot;stats&quot;:[&quot;+5 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:10927,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7347,&quot;bossName&quot;:&quot;Boneflayer Ghoul&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebony Boneclub</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+5 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">37</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="31"
+                        data-item-id="10582"
+                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.0179,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7347,&quot;bossName&quot;:&quot;Boneflayer Ghoul&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Briar Tredders</span></td>
+                        <td><span class="slot-text">Feet (Leather)</span></td>
+                        <td><span class="stat-text">+8 Spirit, +9 Intellect, +78 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Freezing Spirit -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Freezing Spirit</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 36 Elite · Entry 7353</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="31"
+                        data-item-id="10582"
+                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.0583,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7353,&quot;bossName&quot;:&quot;Freezing Spirit&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Briar Tredders</span></td>
+                        <td><span class="slot-text">Feet (Leather)</span></td>
+                        <td><span class="stat-text">+8 Spirit, +9 Intellect, +78 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.06%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="32"
+                        data-item-id="10571"
+                        data-item-json="{&quot;id&quot;:10571,&quot;name&quot;:&quot;Ebony Boneclub&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:37,&quot;req&quot;:32,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–59 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:25.0,&quot;stats&quot;:[&quot;+5 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:10927,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7353,&quot;bossName&quot;:&quot;Freezing Spirit&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ebony Boneclub</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+5 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">37</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin shaman"
+                        data-req="31"
+                        data-item-id="10584"
+                        data-item-json="{&quot;id&quot;:10584,&quot;name&quot;:&quot;Stormgale Fists&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Strength&quot;,&quot;+3 Stamina&quot;,&quot;+149 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2905,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7353,&quot;bossName&quot;:&quot;Freezing Spirit&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormgale Fists</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+10 Strength, +3 Stamina, +149 Armor</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">36</td>
+                        <td class="text-end">0.02%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+</details>
+
+</div>
+
+<script src="tooltip.js"></script>
+<script src="smart_filter_block.js"></script>
+<script src="kcraft_pills.js"></script>
+<script src="dungeon_filter.js"></script>
+<script src="sortable.js"></script>
+
+</body>
+</html>
