@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Old Hillsbrad Foothills — KCraft</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏳</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #1a1a1a; color: #ddd; padding-bottom: 3rem; }
+        .container { max-width: 1100px; }
+        h1, h2, h3 { color: #ffd100; }
+        a { color: #4ea8de; text-decoration: none; }
+        a:hover { color: #88c5f0; }
+        .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .card { background: #232323; border: 1px solid #3a3a3a; margin-bottom: 1.5rem; }
+        .card-title { color: #ffd100; margin-bottom: 0.25rem; }
+        .boss-meta { color: #777; font-size: 0.85rem; margin-bottom: 1rem; }
+
+        /* Collapsible boss cards. The whole card is a <details> element;
+           clicking the summary header toggles the items table below.
+           Defaults to open so the page reads exactly like before — the
+           collapse is opt-in, useful when scrolling through a dungeon
+           with many bosses. The trash section's inner cards inherit
+           this behavior since they share render_boss_card.
+           Arrow is anchored to the top-right corner of the card via
+           absolute positioning so it lines up consistently regardless
+           of how long the boss-meta line wraps. */
+        .boss-card {
+            display: block;  /* override Bootstrap card flex */
+            padding: 0;
+            position: relative;
+        }
+        .boss-card > summary {
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            /* Right padding leaves room for the absolutely-positioned arrow */
+            padding: 0.85rem 2.5rem 0.85rem 1rem;
+            transition: background 0.15s;
+        }
+        .boss-card > summary:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .boss-card > summary::-webkit-details-marker { display: none; }
+        .boss-card::after {
+            content: '▼';
+            position: absolute;
+            top: 0.95rem;
+            right: 1rem;
+            color: #888;
+            font-size: 0.95em;
+            pointer-events: none;  /* let the click pass through to summary */
+            transition: color 0.15s;
+        }
+        .boss-card[open]::after { content: '▲'; color: #ffd100; }
+        /* Title is the only line in summary now — meta moved into content
+           so it collapses with the table. No bottom margin needed. */
+        .boss-card > summary .card-title { margin-bottom: 0; }
+        .boss-card > .boss-card-content {
+            padding: 0.5rem 1rem 1rem;
+        }
+        .boss-card > .boss-card-content .boss-meta {
+            margin-top: 0;
+            margin-bottom: 0.85rem;
+        }
+        table.table { color: #ddd; margin-bottom: 0; }
+        table.table > :not(caption) > * > * {
+            background-color: transparent; color: #ddd;
+            border-bottom-color: #3a3a3a; vertical-align: middle;
+        }
+        table.table > thead {
+            color: #999; font-size: 0.78rem;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        table.table tbody tr:hover { background: #2a2a2a; }
+
+        .filter-bar {
+            margin-bottom: 1.5rem; padding: 1rem;
+            background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        /* Collapsible filter wrapper. The whole <details> sticks to the top
+           of the viewport on scroll so users can change filters from
+           anywhere on a long dungeon page without scrolling back up.
+           Desktop: summary is hidden, content always visible. Mobile:
+           closed by default (set by dungeon_filter.js on init), summary
+           shown as a single-line summary that toggles the filter content.
+           The HTML defaults to <details open> so non-JS users get the
+           working default of expanded. */
+        .filter-bar-collapsible {
+            margin-bottom: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #1a1a1a;  /* matches body so scrolled content doesn't peek through */
+        }
+        .filter-bar-collapsible > .filter-bar {
+            margin-bottom: 0;  /* details element provides outer spacing */
+        }
+        .filter-bar-collapsible > summary {
+            display: none;  /* hidden on desktop */
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            padding: 0.7rem 0.9rem;
+            background: #232323;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            color: #ccc;
+            font-size: 0.92rem;
+        }
+        .filter-bar-collapsible > summary::-webkit-details-marker { display: none; }
+        .filter-bar-collapsible > summary::after {
+            content: ' ▼';
+            color: #888;
+            float: right;
+            font-size: 0.85em;
+        }
+        .filter-bar-collapsible[open] > summary::after { content: ' ▲'; }
+        .filter-bar-collapsible[open] > summary {
+            border-radius: 6px 6px 0 0;
+            border-bottom: 0;
+            margin-bottom: 0;
+        }
+        .filter-bar-collapsible[open] > .filter-bar {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+        .filter-row {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            align-items: center; margin-bottom: 8px;
+        }
+        .filter-row:last-child { margin-bottom: 0; }
+        .filter-row > .label { color: #999; font-size: 0.9rem; min-width: 90px; }
+        .filter-btn {
+            padding: 8px 14px; border-radius: 5px; border: 2px solid #555;
+            background: #2a2a2a; color: #ccc; cursor: pointer;
+            font-size: 0.85rem; transition: all 0.2s ease;
+        }
+        .filter-btn:hover { background: #3a3a3a; border-color: #777; }
+        .filter-btn.active {
+            background: #ffd100; color: #1a1a1a; border-color: #ffd100;
+            font-weight: 600;
+        }
+        /* Apply / Reset buttons. Visually identical across all pages
+           (Find Loot tab on index.html uses the same .reset-btn spec).
+           Apply is the primary action (brand yellow); Reset is destructive
+           but stays subtle so it doesn't shout for attention.
+           Override .filter-btn padding/border so these read as polished
+           action buttons rather than the chunky role-toggle base style.
+           Apply is hidden on desktop — the filter bar is always visible
+           there so collapsing-via-Apply isn't useful — and only shown
+           inside the mobile @media block below. */
+        .filter-btn.apply-btn {
+            display: none;
+            margin-left: 10px; padding: 6px 14px;
+            background: #ffd100; color: #1a1a1a;
+            border: 1px solid #ffd100; border-radius: 4px;
+            font-size: 0.85rem; font-weight: 600;
+        }
+        .filter-btn.apply-btn:hover { background: #ffe14d; border-color: #ffe14d; }
+        .filter-btn.reset-btn {
+            margin-left: 10px; padding: 6px 14px;
+            background: #4a1818; color: #ff9b9b;
+            border: 1px solid #6a2828; border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        .filter-btn.reset-btn:hover { background: #6a2828; border-color: #6a2828; }
+        /* Reset lives at the right edge of the Quality row (mirrors the
+           Find Loot finder bar). margin-left:auto pushes it past the
+           dropdown to the end of the flex row on desktop. */
+        .filter-row.row-quality .filter-btn.reset-btn { margin-left: auto; }
+        /* Desktop hides the Apply row entirely (Apply is mobile-only and
+           is the only control left in row-buttons after Reset moved out).
+           Mobile re-enables the row inside the @media block below. */
+        .filter-row.row-buttons { display: none; }
+
+        /* Expand all / Collapse all controls — sit between the filter
+           bar and the first boss card so they're always reachable. */
+        .expand-controls {
+            display: flex; gap: 0.5rem; flex-wrap: wrap;
+            margin: 0 0 1rem 0;
+        }
+        .expand-controls .expand-btn {
+            padding: 6px 12px; background: #2d2d2d; color: #ccc;
+            border: 1px solid #3a3a3a; border-radius: 4px;
+            cursor: pointer; font-size: 0.85rem;
+            transition: color 0.1s ease, border-color 0.1s ease;
+        }
+        .expand-controls .expand-btn:hover {
+            color: #ffd100; border-color: #ffd100;
+        }
+
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown select {
+            padding: 8px 12px; background: #2a2a2a; color: #ccc;
+            border: 2px solid #555; border-radius: 5px; font-size: 0.85rem;
+            min-width: 150px;
+        }
+
+        .role-pill {
+            display: inline-block; padding: 2px 7px; border-radius: 4px;
+            font-size: 0.75rem; margin-right: 3px; cursor: default;
+            font-weight: 600;
+        }
+        .class-pill {
+            display: inline-block; width: 18px; height: 18px;
+            line-height: 18px; text-align: center; border-radius: 3px;
+            font-size: 0.7rem; font-weight: 700;
+            color: #1a1a1a; margin-right: 2px; cursor: default;
+        }
+        .pill-empty {
+            color: #555; font-size: 1rem; font-weight: 400; cursor: default;
+        }
+
+        .no-loot { color: #777; font-style: italic; text-align: center; padding: 1rem; }
+        .stat-text { color: #4ea8de; font-size: 0.85rem; }
+        .slot-text { color: #bbb; font-size: 0.85rem; }
+
+        /* Notable trash collapsible — secondary content, visually quieter */
+        .trash-section {
+            margin-top: 1.5rem;
+            border-top: 1px solid #333;
+            padding-top: 1rem;
+        }
+        .trash-section > summary {
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ddd;
+            padding: 0.5rem 0;
+            list-style: none;
+            user-select: none;
+        }
+        .trash-section > summary::-webkit-details-marker { display: none; }
+        .trash-section > summary::before {
+            content: '▶';
+            display: inline-block;
+            margin-right: 8px;
+            color: #888;
+            transition: transform 0.15s ease;
+        }
+        .trash-section[open] > summary::before { transform: rotate(90deg); }
+        .trash-section > summary:hover { color: #ffd100; }
+        .trash-section .trash-count { color: #888; font-weight: normal; font-size: 0.95rem; }
+        .trash-section .trash-blurb {
+            color: #999; font-size: 0.85rem; font-style: italic;
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        /* Sortable headers (sortable.js wires up clicks) */
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.1s ease;
+            white-space: nowrap;  /* keep header text + indicator on one line */
+        }
+        th.sortable:hover { color: #ffd100; }
+        th.sortable::after {
+            content: ' ⇅';
+            color: #444;
+            font-size: 0.75em;
+            margin-left: 4px;
+        }
+        th.sortable.sort-asc::after  { content: ' ▲'; color: #ffd100; }
+        th.sortable.sort-desc::after { content: ' ▼'; color: #ffd100; }
+
+        /* ============================================================
+           Mobile (≤600px): boss-card tables become labeled cards.
+           Mirrors the Find Loot card pattern for consistency.
+           Column order: 1=ITEM 2=SLOT 3=STATS 4=ROLES 5=CLASSES 6=ILVL 7=DROP
+           ============================================================ */
+        @media (max-width: 600px) {
+            body { font-size: 0.92rem; }
+            .container { padding: 0 0.5rem; }
+
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.2rem; }
+            .summary-block { padding: 0.7rem 0.8rem; font-size: 0.88rem; }
+
+            /* Filter bar: each row stacks (label on top, controls below).
+               Role buttons go into a 2-col grid for a uniform look — when
+               there's an odd count (we have 5 roles) the last button spans
+               both columns so nothing is stranded as a half-width cell.
+               Class/Quality/Reset stack vertically as full-width controls. */
+            /* Filter bar layout. Each row gets a named class (.row-class,
+               .row-role, .row-quality, .row-buttons, .row-legend) for
+               targeted styling. HTML order is the visual order on mobile:
+               Class → Role → Quality → Reset → Apply → Legend. */
+            .filter-bar { padding: 0.75rem; }
+
+            /* Collapsible summary visible on mobile only */
+            .filter-bar-collapsible > summary {
+                display: block;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+                margin-bottom: 12px;
+            }
+            .filter-row > .label {
+                min-width: 0 !important;
+                font-size: 0.85rem;
+                margin-bottom: 0;
+                /* Override inline margin-left:18px on the Quality label */
+                margin-left: 0 !important;
+            }
+
+            /* Class & Quality dropdown rows: full-width selects */
+            .filter-row.row-class .dropdown,
+            .filter-row.row-quality .dropdown {
+                width: 100%;
+            }
+            .filter-row.row-class select,
+            .filter-row.row-quality select {
+                width: 100%;
+                font-size: 0.9rem;
+                padding: 8px 10px;
+            }
+
+            /* Role row: 2-col button grid, label spans full width.
+               5 buttons total — the lone last one (odd-position) spans
+               both cols so nothing is stranded as a half-width cell. */
+            .filter-row.row-role {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+                align-items: stretch;
+            }
+            .filter-row.row-role > .label {
+                grid-column: 1 / -1;
+            }
+            .filter-row.row-role > .filter-btn {
+                font-size: 0.82rem;
+                padding: 8px 10px;
+                margin: 0;
+            }
+            .filter-row.row-role > .filter-btn:last-child:nth-child(odd) {
+                grid-column: 1 / -1;
+            }
+
+            /* Apply row (mobile only — desktop hides it via the base
+               `.filter-row.row-buttons { display: none }` rule). Reset
+               now lives in the Quality row, so this row only contains
+               Apply; flex:1 stretches it to full width. */
+            .filter-row.row-buttons {
+                display: flex;
+                flex-direction: row;
+                gap: 6px;
+            }
+            .filter-row.row-buttons .filter-btn.apply-btn {
+                display: block;
+                flex: 1 1 0;
+                margin-left: 0;
+                padding: 10px;
+            }
+            /* Reset (mobile): stacks below the Quality dropdown as a
+               full-width control. margin-left:auto from desktop is
+               cancelled — column flow makes it a vertical stack. */
+            .filter-row.row-quality .filter-btn.reset-btn {
+                margin-left: 0;
+                padding: 10px;
+                width: 100%;
+            }
+
+            /* Legend: pills wrap naturally, just make text smaller. Each
+               entry is a .legend-item that holds the pill + name together
+               so multi-word classes (e.g. Death Knight) never split. */
+            .filter-row.row-legend .legend {
+                font-size: 0.8rem !important;
+                line-height: 1.7;
+            }
+            .filter-row.row-legend .legend-item {
+                white-space: nowrap;
+                display: inline-block;
+                margin-right: 8px;
+            }
+
+            /* Boss cards: tighter, full-width. Padding lives on summary
+               and content children (the card is a <details>). */
+            .boss-card { padding: 0; margin-bottom: 1rem; }
+            .boss-card > summary { padding: 0.7rem 0.85rem; }
+            .boss-card > .boss-card-content { padding: 0 0.85rem 0.85rem; }
+            .boss-card h3 { font-size: 1.1rem; }
+            .boss-meta { font-size: 0.8rem; }
+
+            /* Table → card list. Sortable headers don't help on mobile
+               since each row is a card with labeled fields. */
+            .boss-card table,
+            .boss-card thead,
+            .boss-card tbody,
+            .boss-card tr,
+            .boss-card td { display: block; width: 100%; }
+            .boss-card thead { display: none; }
+
+            .boss-card tbody tr {
+                background: #232323; border: 1px solid #2d2d2d;
+                border-radius: 6px;
+                padding: 0.65rem 0.85rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .boss-card tbody tr td {
+                padding: 4px 0; border: 0;
+                font-size: 0.85rem; line-height: 1.5;
+            }
+            .boss-card tbody tr td::before {
+                display: block;
+                color: #777; font-size: 0.7rem;
+                text-transform: uppercase; letter-spacing: 0.5px;
+                margin-bottom: 2px;
+            }
+            .boss-card tbody tr td:nth-child(2)::before { content: 'Slot'; }
+            .boss-card tbody tr td:nth-child(3)::before { content: 'Stats'; }
+            .boss-card tbody tr td:nth-child(4)::before { content: 'Roles'; }
+            .boss-card tbody tr td:nth-child(5)::before { content: 'Classes'; }
+            .boss-card tbody tr td:nth-child(6)::before { content: 'iLvl'; }
+            .boss-card tbody tr td:nth-child(7)::before { content: 'Drop'; }
+
+            /* Stats list: inline with spacing */
+            .boss-card .stat-text {
+                font-size: 0.82rem;
+            }
+            .boss-card .role-pill, .boss-card .class-pill {
+                margin: 0 2px 2px 0; vertical-align: middle;
+            }
+
+            /* Item name as full-width header */
+            .boss-card tbody tr td:nth-child(1) {
+                font-size: 0.95rem; font-weight: 600;
+                margin-bottom: 6px; padding: 0 0 6px 0;
+                border-bottom: 1px solid #2d2d2d;
+            }
+            .boss-card tbody tr td:nth-child(1)::before { content: none; }
+
+            /* Inline label/value for short fields: Slot, iLvl, Drop.
+               Override .text-end which would right-align the value. */
+            .boss-card tbody tr td:nth-child(2),
+            .boss-card tbody tr td:nth-child(6),
+            .boss-card tbody tr td:nth-child(7) {
+                display: flex; gap: 12px;
+                align-items: baseline;
+                font-size: 0.82rem;
+                text-align: left !important;
+            }
+            .boss-card tbody tr td:nth-child(2)::before,
+            .boss-card tbody tr td:nth-child(6)::before,
+            .boss-card tbody tr td:nth-child(7)::before {
+                display: inline-block; margin-bottom: 0;
+            }
+
+            /* Trash section: tighten */
+            .trash-section > summary { font-size: 1rem; }
+            .trash-section .trash-blurb {
+                margin: 0.5rem 0 0.75rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html" style="color: #ffd100;">⚔️ KCraft</a>
+    </div>
+</nav>
+
+<div class="container">
+    <p class="mb-2"><a href="index.html">← All dungeons</a></p>
+
+    <h1>⏳ Old Hillsbrad Foothills</h1>
+    <p class="mb-3" style="color:#bbb; font-style:italic;">"Caverns of Time wing — escort young Thrall from Durnholde Keep through the moments of his escape, with the Infinite Dragonflight trying to unmake history."</p>
+
+    <div class="alert alert-dark mt-3 mb-4" style="background:#232323; border:1px solid #3a3a3a; color:#ddd;">
+        <h5 class="alert-heading" style="color:#ffd100;">🎯 OHF Loot Summary</h5>
+        <p class="mb-2"><strong style="color:#4ea8de;">Equipment Focus:</strong> Caverns of Time escort wing — Keepers of Time reputation, Drape of the Dark Reavers cloak, and Epoch Hunter caster/melee epics on heroic.</p>
+        <ul class="mb-0" style="margin-left: 0; padding-left: 1.2rem;">
+            <li><strong style="color:#4ea8de;">Best for:</strong> Level 66-70</li>
+            <li><strong style="color:#4ea8de;">Run time:</strong> 50-70 minutes (escort-paced)</li>
+            <li><strong style="color:#4ea8de;">Mob levels:</strong> 65-68</li>
+            <li><strong style="color:#4ea8de;">Famous for:</strong> Drape of the Dark Reavers, Epoch Hunter three-phase fight, Keepers of Time reputation grind, Black Morass attunement step (heroic Hourglass of the Unraveller)</li>
+            <li><strong style="color:#4ea8de;">Includes:</strong> Young Thrall escort event (Durnholde → Tarren Mill → final ambush), Captain Skarloc Tarren Mill ambush, Lieutenant Drake prison-gate fight</li>
+        </ul>
+        <div class="gear-sets-note" style="margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid #3a3a3a;"><strong style="color:#ffd100;">🛡 Gear sets</strong><div style="margin-top: 0.5rem;"><strong style="color:#e6cc80;">Mana-Etched Regalia</strong><div style="margin-top: 0.15rem; color:#bbb;">Mana-Etched Crown, Mana-Etched Gloves, Mana-Etched Pantaloons, Mana-Etched Vestments, Mana-Etched Spaulders</div><ul style="margin: 0.25rem 0 0 0; padding-left: 1.2rem;"><li><strong style="color:#4ea8de;">2 pieces:</strong> Increases your hit rating by 35.</li><li><strong style="color:#4ea8de;">4 pieces:</strong> Your harmful spells have a chance to grant you 110 spell power for 15 sec.</li></ul></div><div style="margin-top: 0.5rem;"><strong style="color:#e6cc80;">Wastewalker Armor</strong><div style="margin-top: 0.15rem; color:#bbb;">Wastewalker Tunic, Wastewalker Gloves, Wastewalker Helm, Wastewalker Leggings, Wastewalker Shoulderpads</div><ul style="margin: 0.25rem 0 0 0; padding-left: 1.2rem;"><li><strong style="color:#4ea8de;">2 pieces:</strong> Increases your hit rating by 35.</li><li><strong style="color:#4ea8de;">4 pieces:</strong> Your attacks have a chance to grant you 160 attack power for 15 sec.</li></ul></div><div style="margin-top: 0.5rem;"><strong style="color:#e6cc80;">Desolation Battlegear</strong><div style="margin-top: 0.15rem; color:#bbb;">Greaves of Desolation, Hauberk of Desolation, Gauntlets of Desolation, Helm of Desolation, Pauldrons of Desolation</div><ul style="margin: 0.25rem 0 0 0; padding-left: 1.2rem;"><li><strong style="color:#4ea8de;">2 pieces:</strong> Increases your hit rating by 35.</li><li><strong style="color:#4ea8de;">4 pieces:</strong> Your attacks have a chance to grant you 160 attack power for 15 sec.</li></ul></div><div style="margin-top: 0.5rem;"><strong style="color:#e6cc80;">Doomplate Battlegear</strong><div style="margin-top: 0.15rem; color:#bbb;">Doomplate Chestguard, Doomplate Gauntlets, Doomplate Warhelm, Doomplate Legguards, Doomplate Shoulderguards</div><ul style="margin: 0.25rem 0 0 0; padding-left: 1.2rem;"><li><strong style="color:#4ea8de;">2 pieces:</strong> Increases your hit rating by 35.</li><li><strong style="color:#4ea8de;">4 pieces:</strong> Your attacks have a chance to grant you 160 attack power for 15 sec.</li></ul></div></div>
+    </div>
+
+    <details class="filter-bar-collapsible" open>
+    <summary class="filter-summary">🔧 Filters · all 44 items</summary>
+    <div class="filter-bar">
+        <div class="filter-row row-class">
+            <span class="label">Class:</span>
+            <div class="dropdown">
+                <select id="class-dropdown">
+                    <option value="all">All classes (44)</option>
+                    <option value="warrior">Warrior (14)</option>
+                    <option value="paladin">Paladin (23)</option>
+                    <option value="hunter">Hunter (7)</option>
+                    <option value="rogue">Rogue (6)</option>
+                    <option value="priest">Priest (12)</option>
+                    <option value="dk">Death Knight (13)</option>
+                    <option value="shaman">Shaman (25)</option>
+                    <option value="mage">Mage (10)</option>
+                    <option value="warlock">Warlock (10)</option>
+                    <option value="druid">Druid (16)</option>
+                </select>
+            </div>
+        </div>
+        <div class="filter-row row-role">
+            <span class="label">Role:</span>
+            <button class="filter-btn active" data-role="all">All (<span id="count-all">44</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">16</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">19</span>)</button>
+            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">18</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">22</span>)</button>
+        </div>
+        <div class="filter-row row-quality">
+            <span class="label">Quality:</span>
+            <div class="dropdown">
+                <select id="quality-dropdown">
+                    <option value="">Any quality</option>
+                    <option value="2" style="color:#1eff00">Uncommon and above</option>
+                    <option value="3" style="color:#0070dd">Rare and above</option>
+                    <option value="4" style="color:#a335ee">Epic only</option>
+                </select>
+            </div>
+            <button class="filter-btn reset-btn" id="reset-filters">Reset all</button>
+        </div>
+        <div class="filter-row row-buttons">
+            <button class="filter-btn apply-btn" id="apply-filters">Apply</button>
+        </div>
+        <div class="filter-row row-legend">
+            <span class="label">Legend:</span>
+            <div class="legend" style="font-size: 0.85rem;">
+                <span class="legend-item"><span class="class-pill" style="background:#C79C6E;color:#1a1a1a;">W</span> Warrior</span>
+                <span class="legend-item"><span class="class-pill" style="background:#F58CBA;color:#1a1a1a;">P</span> Paladin</span>
+                <span class="legend-item"><span class="class-pill" style="background:#ABD473;color:#1a1a1a;">H</span> Hunter</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FFF569;color:#1a1a1a;">R</span> Rogue</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FFFFFF;color:#1a1a1a;">P</span> Priest</span>
+                <span class="legend-item"><span class="class-pill" style="background:#C41F3B;color:#1a1a1a;">K</span> Death Knight</span>
+                <span class="legend-item"><span class="class-pill" style="background:#0070DE;color:#1a1a1a;">S</span> Shaman</span>
+                <span class="legend-item"><span class="class-pill" style="background:#69CCF0;color:#1a1a1a;">M</span> Mage</span>
+                <span class="legend-item"><span class="class-pill" style="background:#9482C9;color:#1a1a1a;">W</span> Warlock</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FF7D0A;color:#1a1a1a;">D</span> Druid</span>
+            </div>
+        </div>
+    </div>
+    </details>
+
+    <div class="expand-controls">
+        <button class="expand-btn" id="expand-all">▼ Expand all</button>
+        <button class="expand-btn" id="collapse-all">▲ Collapse all</button>
+    </div>
+
+
+    <!-- Lieutenant Drake -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Lieutenant Drake</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">First boss — Durnholde lieutenant guarding the front gate · Mortal Strike, Cleave, Hamstring; pulled at the prison gate · Level 68 Elite · Entry 17848</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter rogue dk shaman druid"
+                        data-req="66"
+                        data-item-id="27423"
+                        data-item-json="{&quot;id&quot;:27423,&quot;name&quot;:&quot;Cloak of Impulsiveness&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+70 Armor&quot;,&quot;+18 Agility&quot;,&quot;+19 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 40.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22786,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:27,&quot;sellCopper&quot;:86,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:17848,&quot;bossName&quot;:&quot;Lieutenant Drake&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Cloak of Impulsiveness</span></td>
+                        <td><span class="slot-text">Back</span></td>
+                        <td><span class="stat-text">+70 Armor, +18 Agility, +19 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank"
+                        data-classes="warrior paladin dk"
+                        data-req="66"
+                        data-item-id="27436"
+                        data-item-json="{&quot;id&quot;:27436,&quot;name&quot;:&quot;Iron Band of the Unbreakable&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+170 Armor&quot;,&quot;+27 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 17.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:4308,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:43,&quot;sellCopper&quot;:8,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:17848,&quot;bossName&quot;:&quot;Lieutenant Drake&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Iron Band of the Unbreakable</span></td>
+                        <td><span class="slot-text">Finger</span></td>
+                        <td><span class="stat-text">+170 Armor, +27 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal melee"
+                        data-classes="shaman druid"
+                        data-req="66"
+                        data-item-id="27417"
+                        data-item-json="{&quot;id&quot;:27417,&quot;name&quot;:&quot;Ravenwing Pauldrons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Shoulder (Leather)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+197 Armor&quot;,&quot;+19 Strength&quot;,&quot;+19 Stamina&quot;,&quot;+13 Intellect&quot;,&quot;+14 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:30024,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:0,&quot;sellCopper&quot;:24,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:17848,&quot;bossName&quot;:&quot;Lieutenant Drake&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ravenwing Pauldrons</span></td>
+                        <td><span class="slot-text">Shoulder (Leather)</span></td>
+                        <td><span class="stat-text">+197 Armor, +19 Strength, +19 Stamina, +13 Intellect, +14 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="66"
+                        data-item-id="27418"
+                        data-item-json="{&quot;id&quot;:27418,&quot;name&quot;:&quot;Stormreaver Shadow-Kilt&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Legs (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+123 Armor&quot;,&quot;+19 Stamina&quot;,&quot;+26 Intellect&quot;,&quot;+14 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 30.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:32140,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:40,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:17848,&quot;bossName&quot;:&quot;Lieutenant Drake&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormreaver Shadow-Kilt</span></td>
+                        <td><span class="slot-text">Legs (Cloth)</span></td>
+                        <td><span class="stat-text">+123 Armor, +19 Stamina, +26 Intellect, +14 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin dk"
+                        data-req="66"
+                        data-item-id="27420"
+                        data-item-json="{&quot;id&quot;:27420,&quot;name&quot;:&quot;Uther&#x27;s Ceremonial Warboots&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Feet (Plate)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+720 Armor&quot;,&quot;+25 Strength&quot;,&quot;+21 Stamina&quot;,&quot;+20 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 10 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:42412,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:24,&quot;sellCopper&quot;:12,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:17848,&quot;bossName&quot;:&quot;Lieutenant Drake&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Uther's Ceremonial Warboots</span></td>
+                        <td><span class="slot-text">Feet (Plate)</span></td>
+                        <td><span class="stat-text">+720 Armor, +25 Strength, +21 Stamina, +20 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="28212"
+                        data-item-json="{&quot;id&quot;:28212,&quot;name&quot;:&quot;Aran&#x27;s Sorcerous Slacks&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Legs (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+136 Armor&quot;,&quot;+29 Stamina&quot;,&quot;+28 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:36830,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:68,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17848,&quot;bossName&quot;:&quot;Lieutenant Drake&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Aran's Sorcerous Slacks</span></td>
+                        <td><span class="slot-text">Legs (Cloth)</span></td>
+                        <td><span class="stat-text">+136 Armor, +29 Stamina, +28 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin rogue dk shaman druid"
+                        data-req="70"
+                        data-item-id="28210"
+                        data-item-json="{&quot;id&quot;:28210,&quot;name&quot;:&quot;Bloodskull Destroyer&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;130–243 Damage&quot;,&quot;speed&quot;:2.6,&quot;dps&quot;:71.7,&quot;stats&quot;:[&quot;+12 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:91424,&quot;sellGold&quot;:9,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:24,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17848,&quot;bossName&quot;:&quot;Lieutenant Drake&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Bloodskull Destroyer</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+12 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="70"
+                        data-item-id="28214"
+                        data-item-json="{&quot;id&quot;:28214,&quot;name&quot;:&quot;Grips of the Lunar Eclipse&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+183 Armor&quot;,&quot;+23 Stamina&quot;,&quot;+25 Intellect&quot;,&quot;+18 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 28.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:20977,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:77,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17848,&quot;bossName&quot;:&quot;Lieutenant Drake&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Grips of the Lunar Eclipse</span></td>
+                        <td><span class="slot-text">Hands (Leather)</span></td>
+                        <td><span class="stat-text">+183 Armor, +23 Stamina, +25 Intellect, +18 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank"
+                        data-classes="warrior paladin dk"
+                        data-req="70"
+                        data-item-id="28211"
+                        data-item-json="{&quot;id&quot;:28211,&quot;name&quot;:&quot;Lieutenant&#x27;s Signet of Lordaeron&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+143 Armor&quot;,&quot;+30 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:55035,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:50,&quot;sellCopper&quot;:35,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17848,&quot;bossName&quot;:&quot;Lieutenant Drake&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Lieutenant's Signet of Lordaeron</span></td>
+                        <td><span class="slot-text">Finger</span></td>
+                        <td><span class="stat-text">+143 Armor, +30 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
+                        data-req="70"
+                        data-item-id="28213"
+                        data-item-json="{&quot;id&quot;:28213,&quot;name&quot;:&quot;Lordaeron Medical Guide&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+12 Stamina&quot;,&quot;+10 Intellect&quot;,&quot;+16 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:34450,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:44,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17848,&quot;bossName&quot;:&quot;Lieutenant Drake&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Lordaeron Medical Guide</span></td>
+                        <td><span class="slot-text">Held</span></td>
+                        <td><span class="stat-text">+12 Stamina, +10 Intellect, +16 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal melee ranged"
+                        data-classes="paladin hunter shaman"
+                        data-req="70"
+                        data-item-id="28215"
+                        data-item-json="{&quot;id&quot;:28215,&quot;name&quot;:&quot;Mok&#x27;Nathal Mask of Battle&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Head (Mail)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+530 Armor&quot;,&quot;+23 Agility&quot;,&quot;+21 Stamina&quot;,&quot;+21 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 30.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 19.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:37906,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:79,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;hunter&quot;,&quot;shaman&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17848,&quot;bossName&quot;:&quot;Lieutenant Drake&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Mok'Nathal Mask of Battle</span></td>
+                        <td><span class="slot-text">Head (Mail)</span></td>
+                        <td><span class="stat-text">+530 Armor, +23 Agility, +21 Stamina, +21 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Captain Skarloc -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Captain Skarloc</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Second boss — Durnholde captain at the Tarren Mill ambush · Cleave, Holy Light heals (interrupt), Heroic Strike; comes with two Durnholde Lieutenants · Level 68 Elite · Entry 17862</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin rogue dk shaman"
+                        data-req="66"
+                        data-item-id="27424"
+                        data-item-json="{&quot;id&quot;:27424,&quot;name&quot;:&quot;Amani Venom-Axe&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;101–188 Damage&quot;,&quot;speed&quot;:2.3,&quot;dps&quot;:62.8,&quot;stats&quot;:[&quot;+15 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 26.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 15.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:76249,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:62,&quot;sellCopper&quot;:49,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:17862,&quot;bossName&quot;:&quot;Captain Skarloc&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Amani Venom-Axe</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+15 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk"
+                        data-req="66"
+                        data-item-id="27427"
+                        data-item-json="{&quot;id&quot;:27427,&quot;name&quot;:&quot;Durotan&#x27;s Battle Harness&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Chest (Plate)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1048 Armor&quot;,&quot;+31 Strength&quot;,&quot;+34 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:135,&quot;sellPrice&quot;:53987,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:39,&quot;sellCopper&quot;:87,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:17862,&quot;bossName&quot;:&quot;Captain Skarloc&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Durotan's Battle Harness</span></td>
+                        <td><span class="slot-text">Chest (Plate)</span></td>
+                        <td><span class="stat-text">+1048 Armor, +31 Strength, +34 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="ranged"
+                        data-classes="priest shaman druid"
+                        data-req="66"
+                        data-item-id="27426"
+                        data-item-json="{&quot;id&quot;:27426,&quot;name&quot;:&quot;Northshire Battlemace&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;60–162 Damage&quot;,&quot;speed&quot;:2.7,&quot;dps&quot;:41.1,&quot;stats&quot;:[&quot;+15 Intellect&quot;,&quot;+16 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 6 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 85.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:76831,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:68,&quot;sellCopper&quot;:31,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:17862,&quot;bossName&quot;:&quot;Captain Skarloc&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Northshire Battlemace</span></td>
+                        <td><span class="slot-text">Main Hand</span></td>
+                        <td><span class="stat-text">+15 Intellect, +16 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal melee ranged"
+                        data-classes="paladin hunter shaman"
+                        data-req="66"
+                        data-item-id="27430"
+                        data-item-json="{&quot;id&quot;:27430,&quot;name&quot;:&quot;Scaled Greaves of Patience&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Legs (Mail)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+513 Armor&quot;,&quot;+28 Agility&quot;,&quot;+24 Stamina&quot;,&quot;+13 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 46.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:46800,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:68,&quot;sellCopper&quot;:0,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;hunter&quot;,&quot;shaman&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:17862,&quot;bossName&quot;:&quot;Captain Skarloc&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Scaled Greaves of Patience</span></td>
+                        <td><span class="slot-text">Legs (Mail)</span></td>
+                        <td><span class="stat-text">+513 Armor, +28 Agility, +24 Stamina, +13 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="66"
+                        data-item-id="27428"
+                        data-item-json="{&quot;id&quot;:27428,&quot;name&quot;:&quot;Stormfront Gauntlets&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+367 Armor&quot;,&quot;+22 Stamina&quot;,&quot;+16 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 19.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 8 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:23226,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:32,&quot;sellCopper&quot;:26,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:17862,&quot;bossName&quot;:&quot;Captain Skarloc&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Stormfront Gauntlets</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+367 Armor, +22 Stamina, +16 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles=""
+                        data-classes=""
+                        data-req="70"
+                        data-item-id="28221"
+                        data-item-json="{&quot;id&quot;:28221,&quot;name&quot;:&quot;Boots of the Watchful Heart&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Feet (Plate)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+800 Armor&quot;,&quot;+23 Stamina&quot;,&quot;+26 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 29.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 9 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:45154,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:51,&quot;sellCopper&quot;:54,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17862,&quot;bossName&quot;:&quot;Captain Skarloc&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Boots of the Watchful Heart</span></td>
+                        <td><span class="slot-text">Feet (Plate)</span></td>
+                        <td><span class="stat-text">+800 Armor, +23 Stamina, +26 Intellect</span></td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman druid"
+                        data-req="70"
+                        data-item-id="28216"
+                        data-item-json="{&quot;id&quot;:28216,&quot;name&quot;:&quot;Dathrohan&#x27;s Ceremonial Hammer&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;35–113 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:41.1,&quot;stats&quot;:[&quot;+13 Stamina&quot;,&quot;+14 Intellect&quot;,&quot;+18 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 121.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:84562,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:45,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17862,&quot;bossName&quot;:&quot;Captain Skarloc&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Dathrohan's Ceremonial Hammer</span></td>
+                        <td><span class="slot-text">Main Hand</span></td>
+                        <td><span class="stat-text">+13 Stamina, +14 Intellect, +18 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal melee ranged"
+                        data-classes="paladin hunter shaman"
+                        data-req="70"
+                        data-item-id="28219"
+                        data-item-json="{&quot;id&quot;:28219,&quot;name&quot;:&quot;Emerald-Scale Greaves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Legs (Mail)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+570 Armor&quot;,&quot;+28 Agility&quot;,&quot;+20 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 56.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 6 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:51318,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:13,&quot;sellCopper&quot;:18,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;hunter&quot;,&quot;shaman&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17862,&quot;bossName&quot;:&quot;Captain Skarloc&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Emerald-Scale Greaves</span></td>
+                        <td><span class="slot-text">Legs (Mail)</span></td>
+                        <td><span class="stat-text">+570 Armor, +28 Agility, +20 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="shaman druid"
+                        data-req="70"
+                        data-item-id="28220"
+                        data-item-json="{&quot;id&quot;:28220,&quot;name&quot;:&quot;Moon-Crown Antlers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Head (Leather)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+237 Armor&quot;,&quot;+25 Stamina&quot;,&quot;+31 Intellect&quot;,&quot;+20 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 40.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:32192,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:92,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17862,&quot;bossName&quot;:&quot;Captain Skarloc&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Moon-Crown Antlers</span></td>
+                        <td><span class="slot-text">Head (Leather)</span></td>
+                        <td><span class="stat-text">+237 Armor, +25 Stamina, +31 Intellect, +20 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="28218"
+                        data-item-json="{&quot;id&quot;:28218,&quot;name&quot;:&quot;Pontiff&#x27;s Pantaloons of Prophecy&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Legs (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+136 Armor&quot;,&quot;+12 Stamina&quot;,&quot;+27 Intellect&quot;,&quot;+24 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 29.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:34081,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:81,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17862,&quot;bossName&quot;:&quot;Captain Skarloc&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Pontiff's Pantaloons of Prophecy</span></td>
+                        <td><span class="slot-text">Legs (Cloth)</span></td>
+                        <td><span class="stat-text">+136 Armor, +12 Stamina, +27 Intellect, +24 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank"
+                        data-classes="warrior paladin dk"
+                        data-req="70"
+                        data-item-id="28217"
+                        data-item-json="{&quot;id&quot;:28217,&quot;name&quot;:&quot;Tarren Mill Vitality Locket&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+35 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your resilience rating by 24.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:41953,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:19,&quot;sellCopper&quot;:53,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17862,&quot;bossName&quot;:&quot;Captain Skarloc&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Tarren Mill Vitality Locket</span></td>
+                        <td><span class="slot-text">Neck</span></td>
+                        <td><span class="stat-text">+35 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Epoch Hunter -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Epoch Hunter</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Final boss — Infinite Dragonflight assassin trying to kill Thrall · Three phases (human / drake-form / dragon); Sand Breath, Impending Death debuff · Level 68 Elite · Entry 18096</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="29250"
+                        data-item-json="{&quot;id&quot;:29250,&quot;name&quot;:&quot;Cord of Sanctification&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;slot&quot;:&quot;Waist (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+105 Armor&quot;,&quot;+25 Stamina&quot;,&quot;+24 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 33.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 9 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:21406,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Cord of Sanctification</span></td>
+                        <td><span class="slot-text">Waist (Cloth)</span></td>
+                        <td><span class="stat-text">+105 Armor, +25 Stamina, +24 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">110</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin dk"
+                        data-req="70"
+                        data-item-id="30536"
+                        data-item-json="{&quot;id&quot;:30536,&quot;name&quot;:&quot;Greaves of the Martyr&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;slot&quot;:&quot;Legs (Plate)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1216 Armor&quot;,&quot;+38 Strength&quot;,&quot;+30 Stamina&quot;,&quot;+27 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 10 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:77857,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:78,&quot;sellCopper&quot;:57,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Greaves of the Martyr</span></td>
+                        <td><span class="slot-text">Legs (Plate)</span></td>
+                        <td><span class="stat-text">+1216 Armor, +38 Strength, +30 Stamina, +27 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">110</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="29246"
+                        data-item-json="{&quot;id&quot;:29246,&quot;name&quot;:&quot;Nightfall Wristguards&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;slot&quot;:&quot;Wrist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+153 Armor&quot;,&quot;+24 Agility&quot;,&quot;+22 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 46.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:29163,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:91,&quot;sellCopper&quot;:63,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Nightfall Wristguards</span></td>
+                        <td><span class="slot-text">Wrist (Leather)</span></td>
+                        <td><span class="stat-text">+153 Armor, +24 Agility, +22 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">110</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="70"
+                        data-item-id="30534"
+                        data-item-json="{&quot;id&quot;:30534,&quot;name&quot;:&quot;Wyrmscale Greaves&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;slot&quot;:&quot;Legs (Mail)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+681 Armor&quot;,&quot;+32 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 64.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 8 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 26.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:105,&quot;sellPrice&quot;:66241,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:62,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Wyrmscale Greaves</span></td>
+                        <td><span class="slot-text">Legs (Mail)</span></td>
+                        <td><span class="stat-text">+681 Armor, +32 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">110</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk shaman"
+                        data-req="66"
+                        data-item-id="27432"
+                        data-item-json="{&quot;id&quot;:27432,&quot;name&quot;:&quot;Broxigar&#x27;s Ring of Valor&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+21 Strength&quot;,&quot;+19 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your resilience rating by 17.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:36645,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:66,&quot;sellCopper&quot;:45,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Broxigar's Ring of Valor</span></td>
+                        <td><span class="slot-text">Finger</span></td>
+                        <td><span class="stat-text">+21 Strength, +19 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
+                        data-req="66"
+                        data-item-id="27440"
+                        data-item-json="{&quot;id&quot;:27440,&quot;name&quot;:&quot;Diamond Prism of Recurrence&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+12 Stamina&quot;,&quot;+18 Intellect&quot;,&quot;+20 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:12377,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:23,&quot;sellCopper&quot;:77,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Diamond Prism of Recurrence</span></td>
+                        <td><span class="slot-text">Neck</span></td>
+                        <td><span class="stat-text">+12 Stamina, +18 Intellect, +20 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank"
+                        data-classes="druid"
+                        data-req="66"
+                        data-item-id="27434"
+                        data-item-json="{&quot;id&quot;:27434,&quot;name&quot;:&quot;Mantle of Perenolde&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Shoulder (Leather)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+197 Armor&quot;,&quot;+24 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 20.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 23.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:29689,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:96,&quot;sellCopper&quot;:89,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Mantle of Perenolde</span></td>
+                        <td><span class="slot-text">Shoulder (Leather)</span></td>
+                        <td><span class="stat-text">+197 Armor, +24 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="66"
+                        data-item-id="27433"
+                        data-item-json="{&quot;id&quot;:27433,&quot;name&quot;:&quot;Pauldrons of Sufferance&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Shoulder (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+105 Armor&quot;,&quot;+18 Stamina&quot;,&quot;+13 Intellect&quot;,&quot;+19 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 19.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:23663,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:63,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Pauldrons of Sufferance</span></td>
+                        <td><span class="slot-text">Shoulder (Cloth)</span></td>
+                        <td><span class="stat-text">+105 Armor, +18 Stamina, +13 Intellect, +19 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="ranged"
+                        data-classes="priest shaman mage warlock druid"
+                        data-req="66"
+                        data-item-id="27431"
+                        data-item-json="{&quot;id&quot;:27431,&quot;name&quot;:&quot;Time-Shifted Dagger&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:103,&quot;req&quot;:66,&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;38–103 Damage&quot;,&quot;speed&quot;:1.7,&quot;dps&quot;:41.5,&quot;stats&quot;:[&quot;+15 Stamina&quot;,&quot;+15 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 85.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 13.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:78296,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:82,&quot;sellCopper&quot;:96,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Time-Shifted Dagger</span></td>
+                        <td><span class="slot-text">Main Hand</span></td>
+                        <td><span class="stat-text">+15 Stamina, +15 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">103</td>
+                        <td class="text-end">20.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles=""
+                        data-classes=""
+                        data-req="70"
+                        data-item-id="28223"
+                        data-item-json="{&quot;id&quot;:28223,&quot;name&quot;:&quot;Arcanist&#x27;s Stone&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Use&quot;,&quot;text&quot;:&quot;Increases spell power by 167 for 20 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10000,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:0,&quot;sellCopper&quot;:0,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Arcanist's Stone</span></td>
+                        <td><span class="slot-text">Trinket</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk"
+                        data-req="70"
+                        data-item-id="28225"
+                        data-item-json="{&quot;id&quot;:28225,&quot;name&quot;:&quot;Doomplate Warhelm&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Head (Plate)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:661,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+946 Armor&quot;,&quot;+34 Strength&quot;,&quot;+39 Stamina&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:47053,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:70,&quot;sellCopper&quot;:53,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Doomplate Battlegear&quot;,&quot;items&quot;:[{&quot;id&quot;:28403,&quot;name&quot;:&quot;Doomplate Chestguard&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27497,&quot;name&quot;:&quot;Doomplate Gauntlets&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28225,&quot;name&quot;:&quot;Doomplate Warhelm&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27870,&quot;name&quot;:&quot;Doomplate Legguards&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27771,&quot;name&quot;:&quot;Doomplate Shoulderguards&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases your hit rating by 35.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Your attacks have a chance to grant you 160 attack power for 15 sec.&quot;}],&quot;quality&quot;:3}}">
+                        <td><span style="color:#0070dd; font-weight:600;">Doomplate Warhelm</span></td>
+                        <td><span class="slot-text">Head (Plate)</span></td>
+                        <td><span class="stat-text">+946 Armor, +34 Strength, +39 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="27911"
+                        data-item-json="{&quot;id&quot;:27911,&quot;name&quot;:&quot;Epoch&#x27;s Whispering Cinch&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Waist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+164 Armor&quot;,&quot;+25 Agility&quot;,&quot;+24 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 40.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 17.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:22851,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:28,&quot;sellCopper&quot;:51,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Epoch's Whispering Cinch</span></td>
+                        <td><span class="slot-text">Waist (Leather)</span></td>
+                        <td><span class="stat-text">+164 Armor, +25 Agility, +24 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="70"
+                        data-item-id="28401"
+                        data-item-json="{&quot;id&quot;:28401,&quot;name&quot;:&quot;Hauberk of Desolation&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:660,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+652 Armor&quot;,&quot;+28 Stamina&quot;,&quot;+25 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 50.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:50552,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:5,&quot;sellCopper&quot;:52,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Desolation Battlegear&quot;,&quot;items&quot;:[{&quot;id&quot;:27936,&quot;name&quot;:&quot;Greaves of Desolation&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28401,&quot;name&quot;:&quot;Hauberk of Desolation&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27528,&quot;name&quot;:&quot;Gauntlets of Desolation&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28192,&quot;name&quot;:&quot;Helm of Desolation&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27713,&quot;name&quot;:&quot;Pauldrons of Desolation&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases your hit rating by 35.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Your attacks have a chance to grant you 160 attack power for 15 sec.&quot;}],&quot;quality&quot;:3}}">
+                        <td><span style="color:#0070dd; font-weight:600;">Hauberk of Desolation</span></td>
+                        <td><span class="slot-text">Chest (Mail)</span></td>
+                        <td><span class="stat-text">+652 Armor, +28 Stamina, +25 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="28191"
+                        data-item-json="{&quot;id&quot;:28191,&quot;name&quot;:&quot;Mana-Etched Vestments&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Chest (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:658,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+156 Armor&quot;,&quot;+25 Stamina&quot;,&quot;+25 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 29.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 17.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:35771,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:57,&quot;sellCopper&quot;:71,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Mana-Etched Regalia&quot;,&quot;items&quot;:[{&quot;id&quot;:28193,&quot;name&quot;:&quot;Mana-Etched Crown&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27465,&quot;name&quot;:&quot;Mana-Etched Gloves&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27907,&quot;name&quot;:&quot;Mana-Etched Pantaloons&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28191,&quot;name&quot;:&quot;Mana-Etched Vestments&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27796,&quot;name&quot;:&quot;Mana-Etched Spaulders&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases your hit rating by 35.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Your harmful spells have a chance to grant you 110 spell power for 15 sec.&quot;}],&quot;quality&quot;:3}}">
+                        <td><span style="color:#0070dd; font-weight:600;">Mana-Etched Vestments</span></td>
+                        <td><span class="slot-text">Chest (Cloth)</span></td>
+                        <td><span class="stat-text">+156 Armor, +25 Stamina, +25 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles=""
+                        data-classes=""
+                        data-req="70"
+                        data-item-id="28233"
+                        data-item-json="{&quot;id&quot;:28233,&quot;name&quot;:&quot;Necklace of Resplendent Hope&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 28.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 11 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22464,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:24,&quot;sellCopper&quot;:64,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Necklace of Resplendent Hope</span></td>
+                        <td><span class="slot-text">Neck</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk shaman"
+                        data-req="70"
+                        data-item-id="28222"
+                        data-item-json="{&quot;id&quot;:28222,&quot;name&quot;:&quot;Reaver of the Infinites&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;268–403 Damage&quot;,&quot;speed&quot;:3.6,&quot;dps&quot;:93.2,&quot;stats&quot;:[&quot;+22 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 50.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your resilience rating by 27.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:108122,&quot;sellGold&quot;:10,&quot;sellSilver&quot;:81,&quot;sellCopper&quot;:22,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Reaver of the Infinites</span></td>
+                        <td><span class="slot-text">Two-Hand</span></td>
+                        <td><span class="stat-text">+22 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk shaman"
+                        data-req="70"
+                        data-item-id="27904"
+                        data-item-json="{&quot;id&quot;:27904,&quot;name&quot;:&quot;Resounding Ring of Glory&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+24 Strength&quot;,&quot;+24 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 15.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10709,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:7,&quot;sellCopper&quot;:9,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Resounding Ring of Glory</span></td>
+                        <td><span class="slot-text">Finger</span></td>
+                        <td><span class="stat-text">+24 Strength, +24 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="ranged"
+                        data-classes="priest shaman mage warlock druid"
+                        data-req="70"
+                        data-item-id="28227"
+                        data-item-json="{&quot;id&quot;:28227,&quot;name&quot;:&quot;Sparking Arcanite Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+13 Stamina&quot;,&quot;+14 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 22.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 10.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:83797,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:37,&quot;sellCopper&quot;:97,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Sparking Arcanite Ring</span></td>
+                        <td><span class="slot-text">Finger</span></td>
+                        <td><span class="stat-text">+13 Stamina, +14 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior rogue shaman druid"
+                        data-req="70"
+                        data-item-id="28226"
+                        data-item-json="{&quot;id&quot;:28226,&quot;name&quot;:&quot;Timeslicer&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;80–121 Damage&quot;,&quot;speed&quot;:1.4,&quot;dps&quot;:71.8,&quot;stats&quot;:[&quot;+13 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 30.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your expertise rating by 15.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:90122,&quot;sellGold&quot;:9,&quot;sellSilver&quot;:1,&quot;sellCopper&quot;:22,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Timeslicer</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+13 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank"
+                        data-classes="druid"
+                        data-req="70"
+                        data-item-id="28224"
+                        data-item-json="{&quot;id&quot;:28224,&quot;name&quot;:&quot;Wastewalker Helm&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Head (Leather)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:659,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+237 Armor&quot;,&quot;+30 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 56.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 22.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:33551,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:35,&quot;sellCopper&quot;:51,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Wastewalker Armor&quot;,&quot;items&quot;:[{&quot;id&quot;:28264,&quot;name&quot;:&quot;Wastewalker Tunic&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27531,&quot;name&quot;:&quot;Wastewalker Gloves&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28224,&quot;name&quot;:&quot;Wastewalker Helm&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27837,&quot;name&quot;:&quot;Wastewalker Leggings&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27797,&quot;name&quot;:&quot;Wastewalker Shoulderpads&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases your hit rating by 35.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Your attacks have a chance to grant you 160 attack power for 15 sec.&quot;}],&quot;quality&quot;:3}}">
+                        <td><span style="color:#0070dd; font-weight:600;">Wastewalker Helm</span></td>
+                        <td><span class="slot-text">Head (Leather)</span></td>
+                        <td><span class="stat-text">+237 Armor, +30 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal melee ranged"
+                        data-classes="paladin hunter shaman"
+                        data-req="70"
+                        data-item-id="28344"
+                        data-item-json="{&quot;id&quot;:28344,&quot;name&quot;:&quot;Wyrmfury Pauldrons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Shoulder (Mail)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+489 Armor&quot;,&quot;+25 Agility&quot;,&quot;+18 Stamina&quot;,&quot;+20 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 50.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:41467,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:67,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;hunter&quot;,&quot;shaman&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18096,&quot;bossName&quot;:&quot;Epoch Hunter&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Wyrmfury Pauldrons</span></td>
+                        <td><span class="slot-text">Shoulder (Mail)</span></td>
+                        <td><span class="stat-text">+489 Armor, +25 Agility, +18 Stamina, +20 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">16.7%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+
+<details class="trash-section">
+    <summary>🗡️ Trash drops <span class="trash-count">(1 mobs)</span></summary>
+    <p class="trash-blurb">Trash mobs you encounter clearing the dungeon —
+       set pieces, world drops, and miscellaneous gear from non-boss
+       creatures. They respawn, so multiple kills per run are possible.</p>
+    
+    <!-- Don Carlos -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Don Carlos</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 68 Elite · Entry 28132</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles=""
+                        data-classes=""
+                        data-req="0"
+                        data-item-id="38506"
+                        data-item-json="{&quot;id&quot;:38506,&quot;name&quot;:&quot;Don Carlos&#x27; Famous Hat&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:0,&quot;slot&quot;:&quot;Head (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+127 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Use&quot;,&quot;text&quot;:&quot;Right Click to summon an incorporeal coyote spirit to accompany you. The spirit will remain until sent away or you remove the hat.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:25500,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:55,&quot;sellCopper&quot;:0,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:100.0,&quot;chanceStr&quot;:&quot;100.0%&quot;,&quot;bossId&quot;:28132,&quot;bossName&quot;:&quot;Don Carlos&quot;,&quot;bossLvl&quot;:68,&quot;mapId&quot;:560,&quot;dungeon&quot;:&quot;Old Hillsbrad Foothills&quot;,&quot;page&quot;:&quot;old-hillsbrad-foothills.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Don Carlos' Famous Hat</span></td>
+                        <td><span class="slot-text">Head (Cloth)</span></td>
+                        <td><span class="stat-text">+127 Armor</span></td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">100.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+</details>
+
+</div>
+
+<script src="tooltip.js"></script>
+<script src="smart_filter_block.js"></script>
+<script src="kcraft_pills.js"></script>
+<script src="dungeon_filter.js"></script>
+<script src="sortable.js"></script>
+
+</body>
+</html>
