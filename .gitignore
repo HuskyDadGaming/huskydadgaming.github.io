@@ -1,18 +1,28 @@
-# Backups created by the build script (--update-index) and ad-hoc copies.
-# *.bak* catches .bak, .bak1, .bak.2026-05-11, etc.
-*.bak*
+# KCraft website — GitHub Pages deploy.
+#
+# The published site is ONLY: the HTML pages, their JS, and loot-data.json
+# (fetched by the armoury's Upgrade Finder as a fallback). Everything else
+# in this folder — the CSV/DBC build inputs (Spell.csv alone is ~48 MB),
+# the spell/itemset build intermediates, the Python build & server scripts,
+# backups, logs, secrets — exists only to build the site locally and must
+# NOT be pushed.
+#
+# Strategy: ignore everything, then re-include exactly what the site serves.
+# Anything new (another CSV, a .bak, a stray script) is excluded automatically.
 
-# Python bytecode cache
-__pycache__/
-*.pyc
+# Ignore everything by default.
+*
 
-# Helper scripts and temp outputs I create during sessions (convention:
-# any file starting with an underscore is throwaway diagnostic stuff)
-_*.py
-_*.json
-_*.yaml
+# Re-include only what the live site needs:
+!*.html
+!*.js
+!loot-data.json
 
-# Environment / secret files (defensive — nothing here today but if any
-# .env or .pem ever ends up in this folder it stays local)
-*.env
-*.pem
+# ...and keep this ignore file itself in the repo.
+!.gitignore
+
+# If you later add local assets the site loads (CSS, images, fonts, or a
+# custom-domain CNAME), re-include them with another ! line, e.g.:
+#   !*.css
+#   !*.png
+#   !CNAME

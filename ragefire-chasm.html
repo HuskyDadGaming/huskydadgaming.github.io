@@ -172,6 +172,14 @@
             font-size: 0.85rem;
         }
         .filter-btn.reset-btn:hover { background: #6a2828; border-color: #6a2828; }
+        /* Reset lives at the right edge of the Quality row (mirrors the
+           Find Loot finder bar). margin-left:auto pushes it past the
+           dropdown to the end of the flex row on desktop. */
+        .filter-row.row-quality .filter-btn.reset-btn { margin-left: auto; }
+        /* Desktop hides the Apply row entirely (Apply is mobile-only and
+           is the only control left in row-buttons after Reset moved out).
+           Mobile re-enables the row inside the @media block below. */
+        .filter-row.row-buttons { display: none; }
 
         /* Expand all / Collapse all controls — sit between the filter
            bar and the first boss card so they're always reachable. */
@@ -284,7 +292,7 @@
             /* Filter bar layout. Each row gets a named class (.row-class,
                .row-role, .row-quality, .row-buttons, .row-legend) for
                targeted styling. HTML order is the visual order on mobile:
-               Class → Role → Quality → Apply/Reset → Legend. */
+               Class → Role → Quality → Reset → Apply → Legend. */
             .filter-bar { padding: 0.75rem; }
 
             /* Collapsible summary visible on mobile only */
@@ -339,22 +347,28 @@
                 grid-column: 1 / -1;
             }
 
-            /* Apply + Reset row: side-by-side 50/50 split with Apply on
-               the left. Apply is hidden on desktop (display:none on the
-               base rule); on mobile we show it and stretch both buttons
-               to share the row evenly. */
+            /* Apply row (mobile only — desktop hides it via the base
+               `.filter-row.row-buttons { display: none }` rule). Reset
+               now lives in the Quality row, so this row only contains
+               Apply; flex:1 stretches it to full width. */
             .filter-row.row-buttons {
+                display: flex;
                 flex-direction: row;
                 gap: 6px;
             }
             .filter-row.row-buttons .filter-btn.apply-btn {
                 display: block;
-            }
-            .filter-row.row-buttons .filter-btn.apply-btn,
-            .filter-row.row-buttons .filter-btn.reset-btn {
                 flex: 1 1 0;
                 margin-left: 0;
                 padding: 10px;
+            }
+            /* Reset (mobile): stacks below the Quality dropdown as a
+               full-width control. margin-left:auto from desktop is
+               cancelled — column flow makes it a vertical stack. */
+            .filter-row.row-quality .filter-btn.reset-btn {
+                margin-left: 0;
+                padding: 10px;
+                width: 100%;
             }
 
             /* Legend: pills wrap naturally, just make text smaller. Each
@@ -515,10 +529,10 @@
                     <option value="4" style="color:#a335ee">Epic only</option>
                 </select>
             </div>
+            <button class="filter-btn reset-btn" id="reset-filters">Reset all</button>
         </div>
         <div class="filter-row row-buttons">
             <button class="filter-btn apply-btn" id="apply-filters">Apply</button>
-            <button class="filter-btn reset-btn" id="reset-filters">Reset</button>
         </div>
         <div class="filter-row row-legend">
             <span class="label">Legend:</span>
@@ -582,10 +596,10 @@
                         data-classes="priest mage warlock"
                         data-req="13"
                         data-item-id="14148"
-                        data-item-json="{&quot;id&quot;:14148,&quot;name&quot;:&quot;Crystalline Cuffs&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;Wrist (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+2 Spirit&quot;,&quot;+2 Intellect&quot;,&quot;+15 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 4.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:20,&quot;sellPrice&quot;:250,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:11520,&quot;bossName&quot;:&quot;Taragaman the Hungerer&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:14148,&quot;name&quot;:&quot;Crystalline Cuffs&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;Wrist (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+15 Armor&quot;,&quot;+2 Spirit&quot;,&quot;+2 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 4.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:20,&quot;sellPrice&quot;:250,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:11520,&quot;bossName&quot;:&quot;Taragaman the Hungerer&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Crystalline Cuffs</span></td>
                         <td><span class="slot-text">Wrist (Cloth)</span></td>
-                        <td><span class="stat-text">+2 Spirit, +2 Intellect, +15 Armor</span></td>
+                        <td><span class="stat-text">+15 Armor, +2 Spirit, +2 Intellect</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
@@ -603,10 +617,10 @@
                         data-classes="warrior paladin hunter rogue shaman druid"
                         data-req="13"
                         data-item-id="14149"
-                        data-item-json="{&quot;id&quot;:14149,&quot;name&quot;:&quot;Subterranean Cape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+4 Agility&quot;,&quot;+4 Strength&quot;,&quot;+17 Armor&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:377,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:3,&quot;sellCopper&quot;:77,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:11520,&quot;bossName&quot;:&quot;Taragaman the Hungerer&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:14149,&quot;name&quot;:&quot;Subterranean Cape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+17 Armor&quot;,&quot;+4 Agility&quot;,&quot;+4 Strength&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:377,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:3,&quot;sellCopper&quot;:77,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:11520,&quot;bossName&quot;:&quot;Taragaman the Hungerer&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Subterranean Cape</span></td>
                         <td><span class="slot-text">Back</span></td>
-                        <td><span class="stat-text">+4 Agility, +4 Strength, +17 Armor</span></td>
+                        <td><span class="stat-text">+17 Armor, +4 Agility, +4 Strength</span></td>
                         <td>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
@@ -627,7 +641,7 @@
                         data-classes="warrior paladin rogue"
                         data-req="13"
                         data-item-id="14145"
-                        data-item-json="{&quot;id&quot;:14145,&quot;name&quot;:&quot;Cursed Felblade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:7,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;22–42 Damage&quot;,&quot;speed&quot;:2.6,&quot;dps&quot;:12.3,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Chance on hit&quot;,&quot;text&quot;:&quot;Reduces target enemy&#x27;s attack power by 25 for 30 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:1238,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:12,&quot;sellCopper&quot;:38,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;rogue&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:11520,&quot;bossName&quot;:&quot;Taragaman the Hungerer&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:14145,&quot;name&quot;:&quot;Cursed Felblade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:7,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;22–42 Damage&quot;,&quot;speed&quot;:2.6,&quot;dps&quot;:12.3,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Chance on hit&quot;,&quot;text&quot;:&quot;Reduces target enemy&#x27;s attack power by 25 for 30 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:1238,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:12,&quot;sellCopper&quot;:38,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;rogue&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:11520,&quot;bossName&quot;:&quot;Taragaman the Hungerer&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Cursed Felblade</span></td>
                         <td><span class="slot-text">One-Hand</span></td>
                         <td><span class="stat-text"></span></td>
@@ -673,10 +687,10 @@
                         data-classes="warrior paladin shaman"
                         data-req="13"
                         data-item-id="14147"
-                        data-item-json="{&quot;id&quot;:14147,&quot;name&quot;:&quot;Cavedweller Bracers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;Wrist (Mail)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+3 Strength&quot;,&quot;+4 Stamina&quot;,&quot;+78 Armor&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:374,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:3,&quot;sellCopper&quot;:74,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:11518,&quot;bossName&quot;:&quot;Jergosh the Invoker&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:14147,&quot;name&quot;:&quot;Cavedweller Bracers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;Wrist (Mail)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+78 Armor&quot;,&quot;+3 Strength&quot;,&quot;+4 Stamina&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:374,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:3,&quot;sellCopper&quot;:74,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:11518,&quot;bossName&quot;:&quot;Jergosh the Invoker&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Cavedweller Bracers</span></td>
                         <td><span class="slot-text">Wrist (Mail)</span></td>
-                        <td><span class="stat-text">+3 Strength, +4 Stamina, +78 Armor</span></td>
+                        <td><span class="stat-text">+78 Armor, +3 Strength, +4 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
@@ -694,10 +708,10 @@
                         data-classes="priest mage warlock"
                         data-req="13"
                         data-item-id="14150"
-                        data-item-json="{&quot;id&quot;:14150,&quot;name&quot;:&quot;Robe of Evocation&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;Chest (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+5 Intellect&quot;,&quot;+4 Stamina&quot;,&quot;+35 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 5.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:504,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:5,&quot;sellCopper&quot;:4,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:11518,&quot;bossName&quot;:&quot;Jergosh the Invoker&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:14150,&quot;name&quot;:&quot;Robe of Evocation&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;Chest (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+35 Armor&quot;,&quot;+5 Intellect&quot;,&quot;+4 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 5.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:504,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:5,&quot;sellCopper&quot;:4,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:11518,&quot;bossName&quot;:&quot;Jergosh the Invoker&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Robe of Evocation</span></td>
                         <td><span class="slot-text">Chest (Cloth)</span></td>
-                        <td><span class="stat-text">+5 Intellect, +4 Stamina, +35 Armor</span></td>
+                        <td><span class="stat-text">+35 Armor, +5 Intellect, +4 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
@@ -715,7 +729,7 @@
                         data-classes="warrior hunter rogue shaman druid"
                         data-req="13"
                         data-item-id="14151"
-                        data-item-json="{&quot;id&quot;:14151,&quot;name&quot;:&quot;Chanting Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;12–24 Damage&quot;,&quot;speed&quot;:1.5,&quot;dps&quot;:12.0,&quot;stats&quot;:[&quot;+3 Agility&quot;,&quot;+2 Stamina&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:1267,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:12,&quot;sellCopper&quot;:67,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:11518,&quot;bossName&quot;:&quot;Jergosh the Invoker&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:14151,&quot;name&quot;:&quot;Chanting Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:18,&quot;req&quot;:13,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;12–24 Damage&quot;,&quot;speed&quot;:1.5,&quot;dps&quot;:12.0,&quot;stats&quot;:[&quot;+3 Agility&quot;,&quot;+2 Stamina&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:1267,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:12,&quot;sellCopper&quot;:67,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:11518,&quot;bossName&quot;:&quot;Jergosh the Invoker&quot;,&quot;bossLvl&quot;:16,&quot;mapId&quot;:389,&quot;dungeon&quot;:&quot;Ragefire Chasm&quot;,&quot;page&quot;:&quot;ragefire-chasm.html&quot;,&quot;faction&quot;:&quot;Horde&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Chanting Blade</span></td>
                         <td><span class="slot-text">One-Hand</span></td>
                         <td><span class="stat-text">+3 Agility, +2 Stamina</span></td>

@@ -296,10 +296,19 @@
         }
 
         // -- pill visibility within visible rows ---------------------------
+        // The pill's title attribute holds the human name (e.g. "Death Knight"),
+        // but activeClass and classFillsRole use the slug ("dk"). For every
+        // class except DK these strings match after lowercasing — DK is the
+        // outlier and needs an explicit map back to its slug.
+        const TITLE_TO_SLUG = { 'death knight': 'dk' };
+        const pillSlugOf = pill =>
+            TITLE_TO_SLUG[(pill.getAttribute('title') || '').toLowerCase()] ||
+            (pill.getAttribute('title') || '').toLowerCase();
+
         function refinePills(row, item) {
             // Class pills: which classes get shown on this specific row?
             row.querySelectorAll('.class-pill').forEach(pill => {
-                const pillClass = (pill.getAttribute('title') || '').toLowerCase();
+                const pillClass = pillSlugOf(pill);
                 let show = true;
                 if (activeClass !== 'all') {
                     show = (pillClass === activeClass);

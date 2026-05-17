@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Labyrinth — KCraft</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌑</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #1a1a1a; color: #ddd; padding-bottom: 3rem; }
+        .container { max-width: 1100px; }
+        h1, h2, h3 { color: #ffd100; }
+        a { color: #4ea8de; text-decoration: none; }
+        a:hover { color: #88c5f0; }
+        .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .card { background: #232323; border: 1px solid #3a3a3a; margin-bottom: 1.5rem; }
+        .card-title { color: #ffd100; margin-bottom: 0.25rem; }
+        .boss-meta { color: #777; font-size: 0.85rem; margin-bottom: 1rem; }
+
+        /* Collapsible boss cards. The whole card is a <details> element;
+           clicking the summary header toggles the items table below.
+           Defaults to open so the page reads exactly like before — the
+           collapse is opt-in, useful when scrolling through a dungeon
+           with many bosses. The trash section's inner cards inherit
+           this behavior since they share render_boss_card.
+           Arrow is anchored to the top-right corner of the card via
+           absolute positioning so it lines up consistently regardless
+           of how long the boss-meta line wraps. */
+        .boss-card {
+            display: block;  /* override Bootstrap card flex */
+            padding: 0;
+            position: relative;
+        }
+        .boss-card > summary {
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            /* Right padding leaves room for the absolutely-positioned arrow */
+            padding: 0.85rem 2.5rem 0.85rem 1rem;
+            transition: background 0.15s;
+        }
+        .boss-card > summary:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .boss-card > summary::-webkit-details-marker { display: none; }
+        .boss-card::after {
+            content: '▼';
+            position: absolute;
+            top: 0.95rem;
+            right: 1rem;
+            color: #888;
+            font-size: 0.95em;
+            pointer-events: none;  /* let the click pass through to summary */
+            transition: color 0.15s;
+        }
+        .boss-card[open]::after { content: '▲'; color: #ffd100; }
+        /* Title is the only line in summary now — meta moved into content
+           so it collapses with the table. No bottom margin needed. */
+        .boss-card > summary .card-title { margin-bottom: 0; }
+        .boss-card > .boss-card-content {
+            padding: 0.5rem 1rem 1rem;
+        }
+        .boss-card > .boss-card-content .boss-meta {
+            margin-top: 0;
+            margin-bottom: 0.85rem;
+        }
+        table.table { color: #ddd; margin-bottom: 0; }
+        table.table > :not(caption) > * > * {
+            background-color: transparent; color: #ddd;
+            border-bottom-color: #3a3a3a; vertical-align: middle;
+        }
+        table.table > thead {
+            color: #999; font-size: 0.78rem;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        table.table tbody tr:hover { background: #2a2a2a; }
+
+        .filter-bar {
+            margin-bottom: 1.5rem; padding: 1rem;
+            background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        /* Collapsible filter wrapper. The whole <details> sticks to the top
+           of the viewport on scroll so users can change filters from
+           anywhere on a long dungeon page without scrolling back up.
+           Desktop: summary is hidden, content always visible. Mobile:
+           closed by default (set by dungeon_filter.js on init), summary
+           shown as a single-line summary that toggles the filter content.
+           The HTML defaults to <details open> so non-JS users get the
+           working default of expanded. */
+        .filter-bar-collapsible {
+            margin-bottom: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #1a1a1a;  /* matches body so scrolled content doesn't peek through */
+        }
+        .filter-bar-collapsible > .filter-bar {
+            margin-bottom: 0;  /* details element provides outer spacing */
+        }
+        .filter-bar-collapsible > summary {
+            display: none;  /* hidden on desktop */
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            padding: 0.7rem 0.9rem;
+            background: #232323;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            color: #ccc;
+            font-size: 0.92rem;
+        }
+        .filter-bar-collapsible > summary::-webkit-details-marker { display: none; }
+        .filter-bar-collapsible > summary::after {
+            content: ' ▼';
+            color: #888;
+            float: right;
+            font-size: 0.85em;
+        }
+        .filter-bar-collapsible[open] > summary::after { content: ' ▲'; }
+        .filter-bar-collapsible[open] > summary {
+            border-radius: 6px 6px 0 0;
+            border-bottom: 0;
+            margin-bottom: 0;
+        }
+        .filter-bar-collapsible[open] > .filter-bar {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+        .filter-row {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            align-items: center; margin-bottom: 8px;
+        }
+        .filter-row:last-child { margin-bottom: 0; }
+        .filter-row > .label { color: #999; font-size: 0.9rem; min-width: 90px; }
+        .filter-btn {
+            padding: 8px 14px; border-radius: 5px; border: 2px solid #555;
+            background: #2a2a2a; color: #ccc; cursor: pointer;
+            font-size: 0.85rem; transition: all 0.2s ease;
+        }
+        .filter-btn:hover { background: #3a3a3a; border-color: #777; }
+        .filter-btn.active {
+            background: #ffd100; color: #1a1a1a; border-color: #ffd100;
+            font-weight: 600;
+        }
+        /* Apply / Reset buttons. Visually identical across all pages
+           (Find Loot tab on index.html uses the same .reset-btn spec).
+           Apply is the primary action (brand yellow); Reset is destructive
+           but stays subtle so it doesn't shout for attention.
+           Override .filter-btn padding/border so these read as polished
+           action buttons rather than the chunky role-toggle base style.
+           Apply is hidden on desktop — the filter bar is always visible
+           there so collapsing-via-Apply isn't useful — and only shown
+           inside the mobile @media block below. */
+        .filter-btn.apply-btn {
+            display: none;
+            margin-left: 10px; padding: 6px 14px;
+            background: #ffd100; color: #1a1a1a;
+            border: 1px solid #ffd100; border-radius: 4px;
+            font-size: 0.85rem; font-weight: 600;
+        }
+        .filter-btn.apply-btn:hover { background: #ffe14d; border-color: #ffe14d; }
+        .filter-btn.reset-btn {
+            margin-left: 10px; padding: 6px 14px;
+            background: #4a1818; color: #ff9b9b;
+            border: 1px solid #6a2828; border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        .filter-btn.reset-btn:hover { background: #6a2828; border-color: #6a2828; }
+        /* Reset lives at the right edge of the Quality row (mirrors the
+           Find Loot finder bar). margin-left:auto pushes it past the
+           dropdown to the end of the flex row on desktop. */
+        .filter-row.row-quality .filter-btn.reset-btn { margin-left: auto; }
+        /* Desktop hides the Apply row entirely (Apply is mobile-only and
+           is the only control left in row-buttons after Reset moved out).
+           Mobile re-enables the row inside the @media block below. */
+        .filter-row.row-buttons { display: none; }
+
+        /* Expand all / Collapse all controls — sit between the filter
+           bar and the first boss card so they're always reachable. */
+        .expand-controls {
+            display: flex; gap: 0.5rem; flex-wrap: wrap;
+            margin: 0 0 1rem 0;
+        }
+        .expand-controls .expand-btn {
+            padding: 6px 12px; background: #2d2d2d; color: #ccc;
+            border: 1px solid #3a3a3a; border-radius: 4px;
+            cursor: pointer; font-size: 0.85rem;
+            transition: color 0.1s ease, border-color 0.1s ease;
+        }
+        .expand-controls .expand-btn:hover {
+            color: #ffd100; border-color: #ffd100;
+        }
+
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown select {
+            padding: 8px 12px; background: #2a2a2a; color: #ccc;
+            border: 2px solid #555; border-radius: 5px; font-size: 0.85rem;
+            min-width: 150px;
+        }
+
+        .role-pill {
+            display: inline-block; padding: 2px 7px; border-radius: 4px;
+            font-size: 0.75rem; margin-right: 3px; cursor: default;
+            font-weight: 600;
+        }
+        .class-pill {
+            display: inline-block; width: 18px; height: 18px;
+            line-height: 18px; text-align: center; border-radius: 3px;
+            font-size: 0.7rem; font-weight: 700;
+            color: #1a1a1a; margin-right: 2px; cursor: default;
+        }
+        .pill-empty {
+            color: #555; font-size: 1rem; font-weight: 400; cursor: default;
+        }
+
+        .no-loot { color: #777; font-style: italic; text-align: center; padding: 1rem; }
+        .stat-text { color: #4ea8de; font-size: 0.85rem; }
+        .slot-text { color: #bbb; font-size: 0.85rem; }
+
+        /* Notable trash collapsible — secondary content, visually quieter */
+        .trash-section {
+            margin-top: 1.5rem;
+            border-top: 1px solid #333;
+            padding-top: 1rem;
+        }
+        .trash-section > summary {
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ddd;
+            padding: 0.5rem 0;
+            list-style: none;
+            user-select: none;
+        }
+        .trash-section > summary::-webkit-details-marker { display: none; }
+        .trash-section > summary::before {
+            content: '▶';
+            display: inline-block;
+            margin-right: 8px;
+            color: #888;
+            transition: transform 0.15s ease;
+        }
+        .trash-section[open] > summary::before { transform: rotate(90deg); }
+        .trash-section > summary:hover { color: #ffd100; }
+        .trash-section .trash-count { color: #888; font-weight: normal; font-size: 0.95rem; }
+        .trash-section .trash-blurb {
+            color: #999; font-size: 0.85rem; font-style: italic;
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        /* Sortable headers (sortable.js wires up clicks) */
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.1s ease;
+            white-space: nowrap;  /* keep header text + indicator on one line */
+        }
+        th.sortable:hover { color: #ffd100; }
+        th.sortable::after {
+            content: ' ⇅';
+            color: #444;
+            font-size: 0.75em;
+            margin-left: 4px;
+        }
+        th.sortable.sort-asc::after  { content: ' ▲'; color: #ffd100; }
+        th.sortable.sort-desc::after { content: ' ▼'; color: #ffd100; }
+
+        /* ============================================================
+           Mobile (≤600px): boss-card tables become labeled cards.
+           Mirrors the Find Loot card pattern for consistency.
+           Column order: 1=ITEM 2=SLOT 3=STATS 4=ROLES 5=CLASSES 6=ILVL 7=DROP
+           ============================================================ */
+        @media (max-width: 600px) {
+            body { font-size: 0.92rem; }
+            .container { padding: 0 0.5rem; }
+
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.2rem; }
+            .summary-block { padding: 0.7rem 0.8rem; font-size: 0.88rem; }
+
+            /* Filter bar: each row stacks (label on top, controls below).
+               Role buttons go into a 2-col grid for a uniform look — when
+               there's an odd count (we have 5 roles) the last button spans
+               both columns so nothing is stranded as a half-width cell.
+               Class/Quality/Reset stack vertically as full-width controls. */
+            /* Filter bar layout. Each row gets a named class (.row-class,
+               .row-role, .row-quality, .row-buttons, .row-legend) for
+               targeted styling. HTML order is the visual order on mobile:
+               Class → Role → Quality → Reset → Apply → Legend. */
+            .filter-bar { padding: 0.75rem; }
+
+            /* Collapsible summary visible on mobile only */
+            .filter-bar-collapsible > summary {
+                display: block;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+                margin-bottom: 12px;
+            }
+            .filter-row > .label {
+                min-width: 0 !important;
+                font-size: 0.85rem;
+                margin-bottom: 0;
+                /* Override inline margin-left:18px on the Quality label */
+                margin-left: 0 !important;
+            }
+
+            /* Class & Quality dropdown rows: full-width selects */
+            .filter-row.row-class .dropdown,
+            .filter-row.row-quality .dropdown {
+                width: 100%;
+            }
+            .filter-row.row-class select,
+            .filter-row.row-quality select {
+                width: 100%;
+                font-size: 0.9rem;
+                padding: 8px 10px;
+            }
+
+            /* Role row: 2-col button grid, label spans full width.
+               5 buttons total — the lone last one (odd-position) spans
+               both cols so nothing is stranded as a half-width cell. */
+            .filter-row.row-role {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+                align-items: stretch;
+            }
+            .filter-row.row-role > .label {
+                grid-column: 1 / -1;
+            }
+            .filter-row.row-role > .filter-btn {
+                font-size: 0.82rem;
+                padding: 8px 10px;
+                margin: 0;
+            }
+            .filter-row.row-role > .filter-btn:last-child:nth-child(odd) {
+                grid-column: 1 / -1;
+            }
+
+            /* Apply row (mobile only — desktop hides it via the base
+               `.filter-row.row-buttons { display: none }` rule). Reset
+               now lives in the Quality row, so this row only contains
+               Apply; flex:1 stretches it to full width. */
+            .filter-row.row-buttons {
+                display: flex;
+                flex-direction: row;
+                gap: 6px;
+            }
+            .filter-row.row-buttons .filter-btn.apply-btn {
+                display: block;
+                flex: 1 1 0;
+                margin-left: 0;
+                padding: 10px;
+            }
+            /* Reset (mobile): stacks below the Quality dropdown as a
+               full-width control. margin-left:auto from desktop is
+               cancelled — column flow makes it a vertical stack. */
+            .filter-row.row-quality .filter-btn.reset-btn {
+                margin-left: 0;
+                padding: 10px;
+                width: 100%;
+            }
+
+            /* Legend: pills wrap naturally, just make text smaller. Each
+               entry is a .legend-item that holds the pill + name together
+               so multi-word classes (e.g. Death Knight) never split. */
+            .filter-row.row-legend .legend {
+                font-size: 0.8rem !important;
+                line-height: 1.7;
+            }
+            .filter-row.row-legend .legend-item {
+                white-space: nowrap;
+                display: inline-block;
+                margin-right: 8px;
+            }
+
+            /* Boss cards: tighter, full-width. Padding lives on summary
+               and content children (the card is a <details>). */
+            .boss-card { padding: 0; margin-bottom: 1rem; }
+            .boss-card > summary { padding: 0.7rem 0.85rem; }
+            .boss-card > .boss-card-content { padding: 0 0.85rem 0.85rem; }
+            .boss-card h3 { font-size: 1.1rem; }
+            .boss-meta { font-size: 0.8rem; }
+
+            /* Table → card list. Sortable headers don't help on mobile
+               since each row is a card with labeled fields. */
+            .boss-card table,
+            .boss-card thead,
+            .boss-card tbody,
+            .boss-card tr,
+            .boss-card td { display: block; width: 100%; }
+            .boss-card thead { display: none; }
+
+            .boss-card tbody tr {
+                background: #232323; border: 1px solid #2d2d2d;
+                border-radius: 6px;
+                padding: 0.65rem 0.85rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .boss-card tbody tr td {
+                padding: 4px 0; border: 0;
+                font-size: 0.85rem; line-height: 1.5;
+            }
+            .boss-card tbody tr td::before {
+                display: block;
+                color: #777; font-size: 0.7rem;
+                text-transform: uppercase; letter-spacing: 0.5px;
+                margin-bottom: 2px;
+            }
+            .boss-card tbody tr td:nth-child(2)::before { content: 'Slot'; }
+            .boss-card tbody tr td:nth-child(3)::before { content: 'Stats'; }
+            .boss-card tbody tr td:nth-child(4)::before { content: 'Roles'; }
+            .boss-card tbody tr td:nth-child(5)::before { content: 'Classes'; }
+            .boss-card tbody tr td:nth-child(6)::before { content: 'iLvl'; }
+            .boss-card tbody tr td:nth-child(7)::before { content: 'Drop'; }
+
+            /* Stats list: inline with spacing */
+            .boss-card .stat-text {
+                font-size: 0.82rem;
+            }
+            .boss-card .role-pill, .boss-card .class-pill {
+                margin: 0 2px 2px 0; vertical-align: middle;
+            }
+
+            /* Item name as full-width header */
+            .boss-card tbody tr td:nth-child(1) {
+                font-size: 0.95rem; font-weight: 600;
+                margin-bottom: 6px; padding: 0 0 6px 0;
+                border-bottom: 1px solid #2d2d2d;
+            }
+            .boss-card tbody tr td:nth-child(1)::before { content: none; }
+
+            /* Inline label/value for short fields: Slot, iLvl, Drop.
+               Override .text-end which would right-align the value. */
+            .boss-card tbody tr td:nth-child(2),
+            .boss-card tbody tr td:nth-child(6),
+            .boss-card tbody tr td:nth-child(7) {
+                display: flex; gap: 12px;
+                align-items: baseline;
+                font-size: 0.82rem;
+                text-align: left !important;
+            }
+            .boss-card tbody tr td:nth-child(2)::before,
+            .boss-card tbody tr td:nth-child(6)::before,
+            .boss-card tbody tr td:nth-child(7)::before {
+                display: inline-block; margin-bottom: 0;
+            }
+
+            /* Trash section: tighten */
+            .trash-section > summary { font-size: 1rem; }
+            .trash-section .trash-blurb {
+                margin: 0.5rem 0 0.75rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html" style="color: #ffd100;">⚔️ KCraft</a>
+    </div>
+</nav>
+
+<div class="container">
+    <p class="mb-2"><a href="index.html">← All dungeons</a></p>
+
+    <h1>🌑 Shadow Labyrinth</h1>
+    <p class="mb-3" style="color:#bbb; font-style:italic;">"The deepest pit of Auchindoun — the Shadow Council's voidcaller temple beneath the Sethekk halls, where Murmur the sound-elemental was bound."</p>
+
+    <div class="alert alert-dark mt-3 mb-4" style="background:#232323; border:1px solid #3a3a3a; color:#ddd;">
+        <h5 class="alert-heading" style="color:#ffd100;">🎯 SL Loot Summary</h5>
+        <p class="mb-2"><strong style="color:#4ea8de;">Equipment Focus:</strong> Top-tier Auchindoun heroic — pre-raid BiS shadow-themed gear, Murmur sonic-boom epics, and the Karazhan attunement step (heroic First Fragment of the Master's Key).</p>
+        <ul class="mb-0" style="margin-left: 0; padding-left: 1.2rem;">
+            <li><strong style="color:#4ea8de;">Best for:</strong> Level 67-70</li>
+            <li><strong style="color:#4ea8de;">Run time:</strong> 45-65 minutes</li>
+            <li><strong style="color:#4ea8de;">Mob levels:</strong> 69-72</li>
+            <li><strong style="color:#4ea8de;">Famous for:</strong> Murmur sonic-boom epics (Bands of Indrajit, Talon of the Tempest), Karazhan attunement step on heroic, Grandmaster Vorpil voidtraveller-summon fight, Blackheart mind-control roulette</li>
+            <li><strong style="color:#4ea8de;">Includes:</strong> Ambassador Hellmaw (banishable Eredar), Blackheart the Inciter party mind-control, Grandmaster Vorpil Rain of Fire teleport circle, Murmur LoS/absorb sonic boom check</li>
+        </ul>
+        <div class="gear-sets-note" style="margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid #3a3a3a;"><strong style="color:#ffd100;">🛡 Gear sets</strong><div style="margin-top: 0.5rem;"><strong style="color:#e6cc80;">Assassination Armor</strong><div style="margin-top: 0.15rem; color:#bbb;">Handgrips of Assassination, Helm of Assassination, Leggings of Assassination, Shoulderpads of Assassination, Tunic of Assassination</div><ul style="margin: 0.25rem 0 0 0; padding-left: 1.2rem;"><li><strong style="color:#4ea8de;">2 pieces:</strong> Your Cheap Shot and Kidney Shot attacks grant you 160 haste rating for 6 sec.</li><li><strong style="color:#4ea8de;">4 pieces:</strong> Your Eviscerate and Envenom abilities cost 10 less energy.</li></ul></div><div style="margin-top: 0.5rem;"><strong style="color:#e6cc80;">Tidefury Raiment</strong><div style="margin-top: 0.15rem; color:#bbb;">Tidefury Chestpiece, Tidefury Gauntlets, Tidefury Helm, Tidefury Kilt, Tidefury Shoulderguards</div><ul style="margin: 0.25rem 0 0 0; padding-left: 1.2rem;"><li><strong style="color:#4ea8de;">2 pieces:</strong> Your Chain Lightning Spell now only loses 17% of its damage per jump.</li><li><strong style="color:#4ea8de;">4 pieces:</strong> Your Water Shield ability grants an additional 56 mana each time it triggers and an additional 3 mana per 5 sec.</li></ul></div><div style="margin-top: 0.5rem;"><strong style="color:#e6cc80;">Moonglade Raiment</strong><div style="margin-top: 0.15rem; color:#bbb;">Moonglade Cowl, Moonglade Handwraps, Moonglade Pants, Moonglade Robe, Moonglade Shoulders</div><ul style="margin: 0.25rem 0 0 0; padding-left: 1.2rem;"><li><strong style="color:#4ea8de;">2 pieces:</strong> Your Rejuvenation spell now also grants 35 dodge rating.</li><li><strong style="color:#4ea8de;">4 pieces:</strong> Reduces the mana cost of all shapeshifting by 25%.</li></ul></div><div style="margin-top: 0.5rem;"><strong style="color:#e6cc80;">Oblivion Raiment</strong><div style="margin-top: 0.15rem; color:#bbb;">Gloves of Oblivion, Hood of Oblivion, Robe of Oblivion, Spaulders of Oblivion, Trousers of Oblivion</div><ul style="margin: 0.25rem 0 0 0; padding-left: 1.2rem;"><li><strong style="color:#4ea8de;">2 pieces:</strong> Grants your pet 45 mana per 5 sec.</li><li><strong style="color:#4ea8de;">4 pieces:</strong> Your Seed of Corruption deals 180 additional damage when it detonates.</li></ul></div><div style="margin-top: 0.5rem;"><strong style="color:#e6cc80;">Bold Armor</strong><div style="margin-top: 0.15rem; color:#bbb;">Breastplate of the Bold, Gauntlets of the Bold, Legplates of the Bold, Shoulderguards of the Bold, Warhelm of the Bold</div><ul style="margin: 0.25rem 0 0 0; padding-left: 1.2rem;"><li><strong style="color:#4ea8de;">2 pieces:</strong> All of your shout abilities cost less rage.</li><li><strong style="color:#4ea8de;">4 pieces:</strong> Your Charge ability generates an additional rage.</li></ul></div><div style="margin-top: 0.5rem;"><strong style="color:#e6cc80;">Hallowed Raiment</strong><div style="margin-top: 0.15rem; color:#bbb;">Hallowed Crown, Hallowed Garments, Hallowed Handwraps, Hallowed Pauldrons, Hallowed Trousers</div><ul style="margin: 0.25rem 0 0 0; padding-left: 1.2rem;"><li><strong style="color:#4ea8de;">2 pieces:</strong> Gives you a 30% chance to avoid interruption caused by damage while casting Binding Heal.</li><li><strong style="color:#4ea8de;">4 pieces:</strong> Your Prayer of Mending heals an additional 100 health.</li></ul></div></div>
+    </div>
+
+    <details class="filter-bar-collapsible" open>
+    <summary class="filter-summary">🔧 Filters · all 33 items</summary>
+    <div class="filter-bar">
+        <div class="filter-row row-class">
+            <span class="label">Class:</span>
+            <div class="dropdown">
+                <select id="class-dropdown">
+                    <option value="all">All classes (33)</option>
+                    <option value="warrior">Warrior (10)</option>
+                    <option value="paladin">Paladin (13)</option>
+                    <option value="hunter">Hunter (6)</option>
+                    <option value="rogue">Rogue (6)</option>
+                    <option value="priest">Priest (10)</option>
+                    <option value="dk">Death Knight (7)</option>
+                    <option value="shaman">Shaman (12)</option>
+                    <option value="mage">Mage (11)</option>
+                    <option value="warlock">Warlock (11)</option>
+                    <option value="druid">Druid (8)</option>
+                </select>
+            </div>
+        </div>
+        <div class="filter-row row-role">
+            <span class="label">Role:</span>
+            <button class="filter-btn active" data-role="all">All (<span id="count-all">33</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">8</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">13</span>)</button>
+            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">11</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">21</span>)</button>
+        </div>
+        <div class="filter-row row-quality">
+            <span class="label">Quality:</span>
+            <div class="dropdown">
+                <select id="quality-dropdown">
+                    <option value="">Any quality</option>
+                    <option value="2" style="color:#1eff00">Uncommon and above</option>
+                    <option value="3" style="color:#0070dd">Rare and above</option>
+                    <option value="4" style="color:#a335ee">Epic only</option>
+                </select>
+            </div>
+            <button class="filter-btn reset-btn" id="reset-filters">Reset all</button>
+        </div>
+        <div class="filter-row row-buttons">
+            <button class="filter-btn apply-btn" id="apply-filters">Apply</button>
+        </div>
+        <div class="filter-row row-legend">
+            <span class="label">Legend:</span>
+            <div class="legend" style="font-size: 0.85rem;">
+                <span class="legend-item"><span class="class-pill" style="background:#C79C6E;color:#1a1a1a;">W</span> Warrior</span>
+                <span class="legend-item"><span class="class-pill" style="background:#F58CBA;color:#1a1a1a;">P</span> Paladin</span>
+                <span class="legend-item"><span class="class-pill" style="background:#ABD473;color:#1a1a1a;">H</span> Hunter</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FFF569;color:#1a1a1a;">R</span> Rogue</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FFFFFF;color:#1a1a1a;">P</span> Priest</span>
+                <span class="legend-item"><span class="class-pill" style="background:#C41F3B;color:#1a1a1a;">K</span> Death Knight</span>
+                <span class="legend-item"><span class="class-pill" style="background:#0070DE;color:#1a1a1a;">S</span> Shaman</span>
+                <span class="legend-item"><span class="class-pill" style="background:#69CCF0;color:#1a1a1a;">M</span> Mage</span>
+                <span class="legend-item"><span class="class-pill" style="background:#9482C9;color:#1a1a1a;">W</span> Warlock</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FF7D0A;color:#1a1a1a;">D</span> Druid</span>
+            </div>
+        </div>
+    </div>
+    </details>
+
+    <div class="expand-controls">
+        <button class="expand-btn" id="expand-all">▼ Expand all</button>
+        <button class="expand-btn" id="collapse-all">▲ Collapse all</button>
+    </div>
+
+
+    <!-- Ambassador Hellmaw -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Ambassador Hellmaw</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">First boss — Eredar diplomat of the Burning Legion · Corrosive Acid Breath cone, Enrage timer; banishable · Level 72 Elite · Entry 18731</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="68"
+                        data-item-id="27888"
+                        data-item-json="{&quot;id&quot;:27888,&quot;name&quot;:&quot;Dream-Wing Helm&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Head (Mail)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+516 Armor&quot;,&quot;+16 Stamina&quot;,&quot;+25 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 8 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 66.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 20.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 13.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:39736,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:97,&quot;sellCopper&quot;:36,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18731,&quot;bossName&quot;:&quot;Ambassador Hellmaw&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Dream-Wing Helm</span></td>
+                        <td><span class="slot-text">Head (Mail)</span></td>
+                        <td><span class="stat-text">+516 Armor, +16 Stamina, +25 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles=""
+                        data-classes=""
+                        data-req="68"
+                        data-item-id="27886"
+                        data-item-json="{&quot;id&quot;:27886,&quot;name&quot;:&quot;Idol of the Emerald Queen&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Relic&quot;,&quot;slotFilter&quot;:&quot;Relic&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Idol&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases the spell power on the periodic portion of your Lifebloom by 47.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:25617,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:56,&quot;sellCopper&quot;:17,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18731,&quot;bossName&quot;:&quot;Ambassador Hellmaw&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Idol of the Emerald Queen</span></td>
+                        <td><span class="slot-text">Relic</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="68"
+                        data-item-id="27889"
+                        data-item-json="{&quot;id&quot;:27889,&quot;name&quot;:&quot;Jaedenfire Gloves of Annihilation&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+95 Armor&quot;,&quot;+25 Stamina&quot;,&quot;+25 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 32.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:17722,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:77,&quot;sellCopper&quot;:22,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18731,&quot;bossName&quot;:&quot;Ambassador Hellmaw&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Jaedenfire Gloves of Annihilation</span></td>
+                        <td><span class="slot-text">Hands (Cloth)</span></td>
+                        <td><span class="stat-text">+95 Armor, +25 Stamina, +25 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin dk"
+                        data-req="68"
+                        data-item-id="27884"
+                        data-item-json="{&quot;id&quot;:27884,&quot;name&quot;:&quot;Ornate Boots of the Sanctified&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Feet (Plate)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+780 Armor&quot;,&quot;+37 Strength&quot;,&quot;+18 Stamina&quot;,&quot;+20 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:44417,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:44,&quot;sellCopper&quot;:17,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18731,&quot;bossName&quot;:&quot;Ambassador Hellmaw&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ornate Boots of the Sanctified</span></td>
+                        <td><span class="slot-text">Feet (Plate)</span></td>
+                        <td><span class="stat-text">+780 Armor, +37 Strength, +18 Stamina, +20 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank"
+                        data-classes="warrior paladin"
+                        data-req="68"
+                        data-item-id="27887"
+                        data-item-json="{&quot;id&quot;:27887,&quot;name&quot;:&quot;Platinum Shield of the Valorous&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Off-Hand (Shield)&quot;,&quot;slotFilter&quot;:&quot;Off-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:6,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Shield&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+3711 Armor&quot;,&quot;+33 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 24.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:56311,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:63,&quot;sellCopper&quot;:11,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18731,&quot;bossName&quot;:&quot;Ambassador Hellmaw&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Platinum Shield of the Valorous</span></td>
+                        <td><span class="slot-text">Off-Hand (Shield)</span></td>
+                        <td><span class="stat-text">+3711 Armor, +33 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="68"
+                        data-item-id="27885"
+                        data-item-json="{&quot;id&quot;:27885,&quot;name&quot;:&quot;Soul-Wand of the Aldor&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:true,&quot;itemClass&quot;:2,&quot;subclass&quot;:19,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Wand&quot;,&quot;damage&quot;:&quot;158–293 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:125.3,&quot;stats&quot;:[&quot;+9 Stamina&quot;,&quot;+8 Intellect&quot;,&quot;+10 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:63806,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:38,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18731,&quot;bossName&quot;:&quot;Ambassador Hellmaw&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Soul-Wand of the Aldor</span></td>
+                        <td><span class="slot-text">Ranged</span></td>
+                        <td><span class="stat-text">+9 Stamina, +8 Intellect, +10 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Blackheart the Inciter -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Blackheart the Inciter</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Cabal overseer — mind controls the party · Charge, Incite Chaos (full-party mind-control rotation), Knockback · Level 72 Elite · Entry 18667</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles=""
+                        data-classes=""
+                        data-req="68"
+                        data-item-id="27891"
+                        data-item-json="{&quot;id&quot;:27891,&quot;name&quot;:&quot;Adamantine Figurine&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Use&quot;,&quot;text&quot;:&quot;Increases armor by 1280 for 20 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 32.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:66290,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:62,&quot;sellCopper&quot;:90,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18667,&quot;bossName&quot;:&quot;Blackheart the Inciter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Adamantine Figurine</span></td>
+                        <td><span class="slot-text">Trinket</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="ranged"
+                        data-classes="priest shaman mage warlock druid"
+                        data-req="68"
+                        data-item-id="28134"
+                        data-item-json="{&quot;id&quot;:28134,&quot;name&quot;:&quot;Brooch of Heightened Potential&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+15 Stamina&quot;,&quot;+14 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 22.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 9.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22464,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:24,&quot;sellCopper&quot;:64,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18667,&quot;bossName&quot;:&quot;Blackheart the Inciter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Brooch of Heightened Potential</span></td>
+                        <td><span class="slot-text">Neck</span></td>
+                        <td><span class="stat-text">+15 Stamina, +14 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank"
+                        data-classes="warrior paladin dk"
+                        data-req="68"
+                        data-item-id="27892"
+                        data-item-json="{&quot;id&quot;:27892,&quot;name&quot;:&quot;Cloak of the Inciter&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+76 Armor&quot;,&quot;+15 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 30.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 18.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:26870,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:68,&quot;sellCopper&quot;:70,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18667,&quot;bossName&quot;:&quot;Blackheart the Inciter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Cloak of the Inciter</span></td>
+                        <td><span class="slot-text">Back</span></td>
+                        <td><span class="stat-text">+76 Armor, +15 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="27468"
+                        data-item-json="{&quot;id&quot;:27468,&quot;name&quot;:&quot;Moonglade Handwraps&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:637,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+183 Armor&quot;,&quot;+19 Strength&quot;,&quot;+13 Agility&quot;,&quot;+18 Stamina&quot;,&quot;+20 Intellect&quot;,&quot;+17 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:21376,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:13,&quot;sellCopper&quot;:76,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18667,&quot;bossName&quot;:&quot;Blackheart the Inciter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Moonglade Raiment&quot;,&quot;items&quot;:[{&quot;id&quot;:28348,&quot;name&quot;:&quot;Moonglade Cowl&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27468,&quot;name&quot;:&quot;Moonglade Handwraps&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27873,&quot;name&quot;:&quot;Moonglade Pants&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28202,&quot;name&quot;:&quot;Moonglade Robe&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27737,&quot;name&quot;:&quot;Moonglade Shoulders&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Your Rejuvenation spell now also grants 35 dodge rating.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Reduces the mana cost of all shapeshifting by 25%.&quot;}],&quot;quality&quot;:3}}">
+                        <td><span style="color:#0070dd; font-weight:600;">Moonglade Handwraps</span></td>
+                        <td><span class="slot-text">Hands (Leather)</span></td>
+                        <td><span class="stat-text">+183 Armor, +19 Strength, +13 Agility, +18 Stamina, +20 Intellect, +17 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin dk"
+                        data-req="68"
+                        data-item-id="27893"
+                        data-item-json="{&quot;id&quot;:27893,&quot;name&quot;:&quot;Ornate Leggings of the Venerated&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Legs (Plate)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+993 Armor&quot;,&quot;+35 Strength&quot;,&quot;+21 Stamina&quot;,&quot;+25 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:62913,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:13,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18667,&quot;bossName&quot;:&quot;Blackheart the Inciter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ornate Leggings of the Venerated</span></td>
+                        <td><span class="slot-text">Legs (Plate)</span></td>
+                        <td><span class="stat-text">+993 Armor, +35 Strength, +21 Stamina, +25 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="ranged"
+                        data-classes="priest mage warlock"
+                        data-req="68"
+                        data-item-id="27890"
+                        data-item-json="{&quot;id&quot;:27890,&quot;name&quot;:&quot;Wand of the Netherwing&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:true,&quot;itemClass&quot;:2,&quot;subclass&quot;:19,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Wand&quot;,&quot;damage&quot;:&quot;158–293 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:125.3,&quot;stats&quot;:[&quot;+19 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:66698,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:66,&quot;sellCopper&quot;:98,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18667,&quot;bossName&quot;:&quot;Blackheart the Inciter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Wand of the Netherwing</span></td>
+                        <td><span class="slot-text">Ranged</span></td>
+                        <td><span class="stat-text">+19 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Grandmaster Vorpil -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Grandmaster Vorpil</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Cabal grandmaster — voidcaller summoner · Summons Voidtravellers (kill before they reach him), Shadow Bolt Volley, Rain of Fire · Level 72 Elite · Entry 18732</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin rogue dk shaman druid"
+                        data-req="68"
+                        data-item-id="27901"
+                        data-item-json="{&quot;id&quot;:27901,&quot;name&quot;:&quot;Blackout Truncheon&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;73–136 Damage&quot;,&quot;speed&quot;:1.5,&quot;dps&quot;:69.7,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Chance on hit&quot;,&quot;text&quot;:&quot;Increases your haste rating by 132 for 10 sec1.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:83803,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:38,&quot;sellCopper&quot;:3,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:18732,&quot;bossName&quot;:&quot;Grandmaster Vorpil&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Blackout Truncheon</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">10.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles=""
+                        data-classes=""
+                        data-req="68"
+                        data-item-id="27897"
+                        data-item-json="{&quot;id&quot;:27897,&quot;name&quot;:&quot;Breastplate of Many Graces&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Chest (Plate)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1135 Armor&quot;,&quot;+40 Stamina&quot;,&quot;+28 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 33.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 14 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:135,&quot;sellPrice&quot;:57778,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:77,&quot;sellCopper&quot;:78,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:18732,&quot;bossName&quot;:&quot;Grandmaster Vorpil&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Breastplate of Many Graces</span></td>
+                        <td><span class="slot-text">Chest (Plate)</span></td>
+                        <td><span class="stat-text">+1135 Armor, +40 Stamina, +28 Intellect</span></td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">10.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="27775"
+                        data-item-json="{&quot;id&quot;:27775,&quot;name&quot;:&quot;Hallowed Pauldrons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Shoulder (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:662,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+117 Armor&quot;,&quot;+10 Stamina&quot;,&quot;+17 Intellect&quot;,&quot;+20 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:27134,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:71,&quot;sellCopper&quot;:34,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:18732,&quot;bossName&quot;:&quot;Grandmaster Vorpil&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Hallowed Raiment&quot;,&quot;items&quot;:[{&quot;id&quot;:28413,&quot;name&quot;:&quot;Hallowed Crown&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28230,&quot;name&quot;:&quot;Hallowed Garments&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27536,&quot;name&quot;:&quot;Hallowed Handwraps&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27775,&quot;name&quot;:&quot;Hallowed Pauldrons&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27875,&quot;name&quot;:&quot;Hallowed Trousers&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Gives you a 30% chance to avoid interruption caused by damage while casting Binding Heal.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Your Prayer of Mending heals an additional 100 health.&quot;}],&quot;quality&quot;:3}}">
+                        <td><span style="color:#0070dd; font-weight:600;">Hallowed Pauldrons</span></td>
+                        <td><span class="slot-text">Shoulder (Cloth)</span></td>
+                        <td><span class="stat-text">+117 Armor, +10 Stamina, +17 Intellect, +20 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">10.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles=""
+                        data-classes=""
+                        data-req="68"
+                        data-item-id="27900"
+                        data-item-json="{&quot;id&quot;:27900,&quot;name&quot;:&quot;Jewel of Charismatic Mystique&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Use&quot;,&quot;text&quot;:&quot;Reduces your threat to enemy targets within 30 yards, making them less likely to attack you.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:21612,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:16,&quot;sellCopper&quot;:12,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:18732,&quot;bossName&quot;:&quot;Grandmaster Vorpil&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Jewel of Charismatic Mystique</span></td>
+                        <td><span class="slot-text">Trinket</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">10.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="ranged"
+                        data-classes="hunter"
+                        data-req="68"
+                        data-item-id="27898"
+                        data-item-json="{&quot;id&quot;:27898,&quot;name&quot;:&quot;Wrathfire Hand-Cannon&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Gun&quot;,&quot;damage&quot;:&quot;90–168 Damage&quot;,&quot;speed&quot;:2.0,&quot;dps&quot;:64.5,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 30.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 10.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:62144,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:44,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:18732,&quot;bossName&quot;:&quot;Grandmaster Vorpil&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Wrathfire Hand-Cannon</span></td>
+                        <td><span class="slot-text">Ranged</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                        </td>
+                        <td class="text-end">112</td>
+                        <td class="text-end">10.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Murmur -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Murmur</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Final boss — bound sound-elemental of the void · Sonic Boom (raid-wide burst — must LoS or fully absorb), Murmur's Touch fixate explosion, Resonance · Level 72 Elite · Entry 18708</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal melee ranged"
+                        data-classes="paladin hunter shaman"
+                        data-req="70"
+                        data-item-id="29261"
+                        data-item-json="{&quot;id&quot;:29261,&quot;name&quot;:&quot;Girdle of Ferocity&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;slot&quot;:&quot;Waist (Mail)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+438 Armor&quot;,&quot;+28 Agility&quot;,&quot;+21 Stamina&quot;,&quot;+22 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 44.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:34371,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:43,&quot;sellCopper&quot;:71,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;hunter&quot;,&quot;shaman&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Girdle of Ferocity</span></td>
+                        <td><span class="slot-text">Waist (Mail)</span></td>
+                        <td><span class="stat-text">+438 Armor, +28 Agility, +21 Stamina, +22 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">110</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="30532"
+                        data-item-json="{&quot;id&quot;:30532,&quot;name&quot;:&quot;Kirin Tor Master&#x27;s Trousers&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;slot&quot;:&quot;Legs (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+163 Armor&quot;,&quot;+27 Stamina&quot;,&quot;+29 Intellect&quot;,&quot;+25 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 36.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:43827,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:38,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Kirin Tor Master's Trousers</span></td>
+                        <td><span class="slot-text">Legs (Cloth)</span></td>
+                        <td><span class="stat-text">+163 Armor, +27 Stamina, +29 Intellect, +25 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">110</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="29357"
+                        data-item-json="{&quot;id&quot;:29357,&quot;name&quot;:&quot;Master Thief&#x27;s Gloves&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+218 Armor&quot;,&quot;+23 Agility&quot;,&quot;+25 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 58.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Disarm duration reduced by 50%.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:28958,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:89,&quot;sellCopper&quot;:58,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Master Thief's Gloves</span></td>
+                        <td><span class="slot-text">Hands (Leather)</span></td>
+                        <td><span class="stat-text">+218 Armor, +23 Agility, +25 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">110</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin rogue dk shaman druid"
+                        data-req="70"
+                        data-item-id="29353"
+                        data-item-json="{&quot;id&quot;:29353,&quot;name&quot;:&quot;Shockwave Truncheon&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:105,&quot;req&quot;:70,&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;31–127 Damage&quot;,&quot;speed&quot;:1.9,&quot;dps&quot;:41.6,&quot;stats&quot;:[&quot;+24 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 168.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 8 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:105,&quot;sellPrice&quot;:109480,&quot;sellGold&quot;:10,&quot;sellSilver&quot;:94,&quot;sellCopper&quot;:80,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Shockwave Truncheon</span></td>
+                        <td><span class="slot-text">Main Hand</span></td>
+                        <td><span class="stat-text">+24 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">105</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="ranged"
+                        data-classes="mage warlock"
+                        data-req="70"
+                        data-item-id="27905"
+                        data-item-json="{&quot;id&quot;:27905,&quot;name&quot;:&quot;Greatsword of Horrid Dreams&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:7,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;35–113 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:41.1,&quot;stats&quot;:[&quot;+15 Stamina&quot;,&quot;+14 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 130.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:89462,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:94,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:4.166666666666667,&quot;chanceStr&quot;:&quot;4.2%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Greatsword of Horrid Dreams</span></td>
+                        <td><span class="slot-text">Main Hand</span></td>
+                        <td><span class="stat-text">+15 Stamina, +14 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">4.2%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="28230"
+                        data-item-json="{&quot;id&quot;:28230,&quot;name&quot;:&quot;Hallowed Garments&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Chest (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:662,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+156 Armor&quot;,&quot;+12 Stamina&quot;,&quot;+26 Intellect&quot;,&quot;+26 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 30.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:36566,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:65,&quot;sellCopper&quot;:66,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:4.166666666666667,&quot;chanceStr&quot;:&quot;4.2%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Hallowed Raiment&quot;,&quot;items&quot;:[{&quot;id&quot;:28413,&quot;name&quot;:&quot;Hallowed Crown&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28230,&quot;name&quot;:&quot;Hallowed Garments&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27536,&quot;name&quot;:&quot;Hallowed Handwraps&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27775,&quot;name&quot;:&quot;Hallowed Pauldrons&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27875,&quot;name&quot;:&quot;Hallowed Trousers&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Gives you a 30% chance to avoid interruption caused by damage while casting Binding Heal.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Your Prayer of Mending heals an additional 100 health.&quot;}],&quot;quality&quot;:3}}">
+                        <td><span style="color:#0070dd; font-weight:600;">Hallowed Garments</span></td>
+                        <td><span class="slot-text">Chest (Cloth)</span></td>
+                        <td><span class="stat-text">+156 Armor, +12 Stamina, +26 Intellect, +26 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">4.2%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="70"
+                        data-item-id="27912"
+                        data-item-json="{&quot;id&quot;:27912,&quot;name&quot;:&quot;Harness of the Deep Currents&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+652 Armor&quot;,&quot;+28 Stamina&quot;,&quot;+30 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 36.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 13 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:55034,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:50,&quot;sellCopper&quot;:34,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:4.166666666666667,&quot;chanceStr&quot;:&quot;4.2%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Harness of the Deep Currents</span></td>
+                        <td><span class="slot-text">Chest (Mail)</span></td>
+                        <td><span class="stat-text">+652 Armor, +28 Stamina, +30 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">4.2%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="27908"
+                        data-item-json="{&quot;id&quot;:27908,&quot;name&quot;:&quot;Leggings of Assassination&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Legs (Leather)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:620,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+256 Armor&quot;,&quot;+40 Agility&quot;,&quot;+33 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 44.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:45215,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:52,&quot;sellCopper&quot;:15,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:4.166666666666667,&quot;chanceStr&quot;:&quot;4.2%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Assassination Armor&quot;,&quot;items&quot;:[{&quot;id&quot;:27509,&quot;name&quot;:&quot;Handgrips of Assassination&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28414,&quot;name&quot;:&quot;Helm of Assassination&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27908,&quot;name&quot;:&quot;Leggings of Assassination&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27776,&quot;name&quot;:&quot;Shoulderpads of Assassination&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28204,&quot;name&quot;:&quot;Tunic of Assassination&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Your Cheap Shot and Kidney Shot attacks grant you 160 haste rating for 6 sec.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Your Eviscerate and Envenom abilities cost 10 less energy.&quot;}],&quot;quality&quot;:3}}">
+                        <td><span style="color:#0070dd; font-weight:600;">Leggings of Assassination</span></td>
+                        <td><span class="slot-text">Legs (Leather)</span></td>
+                        <td><span class="stat-text">+256 Armor, +40 Agility, +33 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">4.2%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="28232"
+                        data-item-json="{&quot;id&quot;:28232,&quot;name&quot;:&quot;Robe of Oblivion&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Chest (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:644,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+156 Armor&quot;,&quot;+30 Stamina&quot;,&quot;+20 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 40.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:36823,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:68,&quot;sellCopper&quot;:23,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:4.166666666666667,&quot;chanceStr&quot;:&quot;4.2%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Oblivion Raiment&quot;,&quot;items&quot;:[{&quot;id&quot;:27537,&quot;name&quot;:&quot;Gloves of Oblivion&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28415,&quot;name&quot;:&quot;Hood of Oblivion&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28232,&quot;name&quot;:&quot;Robe of Oblivion&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27778,&quot;name&quot;:&quot;Spaulders of Oblivion&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27948,&quot;name&quot;:&quot;Trousers of Oblivion&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Grants your pet 45 mana per 5 sec.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Your Seed of Corruption deals 180 additional damage when it detonates.&quot;}],&quot;quality&quot;:3}}">
+                        <td><span style="color:#0070dd; font-weight:600;">Robe of Oblivion</span></td>
+                        <td><span class="slot-text">Chest (Cloth)</span></td>
+                        <td><span class="stat-text">+156 Armor, +30 Stamina, +20 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">4.2%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk"
+                        data-req="70"
+                        data-item-id="27803"
+                        data-item-json="{&quot;id&quot;:27803,&quot;name&quot;:&quot;Shoulderguards of the Bold&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:653,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+873 Armor&quot;,&quot;+25 Strength&quot;,&quot;+25 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 17.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:44126,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:41,&quot;sellCopper&quot;:26,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:4.166666666666667,&quot;chanceStr&quot;:&quot;4.2%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Bold Armor&quot;,&quot;items&quot;:[{&quot;id&quot;:28205,&quot;name&quot;:&quot;Breastplate of the Bold&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27475,&quot;name&quot;:&quot;Gauntlets of the Bold&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27977,&quot;name&quot;:&quot;Legplates of the Bold&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27803,&quot;name&quot;:&quot;Shoulderguards of the Bold&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28350,&quot;name&quot;:&quot;Warhelm of the Bold&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;All of your shout abilities cost less rage.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Your Charge ability generates an additional rage.&quot;}],&quot;quality&quot;:3}}">
+                        <td><span style="color:#0070dd; font-weight:600;">Shoulderguards of the Bold</span></td>
+                        <td><span class="slot-text">Shoulder (Plate)</span></td>
+                        <td><span class="stat-text">+873 Armor, +25 Strength, +25 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">4.2%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="27902"
+                        data-item-json="{&quot;id&quot;:27902,&quot;name&quot;:&quot;Silent Slippers of Meditation&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Feet (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+107 Armor&quot;,&quot;+24 Stamina&quot;,&quot;+25 Intellect&quot;,&quot;+21 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 26.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:25849,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:58,&quot;sellCopper&quot;:49,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:4.166666666666667,&quot;chanceStr&quot;:&quot;4.2%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Silent Slippers of Meditation</span></td>
+                        <td><span class="slot-text">Feet (Cloth)</span></td>
+                        <td><span class="stat-text">+107 Armor, +24 Stamina, +25 Intellect, +21 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">4.2%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank ranged"
+                        data-classes="warrior paladin shaman"
+                        data-req="70"
+                        data-item-id="27910"
+                        data-item-json="{&quot;id&quot;:27910,&quot;name&quot;:&quot;Silvermoon Crest Shield&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Off-Hand (Shield)&quot;,&quot;slotFilter&quot;:&quot;Off-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:6,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Shield&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+3806 Armor&quot;,&quot;+20 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 6 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:58292,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:82,&quot;sellCopper&quot;:92,&quot;roles&quot;:[&quot;tank&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:4.166666666666667,&quot;chanceStr&quot;:&quot;4.2%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Silvermoon Crest Shield</span></td>
+                        <td><span class="slot-text">Off-Hand (Shield)</span></td>
+                        <td><span class="stat-text">+3806 Armor, +20 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">4.2%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter dk druid"
+                        data-req="70"
+                        data-item-id="27903"
+                        data-item-json="{&quot;id&quot;:27903,&quot;name&quot;:&quot;Sonic Spear&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:6,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Polearm&quot;,&quot;damage&quot;:&quot;261–392 Damage&quot;,&quot;speed&quot;:3.5,&quot;dps&quot;:93.3,&quot;stats&quot;:[&quot;+35 Agility&quot;,&quot;+30 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 62.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 24.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:111025,&quot;sellGold&quot;:11,&quot;sellSilver&quot;:10,&quot;sellCopper&quot;:25,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:4.166666666666667,&quot;chanceStr&quot;:&quot;4.2%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Sonic Spear</span></td>
+                        <td><span class="slot-text">Two-Hand</span></td>
+                        <td><span class="stat-text">+35 Agility, +30 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">4.2%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="27778"
+                        data-item-json="{&quot;id&quot;:27778,&quot;name&quot;:&quot;Spaulders of Oblivion&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Shoulder (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:644,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+117 Armor&quot;,&quot;+25 Stamina&quot;,&quot;+17 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 29.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:27424,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:74,&quot;sellCopper&quot;:24,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:4.166666666666667,&quot;chanceStr&quot;:&quot;4.2%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Oblivion Raiment&quot;,&quot;items&quot;:[{&quot;id&quot;:27537,&quot;name&quot;:&quot;Gloves of Oblivion&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28415,&quot;name&quot;:&quot;Hood of Oblivion&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28232,&quot;name&quot;:&quot;Robe of Oblivion&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27778,&quot;name&quot;:&quot;Spaulders of Oblivion&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27948,&quot;name&quot;:&quot;Trousers of Oblivion&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Grants your pet 45 mana per 5 sec.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Your Seed of Corruption deals 180 additional damage when it detonates.&quot;}],&quot;quality&quot;:3}}">
+                        <td><span style="color:#0070dd; font-weight:600;">Spaulders of Oblivion</span></td>
+                        <td><span class="slot-text">Shoulder (Cloth)</span></td>
+                        <td><span class="stat-text">+117 Armor, +25 Stamina, +17 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">4.2%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="70"
+                        data-item-id="27909"
+                        data-item-json="{&quot;id&quot;:27909,&quot;name&quot;:&quot;Tidefury Kilt&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;Legs (Mail)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:630,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+570 Armor&quot;,&quot;+39 Stamina&quot;,&quot;+31 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 35.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 19.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:54453,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:44,&quot;sellCopper&quot;:53,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:4.166666666666667,&quot;chanceStr&quot;:&quot;4.2%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Tidefury Raiment&quot;,&quot;items&quot;:[{&quot;id&quot;:28231,&quot;name&quot;:&quot;Tidefury Chestpiece&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27510,&quot;name&quot;:&quot;Tidefury Gauntlets&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28349,&quot;name&quot;:&quot;Tidefury Helm&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27909,&quot;name&quot;:&quot;Tidefury Kilt&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27802,&quot;name&quot;:&quot;Tidefury Shoulderguards&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Your Chain Lightning Spell now only loses 17% of its damage per jump.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Your Water Shield ability grants an additional 56 mana each time it triggers and an additional 3 mana per 5 sec.&quot;}],&quot;quality&quot;:3}}">
+                        <td><span style="color:#0070dd; font-weight:600;">Tidefury Kilt</span></td>
+                        <td><span class="slot-text">Legs (Mail)</span></td>
+                        <td><span class="stat-text">+570 Armor, +39 Stamina, +31 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">4.2%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior rogue shaman druid"
+                        data-req="70"
+                        data-item-id="27913"
+                        data-item-json="{&quot;id&quot;:27913,&quot;name&quot;:&quot;Whispering Blade of Slaying&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;109–164 Damage&quot;,&quot;speed&quot;:1.9,&quot;dps&quot;:71.8,&quot;stats&quot;:[&quot;+21 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 26.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your expertise rating by 15.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:92049,&quot;sellGold&quot;:9,&quot;sellSilver&quot;:20,&quot;sellCopper&quot;:49,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:4.166666666666667,&quot;chanceStr&quot;:&quot;4.2%&quot;,&quot;bossId&quot;:18708,&quot;bossName&quot;:&quot;Murmur&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Whispering Blade of Slaying</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+21 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">115</td>
+                        <td class="text-end">4.2%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+
+
+</div>
+
+<script src="tooltip.js"></script>
+<script src="smart_filter_block.js"></script>
+<script src="kcraft_pills.js"></script>
+<script src="dungeon_filter.js"></script>
+<script src="sortable.js"></script>
+
+</body>
+</html>
