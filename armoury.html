@@ -596,6 +596,22 @@
             border-color: #ffd100; font-weight: 600;
         }
 
+        /* Pin the Back link, title, context and role tabs to the top of the
+           screen so they stay visible while the slot list scrolls under them.
+           Works on mobile and desktop — the page scrolls with the body, so
+           sticky/top:0 anchors to the viewport top. */
+        .up-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #1a1a1a;
+            padding-top: 0.5rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid #3a3a3a;
+            box-shadow: 0 6px 10px -6px rgba(0, 0, 0, 0.7);
+        }
+        .up-sticky .up-role-tabs { margin-bottom: 0; }
+
         .up-slots {
             display: grid; grid-template-columns: 1fr; gap: 0.6rem;
         }
@@ -858,20 +874,22 @@
 
     <!-- Upgrade Finder view (entered via button on a character page) -->
     <div id="view-upgrades" style="display:none;">
-        <p style="margin-bottom:0.5rem;">
-            <a href="#" id="up-back-link">&larr; Back</a>
-        </p>
-        <div class="up-header">
-            <div>
-                <h1>Find Upgrades</h1>
-                <div class="up-context" id="up-context"></div>
+        <div class="up-sticky">
+            <p style="margin-bottom:0.5rem;">
+                <a href="#" id="up-back-link">&larr; Back</a>
+            </p>
+            <div class="up-header">
+                <div>
+                    <h1>Find Upgrades</h1>
+                    <div class="up-context" id="up-context"></div>
+                </div>
             </div>
-        </div>
-        <div class="up-role-tabs" id="up-role-tabs">
-            <button class="up-role-btn" data-role="tank">&#x1F6E1; Tank</button>
-            <button class="up-role-btn" data-role="heal">&#x271A; Heal</button>
-            <button class="up-role-btn" data-role="melee">&#x2694; Melee</button>
-            <button class="up-role-btn" data-role="ranged">&#x1F3F9; Ranged</button>
+            <div class="up-role-tabs" id="up-role-tabs">
+                <button class="up-role-btn" data-role="tank">&#x1F6E1; Tank</button>
+                <button class="up-role-btn" data-role="heal">&#x271A; Heal</button>
+                <button class="up-role-btn" data-role="melee">&#x2694; Melee</button>
+                <button class="up-role-btn" data-role="ranged">&#x1F3F9; Ranged</button>
+            </div>
         </div>
         <div id="up-loading" class="loading" style="display:none;">Loading loot data&hellip;</div>
         <div id="up-slots" class="up-slots"></div>
