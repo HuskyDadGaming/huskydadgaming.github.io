@@ -771,7 +771,7 @@
     <!-- Single character view -->
     <div id="view-character" style="display:none;">
         <p style="margin-bottom:0.5rem;">
-            <a href="#" onclick="showRoster(); return false;">← All characters</a>
+            <a href="#" onclick="history.back(); return false;">← All characters</a>
         </p>
         <div id="char-loading" class="loading">Loading character</div>
         <div id="char-content" style="display:none;"></div>
@@ -1756,10 +1756,13 @@
             usableLabel.textContent = '';
         }
 
-        // Back link returns to the character page (re-fetching to show fresh gold)
+        // Back link: step back in history to the character page. The
+        // popstate handler replays showCharacter() (which re-fetches, so
+        // gold shows fresh) — history.back() pops the stack instead of
+        // pushing a duplicate entry that would break the browser Back button.
         document.getElementById('ah-back-link').onclick = function(e) {
             e.preventDefault();
-            window.showCharacter(name);
+            history.back();
         };
 
         // Tooltip comparison — feed the character's equipped item(s) in the
@@ -2570,9 +2573,11 @@
             `${escape(name)} &middot; Lvl ${upState.charLevel} ${escape(upState.classSlug)} ` +
             `&middot; role: <strong>${upState.role}</strong>`;
 
+        // history.back() pops to the character view via the popstate
+        // handler, instead of pushing a duplicate entry that desyncs Back.
         document.getElementById('up-back-link').onclick = function(e) {
             e.preventDefault();
-            window.showCharacter(name);
+            history.back();
         };
 
         // Tooltip comparison: hovering an upgrade candidate shows what's

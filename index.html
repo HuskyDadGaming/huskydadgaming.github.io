@@ -2330,7 +2330,7 @@
                    'viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>' +
                    emoji + '</text></svg>';
     }
-    function showView(v) {
+    function showView(v, fromHistory) {
         // Clear the pre-paint hint — JS now owns the tab state, and
         // leaving the attribute set would override the .active class
         // CSS rule on future tab clicks (Browse Dungeons would stay
@@ -2340,8 +2340,11 @@
         document.querySelectorAll('.tab-btn[data-view]').forEach(el => el.classList.remove('active'));
         document.getElementById('view-' + v).classList.add('active');
         document.querySelector(`.tab-btn[data-view="${v}"]`).classList.add('active');
-        if (history.replaceState) {
-            history.replaceState(null, '', v === 'finder' ? '#finder' : window.location.pathname);
+        // A user tab-switch PUSHES a history entry, so the browser Back
+        // button returns to the previous tab. A popstate-driven switch
+        // (fromHistory) must NOT push — that switch IS the Back navigation.
+        if (history.pushState && !fromHistory) {
+            history.pushState(null, '', v === 'finder' ? '#finder' : window.location.pathname);
         }
         if (FAVICON_EMOJI[v]) setFavicon(FAVICON_EMOJI[v]);
         // Re-sync focus mode when tabs change so leaving Find Loot brings
@@ -2350,12 +2353,20 @@
         if (typeof syncFinderMobileFocus === 'function') syncFinderMobileFocus();
     }
     document.querySelectorAll('.tab-btn[data-view]').forEach(btn => {
-        btn.addEventListener('click', () => showView(btn.dataset.view));
+        btn.addEventListener('click', () => {
+            // Skip clicks on the already-active tab — no spurious history entry.
+            if (!btn.classList.contains('active')) showView(btn.dataset.view);
+        });
     });
 
-    // Open finder if URL hash says so
+    // Browser Back/Forward — restore the tab from the URL hash, no re-push.
+    window.addEventListener('popstate', function() {
+        showView(window.location.hash === '#finder' ? 'finder' : 'dungeons', true);
+    });
+
+    // Open finder if URL hash says so (deep link / refresh on #finder).
     if (window.location.hash === '#finder') {
-        showView('finder');
+        showView('finder', true);
     }
 
     // ----- Wire up sortable headers -----
