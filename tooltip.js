@@ -59,6 +59,12 @@
     #kcraft-tooltip .tt-delta-down { color: #ff5555; font-size: 0.85em; }
     /* Ghost line for stats present on the compared item but missing here. */
     #kcraft-tooltip .tt-missing    { color: #888; }
+    /* Dual-slot (ring/trinket) net-swap line: "<equipped> -> +8 Spi +2 Int".
+       Each delta keeps its green/red colour; spaced for readability. */
+    #kcraft-tooltip .tt-compare-swap   { margin: 2px 0 2px; font-size: 0.9em; }
+    #kcraft-tooltip .tt-compare-swap .tt-delta-up,
+    #kcraft-tooltip .tt-compare-swap .tt-delta-down { font-size: 1em; margin-right: 7px; }
+    #kcraft-tooltip .tt-compare-same   { color: #888; font-size: 0.85em; }
 
     /* Action-button band (e.g. "Find on AH"). Inline-block so multiple
        buttons can sit side by side; stopPropagation in onclick keeps
@@ -244,6 +250,37 @@
     const cls  = delta > 0 ? 'tt-delta-up' : 'tt-delta-down';
     const sign = delta > 0 ? '+' : '';
     return ` <span class="${cls}">(${sign}${delta})</span>`;
+  }
+
+  // Inline net-stat-change line for swapping `candidate` in for `equipped`.
+  // Returns HTML like "+8 Spirit  +2 Intellect  -4 Stamina" (green gains,
+  // red losses), covering the union of both items' stats so losses from the
+  // equipped item show too. Used for dual-slot (ring/trinket) comparisons,
+  // where a single delta tag on the candidate would be ambiguous — each
+  // equipped slot gets its own net summary so the player can see which to
+  // replace. `equipped` may be null (empty slot) → all candidate stats are
+  // gains.
+  function buildCompareSummary(candidate, equipped) {
+    const candIdx = statIndexOf(candidate);
+    const eqIdx   = equipped ? statIndexOf(equipped) : {};
+    // Order: candidate's stat order first, then any stat only on the equipped.
+    const ordered = [];
+    const seen = new Set();
+    (candidate && candidate.stats || []).forEach(s => {
+      const p = parseStatLine(s);
+      if (p && !seen.has(p.name)) { ordered.push(p.name); seen.add(p.name); }
+    });
+    Object.keys(eqIdx).forEach(n => { if (!seen.has(n)) { ordered.push(n); seen.add(n); } });
+    const parts = [];
+    ordered.forEach(name => {
+      const delta = (candIdx[name] || 0) - (eqIdx[name] || 0);
+      if (delta === 0) return;
+      const cls  = delta > 0 ? 'tt-delta-up' : 'tt-delta-down';
+      const sign = delta > 0 ? '+' : '';
+      parts.push(`<span class="${cls}">${sign}${delta} ${escape(name)}</span>`);
+    });
+    if (!parts.length) return `<span class="tt-compare-same">no stat change</span>`;
+    return parts.join('');
   }
 
   // Build the in-game style tooltip HTML for an item.
@@ -461,18 +498,30 @@
     if (typeof provider === 'function') {
       try { compares = provider(it) || []; } catch (e) { compares = []; }
     }
-    // Use the first compare entry's item (if any) as the delta baseline for
-    // the main tooltip — each stat line on the hovered item will show a
-    // green/red (+N)/(-N) tag vs that baseline.
-    const primary = compares.find(c => c && c.item);
-    let html = buildTooltipHTML(it, primary ? primary.item : null);
-    compares.forEach(cmp => {
-      if (!cmp) return;
+    // Single-slot comparison: the hovered item's stat lines get green/red
+    // (+N)/(-N) tags vs the one equipped item. Dual-slot items (rings,
+    // trinkets) return TWO equipped entries — a single baseline on the
+    // candidate would be ambiguous (it'd silently pick Finger 1), so instead
+    // we render the candidate plain and give EACH equipped slot its own
+    // net-swap summary below ("Chrome Ring -> +8 Spirit +2 Intellect ...").
+    const realCompares = compares.filter(c => c);
+    const multi   = realCompares.length > 1;
+    const primary = realCompares.find(c => c.item);
+    let html = buildTooltipHTML(it, multi ? null : (primary ? primary.item : null));
+    realCompares.forEach(cmp => {
       const label = cmp.label || 'Currently equipped';
       html += `<div class="tt-compare-sep"></div>`;
       html += `<div class="tt-compare-label">${escape(label)}</div>`;
-      if (cmp.item) {
-        // Compare items render plain (no nested deltas).
+      if (multi) {
+        // Per-slot net change of equipping the candidate in place of this item.
+        const eqName  = cmp.item ? (cmp.item.name || '(item)') : '(empty)';
+        const eqColor = cmp.item ? (cmp.item.color || '#fff') : '#888';
+        html += `<div class="tt-compare-swap">` +
+                  `<span style="color:${escape(eqColor)}">${escape(eqName)}</span> &rarr; ` +
+                  buildCompareSummary(it, cmp.item) +
+                `</div>`;
+      } else if (cmp.item) {
+        // Single slot: candidate already shows deltas; render equipped plain.
         html += `<div class="tt-compare-body">${buildTooltipHTML(cmp.item)}</div>`;
       } else {
         html += `<div class="tt-compare-empty">(empty)</div>`;
