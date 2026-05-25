@@ -1618,8 +1618,15 @@
             // armoury_api items use 'invType'; loot-data items (used by the
             // Upgrade Finder) use 'slotFilter'. Accept either.
             const slotKey = item.invType || item.slotFilter;
-            const slots = AH_INVTYPE_TO_EQUIP_SLOTS[slotKey];
+            let slots = AH_INVTYPE_TO_EQUIP_SLOTS[slotKey];
             if (!slots) return null;
+            // A shield (armor class 4 / subclass 6) is off-hand-only and not a
+            // weapon, so don't pull in the main hand the way an off-hand WEAPON
+            // does — baselining a shield's armor against a 1H weapon would point
+            // the inline delta at the wrong slot. Shields share the 'Off-Hand'
+            // invType/slotFilter with off-hand weapons, so tell them apart by
+            // item class/subclass.
+            if (item.itemClass === 4 && item.subclass === 6) slots = [16];
             if (skipIfAlreadyEquipped) {
                 for (const idx of slots) {
                     const eq = lastViewedEquipped[idx];
@@ -2213,7 +2220,7 @@
             'Stamina': 1.0, 'Defense': 1.0,
             'Dodge': 0.7, 'Parry': 0.7, 'Block': 0.7,
             'Armor': 0.4, 'Agility': 0.4, 'Strength': 0.4,
-            'Expertise': 0.4, 'Hit': 0.4,
+            'Block Value': 0.4, 'Expertise': 0.4, 'Hit': 0.4,
             'Critical Strike': 0.2, 'Haste': 0.2,
             'Attack Power': 0.2, 'Armor Pen': 0.2,
         },
@@ -2221,7 +2228,7 @@
             // Block is tier 1 — paladins block more than anyone and Shield
             // of Righteousness threat scales with block value.
             'Stamina': 1.0, 'Defense': 1.0, 'Block': 1.0,
-            'Dodge': 0.7, 'Parry': 0.7, 'Strength': 0.7,
+            'Dodge': 0.7, 'Parry': 0.7, 'Strength': 0.7, 'Block Value': 0.7,
             'Armor': 0.4, 'Agility': 0.4, 'Expertise': 0.4,
             'Hit': 0.2, 'Critical Strike': 0.2, 'Haste': 0.2,
             'Attack Power': 0.2, 'Armor Pen': 0.2, 'Intellect': 0.2,
@@ -2300,6 +2307,7 @@
         ['Dodge',           /dodge rating by (\d+)/i],
         ['Parry',           /parry rating by (\d+)/i],
         ['Block',           /block rating .* by (\d+)/i],
+        ['Block Value',     /block value of your shield by (\d+)/i],
         ['Hit',             /hit rating by (\d+)/i],
         ['Critical Strike', /critical strike rating by (\d+)/i],
         ['Haste',           /haste rating by (\d+)/i],
@@ -2347,6 +2355,19 @@
         }
         return {};
     }
+    // Per-stat normalization divisors — convert a stat's raw value into the
+    // same rough unit as a primary stat BEFORE the role weight is applied, so
+    // the hand-tuned tiers (1.0/0.7/0.4/0.2) drive the ranking instead of raw
+    // magnitude. Only the outliers need an entry; everything else divides by 1.
+    //   Armor: item/shield armor runs ~10-30x a primary stat (thousands of
+    //     armor vs tens of Strength). 20 is a compromise between plate (~30
+    //     ideal) and leather (~10) — we only ever compare within a slot+level,
+    //     so the ratio is stable enough.
+    //   Attack Power: comes in roughly 2x a primary stat.
+    // This is the Pawn-style "per-point value" model: dividing here is the same
+    // as writing a tiny per-point weight, but keeps the weight tables readable.
+    const STAT_NORM = { 'Armor': 20, 'Attack Power': 2 };
+
     function scoreItemForRole(item, weights) {
         let score = 0;
         // Stat-block stats from item.stats (Stamina, Strength, Armor, etc.)
@@ -2355,12 +2376,12 @@
             if (!m) continue;
             const val  = parseInt(m[1], 10);
             const name = m[2].trim();
-            score += val * (weights[name] || 0);   // absent stat -> weight 0
+            score += (val / (STAT_NORM[name] || 1)) * (weights[name] || 0);
         }
-        // Rating stats from item.effects (Hit, Crit, Defense, Haste, etc.)
+        // Rating stats from item.effects (Hit, Crit, Defense, Block Value, ...)
         const ratings = extractRatings(item);
         for (const name of Object.keys(ratings)) {
-            score += ratings[name] * (weights[name] || 0);
+            score += (ratings[name] / (STAT_NORM[name] || 1)) * (weights[name] || 0);
         }
         return score;
     }
