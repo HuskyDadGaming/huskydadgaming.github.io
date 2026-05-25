@@ -1532,7 +1532,12 @@
 
     // Map auction item.invType (string from armoury_api INVENTORY_TYPES) to
     // the character.equipped slot index(es) that hold the comparable gear.
-    // Some types occupy two slots (rings, trinkets, one-handed weapons).
+    // Some types compare against two slots: rings (both fingers), trinkets
+    // (both trinkets), and weapons (both hands). Off-hand weapons and held
+    // off-hand items include the main hand too so the comparison shows what's
+    // in the other hand — the tooltip baselines the inline +/- against the
+    // same-slot (weaker) piece, with the main hand rendered below as a
+    // full-stat reference.
     const AH_INVTYPE_TO_EQUIP_SLOTS = {
         'Head':       [0],
         'Neck':       [1],
@@ -1551,8 +1556,8 @@
         'Main Hand':  [15],
         'Two-Hand':   [15],
         'One-Hand':   [15, 16], // can be in either hand
-        'Off-Hand':   [16],
-        'Held':       [16],
+        'Off-Hand':   [16, 15], // show the main hand alongside the off-hand
+        'Held':       [16, 15],
         'Ranged':     [17],
         'Thrown':     [17],
         'Relic':      [17],
