@@ -283,6 +283,29 @@
     return parts.join('');
   }
 
+  // Choose which equipped item the TOP tooltip's inline (+N)/(-N) deltas
+  // compare against, for dual-slot items (rings, trinkets, main/off hand).
+  // A new ring replaces ONE of two equipped pieces — whichever swap is the
+  // bigger upgrade — so we headline that slot: the equipped item with the
+  // greatest net stat gain when swapped for the candidate (i.e. the piece
+  // you'd realistically replace). `withItems` are compare entries that
+  // actually carry an item (empty slots are excluded by the caller, since an
+  // empty slot is pure gain with no baseline to subtract). Returns null when
+  // there are none → plain tooltip, no inline deltas.
+  function pickInlineBaseline(candidate, withItems) {
+    if (!withItems.length) return null;
+    const candIdx = statIndexOf(candidate);
+    let best = null, bestNet = -Infinity;
+    withItems.forEach(c => {
+      const eqIdx = statIndexOf(c.item);
+      const names = new Set(Object.keys(candIdx).concat(Object.keys(eqIdx)));
+      let net = 0;
+      names.forEach(n => { net += (candIdx[n] || 0) - (eqIdx[n] || 0); });
+      if (net > bestNet) { bestNet = net; best = c.item; }
+    });
+    return best;
+  }
+
   // Build the in-game style tooltip HTML for an item.
   // `compareTo` is optional. When provided, each primary-stat line gets a
   // small "(+5)" / "(-3)" tag showing the delta vs the compareTo item.
@@ -500,14 +523,18 @@
     }
     // Single-slot comparison: the hovered item's stat lines get green/red
     // (+N)/(-N) tags vs the one equipped item. Dual-slot items (rings,
-    // trinkets) return TWO equipped entries — a single baseline on the
-    // candidate would be ambiguous (it'd silently pick Finger 1), so instead
-    // we render the candidate plain and give EACH equipped slot its own
-    // net-swap summary below ("Chrome Ring -> +8 Spirit +2 Intellect ...").
+    // trinkets, main/off hand) return TWO equipped entries. We still headline
+    // the top tooltip with inline (+N)/(-N) deltas — baselined against the
+    // slot the candidate best upgrades (the piece you'd actually replace) —
+    // and ALSO give EACH equipped slot its own net-swap summary below
+    // ("Chrome Ring -> +8 Spirit +2 Intellect ...") so both slots stay visible.
     const realCompares = compares.filter(c => c);
-    const multi   = realCompares.length > 1;
-    const primary = realCompares.find(c => c.item);
-    let html = buildTooltipHTML(it, multi ? null : (primary ? primary.item : null));
+    const multi    = realCompares.length > 1;
+    const primary  = realCompares.find(c => c.item);
+    const baseline = multi
+      ? pickInlineBaseline(it, realCompares.filter(c => c.item))
+      : (primary ? primary.item : null);
+    let html = buildTooltipHTML(it, baseline);
     realCompares.forEach(cmp => {
       const label = cmp.label || 'Currently equipped';
       html += `<div class="tt-compare-sep"></div>`;
