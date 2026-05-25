@@ -24,7 +24,7 @@
     const CLASS_ARMOR_FLOOR = {
         warrior: ['Plate', 'Mail'],
         paladin: ['Plate', 'Mail'],
-        dk:      ['Plate'],
+        dk:      ['Plate', 'Mail'],   // level-1 DK wears mail until 40, plate at 40 (like warrior/paladin)
         hunter:  ['Mail', 'Leather'],
         shaman:  ['Mail', 'Leather'],
         rogue:   ['Leather'],
@@ -205,7 +205,7 @@
         classFillsRole: classFillsRole,
         computeItemRoles: computeItemRoles,
         computeItemClasses: computeItemClasses,
-        VERSION: '2.5.0',
+        VERSION: '2.6.0',
     };
 
     // -------------------------------------------------------------------
