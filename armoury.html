@@ -1618,15 +1618,17 @@
             // armoury_api items use 'invType'; loot-data items (used by the
             // Upgrade Finder) use 'slotFilter'. Accept either.
             const slotKey = item.invType || item.slotFilter;
-            let slots = AH_INVTYPE_TO_EQUIP_SLOTS[slotKey];
+            const slots = AH_INVTYPE_TO_EQUIP_SLOTS[slotKey];
             if (!slots) return null;
-            // A shield (armor class 4 / subclass 6) is off-hand-only and not a
-            // weapon, so don't pull in the main hand the way an off-hand WEAPON
-            // does — baselining a shield's armor against a 1H weapon would point
-            // the inline delta at the wrong slot. Shields share the 'Off-Hand'
-            // invType/slotFilter with off-hand weapons, so tell them apart by
-            // item class/subclass.
-            if (item.itemClass === 4 && item.subclass === 6) slots = [16];
+            // Off-hand-only items (off-hand weapons, held items, AND shields —
+            // all carry the 'Off-Hand'/'Held' invType) also show the MAIN HAND,
+            // but only for REFERENCE: the candidate can't equip into the main
+            // hand, so it must NOT become the inline-delta baseline (a shield's
+            // armor would otherwise baseline against a 1H weapon). Mark slot 15
+            // reference; tooltip.js excludes reference slots from
+            // pickInlineBaseline but still renders them below. One-Hand weapons
+            // (either hand) keep both slots as real targets.
+            const mainHandIsReference = (slotKey === 'Off-Hand' || slotKey === 'Held');
             if (skipIfAlreadyEquipped) {
                 for (const idx of slots) {
                     const eq = lastViewedEquipped[idx];
@@ -1637,6 +1639,7 @@
             return slots.map(idx => ({
                 label: `${who}: ${AH_SLOT_LABELS[idx] || 'Equipped'}`,
                 item:  compactForCompare(lastViewedEquipped[idx]),
+                reference: mainHandIsReference && idx === 15,
             }));
         };
     }

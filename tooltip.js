@@ -498,11 +498,12 @@
     // top deltas baseline against the piece the candidate best upgrades (the
     // one you'd realistically replace), so the +/- live only on the top.
     const realCompares = compares.filter(c => c);
-    const multi    = realCompares.length > 1;
-    const primary  = realCompares.find(c => c.item);
-    const baseline = multi
-      ? pickInlineBaseline(it, realCompares.filter(c => c.item))
-      : (primary ? primary.item : null);
+    // Inline-delta baseline = the equipped piece the candidate would actually
+    // replace. Exclude reference-only slots (e.g. the main hand shown beside an
+    // off-hand item or shield — the candidate can't equip there, so it must not
+    // drive the deltas). pickInlineBaseline returns the best-swap among real
+    // target slots, the lone target, or null (empty target → candidate plain).
+    const baseline = pickInlineBaseline(it, realCompares.filter(c => c.item && !c.reference));
     let html = buildTooltipHTML(it, baseline);
     realCompares.forEach(cmp => {
       const label = cmp.label || 'Currently equipped';
