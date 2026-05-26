@@ -2223,6 +2223,7 @@
             'Block Value': 0.4, 'Expertise': 0.4, 'Hit': 0.4,
             'Critical Strike': 0.2, 'Haste': 0.2,
             'Attack Power': 0.2, 'Armor Pen': 0.2,
+            'Melee DPS': 1.0,   // weapon throughput drives threat; survival still leads
         },
         tank_paladin: {
             // Block is tier 1 — paladins block more than anyone and Shield
@@ -2232,6 +2233,7 @@
             'Armor': 0.4, 'Agility': 0.4, 'Expertise': 0.4,
             'Hit': 0.2, 'Critical Strike': 0.2, 'Haste': 0.2,
             'Attack Power': 0.2, 'Armor Pen': 0.2, 'Intellect': 0.2,
+            'Melee DPS': 1.0,
         },
         tank_dk: {
             // No Block key at all — death knights cannot block. Strength
@@ -2241,6 +2243,7 @@
             'Armor': 0.4, 'Agility': 0.4, 'Expertise': 0.4,
             'Hit': 0.2, 'Critical Strike': 0.2, 'Haste': 0.2,
             'Attack Power': 0.2, 'Armor Pen': 0.2,
+            'Melee DPS': 1.0,
         },
         tank_druid: {
             // Bears go uncrittable via talent, not Defense — no Defense,
@@ -2253,6 +2256,7 @@
             'Strength': 0.4, 'Attack Power': 0.4, 'Expertise': 0.4,
             'Hit': 0.4, 'Critical Strike': 0.4,
             'Haste': 0.2, 'Armor Pen': 0.2,
+            'Melee DPS': 1.0,   // feral weapon = a big chunk of bear/cat attack power
         },
         // ---- Healers — generic + Holy Paladin --------------------------
         heal: {
@@ -2283,17 +2287,20 @@
             'Hit': 0.7, 'Critical Strike': 0.7, 'Armor Pen': 0.7,
             'Attack Power': 0.4, 'Haste': 0.4,
             'Intellect': 0.2,
+            'Ranged DPS': 3.0,   // the bow/gun IS the hunter's weapon
         },
         melee_str: {
             'Strength': 1.0,
             'Hit': 0.7, 'Expertise': 0.7, 'Armor Pen': 0.7, 'Critical Strike': 0.7,
             'Attack Power': 0.4, 'Haste': 0.4,
             'Agility': 0.2,
+            'Melee DPS': 3.0,   // weapon DPS dominates a melee weapon's value
         },
         melee_agi: {
             'Agility': 1.0,
             'Hit': 0.7, 'Expertise': 0.7, 'Armor Pen': 0.7, 'Critical Strike': 0.7,
             'Attack Power': 0.4, 'Haste': 0.4, 'Strength': 0.4,
+            'Melee DPS': 3.0,
         },
     };
 
@@ -2368,6 +2375,23 @@
     // as writing a tiny per-point weight, but keeps the weight tables readable.
     const STAT_NORM = { 'Armor': 20, 'Attack Power': 2 };
 
+    // Which DPS weight (if any) a weapon's damage-per-second feeds, by slot.
+    // Melee weapons (one/two-hand, main/off) -> 'Melee DPS'; ranged weapons
+    // (bow/gun/xbow/thrown) -> 'Ranged DPS'. This keys off the SLOT, so a
+    // class only scores DPS on the weapon it actually fights with: a hunter's
+    // melee weapon is a stat-stick (its melee table has no 'Melee DPS'), a
+    // warrior's gun is a stat-stick (no 'Ranged DPS'), casters/healers neither.
+    // Shields/holdables/relics carry no dps, so they never contribute.
+    const MELEE_DPS_SLOTS  = { 'One-Hand': 1, 'Two-Hand': 1, 'Main Hand': 1, 'Off-Hand': 1 };
+    const RANGED_DPS_SLOTS = { 'Ranged': 1, 'Thrown': 1 };
+    function weaponDpsKey(item) {
+        if (!item || !item.dps) return null;
+        const sf = item.slotFilter || item.invType || '';
+        if (RANGED_DPS_SLOTS[sf]) return 'Ranged DPS';
+        if (MELEE_DPS_SLOTS[sf])  return 'Melee DPS';
+        return null;
+    }
+
     function scoreItemForRole(item, weights) {
         let score = 0;
         // Stat-block stats from item.stats (Stamina, Strength, Armor, etc.)
@@ -2382,6 +2406,13 @@
         const ratings = extractRatings(item);
         for (const name of Object.keys(ratings)) {
             score += (ratings[name] / (STAT_NORM[name] || 1)) * (weights[name] || 0);
+        }
+        // Weapon damage-per-second — the dominant value of a melee/ranged
+        // weapon. Weighted per raw DPS point (no STAT_NORM); the per-role
+        // weight (3.0 DPS roles, 1.0 tanks, 0 casters) IS the per-point value.
+        const dpsKey = weaponDpsKey(item);
+        if (dpsKey && weights[dpsKey]) {
+            score += item.dps * weights[dpsKey];
         }
         return score;
     }
