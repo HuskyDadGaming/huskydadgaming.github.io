@@ -1671,6 +1671,10 @@
         ahState.house = '';
         ahState.query = itemName;
         ahState.exact = true;
+        // Carry the Upgrade Finder's active role into the AH so the buy modal
+        // shows "this was a [role] upgrade for <char>" — guards against
+        // accidentally confirming a wrong-spec buy (e.g. Prot when you wanted Ret).
+        ahState.upgradeRole = upState.role || null;
         document.getElementById('ah-house').value  = '';
         document.getElementById('ah-search').value = itemName;
         document.getElementById('ah-exact').checked = true;
@@ -1743,6 +1747,11 @@
         ahState.stat       = null;
         ahState.slot       = '';
         ahState.offset     = 0;
+        // Upgrade-Finder context — set by ahForItem() so the buy modal shows
+        // "this was a [role] upgrade for X" and you don't accidentally buy a
+        // wrong-spec item. Cleared on any fresh AH entry (here) or manual
+        // filter change (readFiltersFromUI).
+        ahState.upgradeRole = null;
 
         // Sync UI controls
         document.getElementById('ah-house').value       = ahState.house;
@@ -2009,10 +2018,19 @@
         const itemName = p.item?.name || `Item #${p.itemEntry}`;
         const itemColor = p.item?.color || '#fff';
         const count = p.itemCount > 1 ? `${p.itemCount}× ` : '';
+        // If we got here from the Upgrade Finder, surface which role's upgrade
+        // this is so a wrong-spec pickup (e.g. Prot when you wanted Ret) is
+        // obvious BEFORE you click Confirm. Banner is suppressed if the user
+        // navigated here manually (ahState.upgradeRole is cleared then).
+        const ROLE_LABELS = { tank:'Tank', heal:'Healer', melee:'Melee DPS', ranged:'Ranged DPS' };
+        const upgradeBanner = ahState.upgradeRole ? `
+                    <div class="modal-row" style="background:#3a3322;border-left:3px solid #ffd84a;padding:8px 10px;color:#ffe48a;">
+                        ⚔️ Suggested as a <strong>${ROLE_LABELS[ahState.upgradeRole] || ahState.upgradeRole}</strong> upgrade for <strong>${escape(p.targetName)}</strong>
+                    </div>` : '';
         host.innerHTML = `
             <div class="ah-modal-overlay" onclick="if (event.target === this) closeBuyModal()">
                 <div class="ah-modal">
-                    <h2>Confirm purchase</h2>
+                    <h2>Confirm purchase</h2>${upgradeBanner}
                     <div class="modal-row">
                         <span class="label">Item</span>
                         <span><strong style="color:${itemColor}">${count}${escape(itemName)}</strong></span>
@@ -2073,6 +2091,9 @@
         ahState.stat       = stat === '' ? null : parseInt(stat, 10);
         ahState.slot       = slot;
         ahState.offset     = 0;
+        // Any user-driven filter change exits the Upgrade-Finder context
+        // (they're browsing manually now), so drop the buy-modal banner.
+        ahState.upgradeRole = null;
     }
     document.getElementById('ah-go').onclick = function() {
         readFiltersFromUI();
