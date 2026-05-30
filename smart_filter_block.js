@@ -82,6 +82,16 @@
     }
 
     function classFillsRole(it, cls, role) {
+        // AllowableClass — if the item is explicitly class-locked, ONLY the
+        // listed classes pass. The build script bakes this into the item's
+        // `allowedClasses` slug list ([] = no restriction). A mage-only wand
+        // is not priest or warlock loot even though those classes have wand
+        // proficiency. KEEP IN SYNC with build_dungeons.py class_fills_role.
+        const allowed = it.allowedClasses;
+        if (Array.isArray(allowed) && allowed.length && !allowed.includes(cls)) {
+            return false;
+        }
+
         if (!passesClassArmor(it, cls, role)) return false;
 
         const slot = it.slotFilter;
