@@ -533,6 +533,15 @@
         }
         .ah-modal .modal-row:last-of-type { border-bottom: none; }
         .ah-modal .modal-row .label { color: #aaa; }
+        /* Upgrade-Finder context banner inside the buy modal — block flow (not
+           flex like .modal-row) so the bold spec/character spans wrap inline
+           as normal text instead of becoming flex items with random gaps on
+           narrow widths. */
+        .ah-modal .modal-upgrade-banner {
+            background: #3a3322; border-left: 3px solid #ffd84a;
+            padding: 8px 10px; color: #ffe48a;
+            margin-bottom: 8px; font-size: 0.9rem; line-height: 1.4;
+        }
         .ah-modal .modal-actions {
             display: flex; justify-content: flex-end; gap: 0.5rem;
             margin-top: 1.25rem;
@@ -2038,7 +2047,7 @@
         // navigated here manually (ahState.upgradeRole is cleared then).
         const ROLE_LABELS = { tank:'Tank', heal:'Healer', melee:'Melee DPS', ranged:'Ranged DPS' };
         const upgradeBanner = ahState.upgradeRole ? `
-                    <div class="modal-row" style="background:#3a3322;border-left:3px solid #ffd84a;padding:8px 10px;color:#ffe48a;">
+                    <div class="modal-upgrade-banner">
                         ⚔️ Suggested as a <strong>${ROLE_LABELS[ahState.upgradeRole] || ahState.upgradeRole}</strong> upgrade for <strong>${escape(p.targetName)}</strong>
                     </div>` : '';
         host.innerHTML = `
