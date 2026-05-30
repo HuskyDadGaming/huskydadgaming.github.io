@@ -1513,6 +1513,29 @@
     const AH_ARMOR_BODY_SLOTS = new Set([
         'Head', 'Shoulder', 'Chest', 'Wrist', 'Hands', 'Waist', 'Legs', 'Feet',
     ]);
+    // WotLK 3.3.5a proficiency cutoff — Plate (warrior/paladin/dk) and Mail
+    // (hunter/shaman) only unlock at level 40. Until then those classes can't
+    // wear their "heavy" armor type, even though it's in their CLASS_ARMOR_FLOOR
+    // (which describes the cap at max level for precomputed loot lists).
+    const HEAVY_ARMOR_UNLOCK_LEVEL = 40;
+    const HEAVY_ARMOR_BY_CLASS = {
+        warrior: 'Plate', paladin: 'Plate', dk: 'Plate',
+        hunter:  'Mail',  shaman:  'Mail',
+    };
+    // Returns true if `item` is the class's heavy armor type but the character
+    // isn't level-40 yet. Used in both isUsableForChar (AH Usable filter) and
+    // findUpgradesForSlot (Upgrade Finder) so Mail/Plate aren't offered before
+    // the class can actually equip them. Accepts items shaped either as AH
+    // items (item.invType) or loot-data items (item.slotFilter).
+    function isHeavyArmorBlockedAtLevel(item, cls, lvl) {
+        if (!item || !cls || !lvl) return false;
+        if (lvl >= HEAVY_ARMOR_UNLOCK_LEVEL) return false;
+        if ((item.itemClass || 0) !== 4) return false;
+        const slotKey = item.invType || item.slotFilter;
+        if (!AH_ARMOR_BODY_SLOTS.has(slotKey)) return false;
+        const heavy = HEAVY_ARMOR_BY_CLASS[cls];
+        return !!heavy && item.armorType === heavy;
+    }
 
     function isUsableForChar(item, cls, level) {
         if (!item) return true;
@@ -1544,6 +1567,9 @@
             const floor = AH_CLASS_ARMOR_FLOOR[cls];
             if (floor && !floor.includes(item.armorType)) return false;
         }
+        // Heavy-armor proficiency unlocks at level 40 — block Plate for
+        // sub-40 warrior/paladin/DK and Mail for sub-40 hunter/shaman.
+        if (isHeavyArmorBlockedAtLevel(item, cls, lvl)) return false;
         return true;
     }
 
@@ -2536,6 +2562,10 @@
             // smart_filter_block.js's classFillsRole/passesClassArmor logic.
             if (!(it.classes || []).includes(cls))  return false;
             if (!(it.roles   || []).includes(role)) return false;
+            // Heavy-armor proficiency unlocks at level 40 — the precomputed
+            // class list says "Hunter can wear Mail" (true at L40+) but for a
+            // sub-40 character we need to gate Mail/Plate at runtime.
+            if (isHeavyArmorBlockedAtLevel(it, cls, level)) return false;
             // Exclude the item currently equipped in this slot.
             if (currentItem && currentItem.id === it.id) return false;
             // Unique-Equipped: can't recommend an item already worn elsewhere
