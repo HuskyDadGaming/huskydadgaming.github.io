@@ -234,12 +234,54 @@
     return { value: parseInt(m[1], 10), name: m[2].trim() };
   }
 
+  // Effect-line rating extractors — mirror of armoury.html RATING_EXTRACTORS.
+  // KEEP IN SYNC. Used so secondary stats that render as Equip-effect lines
+  // ("Equip: Increases spell power by 8.", "...your critical strike rating
+  // by 12.") get a +/- delta tag next to them, matching the primary-stat
+  // delta tags. Pattern + canonical-name pair; first match wins per line.
+  const EFFECT_RATING_EXTRACTORS = [
+    ['Defense',         /defense rating by (\d+)/i],
+    ['Dodge',           /dodge rating by (\d+)/i],
+    ['Parry',           /parry rating by (\d+)/i],
+    ['Block',           /block rating .* by (\d+)/i],
+    ['Block Value',     /block value of your shield by (\d+)/i],
+    ['Hit',             /hit rating by (\d+)/i],
+    ['Critical Strike', /critical strike rating by (\d+)/i],
+    ['Haste',           /haste rating by (\d+)/i],
+    ['Expertise',       /expertise rating by (\d+)/i],
+    ['Resilience',      /resilience rating by (\d+)/i],
+    ['Armor Pen',       /armor penetration rating by (\d+)/i],
+    ['Spell Power',     /(?:spell power|damage and healing) (?:done )?by (?:up to )?(\d+)/i],
+    ['Attack Power',    /attack power by (\d+)/i],
+    ['MP5',             /(\d+)\s*mana\s+every\s+5\s+sec/i],
+  ];
+  // Returns {ratingName: value} for an item's effects, or {} if none match.
+  function extractEffectRatings(item) {
+    const out = {};
+    for (const e of ((item && item.effects) || [])) {
+      if (e.trigger && e.trigger !== 'Equip') continue;   // Use:/Chance: don't have steady stats
+      const t = e.text || '';
+      for (const [name, re] of EFFECT_RATING_EXTRACTORS) {
+        if (out[name] != null) continue;   // first hit wins per stat
+        const m = re.exec(t);
+        if (m) out[name] = parseInt(m[1], 10);
+      }
+    }
+    return out;
+  }
+
   function statIndexOf(item) {
     const idx = {};
     (item && item.stats || []).forEach(s => {
       const p = parseStatLine(s);
       if (p) idx[p.name] = p.value;
     });
+    // Fold in effect-line rating stats so deltas span both the primary stat
+    // block AND Equip-effect lines. Stats from effects use the same name
+    // namespace (Spell Power, Hit, Crit, etc.) — no collision with primary
+    // stat names (Strength, Stamina, Intellect, etc.).
+    const ratings = extractEffectRatings(item);
+    for (const k of Object.keys(ratings)) idx[k] = ratings[k];
     return idx;
   }
 
@@ -399,10 +441,21 @@
       parts.push(`<div class="tt-required">Requires Level ${reqLvl}</div>`);
     }
 
-    // Equip: / Use: / Chance on hit: effects (in green, same as in-game)
+    // Equip: / Use: / Chance on hit: effects (in green, same as in-game).
+    // When comparing against an equipped item, each Equip-rating line gets
+    // a (+N)/(-N) delta tag — same treatment as primary stat lines, so
+    // "Equip: Increases spell power by 8 (+3)" appears when the equipped
+    // piece had +5 Spell Power. First-match-wins regex per line.
     (it.effects || []).forEach(e => {
       const trigger = e.trigger ? `${escape(e.trigger)}: ` : '';
-      parts.push(`<div class="tt-effect">${trigger}${escape(resolveFormulas(e.text))}</div>`);
+      let delta = '';
+      if (compareIdx && (!e.trigger || e.trigger === 'Equip')) {
+        for (const [name, re] of EFFECT_RATING_EXTRACTORS) {
+          const m = re.exec(e.text || '');
+          if (m) { delta = deltaTag(name, parseInt(m[1], 10), compareIdx); break; }
+        }
+      }
+      parts.push(`<div class="tt-effect">${trigger}${escape(resolveFormulas(e.text))}${delta}</div>`);
     });
 
     // Item set block — yellow heading "Set Name (n/m)", greyed-out piece list,
