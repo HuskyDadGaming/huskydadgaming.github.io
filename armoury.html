@@ -84,19 +84,17 @@
             padding: 2px 8px; border-radius: 3px; font-size: 0.78rem;
             font-weight: 600; margin-right: 6px;
         }
-        /* "You have mail" badge — matches the retail character-select envelope.
-           Yellow when there's any mail in the box; brighter + red dot if some
-           of it is unread, so an alt with old read mail doesn't pretend to be
-           urgent. */
+        /* "You have mail" badge — sits next to the character name in the
+           card header. Yellow when any mail is in the box; brighter + red dot
+           if some of it is unread, so an alt with only read mail doesn't
+           pretend to be urgent. */
         .character-card .mail-badge {
             display: inline-flex; align-items: center; gap: 3px;
-            background: #2d2d2d; color: #ffd100;
-            padding: 1px 6px; border-radius: 3px;
-            font-size: 0.78rem; font-weight: 600; margin-left: 6px;
-            border: 1px solid #3a3a3a;
+            color: #ffd100; font-size: 0.85rem; font-weight: 600;
+            margin: 0 6px; vertical-align: middle;
         }
         .character-card .mail-badge.unread {
-            color: #ffec80; border-color: #5a4a00;
+            color: #ffec80;
         }
         .character-card .mail-badge .mail-dot {
             display: inline-block; width: 6px; height: 6px;
@@ -1135,11 +1133,11 @@
             return `
                 <a class="character-card" href="#" onclick="showCharacter('${escape(c.name)}'); return false;">
                     <div class="char-name">
-                        ${dot}${escape(c.name)}${status}
+                        ${dot}${escape(c.name)}${mailBadge}${status}
                     </div>
                     <div class="char-meta">
                         <span class="level-badge">Lvl ${c.level}</span>
-                        ${escape(c.race)} ${escape(c.class)}${mailBadge}
+                        ${escape(c.race)} ${escape(c.class)}
                     </div>
                 </a>
             `;
