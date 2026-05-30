@@ -94,6 +94,9 @@
       color: #1eff00; margin-top: 4px; line-height: 1.3;
     }
     #kcraft-tooltip .tt-durability { color: #ffffff; margin-top: 4px; }
+    /* Class restriction ("Classes: Mage") — red like the in-game tooltip so
+       a wrong-class buy stands out before you click Confirm. */
+    #kcraft-tooltip .tt-classes { color: #ff2020; margin-top: 4px; }
     #kcraft-tooltip .tt-required { color: #ffffff; margin-top: 4px; }
     #kcraft-tooltip .tt-sell {
       margin-top: 4px;
@@ -374,6 +377,20 @@
     if (it.maxDurability) {
       const cur = (it.durability != null) ? it.durability : it.maxDurability;
       parts.push(`<div class="tt-durability">Durability ${cur} / ${it.maxDurability}</div>`);
+    }
+
+    // Class restriction ("Classes: Mage") — renders red when the item is
+    // class-locked. Comes from item_template.AllowableClass resolved into a
+    // slug list by armoury_api. Empty list = no restriction = no line. We
+    // capitalise the slugs for display ("dk" -> "DK", others -> "Mage").
+    if (Array.isArray(it.allowedClasses) && it.allowedClasses.length) {
+      const SLUG_DISPLAY = {
+        warrior:'Warrior', paladin:'Paladin', hunter:'Hunter', rogue:'Rogue',
+        priest:'Priest',   dk:'Death Knight', shaman:'Shaman', mage:'Mage',
+        warlock:'Warlock', druid:'Druid',
+      };
+      const labels = it.allowedClasses.map(s => SLUG_DISPLAY[s] || s).join(', ');
+      parts.push(`<div class="tt-classes">Classes: ${escape(labels)}</div>`);
     }
 
     // Required level. Accept either reqLevel (armoury) or req (loot guide).
