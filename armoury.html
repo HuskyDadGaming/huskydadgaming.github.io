@@ -84,21 +84,12 @@
             padding: 2px 8px; border-radius: 3px; font-size: 0.78rem;
             font-weight: 600; margin-right: 6px;
         }
-        /* "You have mail" badge — sits next to the character name in the
-           card header. Yellow when any mail is in the box; brighter + red dot
-           if some of it is unread, so an alt with only read mail doesn't
-           pretend to be urgent. */
+        /* "You have new mail" badge — only renders for unread mail (matches
+           the retail character-select envelope). Sits next to the name. */
         .character-card .mail-badge {
             display: inline-flex; align-items: center; gap: 3px;
-            color: #ffd100; font-size: 0.85rem; font-weight: 600;
+            color: #ffec80; font-size: 0.85rem; font-weight: 600;
             margin: 0 6px; vertical-align: middle;
-        }
-        .character-card .mail-badge.unread {
-            color: #ffec80;
-        }
-        .character-card .mail-badge .mail-dot {
-            display: inline-block; width: 6px; height: 6px;
-            border-radius: 50%; background: #ff5050;
         }
 
         /* Character page */
@@ -1118,17 +1109,12 @@
             const status = c.online
                 ? '<span class="status-online">Online</span>'
                 : '<span class="status-offline">Offline</span>';
-            // Mail indicator — only show when there's something in the box.
-            // Unread count drives the dot + emphasis colour; total drives the
-            // number so you also see read-but-uncollected mail.
-            const mailBadge = (c.mailCount > 0)
-                ? `<span class="mail-badge ${c.mailUnreadCount > 0 ? 'unread' : ''}"
-                          title="${c.mailCount} item${c.mailCount === 1 ? '' : 's'} in mailbox${
-                              c.mailUnreadCount > 0
-                                ? ` (${c.mailUnreadCount} unread)`
-                                : ''}">${
-                              c.mailUnreadCount > 0 ? '<span class="mail-dot"></span>' : ''
-                          }✉ ${c.mailCount}</span>`
+            // Mail indicator — only fires for UNREAD mail (matches the retail
+            // "You have new mail!" envelope, which only lights up for mail you
+            // haven't opened). Read-but-uncollected mail no longer triggers it.
+            const mailBadge = (c.mailUnreadCount > 0)
+                ? `<span class="mail-badge"
+                         title="${c.mailUnreadCount} unread mail${c.mailUnreadCount === 1 ? '' : 's'}">✉ ${c.mailUnreadCount}</span>`
                 : '';
             return `
                 <a class="character-card" href="#" onclick="showCharacter('${escape(c.name)}'); return false;">
