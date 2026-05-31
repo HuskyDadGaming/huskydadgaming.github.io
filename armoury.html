@@ -812,6 +812,14 @@
                 <option value="Neutral">Neutral</option>
             </select>
             <input type="text" id="ah-search" placeholder="Item name…" maxlength="64">
+            <select id="ah-category" title="In-game AH category">
+                <option value="">All categories</option>
+                <!-- options populated by populateAhCategories() from AH_CATEGORIES -->
+            </select>
+            <select id="ah-subcategory" title="Subcategory (depends on category)" disabled>
+                <option value="">All</option>
+                <!-- options repopulated when category changes -->
+            </select>
             <label style="display:inline-flex; align-items:center; gap:4px; color:#aaa; font-size:0.85rem;">
                 <input type="checkbox" id="ah-exact"> Exact
             </label>
@@ -1600,6 +1608,154 @@
         return '';
     }
 
+    // In-game AH category dropdown (top-level item_template.class). Order
+    // matches the in-game client AH dropdown so users used to that UI find
+    // entries where they expect. Deprecated classes (Reagent[5], Generic[8],
+    // Money[10], Key[13], Permanent[14]) are intentionally omitted — none
+    // of them appear in the client's category list either.
+    const AH_CATEGORIES = [
+        [2,  'Weapon'],
+        [4,  'Armor'],
+        [1,  'Container'],
+        [0,  'Consumable'],
+        [16, 'Glyph'],
+        [7,  'Trade Goods'],
+        [6,  'Projectile'],
+        [11, 'Quiver'],
+        [9,  'Recipe'],
+        [3,  'Gem'],
+        [15, 'Miscellaneous'],
+        [12, 'Quest'],
+    ];
+
+    // Per-category subcategory lists (item_template.subclass). Each entry is
+    // [subclass_id, label]. Only subclasses the 3.3.5 client actually surfaces
+    // are listed — deprecated/obsolete subclasses (e.g. Weapon[9]=Obsolete,
+    // Weapon[11/12]=Exotic, Weapon[17]=Spear, Projectile[0/1/4]=deprecated,
+    // Armor[5]=Buckler, TradeGoods[14/15]=obsolete enchant) are skipped.
+    // Quest (12) intentionally has no subcategories — neither does the
+    // in-game client.
+    const AH_SUBCATEGORIES = {
+        // Consumable (class=0)
+        0: [
+            [0, 'Consumable'], [1, 'Potion'], [2, 'Elixir'], [3, 'Flask'],
+            [4, 'Scroll'], [5, 'Food & Drink'], [6, 'Item Enhancement'],
+            [7, 'Bandage'], [8, 'Other'],
+        ],
+        // Container (class=1)
+        1: [
+            [0, 'Bag'], [1, 'Soul Bag'], [2, 'Herb Bag'],
+            [3, 'Enchanting Bag'], [4, 'Engineering Bag'], [5, 'Gem Bag'],
+            [6, 'Mining Bag'], [7, 'Leatherworking Bag'], [8, 'Inscription Bag'],
+        ],
+        // Weapon (class=2)
+        2: [
+            [0, 'One-Handed Axe'], [1, 'Two-Handed Axe'],
+            [2, 'Bow'], [3, 'Gun'],
+            [4, 'One-Handed Mace'], [5, 'Two-Handed Mace'],
+            [6, 'Polearm'],
+            [7, 'One-Handed Sword'], [8, 'Two-Handed Sword'],
+            [10, 'Staff'],
+            [13, 'Fist Weapon'],
+            [14, 'Miscellaneous'],   // blacksmith hammer, mining pick, etc.
+            [15, 'Dagger'],
+            [16, 'Thrown'],
+            [18, 'Crossbow'],
+            [19, 'Wand'],
+            [20, 'Fishing Pole'],
+        ],
+        // Gem (class=3)
+        3: [
+            [0, 'Red'], [1, 'Blue'], [2, 'Yellow'], [3, 'Purple'],
+            [4, 'Green'], [5, 'Orange'], [6, 'Meta'], [7, 'Simple'],
+            [8, 'Prismatic'],
+        ],
+        // Armor (class=4)
+        4: [
+            [0, 'Miscellaneous'],   // rings, trinkets, necks, cloaks (some)
+            [1, 'Cloth'], [2, 'Leather'], [3, 'Mail'], [4, 'Plate'],
+            [6, 'Shield'],
+            [7, 'Libram'], [8, 'Idol'], [9, 'Totem'], [10, 'Sigil'],
+        ],
+        // Projectile (class=6)
+        6: [
+            [2, 'Arrow'], [3, 'Bullet'],
+        ],
+        // Trade Goods (class=7)
+        7: [
+            [0, 'Trade Goods'], [1, 'Parts'], [2, 'Explosives'],
+            [3, 'Devices'], [4, 'Jewelcrafting'], [5, 'Cloth'],
+            [6, 'Leather'], [7, 'Metal & Stone'], [8, 'Meat'],
+            [9, 'Herb'], [10, 'Elemental'], [11, 'Other'],
+            [12, 'Enchanting'], [13, 'Materials'],
+        ],
+        // Recipe (class=9)
+        9: [
+            [0, 'Book'], [1, 'Leatherworking'], [2, 'Tailoring'],
+            [3, 'Engineering'], [4, 'Blacksmithing'], [5, 'Cooking'],
+            [6, 'Alchemy'], [7, 'First Aid'], [8, 'Enchanting'],
+            [9, 'Fishing'], [10, 'Jewelcrafting'], [11, 'Inscription'],
+        ],
+        // Quiver (class=11)
+        11: [
+            [2, 'Quiver'], [3, 'Ammo Pouch'],
+        ],
+        // Quest (class=12) — no subcategories
+        12: [],
+        // Miscellaneous (class=15)
+        15: [
+            [0, 'Junk'], [1, 'Reagent'], [2, 'Companion Pet'],
+            [3, 'Holiday'], [4, 'Other'], [5, 'Mount'],
+        ],
+        // Glyph (class=16)
+        16: [
+            [1, 'Warrior'], [2, 'Paladin'], [3, 'Hunter'],
+            [4, 'Rogue'], [5, 'Priest'], [6, 'Death Knight'],
+            [7, 'Shaman'], [8, 'Mage'], [9, 'Warlock'],
+            [11, 'Druid'],
+        ],
+    };
+
+    // Fill the category <select> once at script load — options are static.
+    function populateAhCategories() {
+        const sel = document.getElementById('ah-category');
+        if (!sel || sel.dataset.populated) return;
+        AH_CATEGORIES.forEach(([id, label]) => {
+            const opt = document.createElement('option');
+            opt.value = String(id);
+            opt.textContent = label;
+            sel.appendChild(opt);
+        });
+        sel.dataset.populated = '1';
+    }
+
+    // Repopulate the subcategory <select> based on the picked category.
+    // Called whenever the category changes; clears the subcategory selection
+    // and disables the dropdown when no category (or a no-subcategory one
+    // like Quest) is active.
+    function populateAhSubcategories(clsStr) {
+        const sel = document.getElementById('ah-subcategory');
+        if (!sel) return;
+        // Strip everything except the leading "All" option.
+        while (sel.options.length > 1) sel.remove(1);
+        sel.value = '';
+        const cls = clsStr === '' ? null : parseInt(clsStr, 10);
+        const subs = (cls != null) ? AH_SUBCATEGORIES[cls] : null;
+        if (!subs || subs.length === 0) {
+            sel.disabled = true;
+            return;
+        }
+        subs.forEach(([id, label]) => {
+            const opt = document.createElement('option');
+            opt.value = String(id);
+            opt.textContent = label;
+            sel.appendChild(opt);
+        });
+        sel.disabled = false;
+    }
+    // Populate category options immediately — they never change.
+    populateAhCategories();
+
     // Map auction item.invType (string from armoury_api INVENTORY_TYPES) to
     // the character.equipped slot index(es) that hold the comparable gear.
     // Some types compare against two slots: rings (both fingers), trinkets
@@ -1819,6 +1975,10 @@
         ahState.house = '';
         ahState.query = itemName;
         ahState.exact = true;
+        // Clear category/subclass too — a sticky filter from the previous
+        // browse would AND with the exact-name query and return zero rows.
+        ahState.itemClass = null;
+        ahState.itemSubclass = null;
         // Carry the Upgrade Finder's active role into the AH so the buy modal
         // shows "this was a [role] upgrade for <char>" — guards against
         // accidentally confirming a wrong-spec buy (e.g. Prot when you wanted Ret).
@@ -1826,6 +1986,8 @@
         document.getElementById('ah-house').value  = '';
         document.getElementById('ah-search').value = itemName;
         document.getElementById('ah-exact').checked = true;
+        document.getElementById('ah-category').value = '';
+        populateAhSubcategories('');
         loadAuctionPage();
     };
 
@@ -1894,6 +2056,8 @@
         ahState.minQuality = null;
         ahState.stat       = null;
         ahState.slot       = '';
+        ahState.itemClass    = null;
+        ahState.itemSubclass = null;
         ahState.offset     = 0;
         // Upgrade-Finder context — set by ahForItem() so the buy modal shows
         // "this was a [role] upgrade for X" and you don't accidentally buy a
@@ -1911,6 +2075,8 @@
         document.getElementById('ah-min-quality').value = '';
         document.getElementById('ah-stat').value        = '';
         document.getElementById('ah-slot').value        = '';
+        document.getElementById('ah-category').value    = '';
+        populateAhSubcategories('');   // resets + disables subcategory
 
         // Update header context line
         document.getElementById('ah-context').innerHTML =
@@ -1964,6 +2130,8 @@
         if (ahState.minQuality != null) params.set('min_quality', ahState.minQuality);
         if (ahState.stat != null)     params.set('stat', ahState.stat);
         if (ahState.slot)             params.set('slot', ahState.slot);
+        if (ahState.itemClass != null)    params.set('item_class', ahState.itemClass);
+        if (ahState.itemSubclass != null) params.set('item_subclass', ahState.itemSubclass);
         params.set('offset', ahState.offset);
         // When the Usable client-side filter is on, fetch a much bigger
         // chunk per request so plenty survive the filter. Without this,
@@ -2238,6 +2406,10 @@
         ahState.minQuality = minQ === '' ? null : parseInt(minQ, 10);
         ahState.stat       = stat === '' ? null : parseInt(stat, 10);
         ahState.slot       = slot;
+        const cat = document.getElementById('ah-category').value;
+        const sub = document.getElementById('ah-subcategory').value;
+        ahState.itemClass    = cat === '' ? null : parseInt(cat, 10);
+        ahState.itemSubclass = sub === '' ? null : parseInt(sub, 10);
         ahState.offset     = 0;
         // Any user-driven filter change exits the Upgrade-Finder context
         // (they're browsing manually now), so drop the buy-modal banner.
@@ -2250,12 +2422,21 @@
     document.getElementById('ah-search').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') document.getElementById('ah-go').click();
     });
-    // Stat / quality / house / slot dropdowns: fire on change so search isn't required
-    ['ah-stat', 'ah-min-quality', 'ah-house', 'ah-slot'].forEach(id => {
+    // Stat / quality / house / slot / subcategory dropdowns: fire on change
+    // so search isn't required. Category change is handled separately below
+    // because it has to repopulate the subcategory dropdown FIRST.
+    ['ah-stat', 'ah-min-quality', 'ah-house', 'ah-slot', 'ah-subcategory'].forEach(id => {
         document.getElementById(id).addEventListener('change', () => {
             readFiltersFromUI();
             loadAuctionPage();
         });
+    });
+    // Category change → repopulate subcategory options (and clear any
+    // previously-selected subcategory) before reading filters.
+    document.getElementById('ah-category').addEventListener('change', function() {
+        populateAhSubcategories(this.value);
+        readFiltersFromUI();
+        loadAuctionPage();
     });
     document.getElementById('ah-clear').onclick = function() {
         const defaultHouse = factionFor(ahState.raceId) || '';
@@ -2268,6 +2449,8 @@
         document.getElementById('ah-min-quality').value = '';
         document.getElementById('ah-stat').value        = '';
         document.getElementById('ah-slot').value        = '';
+        document.getElementById('ah-category').value    = '';
+        populateAhSubcategories('');   // resets + disables subcategory
         ahState.house      = defaultHouse;
         ahState.query      = '';
         ahState.exact      = false;
@@ -2277,6 +2460,8 @@
         ahState.minQuality = null;
         ahState.stat       = null;
         ahState.slot       = '';
+        ahState.itemClass    = null;
+        ahState.itemSubclass = null;
         ahState.offset     = 0;
         loadAuctionPage();
     };
