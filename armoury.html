@@ -1210,10 +1210,12 @@
 
     // ----- Single character view -----
     window.showCharacter = async function(name) {
-        // Comparison provider is only meaningful in the AH browser; on the
-        // character page itself it would render the equipped item below the
-        // hovered equipped item (duplicate). Drop it here.
-        uninstallAhCompareProvider();
+        // Install the equipped-compare provider so hovering an item in the
+        // backpack / equipped bags / bank shows the currently-equipped piece
+        // (or pieces — rings, trinkets, weapons get both) below the tooltip.
+        // Equipped rows are tagged with _equipped in their JSON and the
+        // provider short-circuits on that, so they don't compare against
+        // themselves.
         uninstallUpgradeActionsProvider();
         showView('character');
         pushHistory('character', { name });
@@ -1228,6 +1230,10 @@
             loading.style.display = 'none';
             content.style.display = '';
             content.innerHTML = renderCharacter(c);
+            // After renderCharacter populates lastViewedEquipped, wire up the
+            // hover-compare. Safe to call repeatedly — it just reassigns the
+            // single window.KCraftTooltip.compareProvider slot.
+            installAhCompareProvider();
         } catch (e) {
             loading.style.display = 'none';
             content.style.display = '';
@@ -1274,7 +1280,7 @@
 
     // ----- Tooltip handling lives in tooltip.js (loaded above) -----
 
-    function renderItem(it, slotLabel) {
+    function renderItem(it, slotLabel, ctx) {
         if (!it) {
             return `<div class="item-row empty">
                 <span class="slot-label">${escape(slotLabel || '')}</span>
@@ -1287,8 +1293,13 @@
         const count = (it.count > 1) ? `<span class="item-count">×${it.count}</span>` : '';
         const req = it.reqLevel ? `<span class="req-level">Lvl ${it.reqLevel}</span>` : '';
         // Stash full item data on the row so the global hover handler can use it
-        // (HTML-escape the JSON for safe attribute embedding).
-        const itemJson = JSON.stringify(it).replace(/"/g, '&quot;');
+        // (HTML-escape the JSON for safe attribute embedding). When the row IS
+        // the currently equipped piece, mark it so the compare provider skips
+        // the redundant "equipped vs itself" panel — bag/backpack/bank rows are
+        // left unmarked, so hovering them shows the equipped item below for
+        // side-by-side comparison.
+        const itemForJson = (ctx === 'equipped') ? { ...it, _equipped: true } : it;
+        const itemJson = JSON.stringify(itemForJson).replace(/"/g, '&quot;');
         return `<div class="item-row" data-item-id="${it.id || ''}" data-item-json="${itemJson}">
             <span class="slot-label">${escape(slotLabel || it.invType || '')}</span>
             <div class="item-info">
@@ -1320,7 +1331,7 @@
             [15, 'Main Hand'], [16, 'Off Hand'], [17, 'Ranged'],
         ];
         const equippedHtml = equippedOrder.map(([slot, label]) =>
-            renderItem(c.equipped[slot], label)
+            renderItem(c.equipped[slot], label, 'equipped')
         ).join('');
 
         // Backpack — array of 16, may have nulls for empty slots
@@ -1713,6 +1724,11 @@
         if (!window.KCraftTooltip) return;
         window.KCraftTooltip.compareProvider = function(item) {
             if (!item || !lastViewedEquipped) return null;
+            // On the character page, hovering an EQUIPPED row would otherwise
+            // render the same item below the tooltip as a duplicate panel.
+            // renderItem marks equipped rows with _equipped so we skip them
+            // here — bag/backpack/bank rows are unmarked and get full compare.
+            if (item._equipped) return null;
             // armoury_api items use 'invType'; loot-data items (used by the
             // Upgrade Finder) use 'slotFilter'. Accept either.
             const slotKey = item.invType || item.slotFilter;
