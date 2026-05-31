@@ -677,6 +677,17 @@
             background: rgba(90,195,90,0.13); border-radius: 3px;
             padding: 1px 5px;
         }
+        /* "Req N" chip — surfaces on candidates that require a higher
+           character level than the viewer. Only used in the empty-slot
+           pathway (findUpgradesForSlot lifts the req-level cap there so
+           the player sees what to chase). Amber, matching "future / not
+           yet" connotations elsewhere on the page. */
+        .up-req-future {
+            color: #d99300; font-weight: 700; font-size: 0.72rem;
+            font-variant-numeric: tabular-nums; white-space: nowrap;
+            background: rgba(217,147,0,0.13); border-radius: 3px;
+            padding: 1px 5px;
+        }
         .up-item-meta {
             display: flex; justify-content: space-between; gap: 0.5rem;
             color: #888; font-size: 0.75rem; margin-top: 2px;
@@ -2831,6 +2842,14 @@
             if (eq && eq.uniqueEquipped) uniqueWornIds.add(eq.id);
         }
 
+        // Empty slot? Lift the "can equip RIGHT NOW" cap so the player sees
+        // what to chase — at low levels there are tiers (Neck/Trinket from
+        // BFD/SM/etc.) where the next available drop is several levels above
+        // the character. Items above the char's level get a "Req N" chip in
+        // the row and rank below currently-wearable picks in the sort below.
+        // Non-empty slots keep the strict cap (don't suggest "wear this in
+        // 10 levels" when you already have a working piece).
+        const isSlotEmpty = !currentItem;
         const candidates = items.filter(it => {
             // Slot match — loot-data uses slotFilter for the bare slot string;
             // accept any item whose slotFilter is in this slot's invType list.
@@ -2840,7 +2859,7 @@
             // item class/subclass (armor class 4, shield subclass 6).
             if (offHandShieldOnly &&
                 !(it.itemClass === 4 && it.subclass === 6)) return false;
-            if ((it.req || 0) > level) return false;
+            if (!isSlotEmpty && (it.req || 0) > level) return false;
             if ((it.quality || 0) < 3) return false;       // Rare+ only
             // Class & role gates — precomputed by build_dungeons.py via
             // smart_filter_block.js's classFillsRole/passesClassArmor logic.
@@ -2912,6 +2931,14 @@
         }
         const upgrades = unique.filter(it => it.upgradeDelta > 0);
         upgrades.sort((a, b) => {
+            // When an empty slot pulled in items above the char's level, rank
+            // currently-wearable picks above future ones so "you can equip
+            // this now" beats "this drops 8 levels from now" at similar delta.
+            // Non-empty slots already filtered req > level above, so this
+            // tiebreak is a no-op there.
+            const aWearable = (a.req || 0) <= level;
+            const bWearable = (b.req || 0) <= level;
+            if (aWearable !== bWearable) return aWearable ? -1 : 1;
             if (b.upgradeDelta !== a.upgradeDelta) return b.upgradeDelta - a.upgradeDelta;
             if ((b.ilvl    || 0) !== (a.ilvl    || 0)) return (b.ilvl    || 0) - (a.ilvl    || 0);
             return (b.quality || 0) - (a.quality || 0);
@@ -2951,10 +2978,18 @@
             const deltaBadge = (kind === 'cand' && typeof it.upgradeDelta === 'number')
                 ? `<span class="up-delta" title="Role-fit improvement over your equipped item">+${Math.round(it.upgradeDelta)}</span>`
                 : '';
+            // "Req N" chip — only shown on candidates that require a higher
+            // character level than the viewer (i.e. the empty-slot lookahead
+            // dropped them through the lifted req cap). Tells the player
+            // "this isn't a now-item, plan for it."
+            const reqBadge = (kind === 'cand' && (it.req || 0) > upState.charLevel)
+                ? `<span class="up-req-future" title="Requires character level ${it.req} — chase for later">Req ${it.req}</span>`
+                : '';
             return `<div class="up-item up-${kind}" data-item-id="${it.id || ''}" data-item-json="${json}" ${rowClick}>
                 <div class="up-item-line">
                     <span class="up-name" style="color:${it.color || '#fff'}">${escape(it.name || '?')}</span>
                     ${ahLink}
+                    ${reqBadge}
                     ${deltaBadge}
                     <span class="up-ilvl">${it.ilvl || '—'}</span>
                 </div>
