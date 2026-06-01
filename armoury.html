@@ -1073,10 +1073,28 @@
     };
 
     // ----- Character roster -----
+
+    // Manual squad assignment overrides — characters listed here are pulled
+    // OUT of the level-gap auto-grouping and placed in the named squad
+    // regardless of their level. Keyed by accountName (case-insensitive).
+    // Each value is an array of squads; each squad is the list of character
+    // names. Names matched case-insensitively. Characters on the account
+    // that aren't listed here still auto-group by level gap.
+    const SQUAD_OVERRIDES = {
+        'Rob': [
+            ['Steve', 'Fum', 'Flid', 'Achey', 'Pod'],
+            ['Bob', 'Monger', 'Scratcher', 'Fummer', 'Coin'],
+        ],
+    };
+
     /**
      * Group characters into squads.
      * 1. Group by accountId.
-     * 2. Within an account, split into sub-squads where there's a level gap >= 5.
+     * 2. If the account has SQUAD_OVERRIDES, place listed characters into
+     *    those squads (in the order listed) and let any leftover characters
+     *    on the account fall through to step 3.
+     * 3. For unassigned characters, split into sub-squads where there's a
+     *    level gap >= 5 (default behaviour).
      * Characters arrive sorted by account, then level DESC.
      */
     function groupIntoSquads(characters) {
@@ -1092,10 +1110,35 @@
 
         const squads = [];
         for (const acct of Object.values(byAccount)) {
+            // Pull out manually-assigned characters first (if any). The
+            // override key match is case-insensitive on both accountName
+            // and character name to survive DB capitalisation drift.
+            const overrideKey = Object.keys(SQUAD_OVERRIDES)
+                .find(k => k.toLowerCase() === acct.accountName.toLowerCase());
+            let remaining = acct.chars;
+            if (overrideKey) {
+                const wantedSquads = SQUAD_OVERRIDES[overrideKey];
+                const byName = {};
+                for (const c of acct.chars) byName[c.name.toLowerCase()] = c;
+                const assigned = new Set();
+                for (const wantedNames of wantedSquads) {
+                    const chars = wantedNames
+                        .map(n => byName[n.toLowerCase()])
+                        .filter(Boolean);
+                    if (chars.length === 0) continue;
+                    // Within a manual squad, sort by level DESC for display
+                    // consistency with the auto-grouped path.
+                    chars.sort((a, b) => b.level - a.level);
+                    chars.forEach(c => assigned.add(c.guid));
+                    squads.push({ accountName: acct.accountName, chars });
+                }
+                remaining = acct.chars.filter(c => !assigned.has(c.guid));
+            }
+
             // chars already sorted by level DESC within an account.
             // Walk and split at gaps.
             let current = [];
-            for (const c of acct.chars) {
+            for (const c of remaining) {
                 if (current.length === 0) {
                     current.push(c);
                     continue;
