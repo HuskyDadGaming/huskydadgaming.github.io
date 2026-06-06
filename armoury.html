@@ -2903,6 +2903,16 @@
             if (offHandShieldOnly &&
                 !(it.itemClass === 4 && it.subclass === 6)) return false;
             if (!isSlotEmpty && (it.req || 0) > level) return false;
+            // Even for empty slots, suppress items requiring WAY more than
+            // the player can reasonably chase. The Q3+ index has slots
+            // (neck, fingers, trinkets, off-hand) where no boss-drop
+            // candidates exist at low levels — without a cap, the lookahead
+            // shows L80 holiday-event epics at L11 because they're the only
+            // Q3+ items it knows about. +20 level keeps recommendations in
+            // "you could realistically reach this on the way up" range
+            // without falling all the way to end-game outliers.
+            const EMPTY_SLOT_LOOKAHEAD_CAP = 20;
+            if (isSlotEmpty && (it.req || 0) > level + EMPTY_SLOT_LOOKAHEAD_CAP) return false;
             if ((it.quality || 0) < 3) return false;       // Rare+ only
             // Class & role gates — precomputed by build_dungeons.py via
             // smart_filter_block.js's classFillsRole/passesClassArmor logic.
