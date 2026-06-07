@@ -68,6 +68,44 @@
             padding: 1rem; cursor: pointer; transition: all 0.15s;
             display: block; text-decoration: none; color: inherit;
         }
+        /* Squad management view */
+        .squad-box {
+            background: #1f1f1f; border: 1px solid #3a3a3a; border-radius: 6px;
+            padding: 0.75rem 1rem; margin-bottom: 0.75rem;
+        }
+        .squad-box-unassigned {
+            background: #1a1a1a; border-style: dashed;
+        }
+        .squad-box-header {
+            display: flex; align-items: baseline; gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .squad-box-header strong { color: #ddd; }
+        .squad-box-meta { color: #888; font-size: 0.85rem; }
+        .squad-box-delete {
+            margin-left: auto; background: transparent; color: #c66;
+            border: 1px solid #553; padding: 2px 8px; border-radius: 3px;
+            font-size: 0.8rem; cursor: pointer;
+        }
+        .squad-box-delete:hover { background: #322; color: #f88; }
+        .squad-box-body {
+            display: flex; flex-wrap: wrap; gap: 0.4rem;
+        }
+        .squad-chip {
+            display: inline-flex; align-items: center; gap: 0.35rem;
+            background: #2a2a2a; border: 1px solid #3a3a3a; border-radius: 4px;
+            padding: 3px 6px 3px 10px;
+        }
+        .squad-chip-name { color: #ddd; font-size: 0.9rem; }
+        .squad-chip-move {
+            background: #1a1a1a; color: #aaa; border: 1px solid #3a3a3a;
+            font-size: 0.75rem; padding: 1px 4px; border-radius: 3px;
+        }
+        #view-squads button {
+            background: #2a2a2a; color: #ddd; border: 1px solid #3a3a3a;
+            padding: 0.4rem 0.85rem; border-radius: 3px; cursor: pointer;
+        }
+        #view-squads button:hover { border-color: #ffd100; }
         .character-card:hover {
             border-color: #ffd100; transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(255, 209, 0, 0.1);
@@ -789,10 +827,36 @@
 
     <!-- Character roster -->
     <div id="view-roster" style="display:none;">
-        <h1 style="margin-bottom:1rem;">Characters</h1>
+        <div style="display:flex; align-items:baseline; justify-content:space-between;
+                    flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
+            <h1 style="margin:0;">Characters</h1>
+            <a href="#" onclick="showSquads(); return false;"
+               style="font-size:0.9rem;">Manage squads →</a>
+        </div>
         <div id="roster-loading" class="loading">Loading characters</div>
         <div id="roster-grid" class="roster-squads" style="display:none;"></div>
         <p id="roster-empty" style="display:none; color:#888;">No characters found.</p>
+    </div>
+
+    <!-- Squad management view -->
+    <div id="view-squads" style="display:none;">
+        <p style="margin-bottom:0.5rem;">
+            <a href="#" onclick="showRoster(); return false;">← Back to roster</a>
+        </p>
+        <h1 style="margin-bottom:1rem;">Manage squads</h1>
+        <p style="color:#888; margin-bottom:1rem;">
+            Squads override the auto-grouping on the roster page. Drop a character
+            into a squad and it'll always appear there. Characters left in
+            <em>Unassigned</em> still auto-group by level gap.
+        </p>
+        <div style="margin-bottom:1rem;">
+            <label for="squad-account" style="font-weight:bold;">Account:</label>
+            <select id="squad-account" onchange="loadSquadEditor(this.value)"
+                    style="margin-left:0.5rem; padding:0.25rem 0.5rem;"></select>
+        </div>
+        <div id="squad-editor-loading" class="loading" style="display:none;">Loading</div>
+        <div id="squad-editor"></div>
+        <p id="squad-editor-msg" style="margin-top:0.75rem;"></p>
     </div>
 
     <!-- Single character view -->
@@ -988,7 +1052,7 @@
 
     // ----- View management -----
     function showView(name) {
-        ['login', 'roster', 'character', 'ah', 'upgrades'].forEach(v => {
+        ['login', 'roster', 'character', 'ah', 'upgrades', 'squads'].forEach(v => {
             document.getElementById('view-' + v).style.display = (v === name) ? '' : 'none';
         });
         // Reflect auth state in the navbar. 'login' view = not signed in
@@ -1031,6 +1095,7 @@
                 case 'ah':        showAuctionHouse(p.name, p.guid, p.copperTotal,
                                       p.raceId, p.classId, p.level); break;
                 case 'upgrades':  showUpgrades(p.name, p.classId, p.level); break;
+                case 'squads':    showSquads(); break;
                 default:          showView('login');
             }
         } finally {
@@ -1055,9 +1120,10 @@
         setCreds(base, key);
         showError('');
 
-        // Validate by hitting /armoury
+        // Validate by hitting /armoury. Squad overrides are best-effort and
+        // run in parallel — a failure there shouldn't block the roster.
         try {
-            await api('/armoury');
+            await Promise.all([api('/armoury'), loadSquadOverrides()]);
             showRoster();
         } catch (e) {
             showError(e.message + '. If this is a self-signed cert, visit ' + base + '/healthz once and accept the warning, then try again.');
@@ -1080,12 +1146,22 @@
     // Each value is an array of squads; each squad is the list of character
     // names. Names matched case-insensitively. Characters on the account
     // that aren't listed here still auto-group by level gap.
-    const SQUAD_OVERRIDES = {
-        'Rob': [
-            ['Steve', 'Fum', 'Flid', 'Achey', 'Pod'],
-            ['Bob', 'Monger', 'Scratcher', 'Fummer', 'Coin'],
-        ],
-    };
+    //
+    // Populated at login from GET /squads (per-account JSON files on the
+    // server). The Manage squads view lets players edit their own; this map
+    // is just a runtime cache the roster reads from.
+    let SQUAD_OVERRIDES = {};
+
+    async function loadSquadOverrides() {
+        try {
+            const data = await api('/squads');
+            SQUAD_OVERRIDES = data.squads_by_account || {};
+        } catch (e) {
+            // Non-fatal — fall back to auto-grouping only.
+            console.warn('Could not load squad overrides:', e.message);
+            SQUAD_OVERRIDES = {};
+        }
+    }
 
     /**
      * Group characters into squads.
@@ -1267,6 +1343,220 @@
             if (e.message === 'Bad API key') { showView('login'); showError('Session expired'); return; }
             empty.textContent = 'Failed to load: ' + e.message;
             empty.style.display = '';
+        }
+    };
+
+    // ----- Squad management view -----
+    //
+    // Local editor state — populated when the user picks an account from the
+    // dropdown. We keep it client-side and only POST on Save. The shape:
+    //   { account: 'Tom',
+    //     characters: ['Tom','Brutus',...],       // every char on the account
+    //     squads:     [['Tom','Brutus'], ...] }   // current draft layout
+    let squadDraft = null;
+
+    window.showSquads = async function() {
+        showView('squads');
+        pushHistory('squads');
+        const sel = document.getElementById('squad-account');
+        const editor = document.getElementById('squad-editor');
+        const loading = document.getElementById('squad-editor-loading');
+        const msg = document.getElementById('squad-editor-msg');
+        msg.textContent = '';
+        editor.innerHTML = '';
+        loading.style.display = '';
+
+        try {
+            // Populate the account dropdown from the roster. Re-fetch fresh
+            // so newly-rolled characters (and new accounts) appear immediately.
+            const data = await api('/armoury');
+            const accounts = [...new Set(
+                (data.characters || []).map(c => c.accountName)
+            )].sort();
+            sel.innerHTML = accounts
+                .map(a => `<option value="${escape(a)}">${escape(a)}</option>`)
+                .join('');
+            if (accounts.length === 0) {
+                loading.style.display = 'none';
+                editor.innerHTML = '<p style="color:#888;">No characters yet.</p>';
+                return;
+            }
+            await loadSquadEditor(sel.value);
+        } catch (e) {
+            loading.style.display = 'none';
+            if (e.message === 'Bad API key') { showView('login'); showError('Session expired'); return; }
+            editor.innerHTML = '<p style="color:#c33;">Failed to load: ' + escape(e.message) + '</p>';
+        }
+    };
+
+    window.loadSquadEditor = async function(account) {
+        const loading = document.getElementById('squad-editor-loading');
+        const editor = document.getElementById('squad-editor');
+        const msg = document.getElementById('squad-editor-msg');
+        msg.textContent = '';
+        loading.style.display = '';
+        editor.innerHTML = '';
+        try {
+            const data = await api('/squads/' + encodeURIComponent(account));
+            squadDraft = {
+                account: data.account,
+                characters: data.characters || [],
+                squads: (data.squads || []).map(sq => sq.slice()),
+            };
+            loading.style.display = 'none';
+            renderSquadEditor();
+        } catch (e) {
+            loading.style.display = 'none';
+            editor.innerHTML = '<p style="color:#c33;">Failed: ' + escape(e.message) + '</p>';
+        }
+    };
+
+    function renderSquadEditor() {
+        if (!squadDraft) return;
+        const editor = document.getElementById('squad-editor');
+        const assigned = new Set();
+        squadDraft.squads.forEach(sq => sq.forEach(n => assigned.add(n.toLowerCase())));
+        const unassigned = squadDraft.characters
+            .filter(n => !assigned.has(n.toLowerCase()));
+
+        // "Move to" dropdown — same options for every chip. The first option
+        // is a no-op header so the select doesn't auto-trigger on focus.
+        const moveOptions = (currentSquadIdx) => {
+            const opts = ['<option value="">Move to…</option>'];
+            squadDraft.squads.forEach((_, i) => {
+                if (i === currentSquadIdx) return;
+                opts.push(`<option value="squad:${i}">Squad ${i + 1}</option>`);
+            });
+            opts.push('<option value="new">+ New squad</option>');
+            if (currentSquadIdx !== -1) {
+                opts.push('<option value="unassigned">× Unassigned</option>');
+            }
+            return opts.join('');
+        };
+
+        const chipHtml = (name, squadIdx) => `
+            <div class="squad-chip">
+                <span class="squad-chip-name">${escape(name)}</span>
+                <select onchange="moveChar('${escape(name)}', ${squadIdx}, this.value); this.value='';"
+                        class="squad-chip-move">${moveOptions(squadIdx)}</select>
+            </div>
+        `;
+
+        const parts = [];
+
+        // Unassigned (auto-grouped) box
+        parts.push(`
+            <div class="squad-box squad-box-unassigned">
+                <div class="squad-box-header">
+                    <strong>Unassigned</strong>
+                    <span class="squad-box-meta">(auto-grouped by level gap)</span>
+                </div>
+                <div class="squad-box-body">
+                    ${unassigned.length
+                        ? unassigned.map(n => chipHtml(n, -1)).join('')
+                        : '<em style="color:#888;">All characters are in squads.</em>'}
+                </div>
+            </div>
+        `);
+
+        // Each saved squad
+        squadDraft.squads.forEach((sq, i) => {
+            parts.push(`
+                <div class="squad-box">
+                    <div class="squad-box-header">
+                        <strong>Squad ${i + 1}</strong>
+                        <span class="squad-box-meta">(${sq.length} character${sq.length === 1 ? '' : 's'})</span>
+                        <button onclick="deleteSquad(${i})" class="squad-box-delete">Delete squad</button>
+                    </div>
+                    <div class="squad-box-body">
+                        ${sq.length
+                            ? sq.map(n => chipHtml(n, i)).join('')
+                            : '<em style="color:#888;">Empty — drag characters in or delete this squad.</em>'}
+                    </div>
+                </div>
+            `);
+        });
+
+        // Action buttons
+        parts.push(`
+            <div style="margin-top:1rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <button onclick="addSquad()">+ Add squad</button>
+                <button onclick="saveSquads()" style="font-weight:bold;">Save changes</button>
+                <button onclick="loadSquadEditor(squadDraft.account)">Discard changes</button>
+            </div>
+        `);
+
+        editor.innerHTML = parts.join('');
+    }
+
+    window.moveChar = function(name, fromIdx, dest) {
+        if (!squadDraft || !dest) return;
+        // Remove from source
+        if (fromIdx === -1) {
+            // Was unassigned — nothing to remove from a squad
+        } else {
+            squadDraft.squads[fromIdx] = squadDraft.squads[fromIdx]
+                .filter(n => n.toLowerCase() !== name.toLowerCase());
+        }
+        // Add to destination
+        if (dest === 'unassigned') {
+            // Already removed from source — leaving it out makes it unassigned
+        } else if (dest === 'new') {
+            squadDraft.squads.push([name]);
+        } else if (dest.startsWith('squad:')) {
+            const idx = parseInt(dest.slice(6), 10);
+            if (squadDraft.squads[idx]
+                && !squadDraft.squads[idx].some(n => n.toLowerCase() === name.toLowerCase())) {
+                squadDraft.squads[idx].push(name);
+            }
+        }
+        renderSquadEditor();
+    };
+
+    window.addSquad = function() {
+        if (!squadDraft) return;
+        if (squadDraft.squads.length >= 20) {
+            document.getElementById('squad-editor-msg').textContent = 'Max 20 squads.';
+            return;
+        }
+        squadDraft.squads.push([]);
+        renderSquadEditor();
+    };
+
+    window.deleteSquad = function(idx) {
+        if (!squadDraft || !squadDraft.squads[idx]) return;
+        const sq = squadDraft.squads[idx];
+        if (sq.length > 0
+            && !confirm(`Delete Squad ${idx + 1}? Its ${sq.length} character${sq.length === 1 ? '' : 's'} will go back to Unassigned.`)) {
+            return;
+        }
+        squadDraft.squads.splice(idx, 1);
+        renderSquadEditor();
+    };
+
+    window.saveSquads = async function() {
+        if (!squadDraft) return;
+        const msg = document.getElementById('squad-editor-msg');
+        msg.style.color = '#888';
+        msg.textContent = 'Saving…';
+        // Strip empties before POST — server does the same but no point
+        // round-tripping noise.
+        const payload = {
+            squads: squadDraft.squads.filter(sq => sq.length > 0),
+        };
+        try {
+            const r = await api('/squads/' + encodeURIComponent(squadDraft.account),
+                                { method: 'POST', body: payload });
+            squadDraft.squads = (r.squads || []).map(sq => sq.slice());
+            // Mirror into the in-memory overrides so the next roster render
+            // picks up the change without a re-fetch.
+            SQUAD_OVERRIDES[squadDraft.account] = squadDraft.squads;
+            msg.style.color = '#3a7';
+            msg.textContent = '✓ Saved.';
+            renderSquadEditor();
+        } catch (e) {
+            msg.style.color = '#c33';
+            msg.textContent = 'Save failed: ' + e.message;
         }
     };
 
