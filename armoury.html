@@ -1950,6 +1950,15 @@
         const lvl = Number(level) || 0;
         const req = Number(item.reqLevel) || 0;
         if (lvl > 0 && req > lvl) return false;
+        // Profession requirement (e.g. "Requires Engineering 120"). Only
+        // enforced once we know this character's trained skills
+        // (ahState.charSkills loaded); unknown = don't over-hide. Independent
+        // of class/level, so it runs before the class checks below.
+        const rs = Number(item.reqSkill) || 0;
+        if (rs > 0 && ahState.charSkills) {
+            const have = Number(ahState.charSkills[rs]) || 0;
+            if (have < (Number(item.reqSkillRank) || 0)) return false;
+        }
         if (!cls) return true; // No class info → can't run proficiency checks.
         // Death Knight is a level-1 leveling class on this server (mod-kcraft-
         // dkstart), so it is NOT gated to reqLevel >= 55 — a low-level DK uses
@@ -2424,6 +2433,23 @@
     // character page. Captures the character context, switches view, loads
     // the first page filtered to that character's faction.
     //
+    // Per-character trained skills, fetched once per guid for the Usable
+    // filter's profession check (e.g. "Requires Engineering 120"). Cached so
+    // re-entering a character's AH doesn't refetch. ahState.charSkills stays
+    // null until loaded — isUsableForChar skips the profession check while
+    // unknown, so we never over-hide before the data arrives.
+    const charSkillsCache = {};
+    function loadCharSkills(guid) {
+        if (!guid) { ahState.charSkills = null; return; }
+        if (charSkillsCache[guid]) { ahState.charSkills = charSkillsCache[guid]; return; }
+        ahState.charSkills = null;
+        api(`/professions/${guid}`).then(d => {
+            charSkillsCache[guid] = (d && d.professions) || {};
+            ahState.charSkills = charSkillsCache[guid];
+            if (ahState.usable) loadAuctionPage();   // re-apply Usable now that skills are known
+        }).catch(() => { ahState.charSkills = null; });
+    }
+
     // skipInitialLoad: when true, the function does NOT call loadAuctionPage()
     // at the end. Caller is responsible for triggering the load themselves
     // after applying any further filter overrides. ahForItem() uses this to
@@ -2433,6 +2459,7 @@
         ahState.charName  = name;
         ahState.charGuid  = guid;
         ahState.charMoney = copperTotal;
+        loadCharSkills(guid);   // for the Usable filter's profession check
         ahState.raceId    = raceId;
         ahState.classSlug = CLASS_ID_TO_SLUG[classId] || '';
         ahState.charLevel = level || 0;
