@@ -372,8 +372,19 @@
           `</div>`
         );
         if (it.dps) {
+          // DPS delta vs the compared weapon. Weapons aren't in the stat
+          // index (statIndexOf only covers stat/effect lines), so compare the
+          // raw .dps fields directly. One decimal; ignore sub-0.05 rounding.
+          let dpsDelta = '';
+          if (compareTo && compareTo.dps != null) {
+            const d = it.dps - compareTo.dps;
+            if (Math.abs(d) >= 0.05) {
+              const cls = d > 0 ? 'tt-delta-up' : 'tt-delta-down';
+              dpsDelta = ` <span class="${cls}">(${d > 0 ? '+' : ''}${d.toFixed(1)})</span>`;
+            }
+          }
           parts.push(
-            `<div class="tt-dps">(${Number(it.dps).toFixed(1)} damage per second)</div>`
+            `<div class="tt-dps">(${Number(it.dps).toFixed(1)} damage per second)${dpsDelta}</div>`
           );
         }
       } else {
