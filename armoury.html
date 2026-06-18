@@ -2432,7 +2432,7 @@
         ahState.raceId    = raceId;
         ahState.classSlug = CLASS_ID_TO_SLUG[classId] || '';
         ahState.charLevel = level || 0;
-        ahState.house      = factionFor(raceId) || '';
+        ahState.house      = '';   // default to All houses (like the Upgrade Finder, which shows all-faction items); raceId is still kept for other uses
         ahState.query      = '';
         ahState.exact      = false;
         ahState.usable     = false;
@@ -2858,7 +2858,7 @@
     });
     applySortHeaders();   // reflect the default (price asc) on load
     document.getElementById('ah-clear').onclick = function() {
-        const defaultHouse = factionFor(ahState.raceId) || '';
+        const defaultHouse = '';   // All houses — consistent with the AH entry default
         document.getElementById('ah-house').value       = defaultHouse;
         document.getElementById('ah-search').value      = '';
         document.getElementById('ah-exact').checked     = false;
