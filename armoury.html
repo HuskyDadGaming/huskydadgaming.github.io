@@ -460,6 +460,29 @@
             background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
             overflow: hidden;
         }
+        /* Sortable column header — same grid + min-widths as .ah-row so the
+           columns line up with the rows below. */
+        .ah-header-row {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto auto auto;
+            gap: 0.75rem; align-items: center;
+            padding: 0.4rem 0.8rem;
+            border-bottom: 2px solid #3a3a3a;
+            font-size: 0.78rem; color: #9a9a9a;
+        }
+        .ah-header-row .ah-th {
+            cursor: pointer; user-select: none; font-weight: 600;
+            white-space: nowrap;
+        }
+        .ah-header-row .ah-th:hover { color: #ffd100; }
+        .ah-header-row .ah-th.active { color: #ffd100; }
+        .ah-header-row .ah-arrow { font-size: 0.7rem; }
+        .ah-header-row .ah-th-req   { min-width: 46px; }
+        .ah-header-row .ah-th-house { min-width: 60px; }
+        .ah-header-row .ah-th-time  { min-width: 50px; }
+        .ah-header-row .ah-th-price { min-width: 110px; text-align: right; }
+        .ah-header-row .ah-th-buy   { min-width: 52px; }
+
         .ah-row {
             display: grid;
             grid-template-columns: 1fr auto auto auto auto auto;
@@ -966,6 +989,14 @@
             <button class="reset-btn" id="ah-clear">Reset all</button>
         </div>
         <div id="ah-loading" class="loading" style="display:none;">Loading auctions…</div>
+        <div id="ah-list-header" class="ah-header-row">
+            <span class="ah-th ah-th-name"  data-sort="name">Item<span class="ah-arrow"></span></span>
+            <span class="ah-th ah-th-req"   data-sort="level">Lvl<span class="ah-arrow"></span></span>
+            <span class="ah-th ah-th-house" data-sort="house">Faction<span class="ah-arrow"></span></span>
+            <span class="ah-th ah-th-time"  data-sort="time">Time<span class="ah-arrow"></span></span>
+            <span class="ah-th ah-th-price" data-sort="price">Price<span class="ah-arrow"></span></span>
+            <span class="ah-th-buy"></span>
+        </div>
         <div id="ah-list" class="ah-list"></div>
         <div id="ah-pagination" class="ah-pagination" style="display:none;">
             <span class="ah-page-info" id="ah-page-info"></span>
@@ -1818,6 +1849,8 @@
         slot:       '',
         offset: 0,
         limit:  50,
+        sort:  'price',
+        dir:   'asc',
     };
 
     // Alliance: human(1), dwarf(3), nightelf(4), gnome(7), draenei(11)
@@ -2491,6 +2524,8 @@
         // leave only a handful of visible rows per 50-row server page.
         const effectiveLimit = ahState.usable ? 500 : ahState.limit;
         params.set('limit', effectiveLimit);
+        params.set('sort', ahState.sort);
+        params.set('direction', ahState.dir);
 
         try {
             const data = await api('/auctions?' + params.toString());
@@ -2797,6 +2832,31 @@
         readFiltersFromUI();
         loadAuctionPage();
     });
+    // Sortable column headers — click a header to sort the FULL result set
+    // (server-side ORDER BY); clicking the active column flips direction.
+    function applySortHeaders() {
+        document.querySelectorAll('#ah-list-header .ah-th').forEach(th => {
+            const active = th.dataset.sort === ahState.sort;
+            th.classList.toggle('active', active);
+            const arrow = th.querySelector('.ah-arrow');
+            if (arrow) arrow.textContent = active ? (ahState.dir === 'asc' ? ' ▲' : ' ▼') : '';
+        });
+    }
+    document.getElementById('ah-list-header').addEventListener('click', function(e) {
+        const th = e.target.closest('.ah-th');
+        if (!th) return;
+        const key = th.dataset.sort;
+        if (ahState.sort === key) {
+            ahState.dir = (ahState.dir === 'asc') ? 'desc' : 'asc';
+        } else {
+            ahState.sort = key;
+            ahState.dir  = 'asc';
+        }
+        ahState.offset = 0;        // jump back to page 1 under the new sort
+        applySortHeaders();
+        loadAuctionPage();
+    });
+    applySortHeaders();   // reflect the default (price asc) on load
     document.getElementById('ah-clear').onclick = function() {
         const defaultHouse = factionFor(ahState.raceId) || '';
         document.getElementById('ah-house').value       = defaultHouse;
