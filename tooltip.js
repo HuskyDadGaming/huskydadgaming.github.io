@@ -401,6 +401,13 @@
       const myStats = new Set((it.stats || []).map(s => {
         const p = parseStatLine(s); return p ? p.name : null;
       }).filter(Boolean));
+      // Also count stats this item provides via its OWN Equip-effect ratings
+      // (crit, hit, spell power...). Otherwise an effect-rating the equipped
+      // item also has gets double-counted: a spurious "0 X (-N)" ghost line
+      // here AND the correct (+/-N) delta on the effect line below. E.g. a
+      // helm with "Equip: crit by 14" vs an equipped "crit by 4" must show
+      // ONLY "+10" on the effect line — not also "0 Critical Strike (-4)".
+      Object.keys(extractEffectRatings(it)).forEach(n => myStats.add(n));
       Object.keys(compareIdx).forEach(name => {
         if (myStats.has(name)) return;
         const otherVal = compareIdx[name];
