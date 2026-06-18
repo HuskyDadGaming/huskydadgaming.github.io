@@ -929,6 +929,9 @@
             <label style="display:inline-flex; align-items:center; gap:4px; color:#aaa; font-size:0.85rem;" title="Only items this character can equip (proficiency + required level)">
                 <input type="checkbox" id="ah-usable"> Usable <span id="ah-usable-label" style="color:#666;"></span>
             </label>
+            <label style="display:inline-flex; align-items:center; gap:4px; color:#aaa; font-size:0.85rem;" title="Only items whose buyout is within this character's available gold">
+                <input type="checkbox" id="ah-affordable"> Affordable
+            </label>
             <input type="number" id="ah-min-level" placeholder="Min lvl" min="0" max="80" style="width:80px;">
             <input type="number" id="ah-max-level" placeholder="Max lvl" min="0" max="80" style="width:80px;">
             <select id="ah-min-quality" title="Minimum quality">
@@ -1842,6 +1845,7 @@
         query:      '',
         exact:      false,
         usable:     false,
+        affordable: false,
         minLevel:   null,
         maxLevel:   null,
         minQuality: null,
@@ -2436,6 +2440,7 @@
         ahState.query      = '';
         ahState.exact      = false;
         ahState.usable     = false;
+        ahState.affordable = false;
         ahState.minLevel   = null;
         ahState.maxLevel   = null;
         ahState.minQuality = null;
@@ -2455,6 +2460,7 @@
         document.getElementById('ah-search').value      = '';
         document.getElementById('ah-exact').checked     = false;
         document.getElementById('ah-usable').checked    = false;
+        document.getElementById('ah-affordable').checked = false;
         document.getElementById('ah-min-level').value   = '';
         document.getElementById('ah-max-level').value   = '';
         document.getElementById('ah-min-quality').value = '';
@@ -2526,6 +2532,8 @@
         params.set('limit', effectiveLimit);
         params.set('sort', ahState.sort);
         params.set('direction', ahState.dir);
+        // Affordable: server filters to buyouts within this character's gold.
+        if (ahState.affordable) params.set('max_buyout', ahState.charMoney);
 
         try {
             const data = await api('/auctions?' + params.toString());
@@ -2790,6 +2798,7 @@
         ahState.query      = document.getElementById('ah-search').value.trim();
         ahState.exact      = document.getElementById('ah-exact').checked;
         ahState.usable     = document.getElementById('ah-usable').checked;
+        ahState.affordable = document.getElementById('ah-affordable').checked;
         const minL = document.getElementById('ah-min-level').value;
         const maxL = document.getElementById('ah-max-level').value;
         const minQ = document.getElementById('ah-min-quality').value;
@@ -2863,6 +2872,7 @@
         document.getElementById('ah-search').value      = '';
         document.getElementById('ah-exact').checked     = false;
         document.getElementById('ah-usable').checked    = false;
+        document.getElementById('ah-affordable').checked = false;
         document.getElementById('ah-min-level').value   = '';
         document.getElementById('ah-max-level').value   = '';
         document.getElementById('ah-min-quality').value = '';
@@ -2874,6 +2884,7 @@
         ahState.query      = '';
         ahState.exact      = false;
         ahState.usable     = false;
+        ahState.affordable = false;
         ahState.minLevel   = null;
         ahState.maxLevel   = null;
         ahState.minQuality = null;
@@ -2891,6 +2902,13 @@
         // Re-fetch is overkill but keeps the page-info hint accurate and
         // the code path identical to other filters; the server query is
         // cheap and the result will be cached by the browser.
+        loadAuctionPage();
+    });
+    // Affordable is server-side (max_buyout WHERE) — must re-fetch so the
+    // filter spans all pages and respects the active sort. Reset to page 1.
+    document.getElementById('ah-affordable').addEventListener('change', function() {
+        ahState.affordable = this.checked;
+        ahState.offset = 0;
         loadAuctionPage();
     });
     // Pagination stride must match the effective fetch limit. When Usable
