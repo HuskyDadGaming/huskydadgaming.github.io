@@ -462,7 +462,7 @@
         }
         .ah-row {
             display: grid;
-            grid-template-columns: 1fr auto auto auto auto;
+            grid-template-columns: 1fr auto auto auto auto auto;
             gap: 0.75rem; align-items: center;
             padding: 0.55rem 0.8rem;
             border-bottom: 1px solid #2a2a2a;
@@ -482,6 +482,11 @@
             white-space: nowrap;
         }
         .ah-row .ah-count { color: #aaa; }
+        .ah-row .ah-req {
+            color: #c4a878; font-size: 0.78rem; min-width: 46px;
+            font-variant-numeric: tabular-nums;
+        }
+        .ah-row .ah-req.too-high { color: #e06666; }
         .ah-row .ah-house {
             color: #888; font-size: 0.78rem; min-width: 60px;
         }
@@ -2521,12 +2526,19 @@
                 const it = a.item || {};
                 const houseCls = a.house.toLowerCase();
                 const countStr = (it.count > 1) ? `×${it.count}` : '';
+                // Required-level chip. Reddened when it's above the selected
+                // character's level (so it reads as "can't use yet" even with
+                // the Usable filter off). reqLevel 0 = no requirement -> blank.
+                const reqHtml = it.reqLevel
+                    ? `<span class="ah-req${(ahState.charLevel && it.reqLevel > ahState.charLevel) ? ' too-high' : ''}">Lvl ${it.reqLevel}</span>`
+                    : `<span class="ah-req"></span>`;
                 // Embed the full item dict for tooltip.js (escape quotes for HTML attribute).
                 const itemJson = JSON.stringify(it).replace(/"/g, '&quot;');
                 return `<div class="ah-row" data-item-id="${it.id || ''}" data-item-json="${itemJson}">
                     <span class="ah-item-name" style="color:${it.color || '#fff'}">
                         ${escape(it.name || '?')} <span class="ah-count">${countStr}</span>
                     </span>
+                    ${reqHtml}
                     <span class="ah-house ${houseCls}">${escape(a.house)}</span>
                     <span class="ah-time-left">${formatTimeLeft(a.expiresAt)}</span>
                     <span class="ah-price">${formatCopper(a.buyout)}</span>
