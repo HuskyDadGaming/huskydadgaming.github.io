@@ -2092,6 +2092,7 @@
         const subs = (cls != null) ? AH_SUBCATEGORIES[cls] : null;
         if (!subs || subs.length === 0) {
             sel.disabled = true;
+            sel.style.display = 'none';   // hidden until a category with subcategories is active
             return;
         }
         subs.forEach(([id, label]) => {
@@ -2101,9 +2102,11 @@
             sel.appendChild(opt);
         });
         sel.disabled = false;
+        sel.style.display = '';
     }
     // Populate category options immediately — they never change.
     populateAhCategories();
+    populateAhSubcategories('');   // start hidden — only appears once a category is picked
 
     // Map auction item.invType (string from armoury_api INVENTORY_TYPES) to
     // the character.equipped slot index(es) that hold the comparable gear.
