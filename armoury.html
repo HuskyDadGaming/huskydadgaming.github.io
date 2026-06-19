@@ -558,6 +558,25 @@
             text-align: center; padding: 2rem; color: #888;
         }
 
+        /* Mailbox section on the character page */
+        .mail-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 2rem; }
+        .mail-row {
+            display: flex; justify-content: space-between; align-items: center; gap: 12px;
+            background: #1f1f1f; border: 1px solid #2a2a2a; border-radius: 6px; padding: 8px 12px;
+        }
+        .mail-row .mail-main { display: flex; align-items: baseline; gap: 10px; min-width: 0; flex-wrap: wrap; }
+        .mail-sender { color: #c4a878; font-weight: 600; font-size: 0.9rem; }
+        .mail-title  { color: #999; font-size: 0.85rem; }
+        .mail-items  { display: inline-flex; gap: 12px; flex-wrap: wrap; }
+        .mail-item   { font-size: 0.9rem; cursor: default; }
+        .mail-side   { display: flex; align-items: center; gap: 14px; white-space: nowrap; }
+        .mail-money  { font-variant-numeric: tabular-nums; }
+        .mail-cod    { color: #e0a060; font-size: 0.82rem; }
+        .mail-expiry { color: #888; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+        @media (max-width: 640px) {
+            .mail-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+        }
+
         /* Toast / banner for buy result feedback */
         .ah-toast {
             position: fixed; bottom: 1.5rem; left: 50%;
@@ -1631,6 +1650,7 @@
             // hover-compare. Safe to call repeatedly — it just reassigns the
             // single window.KCraftTooltip.compareProvider slot.
             installAhCompareProvider();
+            loadMailbox(c.guid);   // async-fill the Mailbox section (non-blocking)
         } catch (e) {
             loading.style.display = 'none';
             content.style.display = '';
@@ -1714,6 +1734,45 @@
     // Full character object — needed by ahForItem() to jump from the Upgrade
     // Finder into the AH view (which wants name/guid/money/raceId/classId/lvl).
     let lastViewedCharacter = null;
+
+    // Fill the #char-mail section with the character's waiting mail. Lazy —
+    // fetched after the page renders so it never blocks the character load.
+    // Item chips carry data-item-json so the delegated tooltip handler gives
+    // them the same hover tooltips as everywhere else.
+    async function loadMailbox(guid) {
+        const el = document.getElementById('char-mail');
+        if (!el || !guid) return;
+        try {
+            const data = await api('/mail/' + guid);
+            const mail = data.mail || [];
+            el.innerHTML = mail.length ? renderMailbox(mail) : '';
+        } catch (e) {
+            el.innerHTML = '';   // non-fatal — just no mailbox section
+        }
+    }
+
+    function renderMailbox(mail) {
+        const rows = mail.map(m => {
+            const items = (m.items || []).map(it => {
+                const j = JSON.stringify(it).replace(/"/g, '&quot;');
+                const cnt = (it.count > 1) ? ` ×${it.count}` : '';
+                return `<span class="mail-item" data-item-json="${j}" style="color:${it.color || '#fff'}">${escape(it.name || '?')}${cnt}</span>`;
+            }).join('');
+            const money  = m.money ? `<span class="mail-money">${formatCopper(m.money)}</span>` : '';
+            const cod    = m.cod ? `<span class="mail-cod">COD ${formatCopper(m.cod)}</span>` : '';
+            const expiry = m.expiresAt ? `<span class="mail-expiry" title="Time until it expires">${formatTimeLeft(m.expiresAt)}</span>` : '';
+            return `<div class="mail-row">
+                <div class="mail-main">
+                    <span class="mail-sender">${escape(m.sender)}</span>
+                    ${m.title ? `<span class="mail-title">${escape(m.title)}</span>` : ''}
+                    ${items ? `<span class="mail-items">${items}</span>` : ''}
+                </div>
+                <div class="mail-side">${money}${cod}${expiry}</div>
+            </div>`;
+        }).join('');
+        return `<div class="section-header"><h2>📬 Mailbox</h2><span class="count">${mail.length}</span></div>
+                <div class="mail-list">${rows}</div>`;
+    }
 
     function renderCharacter(c) {
         lastViewedEquipped = c.equipped || {};
@@ -1802,6 +1861,8 @@
                 </span>
                 <span style="color:#ffd100; font-size:1.3rem;">›</span>
             </a>
+
+            <div id="char-mail"></div>
 
             <div class="section-header">
                 <h2>Equipped</h2>
