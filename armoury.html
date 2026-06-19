@@ -1368,7 +1368,13 @@
         grid.innerHTML = '';
 
         try {
-            const data = await api('/armoury');
+            // Load squad overrides alongside the roster on EVERY render — not
+            // just at fresh login — so opening the armoury with saved creds
+            // (boots straight to showRoster) and post-edit navigations also
+            // apply saved squad groups. Without this the boot path rendered
+            // with empty SQUAD_OVERRIDES and lumped multi-band accounts (e.g.
+            // Skye's L17 + L21 squads, gap 4 < the 5 auto-split threshold).
+            const [data] = await Promise.all([api('/armoury'), loadSquadOverrides()]);
             loading.style.display = 'none';
             if (!data.characters || data.characters.length === 0) {
                 empty.style.display = '';
