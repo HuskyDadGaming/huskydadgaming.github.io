@@ -1792,7 +1792,7 @@
 
         // Backpack — array of 16, may have nulls for empty slots
         const backpackHtml = (c.backpack || []).map((it, i) =>
-            renderItem(it, `Slot ${i + 1}`)
+            it ? renderItem(it, `Slot ${i + 1}`) : ''   // hide empty slots
         ).join('');
         const backpackFilled = (c.backpack || []).filter(x => x).length;
 
@@ -1803,15 +1803,15 @@
             for (const bagGuid of Object.keys(c.bagItems)) {
                 const items = c.bagItems[bagGuid];
                 bagsCount += items.length;
-                bagsHtml += items.map(it =>
-                    renderItem(it, `Bag slot ${(it.bagSlot ?? 0) + 1}`)
+                bagsHtml += items.filter(Boolean).map(it =>
+                    renderItem(it, `Bag slot ${(it.bagSlot ?? 0) + 1}`)   // hide empty slots
                 ).join('');
             }
         }
 
         // Bank — array of 28
         const bankHtml = (c.bank || []).map((it, i) =>
-            renderItem(it, `Slot ${i + 1}`)
+            it ? renderItem(it, `Slot ${i + 1}`) : ''   // hide empty slots
         ).join('');
         const bankFilled = (c.bank || []).filter(x => x).length;
 
@@ -1865,7 +1865,7 @@
             <div id="char-mail"></div>
 
             <div class="section-header">
-                <h2>Equipped</h2>
+                <h2>🛡️ Equipped</h2>
                 <button class="sync-btn" onclick="syncCharacterGear(${JSON.stringify(c.name)}); return false;"
                         title="Flush the worldserver's in-memory gear state to the DB and re-read it. Use after equipping/unequipping while online.">
                     🔄 Sync from server
@@ -1875,21 +1875,21 @@
             <div class="item-list">${equippedHtml}</div>
 
             <div class="section-header">
-                <h2>Backpack</h2>
+                <h2>🎒 Backpack</h2>
                 <span class="count">${backpackFilled} / 16</span>
             </div>
             <div class="item-list">${backpackHtml}</div>
 
             ${bagsHtml ? `
                 <div class="section-header">
-                    <h2>Bags</h2>
+                    <h2>👜 Bags</h2>
                     <span class="count">${bagsCount} items</span>
                 </div>
                 <div class="item-list">${bagsHtml}</div>
             ` : ''}
 
             <div class="section-header">
-                <h2>Bank</h2>
+                <h2>🏦 Bank</h2>
                 <span class="count">${bankFilled} / 28</span>
             </div>
             <div class="item-list">${bankHtml}</div>
