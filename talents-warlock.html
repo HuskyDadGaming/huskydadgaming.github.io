@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warlock Talents — KCraft</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { 
+            background: #1a1a1a; 
+            color: #ddd; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+            padding: 0;
+            padding-bottom: 3rem;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        h1, h2, h3 { color: #ffd100; }
+        a { color: #4ea8de; text-decoration: none; }
+        a:hover { color: #88c5f0; }
+        
+        /* Navigation styles matching index.html */
+        .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        /* Tab switcher */
+        .tab-bar {
+            display: flex; gap: 4px; margin-bottom: 2rem;
+            border-bottom: 1px solid #3a3a3a;
+        }
+        .tab-btn {
+            padding: 10px 20px; background: transparent; color: #888;
+            border: none; border-bottom: 3px solid transparent;
+            cursor: pointer; font-size: 0.95rem; font-weight: 500;
+            transition: all 0.15s; margin-bottom: -1px;
+        }
+        .tab-btn:hover { color: #ddd; background: #2326; }
+        .tab-btn.active {
+            color: #ffd100; border-bottom-color: #ffd100; font-weight: 600;
+        }
+        /* Tab links (to other pages) */
+        a.tab-btn.tab-link {
+            text-decoration: none;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        a.tab-btn.tab-link:hover { color: #ffd100; }
+        
+        .main-content {
+            padding: 0 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        #talent-status {
+            background: rgba(255, 209, 0, 0.1);
+            color: #ffd100;
+            padding: 8px 16px;
+            border-radius: 6px;
+            margin: 1rem 0;
+            font-weight: 500;
+        }
+        
+        #reset-talents {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 1rem 0;
+        }
+        
+        .instructions {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+        
+        .talent-trees { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr; 
+            gap: 1rem; 
+            margin-bottom: 2rem; 
+        }
+        
+        .talent-tree {
+            background: linear-gradient(145deg, #2a241d 0%, #1e1914 100%);
+            border: 2px solid #5a4a3a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        
+        .tree-header {
+            padding: 12px 16px;
+            position: relative;
+            text-align: center;
+            border-bottom: 1px solid #5a4a3a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .tree-icon {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px;
+            border: 1px solid #5a4a3a;
+        }
+        
+        .tree-header h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            flex: 1;
+            text-align: left;
+        }
+        
+        .tree-points {
+            background: rgba(0,0,0,0.8);
+            color: #ffd100;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .arms-header { background: linear-gradient(135deg, #8B4513 0%, #654321 100%); }
+        .fury-header { background: linear-gradient(135deg, #696969 0%, #444444 100%); }
+        .prot-header { background: linear-gradient(135deg, #B22222 0%, #8B1A1A 100%); }
+        
+        .talent-grid {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            height: 720px;
+            background: linear-gradient(145deg, #1a1611 0%, #141209 100%);
+            padding: 16px;
+            margin: 0 auto;
+        }
+        
+        .talent-slot {
+            position: absolute;
+            width: 52px;
+            height: 52px;
+            border: 2px solid #444;
+            border-radius: 6px;
+            background: linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 100%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .talent-slot.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+        
+        .talent-slot.learned {
+            border-color: #ffd700;
+            background: linear-gradient(145deg, #4a4a00 0%, #3a3a00 100%);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+        }
+        
+        .talent-slot.available {
+            border-color: #90EE90;
+            background: linear-gradient(145deg, #2a4a2a 0%, #1a3a1a 100%);
+        }
+        
+        .talent-slot.available:hover {
+            border-color: #aaffaa;
+            background: linear-gradient(145deg, #3a5a3a 0%, #2a4a2a 100%);
+        }
+        
+        .talent-slot.unavailable {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .talent-icon {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 4px;
+        }
+        
+        .talent-rank {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.8);
+            color: #ffd100;
+            padding: 1px 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 2px;
+        }
+        
+        /* Tooltip */
+        #talent-tooltip {
+            position: fixed;
+            z-index: 9999;
+            background: #000000;
+            color: #ffffff;
+            border: 1px solid #444;
+            border-radius: 3px;
+            padding: 8px 12px;
+            font-size: 0.82rem;
+            line-height: 1.4;
+            min-width: 180px;
+            max-width: 280px;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.08s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        }
+        
+        #talent-tooltip.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #talent-tooltip .tt-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        #talent-tooltip .tt-bind {
+            color: #ffffff;
+            font-size: 0.78rem;
+        }
+        
+        #talent-tooltip .tt-slot-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+        
+        #talent-tooltip .tt-slot-row .tt-slot {
+            color: #ffffff;
+        }
+        
+        #talent-tooltip .tt-stat {
+            color: #ffffff;
+        }
+        
+        #talent-tooltip .tt-bonus {
+            color: #1eff00;
+        }
+        
+        #talent-tooltip .tt-required {
+            color: #ff6b6b;
+            margin-top: 4px;
+        }
+        
+        @media (max-width: 900px) {
+            .talent-trees { 
+                grid-template-columns: 1fr; 
+                gap: 1rem; 
+            }
+            
+            .talent-grid { 
+                gap: 6px; 
+                padding: 12px; 
+                min-height: 400px;
+            }
+            
+            .talent-slot {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .tree-header { 
+                padding: 8px 12px; 
+                gap: 8px; 
+            }
+            
+            .tree-icon { 
+                width: 24px; 
+                height: 24px; 
+            }
+            
+            .tree-header h3 { 
+                font-size: 1.1rem; 
+            }
+            
+            #talent-tooltip {
+                max-width: calc(100vw - 24px);
+                min-width: 0;
+                font-size: 0.78rem;
+                padding: 6px 10px;
+            }
+            
+            #talent-tooltip .tt-name { 
+                font-size: 0.88rem; 
+            }
+        }
+
+        /* Tab bar on phones — same horizontal-scroll pattern as the
+           rest of the site so labels don't wrap inside buttons. */
+        @media (max-width: 600px) {
+            body { font-size: 0.92rem; }
+            .container { padding-left: 0.5rem; padding-right: 0.5rem; }
+            .navbar { margin-bottom: 1rem; }
+            .tab-bar {
+                overflow-x: auto;
+                flex-wrap: nowrap !important;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .tab-bar::-webkit-scrollbar { display: none; }
+            .tab-btn, a.tab-btn {
+                padding: 6px 10px;
+                font-size: 0.85rem;
+                white-space: nowrap !important;
+                flex-shrink: 0;
+            }
+        }
+            .class-nav { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 0 0 1.5rem; }
+        .class-link { display: inline-flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 10px; border-radius: 6px; color: #aaa; font-size: 0.72rem; font-weight: 600; border: 1px solid transparent; transition: all .15s; }
+        .class-link img { width: 30px; height: 30px; border-radius: 4px; }
+        .class-link:hover { background: #2a2a2a; color: #ddd; }
+        .class-link.active { background: rgba(255,209,0,0.12); border-color: #ffd100; color: #ffd100; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html" style="color: #ffd100;">⚔️ KCraft</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="tab-bar">
+        <a class="tab-btn tab-link" href="index.html">📚 Browse Dungeons</a>
+        <a class="tab-btn tab-link" href="index.html#finder">🔍 Find Loot</a>
+        <a class="tab-btn tab-link" href="armoury.html">🛡️ Armoury</a>
+        <a class="tab-btn tab-link active" href="talents.html">📜 Talents</a>
+        <a class="tab-btn tab-link" href="warrior.html">⚔️ Warrior</a>
+    </div>
+
+    <div class="class-nav">
+        <a class="class-link" href="talents.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_warrior.jpg" alt="Warrior"><span>Warrior</span></a>
+        <a class="class-link" href="talents-paladin.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_paladin.jpg" alt="Paladin"><span>Paladin</span></a>
+        <a class="class-link" href="talents-hunter.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_hunter.jpg" alt="Hunter"><span>Hunter</span></a>
+        <a class="class-link" href="talents-rogue.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_rogue.jpg" alt="Rogue"><span>Rogue</span></a>
+        <a class="class-link" href="talents-priest.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_priest.jpg" alt="Priest"><span>Priest</span></a>
+        <a class="class-link" href="talents-deathknight.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_deathknight.jpg" alt="Death Knight"><span>Death Knight</span></a>
+        <a class="class-link" href="talents-shaman.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_shaman.jpg" alt="Shaman"><span>Shaman</span></a>
+        <a class="class-link" href="talents-mage.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_mage.jpg" alt="Mage"><span>Mage</span></a>
+        <a class="class-link active" href="talents-warlock.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_warlock.jpg" alt="Warlock"><span>Warlock</span></a>
+        <a class="class-link" href="talents-druid.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_druid.jpg" alt="Druid"><span>Druid</span></a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div id="talent-status">Level 10 • 0 talent points spent • 71 points remaining</div>
+            <button id="reset-talents">Reset All Talents</button>
+        </div>
+
+        <div class="instructions">
+            <strong>Left-click</strong> to add talent points • <strong>Right-click</strong> to remove points • Hover for tooltips
+        </div>
+
+        <div class="talent-trees">
+            <div class="talent-tree" data-tree="affliction">
+                <div class="tree-header arms-header">
+                    <div class="tree-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_deathcoil.jpg')"></div>
+                    <h3>Affliction</h3>
+                    <div class="tree-points" data-points="0">0</div>
+                </div>
+                <div class="talent-grid">
+                    <div class="talent-slot" data-talent="improved-curse-of-agony" data-tree="affliction" data-tier="0" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_curseofsargeras.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="suppression" data-tree="affliction" data-tier="0" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_unsummonbuilding.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-corruption" data-tree="affliction" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_abominationexplosion.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-curse-of-weakness" data-tree="affliction" data-tier="1" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_curseofmannoroth.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-drain-soul" data-tree="affliction" data-tier="1" data-max-rank="2" data-current-rank="0" style="left: 80px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_haunting.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-life-tap" data-tree="affliction" data-tier="1" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_burningspirit.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="soul-siphon" data-tree="affliction" data-tier="1" data-max-rank="2" data-current-rank="0" style="left: 208px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_lifedrain02.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-fear" data-tree="affliction" data-tier="2" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_possession.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="fel-concentration" data-tree="affliction" data-tier="2" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_fingerofdeath.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="amplify-curse" data-tree="affliction" data-tier="2" data-max-rank="1" data-current-rank="0" style="left: 144px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_contagion.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="grim-reach" data-tree="affliction" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_callofbone.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="nightfall" data-tree="affliction" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 80px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_twilight.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="empowered-corruption" data-tree="affliction" data-tier="3" data-max-rank="3" data-current-rank="0" style="left: 208px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_abominationexplosion.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="shadow-embrace" data-tree="affliction" data-tier="4" data-max-rank="5" data-current-rank="0" style="left: 16px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowembrace.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="siphon-life" data-tree="affliction" data-tier="4" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_requiem.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="curse-of-exhaustion" data-tree="affliction" data-tier="4" data-max-rank="1" data-current-rank="0" style="left: 144px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_grimward.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-felhunter" data-tree="affliction" data-tier="5" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_summonfelhunter.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="shadow-mastery" data-tree="affliction" data-tier="5" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadetruesight.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="eradication" data-tree="affliction" data-tier="6" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warlock_eradication.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="contagion" data-tree="affliction" data-tier="6" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_painfulafflictions.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="dark-pact" data-tree="affliction" data-tier="6" data-max-rank="1" data-current-rank="0" style="left: 144px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_darkritual.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-howl-of-terror" data-tree="affliction" data-tier="7" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_deathscream.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="malediction" data-tree="affliction" data-tier="7" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_curseofachimonde.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="death-s-embrace" data-tree="affliction" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_deathsembrace.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="unstable-affliction" data-tree="affliction" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_unstableaffliction_3.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="pandemic" data-tree="affliction" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 144px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_unstableaffliction_2.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="everlasting-affliction" data-tree="affliction" data-tier="9" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 592px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warlock_everlastingaffliction.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="haunt" data-tree="affliction" data-tier="10" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 656px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warlock_haunt.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                </div>
+            </div>
+            <div class="talent-tree" data-tree="demonology">
+                <div class="tree-header fury-header">
+                    <div class="tree-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_metamorphosis.jpg')"></div>
+                    <h3>Demonology</h3>
+                    <div class="tree-points" data-points="0">0</div>
+                </div>
+                <div class="talent-grid">
+                    <div class="talent-slot" data-talent="improved-healthstone" data-tree="demonology" data-tier="0" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/inv_stone_04.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-imp" data-tree="demonology" data-tier="0" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_summonimp.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="demonic-embrace" data-tree="demonology" data-tier="0" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_metamorphosis.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="fel-synergy" data-tree="demonology" data-tier="0" data-max-rank="2" data-current-rank="0" style="left: 208px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_felmending.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-health-funnel" data-tree="demonology" data-tier="1" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_lifedrain.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="demonic-brutality" data-tree="demonology" data-tier="1" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_summonvoidwalker.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="fel-vitality" data-tree="demonology" data-tier="1" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_magicalsentry.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-succubus" data-tree="demonology" data-tier="2" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_summonsuccubus.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="soul-link" data-tree="demonology" data-tier="2" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_gathershadows.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="fel-domination" data-tree="demonology" data-tier="2" data-max-rank="1" data-current-rank="0" style="left: 144px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_removecurse.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="demonic-aegis" data-tree="demonology" data-tier="2" data-max-rank="3" data-current-rank="0" style="left: 208px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_ragingscream.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="unholy-power" data-tree="demonology" data-tier="3" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowworddominate.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="master-summoner" data-tree="demonology" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_impphaseshift.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="mana-feed" data-tree="demonology" data-tier="4" data-max-rank="1" data-current-rank="0" style="left: 16px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_manafeed.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="master-conjuror" data-tree="demonology" data-tier="4" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/inv_ammo_firetar.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="master-demonologist" data-tree="demonology" data-tier="5" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowpact.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="molten-core" data-tree="demonology" data-tier="5" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warlock_moltencore.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="demonic-resilience" data-tree="demonology" data-tier="6" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_demonicfortitude.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="demonic-empowerment" data-tree="demonology" data-tier="6" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warlock_demonicempowerment.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="demonic-knowledge" data-tree="demonology" data-tier="6" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_improvedvampiricembrace.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="demonic-tactics" data-tree="demonology" data-tier="7" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_demonictactics.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="decimation" data-tree="demonology" data-tier="7" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_fireball02.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-demonic-tactics" data-tree="demonology" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warlock_improveddemonictactics.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="summon-felguard" data-tree="demonology" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_summonfelguard.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="nemesis" data-tree="demonology" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_demonicempathy.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="demonic-pact" data-tree="demonology" data-tier="9" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 592px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_demonicpact.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="metamorphosis" data-tree="demonology" data-tier="10" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 656px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_demonform.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                </div>
+            </div>
+            <div class="talent-tree" data-tree="destruction">
+                <div class="tree-header prot-header">
+                    <div class="tree-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_rainoffire.jpg')"></div>
+                    <h3>Destruction</h3>
+                    <div class="tree-points" data-points="0">0</div>
+                </div>
+                <div class="talent-grid">
+                    <div class="talent-slot" data-talent="improved-shadow-bolt" data-tree="destruction" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowbolt.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="bane" data-tree="destruction" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_deathpact.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="aftermath" data-tree="destruction" data-tier="1" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_fire.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="molten-skin" data-tree="destruction" data-tier="1" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_mage_moltenarmor.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="cataclysm" data-tree="destruction" data-tier="1" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_windsofwoe.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="demonic-power" data-tree="destruction" data-tier="2" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_firebolt.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="shadowburn" data-tree="destruction" data-tier="2" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_scourgebuild.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="ruin" data-tree="destruction" data-tier="2" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="intensity" data-tree="destruction" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_lavaspawn.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="destructive-reach" data-tree="destruction" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 80px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_corpseexplode.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-searing-pain" data-tree="destruction" data-tier="3" data-max-rank="3" data-current-rank="0" style="left: 208px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_soulburn.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="backlash" data-tree="destruction" data-tier="4" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_playingwithfire.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-immolate" data-tree="destruction" data-tier="4" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_immolation.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="devastation" data-tree="destruction" data-tier="4" data-max-rank="1" data-current-rank="0" style="left: 144px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_flameshock.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="nether-protection" data-tree="destruction" data-tier="5" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_netherprotection.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="emberstorm" data-tree="destruction" data-tier="5" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_selfdestruct.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="conflagrate" data-tree="destruction" data-tier="6" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_fireball.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="soul-leech" data-tree="destruction" data-tier="6" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_soulleech_3.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="pyroclasm" data-tree="destruction" data-tier="6" data-max-rank="3" data-current-rank="0" style="left: 208px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_volcano.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="shadow-and-flame" data-tree="destruction" data-tier="7" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowandflame.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-soul-leech" data-tree="destruction" data-tier="7" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warlock_improvedsoulleech.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="backdraft" data-tree="destruction" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warlock_backdraft.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="shadowfury" data-tree="destruction" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowfury.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="empowered-imp" data-tree="destruction" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warlock_empoweredimp.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="fire-and-brimstone" data-tree="destruction" data-tier="9" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 592px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warlock_fireandbrimstone.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="chaos-bolt" data-tree="destruction" data-tier="10" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 656px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warlock_chaosbolt.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom tooltip for talents -->
+        <div id="talent-tooltip" role="tooltip" aria-hidden="true"></div>
+    </div>
+</div>
+
+    <script>
+        (function() {
+            'use strict';
+            
+            // Complete talent data with descriptions based on DBC data
+            const TALENT_DATA = {
+                'improved-curse-of-agony': { name: 'Improved Curse of Agony', description: 'Increases the damage done by your Curse of Agony by 5%.', maxRank: 2, prereq: null },
+                'suppression': { name: 'Suppression', description: 'Increases your chance to hit with spells by 1%, and reduces the mana cost of your Affliction spells by 2%.', maxRank: 3, prereq: null },
+                'improved-corruption': { name: 'Improved Corruption', description: 'Increases the damage done by your Corruption by 2%, and increases the critical strike chance of your Seed of Corruption by 1%.', maxRank: 5, prereq: null },
+                'improved-curse-of-weakness': { name: 'Improved Curse of Weakness', description: 'Increases the amount of attack power reduced by your Curse of Weakness by 10%.', maxRank: 2, prereq: null },
+                'improved-drain-soul': { name: 'Improved Drain Soul', description: 'Returns 7% of your maximum mana if the target is killed by you while you drain its soul. In addition, your Affliction spells generate 10% less threat.', maxRank: 2, prereq: null },
+                'improved-life-tap': { name: 'Improved Life Tap', description: 'Increases the amount of Mana awarded by your Life Tap spell by 10%.', maxRank: 2, prereq: null },
+                'soul-siphon': { name: 'Soul Siphon', description: 'Increases the amount drained by your Drain Life and Drain Soul spells by an additional 3% for each of your Affliction effects on the target, up to a maximum of 9% additional effect.', maxRank: 2, prereq: null },
+                'improved-fear': { name: 'Improved Fear', description: 'Causes your Fear spell to inflict a Nightmare on the target when the fear effect ends. The Nightmare effect reduces the target\'s movement speed by 15% for 5 sec.', maxRank: 2, prereq: null },
+                'fel-concentration': { name: 'Fel Concentration', description: 'Reduces the pushback suffered from damaging attacks while casting Drain Life, Drain Mana, Drain Soul, Unstable Affliction, and Haunt by 23%.', maxRank: 3, prereq: null },
+                'amplify-curse': { name: 'Amplify Curse', description: 'Reduces the global cooldown of your Curses by.1 sec.', maxRank: 1, prereq: null },
+                'grim-reach': { name: 'Grim Reach', description: 'Increases the range of your Affliction spells by 10%.', maxRank: 2, prereq: null },
+                'nightfall': { name: 'Nightfall', description: 'Gives your Corruption and Drain Life spells a 2% chance to cause you to enter a Shadow Trance state after damaging the opponent. The Shadow Trance state reduces the casting time of your next Shadow Bolt spell by 100%.', maxRank: 2, prereq: null },
+                'empowered-corruption': { name: 'Empowered Corruption', description: 'Increases the damage of your Corruption spell by an amount equal to 12% of your spell power.', maxRank: 3, prereq: null },
+                'shadow-embrace': { name: 'Shadow Embrace', description: 'Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 1%, and reduces all periodic healing done to the target by 2%. Lasts for 12 sec. Stacks up to times.', maxRank: 5, prereq: null },
+                'siphon-life': { name: 'Siphon Life', description: 'When you deal damage with your Corruption spell, you are instantly healed for % of the damage done. In addition, the damage done by your Corruption, Seed of Corruption and Unstable Affliction damage over time effects is increased by 5%.', maxRank: 1, prereq: null },
+                'curse-of-exhaustion': { name: 'Curse of Exhaustion', description: 'Reduces the target\'s movement speed by 30% for 12 sec. Only one Curse per Warlock can be active on any one target.', maxRank: 1, prereq: null },
+                'improved-felhunter': { name: 'Improved Felhunter', description: 'Your Felhunter regains 4% of its maximum mana each time it hits with its Shadow Bite ability and the cooldown on that ability is reduced by sec. In addition, increases the effect of your Felhunter\'s Fel Intelligence by 5%.', maxRank: 2, prereq: null },
+                'shadow-mastery': { name: 'Shadow Mastery', description: 'Increases the damage dealt or life drained by your Shadow spells and your Felhunter\'s Shadow Bite ability by 3%.', maxRank: 5, prereq: null },
+                'eradication': { name: 'Eradication', description: 'When you deal damage with Corruption, you have 6% chance to increase your spell casting speed by 6% for 10 sec.', maxRank: 3, prereq: null },
+                'contagion': { name: 'Contagion', description: 'Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 1% and reduces the chance your helpful Affliction spells and damage over time effects will be dispelled by an additional 6%.', maxRank: 5, prereq: null },
+                'dark-pact': { name: 'Dark Pact', description: 'Drains 305 of your summoned demon\'s Mana, returning 100% to you.', maxRank: 1, prereq: null },
+                'improved-howl-of-terror': { name: 'Improved Howl of Terror', description: 'Reduces the casting time of your Howl of Terror spell by 0.8 sec.', maxRank: 2, prereq: null },
+                'malediction': { name: 'Malediction', description: 'Increases your spell damage by 1%, and increases the periodic critical strike chance of your Corruption and Unstable Affliction spells by 3%.', maxRank: 3, prereq: null },
+                'death-s-embrace': { name: 'Death\'s Embrace', description: 'Increases the amount drained by your Drain Life by 10% while your health is at or below 20% health, and increases the damage done by your Shadow spells by 4% when your target is at or below 35% health.', maxRank: 3, prereq: null },
+                'unstable-affliction': { name: 'Unstable Affliction', description: 'Shadow energy slowly destroys the target, causing 550 damage over 15 sec. In addition, if the Unstable Affliction is dispelled it will cause 990 damage to the dispeller and silence them for 5 sec. Only one Unstable Affliction or Immolate per Warlock can be active on any one target.', maxRank: 1, prereq: null },
+                'pandemic': { name: 'Pandemic', description: 'Grants the periodic damage from your Corruption and Unstable Affliction spells the ability to critically hit for 100% increased damage, and increases the critical strike damage bonus of your Haunt spell by 100%.', maxRank: 1, prereq: null },
+                'everlasting-affliction': { name: 'Everlasting Affliction', description: 'Your Corruption and Unstable Affliction spells gain an additional 1% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt, and Haunt spells have a 20% chance to reset the duration of your Corruption spell on the target.', maxRank: 5, prereq: null },
+                'haunt': { name: 'Haunt', description: 'You send a ghostly soul into the target, dealing 405 to 473 Shadow damage and increasing all damage done by your Shadow damage-over-time effects on the target by 20% for 12 sec. When the Haunt spell ends or is dispelled, the soul returns to you, healing you for 100% of the damage it did to the target.', maxRank: 1, prereq: null },
+                'improved-healthstone': { name: 'Improved Healthstone', description: 'Increases the amount of Health restored by your Healthstone by 10%.', maxRank: 2, prereq: null },
+                'improved-imp': { name: 'Improved Imp', description: 'Increases the effect of your Imp\'s Firebolt, Fire Shield, and Blood Pact spells by 10%.', maxRank: 3, prereq: null },
+                'demonic-embrace': { name: 'Demonic Embrace', description: 'Increases your total Stamina by 4%.', maxRank: 3, prereq: null },
+                'fel-synergy': { name: 'Fel Synergy', description: 'You have a 50% chance to heal your pet for 15% of the amount of spell damage done by you.', maxRank: 2, prereq: null },
+                'improved-health-funnel': { name: 'Improved Health Funnel', description: 'Increases the amount of Health transferred by your Health Funnel spell by 10% and reduces the health cost by 10%. In addition, your summoned Demon takes 15% less damage while under the effect of your Health Funnel.', maxRank: 2, prereq: null },
+                'demonic-brutality': { name: 'Demonic Brutality', description: 'Increases the effectiveness of your Voidwalker\'s Torment, Consume Shadows, Sacrifice and Suffering spells by 10%, and increases the attack power bonus on your Felguard\'s Demonic Frenzy effect by 1%.', maxRank: 3, prereq: null },
+                'fel-vitality': { name: 'Fel Vitality', description: 'Increases the Stamina and Intellect of your Imp, Voidwalker, Succubus, Felhunter and Felguard by 5% and increases your maximum health and mana by 1%.', maxRank: 3, prereq: null },
+                'improved-succubus': { name: 'Improved Succubus', description: 'Reduces the cast time of your Succubus\' Seduction by 22%, and increases the duration of your Succubus\' Seduction and Lesser Invisibility spells by 10%.', maxRank: 3, prereq: null },
+                'soul-link': { name: 'Soul Link', description: 'When active, 20% of all damage taken by the caster is taken by your Imp, Voidwalker, Succubus, Felhunter, Felguard, or enslaved demon instead. That damage cannot be prevented. Lasts as long as the demon is active and controlled.', maxRank: 1, prereq: null },
+                'fel-domination': { name: 'Fel Domination', description: 'Your next Imp, Voidwalker, Succubus, Felhunter or Felguard Summon spell has its casting time reduced by 5.5 sec and its Mana cost reduced by 50%.', maxRank: 1, prereq: null },
+                'demonic-aegis': { name: 'Demonic Aegis', description: 'Increases the effectiveness of your Demon Armor and Fel Armor spells by 10%.', maxRank: 3, prereq: null },
+                'unholy-power': { name: 'Unholy Power', description: 'Increases the damage done by your Voidwalker, Succubus, Felhunter and Felguard\'s melee attacks and your Imp\'s Firebolt by 4%.', maxRank: 5, prereq: null },
+                'master-summoner': { name: 'Master Summoner', description: 'Reduces the casting time of your Imp, Voidwalker, Succubus, Felhunter and Fel Guard Summoning spells by 2 sec and the Mana cost by 20%.', maxRank: 2, prereq: null },
+                'mana-feed': { name: 'Mana Feed', description: 'When you gain mana from Drain Mana or Life Tap spells, your summoned demon gains 100% of the mana you gain.', maxRank: 1, prereq: null },
+                'master-conjuror': { name: 'Master Conjuror', description: 'Increases the combat ratings gained from your conjured Firestone and Spellstone by 150%.', maxRank: 2, prereq: null },
+                'master-demonologist': { name: 'Master Demonologist', description: 'Grants both the Warlock and the summoned demon an effect as long as that demon is active.Imp - Increases your Fire damage by 1%, and increases the critical effect chance of your Fire spells by 1%.Voidwalker - Reduces Physical damage taken by 2%.Succubus - Increases your Shadow damage by 1%, and increases the critical effect chance of your Shadow spells by 1%.Felhunter - Reduces all spell damage taken by 2%.Felguard - Increases all damage done by 1%, and reduces all damage taken by 1%.', maxRank: 5, prereq: null },
+                'molten-core': { name: 'Molten Core', description: 'Increases the duration of your Immolate by 3 sec, and you have a 4% chance to gain the Molten Core effect when your Corruption deals damage. The Molten Core effect empowers your next 3 Incinerate or Soul Fire spells cast within 15 sec.Incinerate - Increases damage done by 6% and reduces cast time by 10%.Soul Fire - Increases damage done by 6% and increases critical strike chance by 5%.', maxRank: 3, prereq: null },
+                'demonic-resilience': { name: 'Demonic Resilience', description: 'Reduces the chance you\'ll be critically hit by melee and spells by 1% and reduces all damage your summoned demon takes by 5%.', maxRank: 3, prereq: null },
+                'demonic-empowerment': { name: 'Demonic Empowerment', description: 'Grants the Warlock\'s summoned demon Empowerment.Imp - Increases the Imp\'s spell critical strike chance by 20% for 30 sec.Voidwalker - Increases the Voidwalker\'s health by 20%, and its threat generated from spells and attacks by 20% for 20 sec.Succubus - Instantly vanishes, causing the Succubus to go into an improved Invisibility state. The vanish effect removes all stuns, snares and movement impairing effects from the Succubus.Felhunter - Dispels all magical effects from the Felhunter.Felguard - Increases the Felguard\'s attack speed by 20% and breaks all stun, snare and movement impairing effects and makes your Felguard immune to them for 15 sec.', maxRank: 1, prereq: null },
+                'demonic-knowledge': { name: 'Demonic Knowledge', description: 'Increases your spell damage by an amount equal to 4% of the total of your active demon\'s Stamina plus Intellect.', maxRank: 3, prereq: null },
+                'demonic-tactics': { name: 'Demonic Tactics', description: 'Increases melee and spell critical strike chance for you and your summoned demon by 2%.', maxRank: 5, prereq: null },
+                'decimation': { name: 'Decimation', description: 'When you Shadowbolt, Incinerate or Soul Fire a target that is at or below 35% health, the cast time of Soul Fire spell is reduced by 20% for 10 sec. Soul Fires cast under the effect of Decimation cost no shard.', maxRank: 2, prereq: null },
+                'improved-demonic-tactics': { name: 'Improved Demonic Tactics', description: 'Increases your summoned demon\'s critical strike chance equal to 10% of your critical strike chance.', maxRank: 3, prereq: null },
+                'summon-felguard': { name: 'Summon Felguard', description: 'Summons a Felguard under the command of the Warlock.', maxRank: 1, prereq: null },
+                'nemesis': { name: 'Nemesis', description: 'Reduces the cooldown of your Demonic Empowerment, Metamorphosis, and Fel Domination spells by 10%.', maxRank: 3, prereq: null },
+                'demonic-pact': { name: 'Demonic Pact', description: 'Increases your spell damage by 2%, and your pet\'s criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 2% of your Spell Damage for 45 sec. This effect has a 20 sec cooldown. Does not work on Enslaved demons.', maxRank: 5, prereq: null },
+                'metamorphosis': { name: 'Metamorphosis', description: 'You transform into a Demon for 30 sec. This form increases your armor by 600%, damage by 20%, reduces the chance you\'ll be critically hit by melee attacks by 6% and reduces the duration of stun and snare effects by 50%. You gain some unique demon abilities in addition to your normal abilities. 3 minute cooldown.', maxRank: 1, prereq: null },
+                'improved-shadow-bolt': { name: 'Improved Shadow Bolt', description: 'Increases the damage done by your Shadow Bolt spell by 2%, and your Shadow Bolt has a 20% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.', maxRank: 5, prereq: null },
+                'bane': { name: 'Bane', description: 'Reduces the casting time of your Shadow Bolt. Chaos Bolt and Immolate spells by 0.1 sec and your Soul Fire spell by 0.4 sec.', maxRank: 5, prereq: null },
+                'aftermath': { name: 'Aftermath', description: 'Increases the periodic damage done by your Immolate by 3%, and your Conflagrate has a 50% chance to daze the target for 5 sec.', maxRank: 2, prereq: null },
+                'molten-skin': { name: 'Molten Skin', description: 'Reduces all damage taken by 2%.', maxRank: 3, prereq: null },
+                'cataclysm': { name: 'Cataclysm', description: 'Reduces the Mana cost of your Destruction spells by 4%.', maxRank: 3, prereq: null },
+                'demonic-power': { name: 'Demonic Power', description: 'Reduces the cooldown of your Succubus\' Lash of Pain spell by 3 sec. and reduces the casting time of your Imp\'s Firebolt spell by.2 sec.', maxRank: 2, prereq: null },
+                'shadowburn': { name: 'Shadowburn', description: 'Instantly blasts the target for 87 to 99 Shadow damage. If the target dies within 5 sec of Shadowburn, and yields experience or honor, the caster gains a Soul Shard.', maxRank: 1, prereq: null },
+                'ruin': { name: 'Ruin', description: 'Increases the critical strike damage bonus of your Destruction spells and your Imp\'s Firebolt spell by 20%.', maxRank: 5, prereq: null },
+                'intensity': { name: 'Intensity', description: 'Reduces the pushback suffered from damaging attacks while casting or channeling any Destruction spell by 35%.', maxRank: 2, prereq: null },
+                'destructive-reach': { name: 'Destructive Reach', description: 'Increases the range of your Destruction spells by 10% and reduces threat caused by Destruction spells by 10%.', maxRank: 2, prereq: null },
+                'improved-searing-pain': { name: 'Improved Searing Pain', description: 'Increases the critical strike chance of your Searing Pain spell by 4%.', maxRank: 3, prereq: null },
+                'backlash': { name: 'Backlash', description: 'Increases your critical strike chance with spells by an additional 1% and gives you a 8% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.', maxRank: 3, prereq: null },
+                'improved-immolate': { name: 'Improved Immolate', description: 'Increases the damage done by your Immolate spell by 10%.', maxRank: 3, prereq: null },
+                'devastation': { name: 'Devastation', description: 'Increases the critical strike chance of your Destruction spells by 5%.', maxRank: 1, prereq: null },
+                'nether-protection': { name: 'Nether Protection', description: 'After being hit with a spell, you have a 10% chance to gain Nether Protection, reducing all damage by that spell school by 30% for 8 sec.', maxRank: 3, prereq: null },
+                'emberstorm': { name: 'Emberstorm', description: 'Increases the damage done by your Fire spells by 3% and reduces the cast time of your Incinerate spell by.2 sec.', maxRank: 5, prereq: null },
+                'conflagrate': { name: 'Conflagrate', description: 'Consumes an Immolate or Shadowflame effect on the enemy target to instantly deal damage equal to 60% of your Immolate or Shadowflame, and causes an additional 40% damage over 6 sec.', maxRank: 1, prereq: null },
+                'soul-leech': { name: 'Soul Leech', description: 'Gives your Shadow Bolt, Shadowburn, Chaos Bolt, Soul Fire, Incinerate, Searing Pain and Conflagrate spells a 10% chance to return health equal to 20% of the damage caused.', maxRank: 3, prereq: null },
+                'pyroclasm': { name: 'Pyroclasm', description: 'When you critically strike with Searing Pain or Conflagrate, your Fire and Shadow spell damage is increased by 2% for 10 sec.', maxRank: 3, prereq: null },
+                'shadow-and-flame': { name: 'Shadow and Flame', description: 'Your Shadow Bolt, Shadowburn, Chaos Bolt and Incinerate spells gain an additional 4% of your bonus spell damage effects.', maxRank: 5, prereq: null },
+                'improved-soul-leech': { name: 'Improved Soul Leech', description: 'Your Soul Leech effect also restores mana to you and your summoned demon equal to 1% of maximum mana, and has a 50% chance to grant up to 10 party or raid members mana regeneration equal to 1% of maximum mana per 5 sec. Lasts for 15 sec.', maxRank: 2, prereq: null },
+                'backdraft': { name: 'Backdraft', description: 'When you cast Conflagrate, the cast time and global cooldown of your next three Destruction spells is reduced by 10%. Lasts 15 sec.', maxRank: 3, prereq: null },
+                'shadowfury': { name: 'Shadowfury', description: 'Shadowfury is unleashed, causing 343 to 407 Shadow damage and stunning all enemies within 8 yds for 3 sec.', maxRank: 1, prereq: null },
+                'empowered-imp': { name: 'Empowered Imp', description: 'Increases the damage done by your Imp by 10%, and all critical hits done by your Imp have a 33% chance to increase your spell critical hit chance for your next spell by 100%. This effect lasts 8 sec.', maxRank: 3, prereq: null },
+                'fire-and-brimstone': { name: 'Fire and Brimstone', description: 'Increases the damage done by your Incinerate and Chaos Bolt spells to targets afflicted by your Immolate by 2%, and the critical strike chance of your Conflagrate spell is increased by 5%.', maxRank: 5, prereq: null },
+                'chaos-bolt': { name: 'Chaos Bolt', description: 'Sends a bolt of chaotic fire at the enemy, dealing 837 to 1061 Fire damage. Chaos Bolt cannot be resisted, and pierces through all absorption effects.', maxRank: 1, prereq: null },
+            };
+            
+            // Track talent points
+            let talentPoints = {
+                available: 71,
+                spent: 0,
+                trees: { 'affliction': 0, 'demonology': 0, 'destruction': 0 }
+            };
+            
+            // Initialize with current build
+            function initializeTalents() {
+                resetAllTalents();
+                updateAllTalentStates();
+            }
+            
+            function resetAllTalents() {
+                // Reset all talent slots to 0
+                document.querySelectorAll('.talent-slot[data-talent]').forEach(slot => {
+                    slot.dataset.currentRank = '0';
+                    const rankEl = slot.querySelector('.talent-rank');
+                    if (rankEl) {
+                        const maxRank = parseInt(slot.dataset.maxRank);
+                        rankEl.textContent = `0/${maxRank}`;
+                    }
+                    slot.classList.remove('learned');
+                });
+                
+                // Reset point counters
+                talentPoints = {
+                    available: 71,
+                    spent: 0,
+                    trees: { 'affliction': 0, 'demonology': 0, 'destruction': 0 }
+                };
+                
+                updateAllTalentStates();
+            }
+            
+            function updateTalentState(slot) {
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                
+                slot.classList.remove('learned', 'available', 'unavailable');
+                
+                if (currentRank > 0) {
+                    slot.classList.add('learned');
+                } else if (canLearnTalent(slot)) {
+                    slot.classList.add('available');
+                } else {
+                    slot.classList.add('unavailable');
+                }
+            }
+            
+            function canLearnTalent(slot) {
+                const tier = parseInt(slot.dataset.tier);
+                const tree = slot.dataset.tree;
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                
+                // Can't learn if already maxed
+                if (currentRank >= maxRank) return false;
+                
+                // Can't learn if no available points
+                if (talentPoints.available <= 0) return false;
+                
+                // Tier 0 is always available (first tier)
+                if (tier <= 0) return true;
+                
+                // Check if enough points spent in this tree for this tier
+                // DBC uses 0-indexed tiers, so tier 1 requires 5 points, tier 2 requires 10, etc.
+                const requiredPoints = tier * 5;
+                return talentPoints.trees[tree] >= requiredPoints;
+            }
+            
+            function addTalentPoint(slot) {
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                const tree = slot.dataset.tree;
+                
+                if (currentRank < maxRank && talentPoints.available > 0) {
+                    // Add point
+                    slot.dataset.currentRank = currentRank + 1;
+                    const rankEl = slot.querySelector('.talent-rank');
+                    if (rankEl) {
+                        rankEl.textContent = `${currentRank + 1}/${maxRank}`;
+                    }
+                    
+                    // Update counters
+                    talentPoints.available--;
+                    talentPoints.spent++;
+                    talentPoints.trees[tree]++;
+                    
+                    updateAllTalentStates();
+                    return true;
+                }
+                return false;
+            }
+            
+            function removeTalentPoint(slot) {
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                const tree = slot.dataset.tree;
+                
+                if (currentRank > 0) {
+                    // Remove point
+                    slot.dataset.currentRank = currentRank - 1;
+                    const rankEl = slot.querySelector('.talent-rank');
+                    if (rankEl) {
+                        rankEl.textContent = `${currentRank - 1}/${maxRank}`;
+                    }
+                    
+                    // Update counters
+                    talentPoints.available++;
+                    talentPoints.spent--;
+                    talentPoints.trees[tree]--;
+                    
+                    updateAllTalentStates();
+                    return true;
+                }
+                return false;
+            }
+            
+            function updateAllTalentStates() {
+                document.querySelectorAll('.talent-slot[data-talent]').forEach(updateTalentState);
+                
+                // Update tree point counters
+                Object.keys(talentPoints.trees).forEach(tree => {
+                    const counter = document.querySelector(`[data-tree="${tree}"] .tree-points`);
+                    if (counter) {
+                        counter.textContent = `${talentPoints.trees[tree]}/71`;
+                        counter.dataset.points = talentPoints.trees[tree];
+                    }
+                });
+                
+                // Update status
+                updateStatus();
+            }
+            
+            function updateStatus() {
+                const status = document.getElementById('talent-status');
+                const level = 10 + talentPoints.spent;
+                status.textContent = `Level ${level} • ${talentPoints.spent} talent points spent • ${talentPoints.available} points remaining`;
+            }
+            
+            // Tooltip functionality
+            const tooltipEl = document.getElementById('talent-tooltip');
+            let tooltipShownFor = null;
+            
+            function showTooltip(slot, ev) {
+                const talentId = slot.dataset.talent;
+                const talentData = TALENT_DATA[talentId];
+                if (!talentData) return;
+                
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                
+                let html = `<div class="tt-name" style="color: ${currentRank > 0 ? '#ffd700' : '#ffffff'}">${talentData.name}</div>`;
+                html += `<div class="tt-bind">Rank ${currentRank}/${maxRank}</div>`;
+                html += `<div class="tt-stat">${talentData.description}</div>`;
+                
+                if (currentRank === 0) {
+                    if (canLearnTalent(slot)) {
+                        html += `<div class="tt-bonus">Left-click to learn</div>`;
+                    } else {
+                        const tier = parseInt(slot.dataset.tier);
+                        if (tier > 0) {
+                            const requiredPoints = tier * 5;
+                            const tree = slot.dataset.tree;
+                            const currentPoints = talentPoints.trees[tree];
+                            if (currentPoints < requiredPoints) {
+                                html += `<div class="tt-required">Requires ${requiredPoints} points in ${tree.charAt(0).toUpperCase() + tree.slice(1)}</div>`;
+                            }
+                        }
+                    }
+                } else if (currentRank > 0) {
+                    html += `<div class="tt-bonus">Right-click to remove point</div>`;
+                }
+                
+                tooltipEl.innerHTML = html;
+                tooltipEl.classList.add('visible');
+                positionTooltip(ev);
+                tooltipShownFor = slot;
+            }
+            
+            function hideTooltip() {
+                tooltipEl.classList.remove('visible');
+                tooltipShownFor = null;
+            }
+            
+            function positionTooltip(ev) {
+                const pad = 14;
+                const tw = tooltipEl.offsetWidth;
+                const th = tooltipEl.offsetHeight;
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                let x = ev.clientX + pad;
+                let y = ev.clientY + pad;
+                if (x + tw + 8 > vw) x = ev.clientX - tw - pad;
+                if (y + th + 8 > vh) y = ev.clientY - th - pad;
+                if (x < 4) x = 4;
+                if (y < 4) y = 4;
+                tooltipEl.style.left = x + 'px';
+                tooltipEl.style.top = y + 'px';
+            }
+            
+            // Event listeners
+            document.addEventListener('mouseover', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot && tooltipShownFor !== slot) {
+                    showTooltip(slot, ev);
+                }
+            });
+            
+            document.addEventListener('mousemove', (ev) => {
+                if (tooltipShownFor) {
+                    positionTooltip(ev);
+                }
+            });
+            
+            document.addEventListener('mouseout', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot === tooltipShownFor && !slot.contains(ev.relatedTarget)) {
+                    hideTooltip();
+                }
+            });
+            
+            // Click handlers for talent interaction
+            document.addEventListener('click', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot) {
+                    ev.preventDefault();
+                    addTalentPoint(slot);
+                }
+            });
+            
+            document.addEventListener('contextmenu', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot) {
+                    ev.preventDefault();
+                    removeTalentPoint(slot);
+                }
+            });
+            
+            // Reset button
+            document.getElementById('reset-talents').addEventListener('click', () => {
+                resetAllTalents();
+            });
+            
+            // Initialize
+            initializeTalents();
+        })();
+    </script>
+<script src="tab-scroll.js"></script>
+</body>
+</html>

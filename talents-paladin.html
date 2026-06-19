@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paladin Talents — KCraft</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { 
+            background: #1a1a1a; 
+            color: #ddd; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+            padding: 0;
+            padding-bottom: 3rem;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        h1, h2, h3 { color: #ffd100; }
+        a { color: #4ea8de; text-decoration: none; }
+        a:hover { color: #88c5f0; }
+        
+        /* Navigation styles matching index.html */
+        .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        /* Tab switcher */
+        .tab-bar {
+            display: flex; gap: 4px; margin-bottom: 2rem;
+            border-bottom: 1px solid #3a3a3a;
+        }
+        .tab-btn {
+            padding: 10px 20px; background: transparent; color: #888;
+            border: none; border-bottom: 3px solid transparent;
+            cursor: pointer; font-size: 0.95rem; font-weight: 500;
+            transition: all 0.15s; margin-bottom: -1px;
+        }
+        .tab-btn:hover { color: #ddd; background: #2326; }
+        .tab-btn.active {
+            color: #ffd100; border-bottom-color: #ffd100; font-weight: 600;
+        }
+        /* Tab links (to other pages) */
+        a.tab-btn.tab-link {
+            text-decoration: none;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        a.tab-btn.tab-link:hover { color: #ffd100; }
+        
+        .main-content {
+            padding: 0 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        #talent-status {
+            background: rgba(255, 209, 0, 0.1);
+            color: #ffd100;
+            padding: 8px 16px;
+            border-radius: 6px;
+            margin: 1rem 0;
+            font-weight: 500;
+        }
+        
+        #reset-talents {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 1rem 0;
+        }
+        
+        .instructions {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+        
+        .talent-trees { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr; 
+            gap: 1rem; 
+            margin-bottom: 2rem; 
+        }
+        
+        .talent-tree {
+            background: linear-gradient(145deg, #2a241d 0%, #1e1914 100%);
+            border: 2px solid #5a4a3a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        
+        .tree-header {
+            padding: 12px 16px;
+            position: relative;
+            text-align: center;
+            border-bottom: 1px solid #5a4a3a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .tree-icon {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px;
+            border: 1px solid #5a4a3a;
+        }
+        
+        .tree-header h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            flex: 1;
+            text-align: left;
+        }
+        
+        .tree-points {
+            background: rgba(0,0,0,0.8);
+            color: #ffd100;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .arms-header { background: linear-gradient(135deg, #8B4513 0%, #654321 100%); }
+        .fury-header { background: linear-gradient(135deg, #696969 0%, #444444 100%); }
+        .prot-header { background: linear-gradient(135deg, #B22222 0%, #8B1A1A 100%); }
+        
+        .talent-grid {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            height: 720px;
+            background: linear-gradient(145deg, #1a1611 0%, #141209 100%);
+            padding: 16px;
+            margin: 0 auto;
+        }
+        
+        .talent-slot {
+            position: absolute;
+            width: 52px;
+            height: 52px;
+            border: 2px solid #444;
+            border-radius: 6px;
+            background: linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 100%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .talent-slot.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+        
+        .talent-slot.learned {
+            border-color: #ffd700;
+            background: linear-gradient(145deg, #4a4a00 0%, #3a3a00 100%);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+        }
+        
+        .talent-slot.available {
+            border-color: #90EE90;
+            background: linear-gradient(145deg, #2a4a2a 0%, #1a3a1a 100%);
+        }
+        
+        .talent-slot.available:hover {
+            border-color: #aaffaa;
+            background: linear-gradient(145deg, #3a5a3a 0%, #2a4a2a 100%);
+        }
+        
+        .talent-slot.unavailable {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .talent-icon {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 4px;
+        }
+        
+        .talent-rank {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.8);
+            color: #ffd100;
+            padding: 1px 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 2px;
+        }
+        
+        /* Tooltip */
+        #talent-tooltip {
+            position: fixed;
+            z-index: 9999;
+            background: #000000;
+            color: #ffffff;
+            border: 1px solid #444;
+            border-radius: 3px;
+            padding: 8px 12px;
+            font-size: 0.82rem;
+            line-height: 1.4;
+            min-width: 180px;
+            max-width: 280px;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.08s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        }
+        
+        #talent-tooltip.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #talent-tooltip .tt-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        #talent-tooltip .tt-bind {
+            color: #ffffff;
+            font-size: 0.78rem;
+        }
+        
+        #talent-tooltip .tt-slot-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+        
+        #talent-tooltip .tt-slot-row .tt-slot {
+            color: #ffffff;
+        }
+        
+        #talent-tooltip .tt-stat {
+            color: #ffffff;
+        }
+        
+        #talent-tooltip .tt-bonus {
+            color: #1eff00;
+        }
+        
+        #talent-tooltip .tt-required {
+            color: #ff6b6b;
+            margin-top: 4px;
+        }
+        
+        @media (max-width: 900px) {
+            .talent-trees { 
+                grid-template-columns: 1fr; 
+                gap: 1rem; 
+            }
+            
+            .talent-grid { 
+                gap: 6px; 
+                padding: 12px; 
+                min-height: 400px;
+            }
+            
+            .talent-slot {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .tree-header { 
+                padding: 8px 12px; 
+                gap: 8px; 
+            }
+            
+            .tree-icon { 
+                width: 24px; 
+                height: 24px; 
+            }
+            
+            .tree-header h3 { 
+                font-size: 1.1rem; 
+            }
+            
+            #talent-tooltip {
+                max-width: calc(100vw - 24px);
+                min-width: 0;
+                font-size: 0.78rem;
+                padding: 6px 10px;
+            }
+            
+            #talent-tooltip .tt-name { 
+                font-size: 0.88rem; 
+            }
+        }
+
+        /* Tab bar on phones — same horizontal-scroll pattern as the
+           rest of the site so labels don't wrap inside buttons. */
+        @media (max-width: 600px) {
+            body { font-size: 0.92rem; }
+            .container { padding-left: 0.5rem; padding-right: 0.5rem; }
+            .navbar { margin-bottom: 1rem; }
+            .tab-bar {
+                overflow-x: auto;
+                flex-wrap: nowrap !important;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .tab-bar::-webkit-scrollbar { display: none; }
+            .tab-btn, a.tab-btn {
+                padding: 6px 10px;
+                font-size: 0.85rem;
+                white-space: nowrap !important;
+                flex-shrink: 0;
+            }
+        }
+            .class-nav { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 0 0 1.5rem; }
+        .class-link { display: inline-flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 10px; border-radius: 6px; color: #aaa; font-size: 0.72rem; font-weight: 600; border: 1px solid transparent; transition: all .15s; }
+        .class-link img { width: 30px; height: 30px; border-radius: 4px; }
+        .class-link:hover { background: #2a2a2a; color: #ddd; }
+        .class-link.active { background: rgba(255,209,0,0.12); border-color: #ffd100; color: #ffd100; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html" style="color: #ffd100;">⚔️ KCraft</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="tab-bar">
+        <a class="tab-btn tab-link" href="index.html">📚 Browse Dungeons</a>
+        <a class="tab-btn tab-link" href="index.html#finder">🔍 Find Loot</a>
+        <a class="tab-btn tab-link" href="armoury.html">🛡️ Armoury</a>
+        <a class="tab-btn tab-link active" href="talents.html">📜 Talents</a>
+        <a class="tab-btn tab-link" href="warrior.html">⚔️ Warrior</a>
+    </div>
+
+    <div class="class-nav">
+        <a class="class-link" href="talents.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_warrior.jpg" alt="Warrior"><span>Warrior</span></a>
+        <a class="class-link active" href="talents-paladin.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_paladin.jpg" alt="Paladin"><span>Paladin</span></a>
+        <a class="class-link" href="talents-hunter.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_hunter.jpg" alt="Hunter"><span>Hunter</span></a>
+        <a class="class-link" href="talents-rogue.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_rogue.jpg" alt="Rogue"><span>Rogue</span></a>
+        <a class="class-link" href="talents-priest.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_priest.jpg" alt="Priest"><span>Priest</span></a>
+        <a class="class-link" href="talents-deathknight.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_deathknight.jpg" alt="Death Knight"><span>Death Knight</span></a>
+        <a class="class-link" href="talents-shaman.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_shaman.jpg" alt="Shaman"><span>Shaman</span></a>
+        <a class="class-link" href="talents-mage.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_mage.jpg" alt="Mage"><span>Mage</span></a>
+        <a class="class-link" href="talents-warlock.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_warlock.jpg" alt="Warlock"><span>Warlock</span></a>
+        <a class="class-link" href="talents-druid.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_druid.jpg" alt="Druid"><span>Druid</span></a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div id="talent-status">Level 10 • 0 talent points spent • 71 points remaining</div>
+            <button id="reset-talents">Reset All Talents</button>
+        </div>
+
+        <div class="instructions">
+            <strong>Left-click</strong> to add talent points • <strong>Right-click</strong> to remove points • Hover for tooltips
+        </div>
+
+        <div class="talent-trees">
+            <div class="talent-tree" data-tree="holy">
+                <div class="tree-header arms-header">
+                    <div class="tree-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_holybolt.jpg')"></div>
+                    <h3>Holy</h3>
+                    <div class="tree-points" data-points="0">0</div>
+                </div>
+                <div class="talent-grid">
+                    <div class="talent-slot" data-talent="spiritual-focus" data-tree="holy" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_arcane_blink.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="seals-of-the-pure" data-tree="holy" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_thunderbolt.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="healing-light" data-tree="holy" data-tier="1" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_holybolt.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="divine-intellect" data-tree="holy" data-tier="1" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_sleep.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="unyielding-faith" data-tree="holy" data-tier="1" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_unyieldingfaith.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="aura-mastery" data-tree="holy" data-tier="2" data-max-rank="1" data-current-rank="0" style="left: 16px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_auramastery.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="illumination" data-tree="holy" data-tier="2" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_greaterheal.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-lay-on-hands" data-tree="holy" data-tier="2" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_layonhands.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-concentration-aura" data-tree="holy" data-tier="3" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_mindsooth.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-blessing-of-wisdom" data-tree="holy" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_sealofwisdom.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="blessed-hands" data-tree="holy" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 208px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_blessedhands.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="pure-of-heart" data-tree="holy" data-tier="4" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_pureofheart.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="divine-favor" data-tree="holy" data-tier="4" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_heal.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="sanctified-light" data-tree="holy" data-tier="4" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_healingaura.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="purifying-power" data-tree="holy" data-tier="5" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_purifyingpower.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="holy-power" data-tree="holy" data-tier="5" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_power.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="light-s-grace" data-tree="holy" data-tier="6" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_lightsgrace.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="holy-shock" data-tree="holy" data-tier="6" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_searinglight.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="blessed-life" data-tree="holy" data-tier="6" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_blessedlife.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="sacred-cleansing" data-tree="holy" data-tier="7" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_sacredcleansing.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="holy-guidance" data-tree="holy" data-tier="7" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_holyguidance.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="divine-illumination" data-tree="holy" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 16px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_divineillumination.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="judgements-of-the-pure" data-tree="holy" data-tier="8" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_judgementofthepure.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="infusion-of-light" data-tree="holy" data-tier="9" data-max-rank="2" data-current-rank="0" style="left: 80px; top: 592px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_infusionoflight.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="enlightened-judgements" data-tree="holy" data-tier="9" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 592px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_enlightenedjudgements.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="beacon-of-light" data-tree="holy" data-tier="10" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 656px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_beaconoflight.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                </div>
+            </div>
+            <div class="talent-tree" data-tree="protection">
+                <div class="tree-header fury-header">
+                    <div class="tree-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_devotionaura.jpg')"></div>
+                    <h3>Protection</h3>
+                    <div class="tree-points" data-points="0">0</div>
+                </div>
+                <div class="talent-grid">
+                    <div class="talent-slot" data-talent="divinity" data-tree="protection" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_blindingheal.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="divine-strength" data-tree="protection" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_golemthunderclap.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="stoicism" data-tree="protection" data-tier="1" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="guardian-s-favor" data-tree="protection" data-tier="1" data-max-rank="2" data-current-rank="0" style="left: 80px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_sealofprotection.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="anticipation" data-tree="protection" data-tier="1" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_magic_lesserinvisibilty.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="divine-sacrifice" data-tree="protection" data-tier="2" data-max-rank="1" data-current-rank="0" style="left: 16px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_powerwordbarrier.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-righteous-fury" data-tree="protection" data-tier="2" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_sealoffury.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="toughness" data-tree="protection" data-tier="2" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_devotion.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="divine-guardian" data-tree="protection" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_powerwordbarrier.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-hammer-of-justice" data-tree="protection" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 80px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_sealofmight.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-devotion-aura" data-tree="protection" data-tier="3" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_devotionaura.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="blessing-of-sanctuary" data-tree="protection" data-tier="4" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_lightningshield.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="reckoning" data-tree="protection" data-tier="4" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_blessingofstrength.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="sacred-duty" data-tree="protection" data-tier="5" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_divineintervention.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="one-handed-weapon-specialization" data-tree="protection" data-tier="5" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/inv_sword_20.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="spiritual-attunement" data-tree="protection" data-tier="6" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_revivechampion.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="holy-shield" data-tree="protection" data-tier="6" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_blessingofprotection.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="ardent-defender" data-tree="protection" data-tier="6" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_ardentdefender.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="redoubt" data-tree="protection" data-tier="7" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_defend.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="combat-expertise" data-tree="protection" data-tier="7" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_weaponmastery.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="touched-by-the-light" data-tree="protection" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_touchedbylight.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="avenger-s-shield" data-tree="protection" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_avengersshield.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="guarded-by-the-light" data-tree="protection" data-tier="8" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_gaurdedbythelight.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="shield-of-the-templar" data-tree="protection" data-tier="9" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 592px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_shieldofthetemplar.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="judgements-of-the-just" data-tree="protection" data-tier="9" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 592px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_judgementsofthejust.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="hammer-of-the-righteous" data-tree="protection" data-tier="10" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 656px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_hammeroftherighteous.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                </div>
+            </div>
+            <div class="talent-tree" data-tree="retribution">
+                <div class="tree-header prot-header">
+                    <div class="tree-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_auraoflight.jpg')"></div>
+                    <h3>Retribution</h3>
+                    <div class="tree-points" data-points="0">0</div>
+                </div>
+                <div class="talent-grid">
+                    <div class="talent-slot" data-talent="deflection" data-tree="retribution" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_parry.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="benediction" data-tree="retribution" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_frost_windwalkon.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-judgements" data-tree="retribution" data-tier="1" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_righteousfury.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="heart-of-the-crusader" data-tree="retribution" data-tier="1" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_holysmite.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-blessing-of-might" data-tree="retribution" data-tier="1" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_fistofjustice.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="vindication" data-tree="retribution" data-tier="2" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_vindication.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="conviction" data-tree="retribution" data-tier="2" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_retributionaura.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="seal-of-command" data-tree="retribution" data-tier="2" data-max-rank="1" data-current-rank="0" style="left: 144px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_warrior_innerrage.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="pursuit-of-justice" data-tree="retribution" data-tier="2" data-max-rank="2" data-current-rank="0" style="left: 208px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_persuitofjustice.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="eye-for-an-eye" data-tree="retribution" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_eyeforaneye.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="sanctity-of-battle" data-tree="retribution" data-tier="3" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_holysmite.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="crusade" data-tree="retribution" data-tier="3" data-max-rank="3" data-current-rank="0" style="left: 208px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_crusade.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="two-handed-weapon-specialization" data-tree="retribution" data-tier="4" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/inv_hammer_04.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="sanctified-retribution" data-tree="retribution" data-tier="4" data-max-rank="1" data-current-rank="0" style="left: 144px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_mindvision.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="vengeance" data-tree="retribution" data-tier="5" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_racial_avatar.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="divine-purpose" data-tree="retribution" data-tier="5" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_divinepurpose.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="the-art-of-war" data-tree="retribution" data-tier="6" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_artofwar.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="repentance" data-tree="retribution" data-tier="6" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_prayerofhealing.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="judgements-of-the-wise" data-tree="retribution" data-tier="6" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_judgementofthewise.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="fanaticism" data-tree="retribution" data-tier="7" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_fanaticism.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="sanctified-wrath" data-tree="retribution" data-tier="7" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_sanctifiedwrath.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="swift-retribution" data-tree="retribution" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_swiftretribution.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="crusader-strike" data-tree="retribution" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_crusaderstrike.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="sheath-of-light" data-tree="retribution" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_sheathoflight.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="righteous-vengeance" data-tree="retribution" data-tier="9" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 592px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_righteousvengeance.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="divine-storm" data-tree="retribution" data-tier="10" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 656px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_paladin_divinestorm.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom tooltip for talents -->
+        <div id="talent-tooltip" role="tooltip" aria-hidden="true"></div>
+    </div>
+</div>
+
+    <script>
+        (function() {
+            'use strict';
+            
+            // Complete talent data with descriptions based on DBC data
+            const TALENT_DATA = {
+                'spiritual-focus': { name: 'Spiritual Focus', description: 'Reduces the pushback suffered from damaging attacks while casting Flash of Light and Holy Light by 14%.', maxRank: 5, prereq: null },
+                'seals-of-the-pure': { name: 'Seals of the Pure', description: 'Increases the damage done by your Seal of Righteousness, Seal of Vengeance and Seal of Corruption and their Judgement effects by 3%.', maxRank: 5, prereq: null },
+                'healing-light': { name: 'Healing Light', description: 'Increases the amount healed by your Holy Light, Flash of Light and the effectiveness of Holy Shock spells by 4%.', maxRank: 3, prereq: null },
+                'divine-intellect': { name: 'Divine Intellect', description: 'Increases your total Intellect by 2%.', maxRank: 5, prereq: null },
+                'unyielding-faith': { name: 'Unyielding Faith', description: 'Reduces the duration of all Fear and Disorient effects by 15%.', maxRank: 2, prereq: null },
+                'aura-mastery': { name: 'Aura Mastery', description: 'Causes your Concentration Aura to make all affected targets immune to Silence and Interrupt effects and improve the effect of all other auras by 100%. Lasts 6 sec.', maxRank: 1, prereq: null },
+                'illumination': { name: 'Illumination', description: 'After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell you have a 20% chance to gain mana equal to 30% of the base cost of the spell.', maxRank: 5, prereq: null },
+                'improved-lay-on-hands': { name: 'Improved Lay on Hands', description: 'Grants the target of your Lay on Hands spell 10% reduced physical damage taken for 15 sec. In addition, the cooldown for your Lay on Hands spell is reduced by min.', maxRank: 2, prereq: null },
+                'improved-concentration-aura': { name: 'Improved Concentration Aura', description: 'Increases the effect of your Concentration Aura by an additional 5% and while any Aura is active reduces the duration of any Silence or Interrupt effect used against an affected group member by 10%. The duration reduction does not stack with any other effects.', maxRank: 3, prereq: null },
+                'improved-blessing-of-wisdom': { name: 'Improved Blessing of Wisdom', description: 'Increases the effect of your Blessing of Wisdom spell by 10%.', maxRank: 2, prereq: null },
+                'blessed-hands': { name: 'Blessed Hands', description: 'Reduces the mana cost of Hand of Freedom, Hand of Sacrifice and Hand of Salvation by 15%, increases the effectiveness of Hand of Salvation by 50% and the effectiveness of Hand of Sacrifice by an additional 5%.', maxRank: 2, prereq: null },
+                'pure-of-heart': { name: 'Pure of Heart', description: 'Reduces the duration of Curse, Disease and Poison effects by 15%.', maxRank: 2, prereq: null },
+                'divine-favor': { name: 'Divine Favor', description: 'When activated, gives your next Flash of Light, Holy Light, or Holy Shock spell a 100% critical effect chance.', maxRank: 1, prereq: null },
+                'sanctified-light': { name: 'Sanctified Light', description: 'Increases the critical effect chance of your Holy Light and Holy Shock spells by 2%.', maxRank: 3, prereq: null },
+                'purifying-power': { name: 'Purifying Power', description: 'Reduces the mana cost of your Cleanse, Purify and Consecration spells by 5% and reduces the cooldown of your Exorcism and Holy Wrath spells by 17%.', maxRank: 2, prereq: null },
+                'holy-power': { name: 'Holy Power', description: 'Increases the critical effect chance of your Holy spells by 1%.', maxRank: 5, prereq: null },
+                'light-s-grace': { name: 'Light\'s Grace', description: 'Gives your Holy Light spell a 33% chance to reduce the cast time of your next Holy Light spell by 0.5 sec. This effect lasts 15 sec.', maxRank: 3, prereq: null },
+                'holy-shock': { name: 'Holy Shock', description: 'Blasts the target with Holy energy, causing 314 to 340 Holy damage to an enemy, or 481 to 519 healing to an ally.', maxRank: 1, prereq: null },
+                'blessed-life': { name: 'Blessed Life', description: 'All attacks against you have a 4% chance to cause half damage.', maxRank: 3, prereq: null },
+                'sacred-cleansing': { name: 'Sacred Cleansing', description: 'Your Cleanse spell has a 10% chance to increase the target\'s resistance to Disease, Magic and Poison by 30% for 10 sec.', maxRank: 3, prereq: null },
+                'holy-guidance': { name: 'Holy Guidance', description: 'Increases your spell power by 4% of your total Intellect.', maxRank: 5, prereq: null },
+                'divine-illumination': { name: 'Divine Illumination', description: 'Reduces the mana cost of all spells by 50% for 15 sec.', maxRank: 1, prereq: null },
+                'judgements-of-the-pure': { name: 'Judgements of the Pure', description: 'Increases the damage done by your Seal and Judgement spells by 5%, and your Judgement spells increase your casting and melee haste by 3% for 1 min.', maxRank: 5, prereq: null },
+                'infusion-of-light': { name: 'Infusion of Light', description: 'Your Holy Shock critical hits reduce the cast time of your next Flash of Light by.2 sec or increase the critical chance of your next Holy Light by 10%. In addition, causes your Flash of Light to heal targets with Sacred Shield for an additional 50% over 12 sec.', maxRank: 2, prereq: null },
+                'enlightened-judgements': { name: 'Enlightened Judgements', description: 'Increases the range of your Judgement of Light and Judgement of Wisdom spells by 15 yards and increases your chance to hit by 2%.', maxRank: 2, prereq: null },
+                'beacon-of-light': { name: 'Beacon of Light', description: 'The target becomes a Beacon of Light to all members of your party or raid within a 60 yard radius. Any heals you cast on party or raid members will also heal the Beacon for 100% of the amount healed. Only one target can be the Beacon of Light at a time. Lasts 1 min.', maxRank: 1, prereq: null },
+                'divinity': { name: 'Divinity', description: 'Increases all healing done by you and all healing effects on you by 1%.', maxRank: 5, prereq: null },
+                'divine-strength': { name: 'Divine Strength', description: 'Increases your total Strength by 3%.', maxRank: 5, prereq: null },
+                'stoicism': { name: 'Stoicism', description: 'Reduces the duration of all Stun effects by an additional 10% and reduces the chance your helpful spells and damage over time effects will be dispelled by an additional 10%.', maxRank: 3, prereq: null },
+                'guardian-s-favor': { name: 'Guardian\'s Favor', description: 'Reduces the cooldown of your Hand of Protection by 60 sec and increases the duration of your Hand of Freedom by 2 sec.', maxRank: 2, prereq: null },
+                'anticipation': { name: 'Anticipation', description: 'Increases your Dodge chance by 1/2/3/4/5%.', maxRank: 5, prereq: null },
+                'divine-sacrifice': { name: 'Divine Sacrifice', description: '30% of all damage taken by party members within 30 yards is redirected to the Paladin (up to a maximum of 40% of the Paladin\'s health times the number of party members). Damage which reduces the Paladin below 20% health will break the effect. Lasts 10 sec.', maxRank: 1, prereq: null },
+                'improved-righteous-fury': { name: 'Improved Righteous Fury', description: 'While Righteous Fury is active, all damage taken is reduced by 2%.', maxRank: 3, prereq: null },
+                'toughness': { name: 'Toughness', description: 'Increases your armor value from items by 2/4/6/8/10% and reduces the duration of all movement slowing effects by 6/12/18/24/30%.', maxRank: 5, prereq: null },
+                'divine-guardian': { name: 'Divine Guardian', description: 'When Divine Sacrifice is activated, your party and raid members within 30 yards take 10% reduced damage for 6 sec. In addition, increases the duration of your Sacred Shield by 50% and the amount absorbed by 10%.', maxRank: 2, prereq: null },
+                'improved-hammer-of-justice': { name: 'Improved Hammer of Justice', description: 'Decreases the cooldown of your Hammer of Justice spell by 10 sec.', maxRank: 2, prereq: null },
+                'improved-devotion-aura': { name: 'Improved Devotion Aura', description: 'Increases the armor bonus of your Devotion Aura by 17% and increases the amount healed on any target affected by any of your Auras by 2%.', maxRank: 3, prereq: null },
+                'blessing-of-sanctuary': { name: 'Blessing of Sanctuary', description: 'Places a Blessing on the friendly target, reducing damage taken from all sources by 3% for 10 min and increasing strength and stamina by 10%. In addition, when the target blocks, parries, or dodges a melee attack the target will gain 2% of maximum displayed mana. Players may only have one Blessing on them per Paladin at any one time.', maxRank: 1, prereq: null },
+                'reckoning': { name: 'Reckoning', description: 'Gives you a 2% chance after being hit by any damaging attack that the next weapon swings within 8 sec will generate an additional attack.', maxRank: 5, prereq: null },
+                'sacred-duty': { name: 'Sacred Duty', description: 'Increases your total Stamina by 2%, reduces the cooldown of your Divine Shield and Divine Protection spells by 30 sec.', maxRank: 2, prereq: null },
+                'one-handed-weapon-specialization': { name: 'One-Handed Weapon Specialization', description: 'Increases physical damage you deal when a one-handed melee weapon is equipped by 2%.', maxRank: 3, prereq: null },
+                'spiritual-attunement': { name: 'Spiritual Attunement', description: 'A passive ability that gives the Paladin mana when healed by other friendly targets\' spells. The amount of mana gained is equal to 5% of the amount healed.', maxRank: 2, prereq: null },
+                'holy-shield': { name: 'Holy Shield', description: 'Increases chance to block by 30% for 10 sec and deals 79 Holy damage for each attack blocked while active. Each block expends a charge. charges.', maxRank: 1, prereq: null },
+                'ardent-defender': { name: 'Ardent Defender', description: 'Damage that takes you below 35% health is reduced by 7%. In addition, attacks which would otherwise kill you cause you to be healed by up to 10% of your maximum health (amount healed based on defense). This healing effect cannot occur more often than once every 2 min.', maxRank: 3, prereq: null },
+                'redoubt': { name: 'Redoubt', description: 'Increases your block value by 10% and damaging melee and ranged attacks against you have a 10% chance to increase your chance to block by 10%. Lasts 10 sec or blocks.', maxRank: 3, prereq: null },
+                'combat-expertise': { name: 'Combat Expertise', description: 'Increases your expertise by 2, total Stamina and chance to critically hit by 2%.', maxRank: 3, prereq: null },
+                'touched-by-the-light': { name: 'Touched by the Light', description: 'Increases your spell power by an amount equal to 20% of your Strength and increases the amount healed by your critical heals by 10%.', maxRank: 3, prereq: null },
+                'avenger-s-shield': { name: 'Avenger\'s Shield', description: 'Hurls a holy shield at the enemy, dealing to Holy damage, Dazing them and then jumping to additional nearby enemies. Affects total targets. Lasts 10 sec.', maxRank: 1, prereq: null },
+                'guarded-by-the-light': { name: 'Guarded by the Light', description: 'Reduces spell damage taken by 3% and gives a 50% chance to refresh the duration of your Divine Plea when you hit an enemy. In addition, your Divine Plea spell is 50% less likely to be dispelled.', maxRank: 2, prereq: null },
+                'shield-of-the-templar': { name: 'Shield of the Templar', description: 'Reduces all damage taken by 1% and grants your Avenger\'s Shield a 33% chance to silence your targets for 3 sec.', maxRank: 3, prereq: null },
+                'judgements-of-the-just': { name: 'Judgements of the Just', description: 'Reduces the cooldown of your Hammer of Justice by 5 sec, increases the duration of your Seal of Justice effect by 0.5 sec and your Judgement spells also reduce the melee attack speed of the target by 10%.', maxRank: 2, prereq: null },
+                'hammer-of-the-righteous': { name: 'Hammer of the Righteous', description: 'Hammer the current target and up to additional nearby targets, causing 4 times your main hand damage per second as Holy damage.', maxRank: 1, prereq: null },
+                'deflection': { name: 'Deflection', description: 'Increases your Parry chance by 1%.', maxRank: 5, prereq: null },
+                'benediction': { name: 'Benediction', description: 'Reduces the mana cost of all instant cast spells by 2%.', maxRank: 5, prereq: null },
+                'improved-judgements': { name: 'Improved Judgements', description: 'Decreases the cooldown of your Judgement spells by 1 sec.', maxRank: 2, prereq: null },
+                'heart-of-the-crusader': { name: 'Heart of the Crusader', description: 'In addition to the normal effect, your Judgement spells will also increase the critical strike chance of all attacks made against that target by an additional 1%.', maxRank: 3, prereq: null },
+                'improved-blessing-of-might': { name: 'Improved Blessing of Might', description: 'Increases the attack power bonus of your Blessing of Might by 12%.', maxRank: 2, prereq: null },
+                'vindication': { name: 'Vindication', description: 'Gives the Paladin\'s damaging attacks a chance to reduce the target\'s attack power by 23 for 10 sec.', maxRank: 2, prereq: null },
+                'conviction': { name: 'Conviction', description: 'Increases your chance to get a critical strike with all spells and attacks by 1%.', maxRank: 5, prereq: null },
+                'seal-of-command': { name: 'Seal of Command', description: 'All melee attacks deal to additional Holy damage. When used with attacks or abilities that strike a single target, this additional Holy damage will strike up to 2 additional targets. Lasts 30 min.Unleashing this Seal\'s energy will judge an enemy, instantly causing to Holy damage.', maxRank: 1, prereq: null },
+                'pursuit-of-justice': { name: 'Pursuit of Justice', description: 'Reduces the duration of all Disarm effects by 25% and increases movement and mounted movement speed by 8%. This does not stack with other movement speed increasing effects.', maxRank: 2, prereq: null },
+                'eye-for-an-eye': { name: 'Eye for an Eye', description: 'All criticals against you cause 5% of the damage taken to the attacker as well. The damage caused by Eye for an Eye will not exceed 50% of the Paladin\'s total health.', maxRank: 2, prereq: null },
+                'sanctity-of-battle': { name: 'Sanctity of Battle', description: 'Increases your chance to critically hit with all spells and attacks by 1% and increases the damage caused by Exorcism and Crusader Strike by 5%.', maxRank: 3, prereq: null },
+                'crusade': { name: 'Crusade', description: 'Increases all damage caused by 1% and all damage caused against Humanoids, Demons, Undead and Elementals by an additional 1%.', maxRank: 3, prereq: null },
+                'two-handed-weapon-specialization': { name: 'Two-Handed Weapon Specialization', description: 'Increases the damage you deal with two-handed melee weapons by 2%.', maxRank: 3, prereq: null },
+                'sanctified-retribution': { name: 'Sanctified Retribution', description: 'Increases the damage caused by Retribution Aura by 50% and all damage caused by friendly targets affected by any of your Auras is increased by 3%.', maxRank: 1, prereq: null },
+                'vengeance': { name: 'Vengeance', description: 'Gives you a 1% bonus to Physical and Holy damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell, or ability. This effect stacks up to times.', maxRank: 3, prereq: null },
+                'divine-purpose': { name: 'Divine Purpose', description: 'Reduces your chance to be hit by spells and ranged attacks by 2% and gives your Hand of Freedom spell a 50% chance to remove any Stun effects on the target.', maxRank: 2, prereq: null },
+                'the-art-of-war': { name: 'The Art of War', description: 'Increases the damage of your Judgement, Crusader Strike and Divine Storm abilities by 5% and when your melee attacks critically hit the cast time of your next Flash of Light or Exorcism is reduced by.2 sec.', maxRank: 2, prereq: null },
+                'repentance': { name: 'Repentance', description: 'Puts the enemy target in a state of meditation, incapacitating them for up to 1 min, and removing the effect of Righteous Vengeance. Any damage caused will awaken the target. Usable against Demons, Dragonkin, Giants, Humanoids and Undead.', maxRank: 1, prereq: null },
+                'judgements-of-the-wise': { name: 'Judgements of the Wise', description: 'Your damaging Judgement spells have a 33% chance to grant the Replenishment effect to up to 10 party or raid members mana regeneration equal to 1% of their maximum mana per 5 sec for 15 sec, and to immediately grant you 25% of your base mana.', maxRank: 3, prereq: null },
+                'fanaticism': { name: 'Fanaticism', description: 'Increases the critical strike chance of all Judgements capable of a critical hit by 6% and reduces threat caused by all actions by 10% except when under the effects of Righteous Fury.', maxRank: 3, prereq: null },
+                'sanctified-wrath': { name: 'Sanctified Wrath', description: 'Increases the critical strike chance of Hammer of Wrath by 25%, reduces the cooldown of Avenging Wrath by 30 secs and while affected by Avenging Wrath 25% of all damage caused bypasses damage reduction effects.', maxRank: 2, prereq: null },
+                'swift-retribution': { name: 'Swift Retribution', description: 'Your auras also increase casting, ranged and melee attack speeds by 1%.', maxRank: 3, prereq: null },
+                'crusader-strike': { name: 'Crusader Strike', description: 'An instant strike that causes 74% weapon damage.', maxRank: 1, prereq: null },
+                'sheath-of-light': { name: 'Sheath of Light', description: 'Increases your spell power by an amount equal to 10% of your attack power and your critical healing spells heal the target for 20% of the healed amount over 12 seconds.', maxRank: 3, prereq: null },
+                'righteous-vengeance': { name: 'Righteous Vengeance', description: 'When your Judgement, Crusader Strike and Divine Storm spells deal a critical strike, your target will take 10% additional damage over 8 sec.', maxRank: 3, prereq: null },
+                'divine-storm': { name: 'Divine Storm', description: 'An instant weapon attack that causes 110% of weapon damage to up to enemies within 8 yards. The Divine Storm heals up to 3 party or raid members totaling 25% of the damage caused.', maxRank: 1, prereq: null },
+            };
+            
+            // Track talent points
+            let talentPoints = {
+                available: 71,
+                spent: 0,
+                trees: { 'holy': 0, 'protection': 0, 'retribution': 0 }
+            };
+            
+            // Initialize with current build
+            function initializeTalents() {
+                resetAllTalents();
+                updateAllTalentStates();
+            }
+            
+            function resetAllTalents() {
+                // Reset all talent slots to 0
+                document.querySelectorAll('.talent-slot[data-talent]').forEach(slot => {
+                    slot.dataset.currentRank = '0';
+                    const rankEl = slot.querySelector('.talent-rank');
+                    if (rankEl) {
+                        const maxRank = parseInt(slot.dataset.maxRank);
+                        rankEl.textContent = `0/${maxRank}`;
+                    }
+                    slot.classList.remove('learned');
+                });
+                
+                // Reset point counters
+                talentPoints = {
+                    available: 71,
+                    spent: 0,
+                    trees: { 'holy': 0, 'protection': 0, 'retribution': 0 }
+                };
+                
+                updateAllTalentStates();
+            }
+            
+            function updateTalentState(slot) {
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                
+                slot.classList.remove('learned', 'available', 'unavailable');
+                
+                if (currentRank > 0) {
+                    slot.classList.add('learned');
+                } else if (canLearnTalent(slot)) {
+                    slot.classList.add('available');
+                } else {
+                    slot.classList.add('unavailable');
+                }
+            }
+            
+            function canLearnTalent(slot) {
+                const tier = parseInt(slot.dataset.tier);
+                const tree = slot.dataset.tree;
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                
+                // Can't learn if already maxed
+                if (currentRank >= maxRank) return false;
+                
+                // Can't learn if no available points
+                if (talentPoints.available <= 0) return false;
+                
+                // Tier 0 is always available (first tier)
+                if (tier <= 0) return true;
+                
+                // Check if enough points spent in this tree for this tier
+                // DBC uses 0-indexed tiers, so tier 1 requires 5 points, tier 2 requires 10, etc.
+                const requiredPoints = tier * 5;
+                return talentPoints.trees[tree] >= requiredPoints;
+            }
+            
+            function addTalentPoint(slot) {
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                const tree = slot.dataset.tree;
+                
+                if (currentRank < maxRank && talentPoints.available > 0) {
+                    // Add point
+                    slot.dataset.currentRank = currentRank + 1;
+                    const rankEl = slot.querySelector('.talent-rank');
+                    if (rankEl) {
+                        rankEl.textContent = `${currentRank + 1}/${maxRank}`;
+                    }
+                    
+                    // Update counters
+                    talentPoints.available--;
+                    talentPoints.spent++;
+                    talentPoints.trees[tree]++;
+                    
+                    updateAllTalentStates();
+                    return true;
+                }
+                return false;
+            }
+            
+            function removeTalentPoint(slot) {
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                const tree = slot.dataset.tree;
+                
+                if (currentRank > 0) {
+                    // Remove point
+                    slot.dataset.currentRank = currentRank - 1;
+                    const rankEl = slot.querySelector('.talent-rank');
+                    if (rankEl) {
+                        rankEl.textContent = `${currentRank - 1}/${maxRank}`;
+                    }
+                    
+                    // Update counters
+                    talentPoints.available++;
+                    talentPoints.spent--;
+                    talentPoints.trees[tree]--;
+                    
+                    updateAllTalentStates();
+                    return true;
+                }
+                return false;
+            }
+            
+            function updateAllTalentStates() {
+                document.querySelectorAll('.talent-slot[data-talent]').forEach(updateTalentState);
+                
+                // Update tree point counters
+                Object.keys(talentPoints.trees).forEach(tree => {
+                    const counter = document.querySelector(`[data-tree="${tree}"] .tree-points`);
+                    if (counter) {
+                        counter.textContent = `${talentPoints.trees[tree]}/71`;
+                        counter.dataset.points = talentPoints.trees[tree];
+                    }
+                });
+                
+                // Update status
+                updateStatus();
+            }
+            
+            function updateStatus() {
+                const status = document.getElementById('talent-status');
+                const level = 10 + talentPoints.spent;
+                status.textContent = `Level ${level} • ${talentPoints.spent} talent points spent • ${talentPoints.available} points remaining`;
+            }
+            
+            // Tooltip functionality
+            const tooltipEl = document.getElementById('talent-tooltip');
+            let tooltipShownFor = null;
+            
+            function showTooltip(slot, ev) {
+                const talentId = slot.dataset.talent;
+                const talentData = TALENT_DATA[talentId];
+                if (!talentData) return;
+                
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                
+                let html = `<div class="tt-name" style="color: ${currentRank > 0 ? '#ffd700' : '#ffffff'}">${talentData.name}</div>`;
+                html += `<div class="tt-bind">Rank ${currentRank}/${maxRank}</div>`;
+                html += `<div class="tt-stat">${talentData.description}</div>`;
+                
+                if (currentRank === 0) {
+                    if (canLearnTalent(slot)) {
+                        html += `<div class="tt-bonus">Left-click to learn</div>`;
+                    } else {
+                        const tier = parseInt(slot.dataset.tier);
+                        if (tier > 0) {
+                            const requiredPoints = tier * 5;
+                            const tree = slot.dataset.tree;
+                            const currentPoints = talentPoints.trees[tree];
+                            if (currentPoints < requiredPoints) {
+                                html += `<div class="tt-required">Requires ${requiredPoints} points in ${tree.charAt(0).toUpperCase() + tree.slice(1)}</div>`;
+                            }
+                        }
+                    }
+                } else if (currentRank > 0) {
+                    html += `<div class="tt-bonus">Right-click to remove point</div>`;
+                }
+                
+                tooltipEl.innerHTML = html;
+                tooltipEl.classList.add('visible');
+                positionTooltip(ev);
+                tooltipShownFor = slot;
+            }
+            
+            function hideTooltip() {
+                tooltipEl.classList.remove('visible');
+                tooltipShownFor = null;
+            }
+            
+            function positionTooltip(ev) {
+                const pad = 14;
+                const tw = tooltipEl.offsetWidth;
+                const th = tooltipEl.offsetHeight;
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                let x = ev.clientX + pad;
+                let y = ev.clientY + pad;
+                if (x + tw + 8 > vw) x = ev.clientX - tw - pad;
+                if (y + th + 8 > vh) y = ev.clientY - th - pad;
+                if (x < 4) x = 4;
+                if (y < 4) y = 4;
+                tooltipEl.style.left = x + 'px';
+                tooltipEl.style.top = y + 'px';
+            }
+            
+            // Event listeners
+            document.addEventListener('mouseover', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot && tooltipShownFor !== slot) {
+                    showTooltip(slot, ev);
+                }
+            });
+            
+            document.addEventListener('mousemove', (ev) => {
+                if (tooltipShownFor) {
+                    positionTooltip(ev);
+                }
+            });
+            
+            document.addEventListener('mouseout', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot === tooltipShownFor && !slot.contains(ev.relatedTarget)) {
+                    hideTooltip();
+                }
+            });
+            
+            // Click handlers for talent interaction
+            document.addEventListener('click', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot) {
+                    ev.preventDefault();
+                    addTalentPoint(slot);
+                }
+            });
+            
+            document.addEventListener('contextmenu', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot) {
+                    ev.preventDefault();
+                    removeTalentPoint(slot);
+                }
+            });
+            
+            // Reset button
+            document.getElementById('reset-talents').addEventListener('click', () => {
+                resetAllTalents();
+            });
+            
+            // Initialize
+            initializeTalents();
+        })();
+    </script>
+<script src="tab-scroll.js"></script>
+</body>
+</html>

@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaman Talents — KCraft</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { 
+            background: #1a1a1a; 
+            color: #ddd; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+            padding: 0;
+            padding-bottom: 3rem;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        h1, h2, h3 { color: #ffd100; }
+        a { color: #4ea8de; text-decoration: none; }
+        a:hover { color: #88c5f0; }
+        
+        /* Navigation styles matching index.html */
+        .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        /* Tab switcher */
+        .tab-bar {
+            display: flex; gap: 4px; margin-bottom: 2rem;
+            border-bottom: 1px solid #3a3a3a;
+        }
+        .tab-btn {
+            padding: 10px 20px; background: transparent; color: #888;
+            border: none; border-bottom: 3px solid transparent;
+            cursor: pointer; font-size: 0.95rem; font-weight: 500;
+            transition: all 0.15s; margin-bottom: -1px;
+        }
+        .tab-btn:hover { color: #ddd; background: #2326; }
+        .tab-btn.active {
+            color: #ffd100; border-bottom-color: #ffd100; font-weight: 600;
+        }
+        /* Tab links (to other pages) */
+        a.tab-btn.tab-link {
+            text-decoration: none;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        a.tab-btn.tab-link:hover { color: #ffd100; }
+        
+        .main-content {
+            padding: 0 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        #talent-status {
+            background: rgba(255, 209, 0, 0.1);
+            color: #ffd100;
+            padding: 8px 16px;
+            border-radius: 6px;
+            margin: 1rem 0;
+            font-weight: 500;
+        }
+        
+        #reset-talents {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 1rem 0;
+        }
+        
+        .instructions {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+        
+        .talent-trees { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr; 
+            gap: 1rem; 
+            margin-bottom: 2rem; 
+        }
+        
+        .talent-tree {
+            background: linear-gradient(145deg, #2a241d 0%, #1e1914 100%);
+            border: 2px solid #5a4a3a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        
+        .tree-header {
+            padding: 12px 16px;
+            position: relative;
+            text-align: center;
+            border-bottom: 1px solid #5a4a3a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .tree-icon {
+            width: 32px;
+            height: 32px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px;
+            border: 1px solid #5a4a3a;
+        }
+        
+        .tree-header h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            flex: 1;
+            text-align: left;
+        }
+        
+        .tree-points {
+            background: rgba(0,0,0,0.8);
+            color: #ffd100;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .arms-header { background: linear-gradient(135deg, #8B4513 0%, #654321 100%); }
+        .fury-header { background: linear-gradient(135deg, #696969 0%, #444444 100%); }
+        .prot-header { background: linear-gradient(135deg, #B22222 0%, #8B1A1A 100%); }
+        
+        .talent-grid {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            height: 720px;
+            background: linear-gradient(145deg, #1a1611 0%, #141209 100%);
+            padding: 16px;
+            margin: 0 auto;
+        }
+        
+        .talent-slot {
+            position: absolute;
+            width: 52px;
+            height: 52px;
+            border: 2px solid #444;
+            border-radius: 6px;
+            background: linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 100%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .talent-slot.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+        
+        .talent-slot.learned {
+            border-color: #ffd700;
+            background: linear-gradient(145deg, #4a4a00 0%, #3a3a00 100%);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+        }
+        
+        .talent-slot.available {
+            border-color: #90EE90;
+            background: linear-gradient(145deg, #2a4a2a 0%, #1a3a1a 100%);
+        }
+        
+        .talent-slot.available:hover {
+            border-color: #aaffaa;
+            background: linear-gradient(145deg, #3a5a3a 0%, #2a4a2a 100%);
+        }
+        
+        .talent-slot.unavailable {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .talent-icon {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 4px;
+        }
+        
+        .talent-rank {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.8);
+            color: #ffd100;
+            padding: 1px 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 2px;
+        }
+        
+        /* Tooltip */
+        #talent-tooltip {
+            position: fixed;
+            z-index: 9999;
+            background: #000000;
+            color: #ffffff;
+            border: 1px solid #444;
+            border-radius: 3px;
+            padding: 8px 12px;
+            font-size: 0.82rem;
+            line-height: 1.4;
+            min-width: 180px;
+            max-width: 280px;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.08s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        }
+        
+        #talent-tooltip.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #talent-tooltip .tt-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        #talent-tooltip .tt-bind {
+            color: #ffffff;
+            font-size: 0.78rem;
+        }
+        
+        #talent-tooltip .tt-slot-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+        
+        #talent-tooltip .tt-slot-row .tt-slot {
+            color: #ffffff;
+        }
+        
+        #talent-tooltip .tt-stat {
+            color: #ffffff;
+        }
+        
+        #talent-tooltip .tt-bonus {
+            color: #1eff00;
+        }
+        
+        #talent-tooltip .tt-required {
+            color: #ff6b6b;
+            margin-top: 4px;
+        }
+        
+        @media (max-width: 900px) {
+            .talent-trees { 
+                grid-template-columns: 1fr; 
+                gap: 1rem; 
+            }
+            
+            .talent-grid { 
+                gap: 6px; 
+                padding: 12px; 
+                min-height: 400px;
+            }
+            
+            .talent-slot {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .tree-header { 
+                padding: 8px 12px; 
+                gap: 8px; 
+            }
+            
+            .tree-icon { 
+                width: 24px; 
+                height: 24px; 
+            }
+            
+            .tree-header h3 { 
+                font-size: 1.1rem; 
+            }
+            
+            #talent-tooltip {
+                max-width: calc(100vw - 24px);
+                min-width: 0;
+                font-size: 0.78rem;
+                padding: 6px 10px;
+            }
+            
+            #talent-tooltip .tt-name { 
+                font-size: 0.88rem; 
+            }
+        }
+
+        /* Tab bar on phones — same horizontal-scroll pattern as the
+           rest of the site so labels don't wrap inside buttons. */
+        @media (max-width: 600px) {
+            body { font-size: 0.92rem; }
+            .container { padding-left: 0.5rem; padding-right: 0.5rem; }
+            .navbar { margin-bottom: 1rem; }
+            .tab-bar {
+                overflow-x: auto;
+                flex-wrap: nowrap !important;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .tab-bar::-webkit-scrollbar { display: none; }
+            .tab-btn, a.tab-btn {
+                padding: 6px 10px;
+                font-size: 0.85rem;
+                white-space: nowrap !important;
+                flex-shrink: 0;
+            }
+        }
+            .class-nav { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 0 0 1.5rem; }
+        .class-link { display: inline-flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 10px; border-radius: 6px; color: #aaa; font-size: 0.72rem; font-weight: 600; border: 1px solid transparent; transition: all .15s; }
+        .class-link img { width: 30px; height: 30px; border-radius: 4px; }
+        .class-link:hover { background: #2a2a2a; color: #ddd; }
+        .class-link.active { background: rgba(255,209,0,0.12); border-color: #ffd100; color: #ffd100; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html" style="color: #ffd100;">⚔️ KCraft</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="tab-bar">
+        <a class="tab-btn tab-link" href="index.html">📚 Browse Dungeons</a>
+        <a class="tab-btn tab-link" href="index.html#finder">🔍 Find Loot</a>
+        <a class="tab-btn tab-link" href="armoury.html">🛡️ Armoury</a>
+        <a class="tab-btn tab-link active" href="talents.html">📜 Talents</a>
+        <a class="tab-btn tab-link" href="warrior.html">⚔️ Warrior</a>
+    </div>
+
+    <div class="class-nav">
+        <a class="class-link" href="talents.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_warrior.jpg" alt="Warrior"><span>Warrior</span></a>
+        <a class="class-link" href="talents-paladin.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_paladin.jpg" alt="Paladin"><span>Paladin</span></a>
+        <a class="class-link" href="talents-hunter.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_hunter.jpg" alt="Hunter"><span>Hunter</span></a>
+        <a class="class-link" href="talents-rogue.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_rogue.jpg" alt="Rogue"><span>Rogue</span></a>
+        <a class="class-link" href="talents-priest.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_priest.jpg" alt="Priest"><span>Priest</span></a>
+        <a class="class-link" href="talents-deathknight.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_deathknight.jpg" alt="Death Knight"><span>Death Knight</span></a>
+        <a class="class-link active" href="talents-shaman.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_shaman.jpg" alt="Shaman"><span>Shaman</span></a>
+        <a class="class-link" href="talents-mage.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_mage.jpg" alt="Mage"><span>Mage</span></a>
+        <a class="class-link" href="talents-warlock.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_warlock.jpg" alt="Warlock"><span>Warlock</span></a>
+        <a class="class-link" href="talents-druid.html"><img src="https://wow.zamimg.com/images/wow/icons/large/classicon_druid.jpg" alt="Druid"><span>Druid</span></a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div id="talent-status">Level 10 • 0 talent points spent • 71 points remaining</div>
+            <button id="reset-talents">Reset All Talents</button>
+        </div>
+
+        <div class="instructions">
+            <strong>Left-click</strong> to add talent points • <strong>Right-click</strong> to remove points • Hover for tooltips
+        </div>
+
+        <div class="talent-trees">
+            <div class="talent-tree" data-tree="elemental">
+                <div class="tree-header arms-header">
+                    <div class="tree-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_lightning.jpg')"></div>
+                    <h3>Elemental</h3>
+                    <div class="tree-points" data-points="0">0</div>
+                </div>
+                <div class="talent-grid">
+                    <div class="talent-slot" data-talent="convection" data-tree="elemental" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_wispsplode.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="concussion" data-tree="elemental" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_fireball.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="call-of-flame" data-tree="elemental" data-tier="1" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_immolation.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="elemental-warding" data-tree="elemental" data-tier="1" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_spiritarmor.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="elemental-devastation" data-tree="elemental" data-tier="1" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_elementaldevastation.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="reverberation" data-tree="elemental" data-tier="2" data-max-rank="5" data-current-rank="0" style="left: 16px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_frost_frostward.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="elemental-focus" data-tree="elemental" data-tier="2" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_manaburn.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="elemental-fury" data-tree="elemental" data-tier="2" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_volcano.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-fire-nova" data-tree="elemental" data-tier="3" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_sealoffire.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="eye-of-the-storm" data-tree="elemental" data-tier="3" data-max-rank="3" data-current-rank="0" style="left: 208px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_soulleech_2.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="elemental-reach" data-tree="elemental" data-tier="4" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_stormreach.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="call-of-thunder" data-tree="elemental" data-tier="4" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_callstorm.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="unrelenting-storm" data-tree="elemental" data-tier="4" data-max-rank="3" data-current-rank="0" style="left: 208px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_unrelentingstorm.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="elemental-precision" data-tree="elemental" data-tier="5" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_elementalprecision_1.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="lightning-mastery" data-tree="elemental" data-tier="5" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_lightning_lightningbolt01.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="elemental-mastery" data-tree="elemental" data-tier="6" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_wispheal.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="storm-earth-and-fire" data-tree="elemental" data-tier="6" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shaman_stormearthfire.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="booming-echoes" data-tree="elemental" data-tier="7" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_blueflamering.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="elemental-oath" data-tree="elemental" data-tier="7" data-max-rank="2" data-current-rank="0" style="left: 80px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shaman_elementaloath.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="lightning-overload" data-tree="elemental" data-tier="7" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_lightningoverload.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="astral-shift" data-tree="elemental" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shaman_astralshift.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="totem-of-wrath" data-tree="elemental" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_totemofwrath.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="lava-flows" data-tree="elemental" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shaman_lavaflow.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="shamanism" data-tree="elemental" data-tier="9" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 592px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_unused2.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="thunderstorm" data-tree="elemental" data-tier="10" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 656px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shaman_thunderstorm.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                </div>
+            </div>
+            <div class="talent-tree" data-tree="enhancement">
+                <div class="tree-header fury-header">
+                    <div class="tree-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_lightningshield.jpg')"></div>
+                    <h3>Enhancement</h3>
+                    <div class="tree-points" data-points="0">0</div>
+                </div>
+                <div class="talent-grid">
+                    <div class="talent-slot" data-talent="enhancing-totems" data-tree="enhancement" data-tier="0" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_earthbindtotem.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="earth-s-grasp" data-tree="enhancement" data-tier="0" data-max-rank="2" data-current-rank="0" style="left: 80px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_stoneclawtotem.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="ancestral-knowledge" data-tree="enhancement" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shadow_grimward.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="guardian-totems" data-tree="enhancement" data-tier="1" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_stoneskintotem.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="thundering-strikes" data-tree="enhancement" data-tier="1" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_thunderbolt.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-ghost-wolf" data-tree="enhancement" data-tier="1" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_spiritwolf.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-shields" data-tree="enhancement" data-tier="1" data-max-rank="3" data-current-rank="0" style="left: 208px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_lightningshield.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="elemental-weapons" data-tree="enhancement" data-tier="2" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_flametounge.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="shamanistic-focus" data-tree="enhancement" data-tier="2" data-max-rank="1" data-current-rank="0" style="left: 144px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_elementalabsorption.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="anticipation" data-tree="enhancement" data-tier="2" data-max-rank="3" data-current-rank="0" style="left: 208px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_mirrorimage.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="flurry" data-tree="enhancement" data-tier="3" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_ghoulfrenzy.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="toughness" data-tree="enhancement" data-tier="3" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_holy_devotion.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-windfury-totem" data-tree="enhancement" data-tier="4" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_windfury.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="spirit-weapons" data-tree="enhancement" data-tier="4" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_parry.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="mental-dexterity" data-tree="enhancement" data-tier="4" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="unleashed-rage" data-tree="enhancement" data-tier="5" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_unleashedrage.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="weapon-mastery" data-tree="enhancement" data-tier="5" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_hunter_swiftstrike.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="frozen-power" data-tree="enhancement" data-tier="5" data-max-rank="2" data-current-rank="0" style="left: 208px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_fire_bluecano.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="dual-wield-specialization" data-tree="enhancement" data-tier="6" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_dualwieldspecialization.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="dual-wield" data-tree="enhancement" data-tier="6" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_dualwield.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="stormstrike" data-tree="enhancement" data-tier="6" data-max-rank="1" data-current-rank="0" style="left: 144px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_shaman_stormstrike.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="static-shock" data-tree="enhancement" data-tier="7" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shaman_staticshock.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="lava-lash" data-tree="enhancement" data-tier="7" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_shaman_lavalash.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-stormstrike" data-tree="enhancement" data-tier="7" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shaman_improvedstormstrike.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="mental-quickness" data-tree="enhancement" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_mentalquickness.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="shamanistic-rage" data-tree="enhancement" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_shamanrage.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="earthen-power" data-tree="enhancement" data-tier="8" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_earthelemental_totem.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="maelstrom-weapon" data-tree="enhancement" data-tier="9" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 592px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shaman_maelstromweapon.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="feral-spirit" data-tree="enhancement" data-tier="10" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 656px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shaman_feralspirit.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                </div>
+            </div>
+            <div class="talent-tree" data-tree="restoration">
+                <div class="tree-header prot-header">
+                    <div class="tree-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_magicimmunity.jpg')"></div>
+                    <h3>Restoration</h3>
+                    <div class="tree-points" data-points="0">0</div>
+                </div>
+                <div class="talent-grid">
+                    <div class="talent-slot" data-talent="improved-healing-wave" data-tree="restoration" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_magicimmunity.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="totemic-focus" data-tree="restoration" data-tier="0" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 16px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_moonglow.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-reincarnation" data-tree="restoration" data-tier="1" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_reincarnation.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="healing-grace" data-tree="restoration" data-tier="1" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_healingtouch.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="tidal-focus" data-tree="restoration" data-tier="1" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 80px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_frost_manarecharge.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-water-shield" data-tree="restoration" data-tier="2" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_shaman_watershield.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="healing-focus" data-tree="restoration" data-tier="2" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_healingwavelesser.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="tidal-force" data-tree="restoration" data-tier="2" data-max-rank="1" data-current-rank="0" style="left: 144px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_frost_frostbolt.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="ancestral-healing" data-tree="restoration" data-tier="2" data-max-rank="3" data-current-rank="0" style="left: 208px; top: 144px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_undyingstrength.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="restorative-totems" data-tree="restoration" data-tier="3" data-max-rank="3" data-current-rank="0" style="left: 80px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_manaregentotem.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="tidal-mastery" data-tree="restoration" data-tier="3" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 208px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_tranquility.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="healing-way" data-tree="restoration" data-tier="4" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_healingway.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="nature-s-swiftness" data-tree="restoration" data-tier="4" data-max-rank="1" data-current-rank="0" style="left: 144px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_ravenform.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="focused-mind" data-tree="restoration" data-tier="4" data-max-rank="3" data-current-rank="0" style="left: 208px; top: 272px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_focusedmind.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="purification" data-tree="restoration" data-tier="5" data-max-rank="5" data-current-rank="0" style="left: 144px; top: 336px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_frost_wizardmark.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="nature-s-guardian" data-tree="restoration" data-tier="6" data-max-rank="5" data-current-rank="0" style="left: 16px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_natureguardian.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="mana-tide-totem" data-tree="restoration" data-tier="6" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_frost_summonwaterelemental.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="cleanse-spirit" data-tree="restoration" data-tier="6" data-max-rank="1" data-current-rank="0" style="left: 144px; top: 400px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/ability_shaman_cleansespirit.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="blessing-of-the-eternals" data-tree="restoration" data-tier="7" data-max-rank="2" data-current-rank="0" style="left: 16px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shaman_blessingofeternals.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-chain-heal" data-tree="restoration" data-tier="7" data-max-rank="2" data-current-rank="0" style="left: 80px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_healingwavegreater.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="nature-s-blessing" data-tree="restoration" data-tier="7" data-max-rank="3" data-current-rank="0" style="left: 144px; top: 464px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_natureblessing.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="ancestral-awakening" data-tree="restoration" data-tier="8" data-max-rank="3" data-current-rank="0" style="left: 16px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shaman_ancestralawakening.jpg')"></div>
+                        <div class="talent-rank">0/3</div>
+                    </div>
+                    <div class="talent-slot" data-talent="earth-shield" data-tree="restoration" data-tier="8" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_skinofearth.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                    <div class="talent-slot" data-talent="improved-earth-shield" data-tree="restoration" data-tier="8" data-max-rank="2" data-current-rank="0" style="left: 144px; top: 528px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_skinofearth.jpg')"></div>
+                        <div class="talent-rank">0/2</div>
+                    </div>
+                    <div class="talent-slot" data-talent="tidal-waves" data-tree="restoration" data-tier="9" data-max-rank="5" data-current-rank="0" style="left: 80px; top: 592px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_shaman_tidalwaves.jpg')"></div>
+                        <div class="talent-rank">0/5</div>
+                    </div>
+                    <div class="talent-slot" data-talent="riptide" data-tree="restoration" data-tier="10" data-max-rank="1" data-current-rank="0" style="left: 80px; top: 656px;">
+                        <div class="talent-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/large/spell_nature_riptide.jpg')"></div>
+                        <div class="talent-rank">0/1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom tooltip for talents -->
+        <div id="talent-tooltip" role="tooltip" aria-hidden="true"></div>
+    </div>
+</div>
+
+    <script>
+        (function() {
+            'use strict';
+            
+            // Complete talent data with descriptions based on DBC data
+            const TALENT_DATA = {
+                'convection': { name: 'Convection', description: 'Reduces the mana cost of your Shock, Lightning Bolt, Chain Lightning, Lava Burst, and Wind Shear spells by 2%.', maxRank: 5, prereq: null },
+                'concussion': { name: 'Concussion', description: 'Increases the damage done by your Lightning Bolt, Chain Lightning, Thunderstorm, Lava Burst and Shock spells by 1%.', maxRank: 5, prereq: null },
+                'call-of-flame': { name: 'Call of Flame', description: 'Increases the damage done by your Fire Totems and Fire Nova by 5%, and damage done by your Lava Burst spell by 2%.', maxRank: 3, prereq: null },
+                'elemental-warding': { name: 'Elemental Warding', description: 'Reduces all damage taken by 2%.', maxRank: 3, prereq: null },
+                'elemental-devastation': { name: 'Elemental Devastation', description: 'Your non-periodic offensive spell crits will increase your chance to get a critical strike with melee attacks by 3% for 10 sec.', maxRank: 3, prereq: null },
+                'reverberation': { name: 'Reverberation', description: 'Reduces the cooldown of your Shock spells and Wind Shear by 0.2 sec.', maxRank: 5, prereq: null },
+                'elemental-focus': { name: 'Elemental Focus', description: 'After landing a non-periodic critical strike with a Fire, Frost, or Nature damage spell, you enter a Clearcasting state. The Clearcasting state reduces the mana cost of your next damage or healing spells by 40%.', maxRank: 1, prereq: null },
+                'elemental-fury': { name: 'Elemental Fury', description: 'Increases the critical strike damage bonus of your Searing and Magma Totems and your Fire, Frost, and Nature spells by 20%.', maxRank: 5, prereq: null },
+                'improved-fire-nova': { name: 'Improved Fire Nova', description: 'Increases the damage done by your Fire Nova by 10% and reduces the cooldown by 2 sec.', maxRank: 2, prereq: null },
+                'eye-of-the-storm': { name: 'Eye of the Storm', description: 'Reduces the pushback suffered from damaging attacks while casting Lightning Bolt, Chain Lightning, Lava Burst and Hex spells by 23%.', maxRank: 3, prereq: null },
+                'elemental-reach': { name: 'Elemental Reach', description: 'Increases the range of your Lightning Bolt, Chain Lightning, Fire Nova, and Lava Burst spells by 3 yards, increases the radius of your Thunderstorm spell by 10%, and increases the range of your Flame Shock by 7 yards.', maxRank: 2, prereq: null },
+                'call-of-thunder': { name: 'Call of Thunder', description: 'Increases the critical strike chance of your Lightning Bolt, Chain Lightning and Thunderstorm spells by an additional 5%.', maxRank: 1, prereq: null },
+                'unrelenting-storm': { name: 'Unrelenting Storm', description: 'Regenerate mana equal to 4% of your Intellect every 5 sec, even while casting.', maxRank: 3, prereq: null },
+                'elemental-precision': { name: 'Elemental Precision', description: 'Increases your chance to hit with Fire, Frost and Nature spells by 1% and reduces the threat caused by Fire, Frost and Nature spells by 10%.', maxRank: 3, prereq: null },
+                'lightning-mastery': { name: 'Lightning Mastery', description: 'Reduces the cast time of your Lightning Bolt, Chain Lightning, and Lava Burst spells by 0.1 sec.', maxRank: 5, prereq: null },
+                'elemental-mastery': { name: 'Elemental Mastery', description: 'When activated, your next Lightning Bolt, Chain Lightning or Lava Burst spell becomes an instant cast spell. In addition, you gain 15% spell haste for 15 sec. Elemental Mastery shares a cooldown with Nature\'s Swiftness.', maxRank: 1, prereq: null },
+                'storm-earth-and-fire': { name: 'Storm, Earth and Fire', description: 'Reduces the cooldown of your Chain Lightning spell by.75 sec, your Earthbind Totem also has a 33% chance to root targets for 5 sec when cast and the periodic damage done by your Flame Shock is increased by 20%.', maxRank: 3, prereq: null },
+                'booming-echoes': { name: 'Booming Echoes', description: 'Reduces the cooldown of your Flame Shock and Frost Shock spells by an additional 1 sec., and increases the direct damage done by your Flame Shock and Frost Shock spells by an additional 10%.', maxRank: 2, prereq: null },
+                'elemental-oath': { name: 'Elemental Oath', description: 'While Clearcasting from Elemental Focus is active, you deal 5% more spell damage. In addition, party and raid members within 100 yards receive a 3% bonus to their spell critical strike chance.', maxRank: 2, prereq: null },
+                'lightning-overload': { name: 'Lightning Overload', description: 'Gives your Lightning Bolt and Chain Lightning spells a 11% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.', maxRank: 3, prereq: null },
+                'astral-shift': { name: 'Astral Shift', description: 'When stunned, feared or silenced you shift into the Astral Plane reducing all damage taken by 10% for the duration of the stun, fear or silence effect.', maxRank: 3, prereq: null },
+                'totem-of-wrath': { name: 'Totem of Wrath', description: 'Summons a Totem of Wrath with 5 health at the feet of the caster. The totem increases spell power by 100 for all party and raid members, and increases the critical strike chance of all attacks by 3% against all enemies within 40 yards. Lasts 5 min.', maxRank: 1, prereq: null },
+                'lava-flows': { name: 'Lava Flows', description: 'Increases the critical strike damage bonus of your Lava Burst spell by an additional 6%, and when your Flame Shock is dispelled your spell casting speed is increased by 10% for 6 sec.', maxRank: 3, prereq: null },
+                'shamanism': { name: 'Shamanism', description: 'Your Lightning Bolt and Chain Lightning spells gain an additional 4% and your Lava Burst gains an additional 5% of your bonus damage effects.', maxRank: 5, prereq: null },
+                'thunderstorm': { name: 'Thunderstorm', description: 'You call down a bolt of lightning, energizing you and damaging nearby enemies within 10 yards. Restores 8% mana to you and deals 551 to 629 Nature damage to all nearby enemies, knocking them back 20 yards. This spell is usable while stunned.', maxRank: 1, prereq: null },
+                'enhancing-totems': { name: 'Enhancing Totems', description: 'Increases the effect of your Strength of Earth and Flametongue Totems by 5%.', maxRank: 3, prereq: null },
+                'earth-s-grasp': { name: 'Earth\'s Grasp', description: 'Increases the health of your Stoneclaw Totem by 25% and the radius of your Earthbind Totem by 10%, and reduces the cooldown of both totems by 15%.', maxRank: 2, prereq: null },
+                'ancestral-knowledge': { name: 'Ancestral Knowledge', description: 'Increases your Intellect by 2%.', maxRank: 5, prereq: null },
+                'guardian-totems': { name: 'Guardian Totems', description: 'Increases the amount of armor increased by your Stoneskin Totem by 10% and reduces the cooldown of your Grounding Totem by 1 sec.', maxRank: 2, prereq: null },
+                'thundering-strikes': { name: 'Thundering Strikes', description: 'Improves your chance to get a critical strike with all spells and attacks by 1%.', maxRank: 5, prereq: null },
+                'improved-ghost-wolf': { name: 'Improved Ghost Wolf', description: 'Reduces the cast time of your Ghost Wolf spell by 1 sec.', maxRank: 2, prereq: null },
+                'improved-shields': { name: 'Improved Shields', description: 'Increases the damage done by your Lightning Shield orbs by 5%, increases the amount of mana gained from your Water Shield orbs by 5% and increases the amount of healing done by your Earth Shield orbs by 5%.', maxRank: 3, prereq: null },
+                'elemental-weapons': { name: 'Elemental Weapons', description: 'Increases the damage caused by your Windfury Weapon effect by 13% increases the spell damage on your Flametongue Weapon by 10% and increases the bonus healing on your Earthliving Weapon by 10%.', maxRank: 3, prereq: null },
+                'shamanistic-focus': { name: 'Shamanistic Focus', description: 'Reduces the mana cost of your Shock spells by 45%.', maxRank: 1, prereq: null },
+                'anticipation': { name: 'Anticipation', description: 'Increases your Dodge chance by 1/2/3/4/5%.', maxRank: 3, prereq: null },
+                'flurry': { name: 'Flurry', description: 'Increases your attack speed by 5% for your next 3 swings after dealing a melee critical strike.', maxRank: 5, prereq: null },
+                'toughness': { name: 'Toughness', description: 'Increases your armor value from items by 2/4/6/8/10% and reduces the duration of all movement slowing effects by 6/12/18/24/30%.', maxRank: 5, prereq: null },
+                'improved-windfury-totem': { name: 'Improved Windfury Totem', description: 'Increases the melee haste granted by your Windfury totem by 2%.', maxRank: 2, prereq: null },
+                'spirit-weapons': { name: 'Spirit Weapons', description: 'Gives a chance to parry enemy melee attacks and reduces all threat generated by 30%.', maxRank: 1, prereq: null },
+                'mental-dexterity': { name: 'Mental Dexterity', description: 'Increases your Attack Power by 33% of your Intellect.', maxRank: 3, prereq: null },
+                'unleashed-rage': { name: 'Unleashed Rage', description: 'Increases your expertise by 3, and increases all party and raid members\' attack power by 4% while within 100 yards of the Shaman.', maxRank: 3, prereq: null },
+                'weapon-mastery': { name: 'Weapon Mastery', description: 'Reduces the chance for your attacks to be dodged by 1% and reduces the duration of all Disarm effects used against you by 25%. This does not stack with other Disarm duration reducing effects.', maxRank: 3, prereq: null },
+                'frozen-power': { name: 'Frozen Power', description: 'Increases the damage done by your Lightning Bolt, Chain Lightning, Lava Lash and Shock spells by 5% on targets afflicted by your Frostbrand Attack effect, and your Frost Shock has a 50% chance to root the target in ice for 5 sec. when used on targets at or further than 15 yards from you.', maxRank: 2, prereq: null },
+                'dual-wield-specialization': { name: 'Dual Wield Specialization', description: 'Increases the damage done by your offhand weapon by 5%.', maxRank: 3, prereq: null },
+                'dual-wield': { name: 'Dual Wield', description: 'Allows one-hand and off-hand weapons to be equipped in the off-hand.', maxRank: 1, prereq: null },
+                'stormstrike': { name: 'Stormstrike', description: 'Instantly attack with both weapons. In addition, the next sources of Nature damage dealt to the target from the Shaman are increased by 20%. Lasts 12 sec.', maxRank: 1, prereq: null },
+                'static-shock': { name: 'Static Shock', description: 'You have a 2% chance to hit your target with a Lightning Shield orb charge when you deal damage with melee attacks and abilities, and your Lightning Shield gains 2 additional charges.', maxRank: 3, prereq: null },
+                'lava-lash': { name: 'Lava Lash', description: 'You charge your off-hand weapon with lava, instantly dealing 100% off-hand Weapon damage. Damage is increased by 25% if your off-hand weapon is enchanted with Flametongue.', maxRank: 1, prereq: null },
+                'improved-stormstrike': { name: 'Improved Stormstrike', description: 'When you Stormstrike, you have a 50% chance to immediately grant you 20% of your base mana.', maxRank: 2, prereq: null },
+                'mental-quickness': { name: 'Mental Quickness', description: 'Reduces the mana cost of your instant cast Shaman spells by 2% and increases your spell power by an amount equal to 10% of your attack power.', maxRank: 3, prereq: null },
+                'shamanistic-rage': { name: 'Shamanistic Rage', description: 'Reduces all damage taken by 30% and gives your successful melee attacks a chance to regenerate mana equal to 15% of your attack power. This spell is usable while stunned. Lasts 15 sec.', maxRank: 1, prereq: null },
+                'earthen-power': { name: 'Earthen Power', description: 'Your Earthbind Totem\'s pulses have a 50% chance to also remove all snare effects from you and nearby friendly targets, and your Earth Shock reduces enemy attack speed by an additional 5%.', maxRank: 2, prereq: null },
+                'maelstrom-weapon': { name: 'Maelstrom Weapon', description: 'When you deal damage with a melee weapon, you have a chance to reduce the cast time of your next Lightning Bolt, Chain Lightning, Lesser Healing Wave, Healing Wave, Chain Heal, or Hex spell by 20%. Stacks up to 5 times. Lasts 30 sec.', maxRank: 5, prereq: null },
+                'feral-spirit': { name: 'Feral Spirit', description: 'Summons two Spirit Wolves under the command of the Shaman, lasting 45 sec.', maxRank: 1, prereq: null },
+                'improved-healing-wave': { name: 'Improved Healing Wave', description: 'Reduces the casting time of your Healing Wave spell by 0.1 sec.', maxRank: 5, prereq: null },
+                'totemic-focus': { name: 'Totemic Focus', description: 'Reduces the mana cost of your totems by 5%.', maxRank: 5, prereq: null },
+                'improved-reincarnation': { name: 'Improved Reincarnation', description: 'Reduces the cooldown of your Reincarnation spell by 7 min and increases the amount of health and mana recovered when reincarnating by an additional 10%.', maxRank: 2, prereq: null },
+                'healing-grace': { name: 'Healing Grace', description: 'Reduces the threat generated by your healing spells by 5% and reduces the chance your helpful spells and damage over time effects will be dispelled by 10%.', maxRank: 3, prereq: null },
+                'tidal-focus': { name: 'Tidal Focus', description: 'Reduces the mana cost of your healing spells by 1%.', maxRank: 5, prereq: null },
+                'improved-water-shield': { name: 'Improved Water Shield', description: 'You have a 33% chance to instantly gain mana as if you consumed a Water Shield Orb when you gain a critical effect from your Healing Wave or Riptide spells, a % chance when you gain a critical effect from your Lesser Healing Wave spell, and a % chance when you gain a critical effect from your Chain Heal spell.', maxRank: 3, prereq: null },
+                'healing-focus': { name: 'Healing Focus', description: 'Reduces the pushback suffered from damaging attacks while casting any Shaman healing spell by 23%.', maxRank: 3, prereq: null },
+                'tidal-force': { name: 'Tidal Force', description: 'Increases the critical effect chance of your Healing Wave, Lesser Healing Wave and Chain Heal by 60%. Each critical heal reduces the chance by 20%. Lasts 20 sec.', maxRank: 1, prereq: null },
+                'ancestral-healing': { name: 'Ancestral Healing', description: 'Reduces your target\'s physical damage taken by 3% for 15 sec after getting a critical effect from one of your healing spells.', maxRank: 3, prereq: null },
+                'restorative-totems': { name: 'Restorative Totems', description: 'Increases the effect of your Mana Spring Totem by 7%, and increases the amount healed by your Healing Stream Totem by 15%.', maxRank: 3, prereq: null },
+                'tidal-mastery': { name: 'Tidal Mastery', description: 'Increases the critical effect chance of your healing and lightning spells by 1%.', maxRank: 5, prereq: null },
+                'healing-way': { name: 'Healing Way', description: 'Increases the amount healed by your Healing Wave spell by 8%.', maxRank: 3, prereq: null },
+                'nature-s-swiftness': { name: 'Nature\'s Swiftness', description: 'When activated, your next Nature spell with a base casting time less than 10 sec. becomes an instant cast spell. Nature\'s Swiftness shares a cooldown with Elemental Mastery.', maxRank: 1, prereq: null },
+                'focused-mind': { name: 'Focused Mind', description: 'Reduces the duration of any Silence or Interrupt effects used against the Shaman by 10%. This effect does not stack with other similar effects.', maxRank: 3, prereq: null },
+                'purification': { name: 'Purification', description: 'Increases the effectiveness of your healing spells by 2%.', maxRank: 5, prereq: null },
+                'nature-s-guardian': { name: 'Nature\'s Guardian', description: 'Whenever a damaging attack brings you below 30% health, your maximum health is increased by 3% for 10 sec and your threat level towards the attacker is reduced. 30 second cooldown.', maxRank: 5, prereq: null },
+                'mana-tide-totem': { name: 'Mana Tide Totem', description: 'Summons a Mana Tide Totem with 10% of the caster\'s health at the feet of the caster for sec that restores % of total mana every 3 seconds to group members within 30 yards.', maxRank: 1, prereq: null },
+                'cleanse-spirit': { name: 'Cleanse Spirit', description: 'Cleanse the spirit of a friendly target, removing 1 poison effect, 1 disease effect, and 1 curse effect.', maxRank: 1, prereq: null },
+                'blessing-of-the-eternals': { name: 'Blessing of the Eternals', description: 'Increases the critical effect chance of your spells by 2%, and increases the chance to apply the Earthliving heal over time effect on the target by 40% when they are at or under 35% total health.', maxRank: 2, prereq: null },
+                'improved-chain-heal': { name: 'Improved Chain Heal', description: 'Increases the amount healed by your Chain Heal spell by 10%.', maxRank: 2, prereq: null },
+                'nature-s-blessing': { name: 'Nature\'s Blessing', description: 'Increases your healing by an amount equal to 5% of your Intellect.', maxRank: 3, prereq: null },
+                'ancestral-awakening': { name: 'Ancestral Awakening', description: 'When you critically heal with your Healing Wave, Lesser Healing Wave or Riptide you summon an Ancestral spirit to aid you, instantly healing the lowest percentage health friendly party or raid target within 40 yards for 10% of the amount healed.', maxRank: 3, prereq: null },
+                'earth-shield': { name: 'Earth Shield', description: 'Protects the target with an earthen shield, reducing casting or channeling time lost when damaged by 30% and causing attacks to heal the shielded target for . This effect can only occur once every few seconds. charges. Lasts 10 min. Earth Shield can only be placed on one target at a time and only one Elemental Shield can be active on a target at a time.', maxRank: 1, prereq: null },
+                'improved-earth-shield': { name: 'Improved Earth Shield', description: 'Increases the amount of charges for your Earth Shield by 1, and increases the healing done by your Earth Shield by 5%.', maxRank: 2, prereq: null },
+                'tidal-waves': { name: 'Tidal Waves', description: 'When you cast Chain Heal or Riptide, you have a 20% chance to lower the cast time of your Healing Wave spell by 30% and increase the critical effect chance of your Lesser Healing Wave spell by 25%, until two such spells have been cast. In addition, your Healing Wave gains an additional 4% of your bonus healing effects and your Lesser Healing Wave gains an additional 2% of your bonus healing effects.', maxRank: 5, prereq: null },
+                'riptide': { name: 'Riptide', description: 'Heals a friendly target for 639 to 691 and another 665 over 15 sec. Your next Chain Heal cast on that primary target within 15 sec will consume the healing over time effect and increase the amount of the Chain Heal by 25%.', maxRank: 1, prereq: null },
+            };
+            
+            // Track talent points
+            let talentPoints = {
+                available: 71,
+                spent: 0,
+                trees: { 'elemental': 0, 'enhancement': 0, 'restoration': 0 }
+            };
+            
+            // Initialize with current build
+            function initializeTalents() {
+                resetAllTalents();
+                updateAllTalentStates();
+            }
+            
+            function resetAllTalents() {
+                // Reset all talent slots to 0
+                document.querySelectorAll('.talent-slot[data-talent]').forEach(slot => {
+                    slot.dataset.currentRank = '0';
+                    const rankEl = slot.querySelector('.talent-rank');
+                    if (rankEl) {
+                        const maxRank = parseInt(slot.dataset.maxRank);
+                        rankEl.textContent = `0/${maxRank}`;
+                    }
+                    slot.classList.remove('learned');
+                });
+                
+                // Reset point counters
+                talentPoints = {
+                    available: 71,
+                    spent: 0,
+                    trees: { 'elemental': 0, 'enhancement': 0, 'restoration': 0 }
+                };
+                
+                updateAllTalentStates();
+            }
+            
+            function updateTalentState(slot) {
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                
+                slot.classList.remove('learned', 'available', 'unavailable');
+                
+                if (currentRank > 0) {
+                    slot.classList.add('learned');
+                } else if (canLearnTalent(slot)) {
+                    slot.classList.add('available');
+                } else {
+                    slot.classList.add('unavailable');
+                }
+            }
+            
+            function canLearnTalent(slot) {
+                const tier = parseInt(slot.dataset.tier);
+                const tree = slot.dataset.tree;
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                
+                // Can't learn if already maxed
+                if (currentRank >= maxRank) return false;
+                
+                // Can't learn if no available points
+                if (talentPoints.available <= 0) return false;
+                
+                // Tier 0 is always available (first tier)
+                if (tier <= 0) return true;
+                
+                // Check if enough points spent in this tree for this tier
+                // DBC uses 0-indexed tiers, so tier 1 requires 5 points, tier 2 requires 10, etc.
+                const requiredPoints = tier * 5;
+                return talentPoints.trees[tree] >= requiredPoints;
+            }
+            
+            function addTalentPoint(slot) {
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                const tree = slot.dataset.tree;
+                
+                if (currentRank < maxRank && talentPoints.available > 0) {
+                    // Add point
+                    slot.dataset.currentRank = currentRank + 1;
+                    const rankEl = slot.querySelector('.talent-rank');
+                    if (rankEl) {
+                        rankEl.textContent = `${currentRank + 1}/${maxRank}`;
+                    }
+                    
+                    // Update counters
+                    talentPoints.available--;
+                    talentPoints.spent++;
+                    talentPoints.trees[tree]++;
+                    
+                    updateAllTalentStates();
+                    return true;
+                }
+                return false;
+            }
+            
+            function removeTalentPoint(slot) {
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                const tree = slot.dataset.tree;
+                
+                if (currentRank > 0) {
+                    // Remove point
+                    slot.dataset.currentRank = currentRank - 1;
+                    const rankEl = slot.querySelector('.talent-rank');
+                    if (rankEl) {
+                        rankEl.textContent = `${currentRank - 1}/${maxRank}`;
+                    }
+                    
+                    // Update counters
+                    talentPoints.available++;
+                    talentPoints.spent--;
+                    talentPoints.trees[tree]--;
+                    
+                    updateAllTalentStates();
+                    return true;
+                }
+                return false;
+            }
+            
+            function updateAllTalentStates() {
+                document.querySelectorAll('.talent-slot[data-talent]').forEach(updateTalentState);
+                
+                // Update tree point counters
+                Object.keys(talentPoints.trees).forEach(tree => {
+                    const counter = document.querySelector(`[data-tree="${tree}"] .tree-points`);
+                    if (counter) {
+                        counter.textContent = `${talentPoints.trees[tree]}/71`;
+                        counter.dataset.points = talentPoints.trees[tree];
+                    }
+                });
+                
+                // Update status
+                updateStatus();
+            }
+            
+            function updateStatus() {
+                const status = document.getElementById('talent-status');
+                const level = 10 + talentPoints.spent;
+                status.textContent = `Level ${level} • ${talentPoints.spent} talent points spent • ${talentPoints.available} points remaining`;
+            }
+            
+            // Tooltip functionality
+            const tooltipEl = document.getElementById('talent-tooltip');
+            let tooltipShownFor = null;
+            
+            function showTooltip(slot, ev) {
+                const talentId = slot.dataset.talent;
+                const talentData = TALENT_DATA[talentId];
+                if (!talentData) return;
+                
+                const currentRank = parseInt(slot.dataset.currentRank);
+                const maxRank = parseInt(slot.dataset.maxRank);
+                
+                let html = `<div class="tt-name" style="color: ${currentRank > 0 ? '#ffd700' : '#ffffff'}">${talentData.name}</div>`;
+                html += `<div class="tt-bind">Rank ${currentRank}/${maxRank}</div>`;
+                html += `<div class="tt-stat">${talentData.description}</div>`;
+                
+                if (currentRank === 0) {
+                    if (canLearnTalent(slot)) {
+                        html += `<div class="tt-bonus">Left-click to learn</div>`;
+                    } else {
+                        const tier = parseInt(slot.dataset.tier);
+                        if (tier > 0) {
+                            const requiredPoints = tier * 5;
+                            const tree = slot.dataset.tree;
+                            const currentPoints = talentPoints.trees[tree];
+                            if (currentPoints < requiredPoints) {
+                                html += `<div class="tt-required">Requires ${requiredPoints} points in ${tree.charAt(0).toUpperCase() + tree.slice(1)}</div>`;
+                            }
+                        }
+                    }
+                } else if (currentRank > 0) {
+                    html += `<div class="tt-bonus">Right-click to remove point</div>`;
+                }
+                
+                tooltipEl.innerHTML = html;
+                tooltipEl.classList.add('visible');
+                positionTooltip(ev);
+                tooltipShownFor = slot;
+            }
+            
+            function hideTooltip() {
+                tooltipEl.classList.remove('visible');
+                tooltipShownFor = null;
+            }
+            
+            function positionTooltip(ev) {
+                const pad = 14;
+                const tw = tooltipEl.offsetWidth;
+                const th = tooltipEl.offsetHeight;
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                let x = ev.clientX + pad;
+                let y = ev.clientY + pad;
+                if (x + tw + 8 > vw) x = ev.clientX - tw - pad;
+                if (y + th + 8 > vh) y = ev.clientY - th - pad;
+                if (x < 4) x = 4;
+                if (y < 4) y = 4;
+                tooltipEl.style.left = x + 'px';
+                tooltipEl.style.top = y + 'px';
+            }
+            
+            // Event listeners
+            document.addEventListener('mouseover', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot && tooltipShownFor !== slot) {
+                    showTooltip(slot, ev);
+                }
+            });
+            
+            document.addEventListener('mousemove', (ev) => {
+                if (tooltipShownFor) {
+                    positionTooltip(ev);
+                }
+            });
+            
+            document.addEventListener('mouseout', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot === tooltipShownFor && !slot.contains(ev.relatedTarget)) {
+                    hideTooltip();
+                }
+            });
+            
+            // Click handlers for talent interaction
+            document.addEventListener('click', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot) {
+                    ev.preventDefault();
+                    addTalentPoint(slot);
+                }
+            });
+            
+            document.addEventListener('contextmenu', (ev) => {
+                const slot = ev.target.closest('.talent-slot[data-talent]');
+                if (slot) {
+                    ev.preventDefault();
+                    removeTalentPoint(slot);
+                }
+            });
+            
+            // Reset button
+            document.getElementById('reset-talents').addEventListener('click', () => {
+                resetAllTalents();
+            });
+            
+            // Initialize
+            initializeTalents();
+        })();
+    </script>
+<script src="tab-scroll.js"></script>
+</body>
+</html>
