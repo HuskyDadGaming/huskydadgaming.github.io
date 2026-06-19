@@ -114,6 +114,10 @@
         .character-card .char-name {
             font-size: 1.1rem; font-weight: 600; margin-bottom: 6px;
         }
+        .class-icon {
+            width: 1em; height: 1em; vertical-align: -0.15em;
+            border-radius: 3px; margin-right: 0.4em;
+        }
         .character-card .char-meta {
             color: #aaa; font-size: 0.82rem;
         }
@@ -1324,7 +1328,7 @@
             return `
                 <a class="character-card" href="#" onclick="showCharacter('${escape(c.name)}'); return false;">
                     <div class="char-name">
-                        ${dot}${escape(c.name)}${mailBadge}${status}
+                        ${dot}${classIconImg(c.classId)}${escape(c.name)}${mailBadge}${status}
                     </div>
                     <div class="char-meta">
                         <span class="level-badge">Lvl ${c.level}</span>
@@ -1697,6 +1701,16 @@
 
     // ----- Tooltip handling lives in tooltip.js (loaded above) -----
 
+    // WoW class icon (Wowhead CDN). Sized in `em` so it scales with the
+    // surrounding text — large in the character header h1, small in roster
+    // cards — from one CSS rule. Returns '' for unknown classes.
+    const CLASS_ICON_SLUG = {1:'warrior',2:'paladin',3:'hunter',4:'rogue',5:'priest',6:'deathknight',7:'shaman',8:'mage',9:'warlock',11:'druid'};
+    function classIconImg(classId) {
+        const slug = CLASS_ICON_SLUG[classId];
+        if (!slug) return '';
+        return `<img class="class-icon" src="https://wow.zamimg.com/images/wow/icons/medium/classicon_${slug}.jpg" alt="" loading="lazy">`;
+    }
+
     function renderItem(it, slotLabel, ctx) {
         if (!it) {
             return `<div class="item-row empty">
@@ -1827,7 +1841,7 @@
 
         return `
             <div class="char-header">
-                <h1>${escape(c.name)}</h1>
+                <h1>${classIconImg(c.classId)}${escape(c.name)}</h1>
                 <div class="subline">
                     Level ${c.level} ${escape(c.race)} ${escape(c.class)}
                     &nbsp;·&nbsp; ${onlineBadge}
