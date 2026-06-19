@@ -1756,7 +1756,7 @@
             const items = (m.items || []).map(it => {
                 const j = JSON.stringify(it).replace(/"/g, '&quot;');
                 const cnt = (it.count > 1) ? ` ×${it.count}` : '';
-                return `<span class="mail-item" data-item-json="${j}" style="color:${it.color || '#fff'}">${escape(it.name || '?')}${cnt}</span>`;
+                return `<span class="mail-item" data-item-id="${it.id || ''}" data-item-json="${j}" style="color:${it.color || '#fff'}">${escape(it.name || '?')}${cnt}</span>`;
             }).join('');
             const money  = m.money ? `<span class="mail-money">${formatCopper(m.money)}</span>` : '';
             const cod    = m.cod ? `<span class="mail-cod">COD ${formatCopper(m.cod)}</span>` : '';
