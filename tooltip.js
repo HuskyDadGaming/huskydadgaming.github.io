@@ -378,18 +378,35 @@
     if (!eq) return '';
     const baselines = [{ abbr: '', idx: statIndexOf(eq) }];
     let h = `<div class="tt-swap-sub">replacing ${escape(eq.name)}</div>`;
-    // Candidate's own stats, each with the standard single-baseline delta.
+    // Weapon DPS delta — the dominant stat for a weapon, and not in statIndexOf
+    // (which only covers stat/effect lines). Compare raw .dps fields.
+    if (cand.dps) {
+      const dd = cand.dps - (eq.dps || 0);
+      const tag = Math.abs(dd) >= 0.05
+        ? ` <span class="${dd > 0 ? 'tt-delta-up' : 'tt-delta-down'}">(${dd > 0 ? '+' : ''}${dd.toFixed(1)})</span>`
+        : '';
+      h += `<div class="tt-dps">${Number(cand.dps).toFixed(1)} dps${tag}</div>`;
+    }
+    // Candidate's own primary stats, each with the standard single delta.
     (cand.stats || []).forEach(s => {
       const cls = /^[+]/.test(s) ? 'tt-stat tt-bonus' : 'tt-stat';
       const p = parseStatLine(s);
       const d = p ? multiDeltaTag(p.name, p.value, baselines, false) : '';
       h += `<div class="${cls}">${escape(s)}${d}</div>`;
     });
+    // Candidate's Equip-effect ratings (spell power, crit, hit…) as stat lines
+    // with deltas, so caster/effect-based gear compares too (not just primary
+    // stats). Same name namespace as ghosts below, so no double-count.
+    const candRatings = extractEffectRatings(cand);
+    Object.keys(candRatings).forEach(name => {
+      h += `<div class="tt-stat tt-bonus">+${candRatings[name]} ${escape(name)}` +
+           multiDeltaTag(name, candRatings[name], baselines, false) + `</div>`;
+    });
     // Ghost lines: stats the equipped piece has that the candidate lacks.
     const myStats = new Set((cand.stats || []).map(s => {
       const p = parseStatLine(s); return p ? p.name : null;
     }).filter(Boolean));
-    Object.keys(extractEffectRatings(cand)).forEach(n => myStats.add(n));
+    Object.keys(candRatings).forEach(n => myStats.add(n));
     Object.keys(baselines[0].idx).forEach(name => {
       if (myStats.has(name) || !baselines[0].idx[name]) return;
       h += `<div class="tt-stat tt-missing">0 ${escape(name)}` +
@@ -686,29 +703,19 @@
     // top deltas baseline against the piece the candidate best upgrades (the
     // one you'd realistically replace), so the +/- live only on the top.
     const realCompares = compares.filter(c => c);
-    // Inline-delta baseline = the equipped piece the candidate would actually
-    // replace. Exclude reference-only slots (e.g. the main hand shown beside an
-    // off-hand item or shield — the candidate can't equip there, so it must not
-    // drive the deltas). pickInlineBaseline returns the best-swap among real
-    // target slots, the lone target, or null (empty target → candidate plain).
-    const realTargets = realCompares.filter(c => c.item && !c.reference);
-    // Dual-slot (rings/trinkets/1H either-hand): a new piece replaces ONE of
-    // two, and which one is the player's call. The candidate renders PLAIN up
-    // top; the comparison lives on each EQUIPPED piece's panel below — its own
-    // stats/effects annotated with the swap delta (see buildSwapPanel). The
-    // slot label identifies the piece, so no F1/F2 shorthand. Single-slot keeps
-    // the classic inline delta against the one equipped item.
-    const isDualSlot = realTargets.length > 1;
-    const baseline = isDualSlot ? null : pickInlineBaseline(it, realTargets);
-    let html = buildTooltipHTML(it, baseline);
+    // Unified layout for ALL comparisons: the candidate renders PLAIN up top,
+    // and EACH real swap target gets a "replacing <name>" panel showing the
+    // candidate's stats with their deltas vs that piece (buildSwapPanel) — so
+    // single- and dual-slot read identically. Reference-only entries (e.g. the
+    // main hand shown beside an off-hand/shield, which the candidate can't
+    // equip) stay a plain tooltip — they're context, not a swap target.
+    let html = buildTooltipHTML(it, null);
     realCompares.forEach(cmp => {
       const label = cmp.label || 'Currently equipped';
       html += `<div class="tt-compare-sep"></div>`;
       html += `<div class="tt-compare-label">${escape(label)}</div>`;
       if (cmp.item) {
-        // Dual-slot: render the equipped piece with its stats/effects annotated
-        // by the swap delta vs the candidate. Single-slot: plain full tooltip.
-        const body = isDualSlot ? buildSwapPanel(cmp.item, it) : buildTooltipHTML(cmp.item);
+        const body = cmp.reference ? buildTooltipHTML(cmp.item) : buildSwapPanel(cmp.item, it);
         html += `<div class="tt-compare-body">${body}</div>`;
       } else {
         html += `<div class="tt-compare-empty">(empty)</div>`;
