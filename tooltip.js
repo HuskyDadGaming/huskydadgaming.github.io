@@ -65,9 +65,11 @@
     #kcraft-tooltip .tt-compare-swap .tt-delta-up,
     #kcraft-tooltip .tt-compare-swap .tt-delta-down { font-size: 1em; margin-right: 7px; }
     #kcraft-tooltip .tt-compare-same   { color: #888; font-size: 0.85em; }
-    /* Zero-delta tag in labelled (dual-slot) mode — grey, keeps F1/F2 columns
-       aligned even when one swap doesn't change that stat. */
+    /* Zero-delta tag (grey) — used where alignment matters. */
     #kcraft-tooltip .tt-delta-zero { color: #888; font-size: 0.85em; }
+    /* "gains +5 Stamina …" line on a swap panel — stats the candidate adds
+       that the equipped piece lacks. */
+    #kcraft-tooltip .tt-swap-gains { color: #1eff00; font-size: 0.85em; margin-top: 1px; }
 
     /* Action-button band (e.g. "Find on AH"). Inline-block so multiple
        buttons can sit side by side; stopPropagation in onclick keeps
@@ -365,23 +367,56 @@
     return best;
   }
 
-  // Compact equipped-piece panel for dual-slot (ring/trinket) comparisons:
-  // the name plus only the Equip text that ISN'T a steady stat-rating — procs,
-  // on-use, "when struck" flavour. The stat-ratings (Spell Power, MP5, crit…)
-  // are already reflected in the inline (F1/F2) deltas above, so repeating the
-  // full stat block would be redundant. Keeps Use:/Chance: lines regardless,
-  // since those aren't steady stats and so aren't in the deltas.
-  function buildCompactPanel(item) {
-    if (!item) return '';
-    let h = `<div class="tt-name" style="color:${escape(item.color || '#fff')}">${escape(item.name)}</div>`;
-    (item.effects || []).forEach(e => {
-      const text = e.text || '';
-      const covered = (!e.trigger || e.trigger === 'Equip')
-        && EFFECT_RATING_EXTRACTORS.some(([, re]) => re.test(text));
-      if (covered) return;
-      const trigger = e.trigger ? `${escape(e.trigger)}: ` : '';
-      h += `<div class="tt-effect">${trigger}${escape(resolveFormulas(text))}</div>`;
+  // "(swap +N)" / "(swap -N)" tag — the change to a stat if the player
+  // replaced this equipped piece with the candidate. Empty when unchanged.
+  function swapTag(delta) {
+    if (delta === 0) return '';
+    const cls = delta > 0 ? 'tt-delta-up' : 'tt-delta-down';
+    return ` <span class="${cls}">(swap ${delta > 0 ? '+' : ''}${delta})</span>`;
+  }
+
+  // Dual-slot (ring/trinket) comparison panel rendered on the EQUIPPED piece:
+  // its own name / stats / effects, each annotated with the swap delta vs the
+  // candidate (candidate - equipped), plus a trailing "gains …" line for stats
+  // the candidate adds that this piece lacks. The slot label above the panel
+  // says which finger, so no F1/F2 shorthand is needed. `cand` is the hovered
+  // item; `eq` the equipped piece.
+  function buildSwapPanel(eq, cand) {
+    if (!eq) return '';
+    const candIdx = statIndexOf(cand);
+    let h = `<div class="tt-name" style="color:${escape(eq.color || '#fff')}">${escape(eq.name)}</div>`;
+    // Primary stats, summed by name (base + suffix), each with its swap delta.
+    const order = [], prim = {};
+    (eq.stats || []).forEach(s => {
+      const p = parseStatLine(s);
+      if (!p) return;
+      if (prim[p.name] === undefined) order.push(p.name);
+      prim[p.name] = (prim[p.name] || 0) + p.value;
     });
+    order.forEach(name => {
+      const v = prim[name];
+      h += `<div class="tt-stat tt-bonus">${v >= 0 ? '+' : ''}${v} ${escape(name)}` +
+           swapTag((candIdx[name] || 0) - v) + `</div>`;
+    });
+    // Effects: stat-rating Equip lines get a swap delta; procs/on-use plain.
+    (eq.effects || []).forEach(e => {
+      const text = e.text || '';
+      const trigger = e.trigger ? `${escape(e.trigger)}: ` : '';
+      let tag = '';
+      if (!e.trigger || e.trigger === 'Equip') {
+        for (const [rname, re] of EFFECT_RATING_EXTRACTORS) {
+          const m = re.exec(text);
+          if (m) { tag = swapTag((candIdx[rname] || 0) - parseInt(m[1], 10)); break; }
+        }
+      }
+      h += `<div class="tt-effect">${trigger}${escape(resolveFormulas(text))}${tag}</div>`;
+    });
+    // Stats the candidate ADDS that this piece lacks -> one "gains …" line.
+    const eqIdx = statIndexOf(eq);
+    const gains = Object.keys(candIdx)
+      .filter(n => candIdx[n] > 0 && !(eqIdx[n] > 0))
+      .map(n => `+${candIdx[n]} ${escape(n)}`);
+    if (gains.length) h += `<div class="tt-swap-gains">gains ${gains.join(', ')}</div>`;
     return h;
   }
 
@@ -671,26 +706,22 @@
     // target slots, the lone target, or null (empty target → candidate plain).
     const realTargets = realCompares.filter(c => c.item && !c.reference);
     // Dual-slot (rings/trinkets/1H either-hand): a new piece replaces ONE of
-    // two equipped pieces, and which one is the player's call. So the top
-    // tooltip shows a SHORT-LABELLED delta per target on each stat line —
-    // "+6 Intellect (F1 -4) (F2 +6)" — both swap outcomes inline. Single-slot
-    // passes the one equipped piece for the classic single delta.
+    // two, and which one is the player's call. The candidate renders PLAIN up
+    // top; the comparison lives on each EQUIPPED piece's panel below — its own
+    // stats/effects annotated with the swap delta (see buildSwapPanel). The
+    // slot label identifies the piece, so no F1/F2 shorthand. Single-slot keeps
+    // the classic inline delta against the one equipped item.
     const isDualSlot = realTargets.length > 1;
-    const baseline = isDualSlot
-      ? realTargets.map(t => ({
-          item:  t.item,
-          label: String(t.label || '').split(':').pop().trim(),
-        }))
-      : pickInlineBaseline(it, realTargets);
+    const baseline = isDualSlot ? null : pickInlineBaseline(it, realTargets);
     let html = buildTooltipHTML(it, baseline);
     realCompares.forEach(cmp => {
       const label = cmp.label || 'Currently equipped';
       html += `<div class="tt-compare-sep"></div>`;
       html += `<div class="tt-compare-label">${escape(label)}</div>`;
       if (cmp.item) {
-        // Dual-slot: stats are covered by the inline (F1/F2) deltas above, so
-        // render the equipped piece compact — name + non-stat Equip text only.
-        const body = isDualSlot ? buildCompactPanel(cmp.item) : buildTooltipHTML(cmp.item);
+        // Dual-slot: render the equipped piece with its stats/effects annotated
+        // by the swap delta vs the candidate. Single-slot: plain full tooltip.
+        const body = isDualSlot ? buildSwapPanel(cmp.item, it) : buildTooltipHTML(cmp.item);
         html += `<div class="tt-compare-body">${body}</div>`;
       } else {
         html += `<div class="tt-compare-empty">(empty)</div>`;
