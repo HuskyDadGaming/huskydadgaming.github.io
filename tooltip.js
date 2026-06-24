@@ -713,7 +713,14 @@
     // main hand shown beside an off-hand/shield, which the candidate can't
     // equip) stay a plain tooltip — they're context, not a swap target.
     let html = buildTooltipHTML(it, null);
-    realCompares.forEach(cmp => {
+    // Order: reference/context panels first (the slot you're NOT swapping —
+    // e.g. the main hand shown beside an off-hand/shield), then the actual
+    // "replacing <name>" swap panel(s) pinned to the BOTTOM as the takeaway.
+    // Stable sort preserves each group's own order; no-op when there are no
+    // reference panels (rings, armour — all real swaps).
+    const ordered = realCompares.slice()
+      .sort((a, b) => (a.reference ? 0 : 1) - (b.reference ? 0 : 1));
+    ordered.forEach(cmp => {
       const label = cmp.label || 'Currently equipped';
       html += `<div class="tt-compare-sep"></div>`;
       html += `<div class="tt-compare-label">${escape(label)}</div>`;
