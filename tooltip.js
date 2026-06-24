@@ -65,6 +65,8 @@
     #kcraft-tooltip .tt-compare-swap .tt-delta-up,
     #kcraft-tooltip .tt-compare-swap .tt-delta-down { font-size: 1em; margin-right: 7px; }
     #kcraft-tooltip .tt-compare-same   { color: #888; font-size: 0.85em; }
+    /* "If replacing Finger 1:" prefix on the top-tooltip swap lines. */
+    #kcraft-tooltip .tt-swap-label { color: #c8c8c8; font-weight: 600; }
 
     /* Action-button band (e.g. "Find on AH"). Inline-block so multiple
        buttons can sit side by side; stopPropagation in onclick keeps
@@ -312,7 +314,7 @@
   // outcome. Gains (green) listed first, then losses (red). statIndexOf folds
   // in Equip-effect ratings, so Spell Power / MP5 are included. Returns a
   // "no change" line when the swap is a wash.
-  function buildSwapSummary(candidate, equipped) {
+  function buildSwapSummary(candidate, equipped, label) {
     const candIdx = statIndexOf(candidate);
     const eqIdx   = statIndexOf(equipped);
     const names = Array.from(new Set(Object.keys(candIdx).concat(Object.keys(eqIdx))));
@@ -323,8 +325,9 @@
       else if (d < 0) losses.push(`<span class="tt-delta-down">${d} ${escape(n)}</span>`);
     });
     const chips = gains.concat(losses);
-    if (!chips.length) return `<div class="tt-compare-swap tt-compare-same">swap = no stat change</div>`;
-    return `<div class="tt-compare-swap">${chips.join(' ')}</div>`;
+    const lbl = label ? `<span class="tt-swap-label">${escape(label)}</span> ` : '';
+    const body = chips.length ? chips.join(' ') : `<span class="tt-compare-same">no change</span>`;
+    return `<div class="tt-compare-swap">${lbl}${body}</div>`;
   }
 
   // Choose which equipped item the TOP tooltip's inline (+N)/(-N) deltas
@@ -631,16 +634,21 @@
     const isDualSlot = realTargets.length > 1;
     const baseline = isDualSlot ? null : pickInlineBaseline(it, realTargets);
     let html = buildTooltipHTML(it, baseline);
+    // Dual-slot (rings/trinkets/1H): show BOTH swap outcomes in the top
+    // tooltip, right under the candidate's stats — "If replacing Finger 1: …"
+    // / "If replacing Finger 2: …" — so the player weighs both at a glance.
+    // The equipped pieces still render plain below for full-stat reference.
+    if (isDualSlot) {
+      realTargets.forEach(t => {
+        const slotName = String(t.label || '').split(':').pop().trim() || 'this slot';
+        html += buildSwapSummary(it, t.item, `If replacing ${slotName}:`);
+      });
+    }
     realCompares.forEach(cmp => {
-      const isTarget = isDualSlot && cmp.item && !cmp.reference;
       const label = cmp.label || 'Currently equipped';
       html += `<div class="tt-compare-sep"></div>`;
       html += `<div class="tt-compare-label">${escape(label)}</div>`;
       if (cmp.item) {
-        // Dual-slot real targets get a swap-summary line (net change if you
-        // replace this specific piece); the combined reference panel and all
-        // single-slot items render plain.
-        if (isTarget) html += buildSwapSummary(it, cmp.item);
         html += `<div class="tt-compare-body">${buildTooltipHTML(cmp.item)}</div>`;
       } else {
         html += `<div class="tt-compare-empty">(empty)</div>`;
