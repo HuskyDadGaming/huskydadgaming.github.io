@@ -65,9 +65,6 @@
     #kcraft-tooltip .tt-compare-swap .tt-delta-up,
     #kcraft-tooltip .tt-compare-swap .tt-delta-down { font-size: 1em; margin-right: 7px; }
     #kcraft-tooltip .tt-compare-same   { color: #888; font-size: 0.85em; }
-    /* Marks which equipped piece the top (+N)/(-N) deltas are measured
-       against, so a dual-slot (ring/trinket) best-swap target is obvious. */
-    #kcraft-tooltip .tt-baseline-tag { color: #1eff00; font-size: 0.78em; font-weight: 600; }
 
     /* Action-button band (e.g. "Find on AH"). Inline-block so multiple
        buttons can sit side by side; stopPropagation in onclick keeps
@@ -307,6 +304,27 @@
     const cls  = delta > 0 ? 'tt-delta-up' : 'tt-delta-down';
     const sign = delta > 0 ? '+' : '';
     return ` <span class="${cls}">(${sign}${delta})</span>`;
+  }
+
+  // One-line NET stat change if `candidate` replaced THIS specific equipped
+  // piece. Used for dual-slot items (rings/trinkets) so the player can weigh
+  // "swap Finger 1" vs "swap Finger 2" directly — each finger shows its own
+  // outcome. Gains (green) listed first, then losses (red). statIndexOf folds
+  // in Equip-effect ratings, so Spell Power / MP5 are included. Returns a
+  // "no change" line when the swap is a wash.
+  function buildSwapSummary(candidate, equipped) {
+    const candIdx = statIndexOf(candidate);
+    const eqIdx   = statIndexOf(equipped);
+    const names = Array.from(new Set(Object.keys(candIdx).concat(Object.keys(eqIdx))));
+    const gains = [], losses = [];
+    names.forEach(n => {
+      const d = (candIdx[n] || 0) - (eqIdx[n] || 0);
+      if (d > 0) gains.push(`<span class="tt-delta-up">+${d} ${escape(n)}</span>`);
+      else if (d < 0) losses.push(`<span class="tt-delta-down">${d} ${escape(n)}</span>`);
+    });
+    const chips = gains.concat(losses);
+    if (!chips.length) return `<div class="tt-compare-swap tt-compare-same">swap = no stat change</div>`;
+    return `<div class="tt-compare-swap">${chips.join(' ')}</div>`;
   }
 
   // Choose which equipped item the TOP tooltip's inline (+N)/(-N) deltas
@@ -604,23 +622,25 @@
     // drive the deltas). pickInlineBaseline returns the best-swap among real
     // target slots, the lone target, or null (empty target → candidate plain).
     const realTargets = realCompares.filter(c => c.item && !c.reference);
-    const baseline = pickInlineBaseline(it, realTargets);
-    // Only flag the baseline when there's an actual CHOICE of swap target
-    // (dual-slot rings/trinkets/1H weapons). Single-slot items have one
-    // obvious baseline, so the tag would just be noise.
-    const flagBaseline = realTargets.length > 1;
+    // Dual-slot (rings/trinkets/1H either-hand): a new piece replaces ONE of
+    // two, and which one is the player's call. So instead of picking a single
+    // best-swap baseline for the top, leave the top tooltip PLAIN and show a
+    // per-piece "swap summary" under each equipped piece — the net change if
+    // you swapped THAT one. The player compares "swap Finger 1" vs "swap
+    // Finger 2" directly. Single-slot keeps the classic top inline deltas.
+    const isDualSlot = realTargets.length > 1;
+    const baseline = isDualSlot ? null : pickInlineBaseline(it, realTargets);
     let html = buildTooltipHTML(it, baseline);
     realCompares.forEach(cmp => {
-      const isBaseline = flagBaseline && cmp.item && cmp.item === baseline;
+      const isTarget = isDualSlot && cmp.item && !cmp.reference;
       const label = cmp.label || 'Currently equipped';
       html += `<div class="tt-compare-sep"></div>`;
-      html += `<div class="tt-compare-label">${escape(label)}` +
-              (isBaseline ? ` <span class="tt-baseline-tag">&larr; swap target &middot; deltas vs this</span>` : ``) +
-              `</div>`;
+      html += `<div class="tt-compare-label">${escape(label)}</div>`;
       if (cmp.item) {
-        // Equipped item rendered plain with its full stats — the +/- deltas
-        // live only on the top tooltip. For dual-slot items (rings, trinkets,
-        // main/off hand) both equipped pieces show here, each with full stats.
+        // Dual-slot real targets get a swap-summary line (net change if you
+        // replace this specific piece); the combined reference panel and all
+        // single-slot items render plain.
+        if (isTarget) html += buildSwapSummary(it, cmp.item);
         html += `<div class="tt-compare-body">${buildTooltipHTML(cmp.item)}</div>`;
       } else {
         html += `<div class="tt-compare-empty">(empty)</div>`;
