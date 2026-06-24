@@ -2409,13 +2409,12 @@
             }
 
             // === Dual same-slot (rings, trinkets) =============================
-            // A new ring/trinket replaces only ONE of the two equipped pieces
-            // (whichever swap is the bigger upgrade), so — unlike a 2H weapon —
-            // the inline delta must stay against a SINGLE piece (best-swap),
-            // NOT the sum, or every candidate looks like a downgrade vs two
-            // items. We keep both individual pieces as real delta targets and
-            // add a "Finger 1 + Finger 2" combined panel as a REFERENCE so the
-            // full picture (incl. Spell Power / MP5 across both) is visible.
+            // A new ring/trinket replaces only ONE of the two equipped pieces,
+            // and which one is the player's call — so tooltip.js shows a
+            // per-baseline inline delta on each stat line ("(F1 -4) (F2 +6)").
+            // Both equipped pieces are returned as real delta targets; their
+            // panels below render compact (name + non-stat Equip text only),
+            // since the stats are already covered by the inline deltas.
             if ((slotKey === 'Finger' || slotKey === 'Trinket')
                 && lastViewedEquipped[slots[0]] && lastViewedEquipped[slots[1]]) {
                 if (skipIf(slots)) return null;
@@ -2423,11 +2422,6 @@
                 const b = lastViewedEquipped[slots[1]];
                 const lblA = AH_SLOT_LABELS[slots[0]], lblB = AH_SLOT_LABELS[slots[1]];
                 return [
-                    { label: `${who}: ${lblA} + ${lblB}`,
-                      item:  combineWeaponItemsForCompare(
-                                 [compactForCompare(a), compactForCompare(b)],
-                                 `${lblA} + ${lblB}`),
-                      reference: true },
                     { label: `${who}: ${lblA}`, item: compactForCompare(a), reference: false },
                     { label: `${who}: ${lblB}`, item: compactForCompare(b), reference: false },
                 ];

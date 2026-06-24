@@ -365,6 +365,26 @@
     return best;
   }
 
+  // Compact equipped-piece panel for dual-slot (ring/trinket) comparisons:
+  // the name plus only the Equip text that ISN'T a steady stat-rating — procs,
+  // on-use, "when struck" flavour. The stat-ratings (Spell Power, MP5, crit…)
+  // are already reflected in the inline (F1/F2) deltas above, so repeating the
+  // full stat block would be redundant. Keeps Use:/Chance: lines regardless,
+  // since those aren't steady stats and so aren't in the deltas.
+  function buildCompactPanel(item) {
+    if (!item) return '';
+    let h = `<div class="tt-name" style="color:${escape(item.color || '#fff')}">${escape(item.name)}</div>`;
+    (item.effects || []).forEach(e => {
+      const text = e.text || '';
+      const covered = (!e.trigger || e.trigger === 'Equip')
+        && EFFECT_RATING_EXTRACTORS.some(([, re]) => re.test(text));
+      if (covered) return;
+      const trigger = e.trigger ? `${escape(e.trigger)}: ` : '';
+      h += `<div class="tt-effect">${trigger}${escape(resolveFormulas(text))}</div>`;
+    });
+    return h;
+  }
+
   // Build the in-game style tooltip HTML for an item.
   // `compareTo` is optional. It may be:
   //   - a single equipped item -> each stat line gets one "(+5)/(-3)" delta;
@@ -668,7 +688,10 @@
       html += `<div class="tt-compare-sep"></div>`;
       html += `<div class="tt-compare-label">${escape(label)}</div>`;
       if (cmp.item) {
-        html += `<div class="tt-compare-body">${buildTooltipHTML(cmp.item)}</div>`;
+        // Dual-slot: stats are covered by the inline (F1/F2) deltas above, so
+        // render the equipped piece compact — name + non-stat Equip text only.
+        const body = isDualSlot ? buildCompactPanel(cmp.item) : buildTooltipHTML(cmp.item);
+        html += `<div class="tt-compare-body">${body}</div>`;
       } else {
         html += `<div class="tt-compare-empty">(empty)</div>`;
       }
