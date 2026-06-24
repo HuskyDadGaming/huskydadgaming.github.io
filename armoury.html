@@ -3636,16 +3636,23 @@
     }
 
     window.showUpgrades = async function(name, classId, level) {
+        // Capture BEFORE overwrite so we can tell a fresh entry from a return.
+        const prevName = upState.charName;
+        const prevRole = upState.role;
         upState.charName  = name;
         upState.classSlug = CLASS_ID_TO_SLUG[classId] || '';
         upState.charLevel = level || 0;
         upState.equipped  = lastViewedEquipped || {};
-        // Default to the FIRST viable role for the class — first entry in the
-        // CLASS_VIABLE_ROLES list (typically the most common spec, e.g.
-        // warrior -> tank, hunter -> ranged, paladin -> tank). User can
-        // override by clicking any other visible tab.
+        // Default to the FIRST viable role for the class (first entry in the
+        // CLASS_VIABLE_ROLES list, e.g. warrior -> tank, hunter -> ranged)
+        // ONLY on a fresh entry — a first visit, a different character, or a
+        // role no longer valid for this class. When RETURNING to the same
+        // character (e.g. back from the AH after buying), keep the role the
+        // user had selected instead of snapping back to the default.
         const viable = CLASS_VIABLE_ROLES[upState.classSlug] || ['melee'];
-        upState.role = viable[0];
+        upState.role = (prevName === name && prevRole && viable.includes(prevRole))
+            ? prevRole
+            : viable[0];
 
         document.getElementById('up-context').innerHTML =
             `${escape(name)} &middot; Lvl ${upState.charLevel} ${escape(upState.classSlug)} ` +
