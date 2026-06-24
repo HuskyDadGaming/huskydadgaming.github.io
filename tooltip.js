@@ -415,14 +415,24 @@
       h += `<div class="tt-stat tt-missing">0 ${escape(name)}` +
            multiDeltaTag(name, 0, baselines, false) + `</div>`;
     });
-    // Non-stat Equip text on the piece you'd give up (procs / on-use).
+    // Non-stat Equip text on the piece. Red (tt-effect-lost) when you'd GIVE
+    // IT UP, but green when the candidate carries the same effect — e.g.
+    // "replacing" the identical item, or a different piece with the same proc,
+    // where nothing is actually lost.
+    const isNonRating = e => {
+      const t = e.text || '';
+      return !((!e.trigger || e.trigger === 'Equip')
+        && EFFECT_RATING_EXTRACTORS.some(([, re]) => re.test(t)));
+    };
+    const candProcs = new Set((cand.effects || []).filter(isNonRating)
+      .map(e => `${e.trigger || ''}|${e.text || ''}`));
     (eq.effects || []).forEach(e => {
+      if (!isNonRating(e)) return;
       const text = e.text || '';
-      const isRating = (!e.trigger || e.trigger === 'Equip')
-        && EFFECT_RATING_EXTRACTORS.some(([, re]) => re.test(text));
-      if (isRating) return;
+      const retained = candProcs.has(`${e.trigger || ''}|${text}`);
       const trigger = e.trigger ? `${escape(e.trigger)}: ` : '';
-      h += `<div class="tt-effect tt-effect-lost">${trigger}${escape(resolveFormulas(text))}</div>`;
+      const cls = retained ? 'tt-effect' : 'tt-effect tt-effect-lost';
+      h += `<div class="${cls}">${trigger}${escape(resolveFormulas(text))}</div>`;
     });
     return h;
   }
