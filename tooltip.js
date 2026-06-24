@@ -256,15 +256,20 @@
     ['MP5',             /(\d+)\s*mana\s+every\s+5\s+sec/i],
   ];
   // Returns {ratingName: value} for an item's effects, or {} if none match.
+  // Values are SUMMED across effect lines, not first-wins: a normal item has
+  // at most one line per rating so the sum == that one value, but the virtual
+  // "Main Hand + Off Hand" combine item (combineWeaponItemsForCompare in
+  // armoury.html) concatenates BOTH weapons' Equip effects — so a 2H candidate
+  // must baseline against MH+OH spell power summed (9 + 12 = 21), not just the
+  // main hand's 9. First-wins was silently dropping the off-hand's contribution.
   function extractEffectRatings(item) {
     const out = {};
     for (const e of ((item && item.effects) || [])) {
       if (e.trigger && e.trigger !== 'Equip') continue;   // Use:/Chance: don't have steady stats
       const t = e.text || '';
       for (const [name, re] of EFFECT_RATING_EXTRACTORS) {
-        if (out[name] != null) continue;   // first hit wins per stat
         const m = re.exec(t);
-        if (m) out[name] = parseInt(m[1], 10);
+        if (m) out[name] = (out[name] || 0) + parseInt(m[1], 10);
       }
     }
     return out;
