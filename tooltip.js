@@ -97,6 +97,9 @@
     #kcraft-tooltip .tt-effect {
       color: #1eff00; margin-top: 4px; line-height: 1.3;
     }
+    /* An equipped piece's proc / on-use shown in a swap panel = an effect
+       you'd LOSE by swapping it out, so render it red instead of green. */
+    #kcraft-tooltip .tt-effect.tt-effect-lost { color: #ff5555; }
     #kcraft-tooltip .tt-durability { color: #ffffff; margin-top: 4px; }
     /* Class restriction ("Classes: Mage") — red like the in-game tooltip so
        a wrong-class buy stands out before you click Confirm. */
@@ -419,7 +422,7 @@
         && EFFECT_RATING_EXTRACTORS.some(([, re]) => re.test(text));
       if (isRating) return;
       const trigger = e.trigger ? `${escape(e.trigger)}: ` : '';
-      h += `<div class="tt-effect">${trigger}${escape(resolveFormulas(text))}</div>`;
+      h += `<div class="tt-effect tt-effect-lost">${trigger}${escape(resolveFormulas(text))}</div>`;
     });
     return h;
   }
