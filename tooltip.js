@@ -67,9 +67,8 @@
     #kcraft-tooltip .tt-compare-same   { color: #888; font-size: 0.85em; }
     /* Zero-delta tag (grey) — used where alignment matters. */
     #kcraft-tooltip .tt-delta-zero { color: #888; font-size: 0.85em; }
-    /* "gains +5 Stamina …" line on a swap panel — stats the candidate adds
-       that the equipped piece lacks. */
-    #kcraft-tooltip .tt-swap-gains { color: #1eff00; font-size: 0.85em; margin-top: 1px; }
+    /* "replacing <name>" sub-header above a dual-slot swap panel's deltas. */
+    #kcraft-tooltip .tt-swap-sub { color: #888; font-size: 0.8em; font-style: italic; margin-bottom: 1px; }
 
     /* Action-button band (e.g. "Find on AH"). Inline-block so multiple
        buttons can sit side by side; stopPropagation in onclick keeps
@@ -367,56 +366,44 @@
     return best;
   }
 
-  // "(swap +N)" / "(swap -N)" tag — the change to a stat if the player
-  // replaced this equipped piece with the candidate. Empty when unchanged.
-  function swapTag(delta) {
-    if (delta === 0) return '';
-    const cls = delta > 0 ? 'tt-delta-up' : 'tt-delta-down';
-    return ` <span class="${cls}">(swap ${delta > 0 ? '+' : ''}${delta})</span>`;
-  }
-
-  // Dual-slot (ring/trinket) comparison panel rendered on the EQUIPPED piece:
-  // its own name / stats / effects, each annotated with the swap delta vs the
-  // candidate (candidate - equipped), plus a trailing "gains …" line for stats
-  // the candidate adds that this piece lacks. The slot label above the panel
-  // says which finger, so no F1/F2 shorthand is needed. `cand` is the hovered
-  // item; `eq` the equipped piece.
+  // Dual-slot (ring/trinket) comparison panel, in the SAME format as a
+  // single-slot item: the CANDIDATE's stat lines with "(+N)/(-N)" deltas vs
+  // this equipped piece, plus grey "0 X (-N)" ghost lines for stats the
+  // candidate lacks that the piece has. One panel per equipped piece, so both
+  // swap outcomes show; the slot label above identifies which piece. Any
+  // non-stat Equip text on the piece (procs / on-use you'd give up) is listed
+  // after, since those aren't captured by the stat deltas. `eq` = equipped
+  // piece, `cand` = hovered candidate.
   function buildSwapPanel(eq, cand) {
     if (!eq) return '';
-    const candIdx = statIndexOf(cand);
-    let h = `<div class="tt-name" style="color:${escape(eq.color || '#fff')}">${escape(eq.name)}</div>`;
-    // Primary stats, summed by name (base + suffix), each with its swap delta.
-    const order = [], prim = {};
-    (eq.stats || []).forEach(s => {
+    const baselines = [{ abbr: '', idx: statIndexOf(eq) }];
+    let h = `<div class="tt-swap-sub">replacing ${escape(eq.name)}</div>`;
+    // Candidate's own stats, each with the standard single-baseline delta.
+    (cand.stats || []).forEach(s => {
+      const cls = /^[+]/.test(s) ? 'tt-stat tt-bonus' : 'tt-stat';
       const p = parseStatLine(s);
-      if (!p) return;
-      if (prim[p.name] === undefined) order.push(p.name);
-      prim[p.name] = (prim[p.name] || 0) + p.value;
+      const d = p ? multiDeltaTag(p.name, p.value, baselines, false) : '';
+      h += `<div class="${cls}">${escape(s)}${d}</div>`;
     });
-    order.forEach(name => {
-      const v = prim[name];
-      h += `<div class="tt-stat tt-bonus">${v >= 0 ? '+' : ''}${v} ${escape(name)}` +
-           swapTag((candIdx[name] || 0) - v) + `</div>`;
+    // Ghost lines: stats the equipped piece has that the candidate lacks.
+    const myStats = new Set((cand.stats || []).map(s => {
+      const p = parseStatLine(s); return p ? p.name : null;
+    }).filter(Boolean));
+    Object.keys(extractEffectRatings(cand)).forEach(n => myStats.add(n));
+    Object.keys(baselines[0].idx).forEach(name => {
+      if (myStats.has(name) || !baselines[0].idx[name]) return;
+      h += `<div class="tt-stat tt-missing">0 ${escape(name)}` +
+           multiDeltaTag(name, 0, baselines, false) + `</div>`;
     });
-    // Effects: stat-rating Equip lines get a swap delta; procs/on-use plain.
+    // Non-stat Equip text on the piece you'd give up (procs / on-use).
     (eq.effects || []).forEach(e => {
       const text = e.text || '';
+      const isRating = (!e.trigger || e.trigger === 'Equip')
+        && EFFECT_RATING_EXTRACTORS.some(([, re]) => re.test(text));
+      if (isRating) return;
       const trigger = e.trigger ? `${escape(e.trigger)}: ` : '';
-      let tag = '';
-      if (!e.trigger || e.trigger === 'Equip') {
-        for (const [rname, re] of EFFECT_RATING_EXTRACTORS) {
-          const m = re.exec(text);
-          if (m) { tag = swapTag((candIdx[rname] || 0) - parseInt(m[1], 10)); break; }
-        }
-      }
-      h += `<div class="tt-effect">${trigger}${escape(resolveFormulas(text))}${tag}</div>`;
+      h += `<div class="tt-effect">${trigger}${escape(resolveFormulas(text))}</div>`;
     });
-    // Stats the candidate ADDS that this piece lacks -> one "gains …" line.
-    const eqIdx = statIndexOf(eq);
-    const gains = Object.keys(candIdx)
-      .filter(n => candIdx[n] > 0 && !(eqIdx[n] > 0))
-      .map(n => `+${candIdx[n]} ${escape(n)}`);
-    if (gains.length) h += `<div class="tt-swap-gains">gains ${gains.join(', ')}</div>`;
     return h;
   }
 
