@@ -65,6 +65,9 @@
     #kcraft-tooltip .tt-compare-swap .tt-delta-up,
     #kcraft-tooltip .tt-compare-swap .tt-delta-down { font-size: 1em; margin-right: 7px; }
     #kcraft-tooltip .tt-compare-same   { color: #888; font-size: 0.85em; }
+    /* Marks which equipped piece the top (+N)/(-N) deltas are measured
+       against, so a dual-slot (ring/trinket) best-swap target is obvious. */
+    #kcraft-tooltip .tt-baseline-tag { color: #1eff00; font-size: 0.78em; font-weight: 600; }
 
     /* Action-button band (e.g. "Find on AH"). Inline-block so multiple
        buttons can sit side by side; stopPropagation in onclick keeps
@@ -600,12 +603,20 @@
     // off-hand item or shield — the candidate can't equip there, so it must not
     // drive the deltas). pickInlineBaseline returns the best-swap among real
     // target slots, the lone target, or null (empty target → candidate plain).
-    const baseline = pickInlineBaseline(it, realCompares.filter(c => c.item && !c.reference));
+    const realTargets = realCompares.filter(c => c.item && !c.reference);
+    const baseline = pickInlineBaseline(it, realTargets);
+    // Only flag the baseline when there's an actual CHOICE of swap target
+    // (dual-slot rings/trinkets/1H weapons). Single-slot items have one
+    // obvious baseline, so the tag would just be noise.
+    const flagBaseline = realTargets.length > 1;
     let html = buildTooltipHTML(it, baseline);
     realCompares.forEach(cmp => {
+      const isBaseline = flagBaseline && cmp.item && cmp.item === baseline;
       const label = cmp.label || 'Currently equipped';
       html += `<div class="tt-compare-sep"></div>`;
-      html += `<div class="tt-compare-label">${escape(label)}</div>`;
+      html += `<div class="tt-compare-label">${escape(label)}` +
+              (isBaseline ? ` <span class="tt-baseline-tag">&larr; swap target &middot; deltas vs this</span>` : ``) +
+              `</div>`;
       if (cmp.item) {
         // Equipped item rendered plain with its full stats — the +/- deltas
         // live only on the top tooltip. For dual-slot items (rings, trinkets,
