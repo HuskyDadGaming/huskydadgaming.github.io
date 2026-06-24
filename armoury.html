@@ -429,10 +429,33 @@
         .ah-header .ah-context .money { color: #ddd; }
 
         .ah-filters {
-            display: flex; gap: 0.5rem; flex-wrap: wrap;
+            display: flex; flex-direction: column; gap: 0.5rem;
             background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
             padding: 0.6rem 0.8rem; margin-bottom: 1rem;
         }
+        .ah-filter-row {
+            display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
+        }
+        /* Boxed sub-groups so the level range and the toggles read as units. */
+        .ah-level-group, .ah-toggles {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #2d2d2d; border: 1px solid #3a3a3a; border-radius: 4px;
+            padding: 4px 10px;
+        }
+        .ah-level-group { gap: 5px; }
+        .ah-level-group .ah-group-label { color: #aaa; font-size: 0.85rem; }
+        .ah-level-group input[type=number] {
+            width: 48px; background: transparent; border: none; color: #ddd;
+            font-size: 0.88rem; font-family: inherit; padding: 2px 0;
+        }
+        .ah-level-group input[type=number]:focus { outline: none; }
+        .ah-level-dash { color: #666; }
+        .ah-toggles label {
+            display: inline-flex; align-items: center; gap: 4px;
+            color: #aaa; font-size: 0.85rem; white-space: nowrap; cursor: pointer;
+        }
+        /* Search + Reset pushed to the right edge of row 2. */
+        .ah-actions { display: inline-flex; gap: 0.5rem; margin-left: auto; }
         .ah-filters select, .ah-filters input[type=text] {
             background: #2d2d2d; border: 1px solid #3a3a3a; color: #ddd;
             padding: 6px 10px; border-radius: 4px; font-size: 0.88rem;
@@ -441,7 +464,7 @@
         .ah-filters select:focus, .ah-filters input:focus {
             outline: none; border-color: #ffd100;
         }
-        .ah-filters input[type=text] { flex: 1; min-width: 180px; }
+        .ah-filter-row > input[type=text] { flex: 1; min-width: 180px; }
         .ah-filters button {
             background: #ffd100; color: #1a1a1a; border: none;
             padding: 6px 16px; border-radius: 4px; cursor: pointer;
@@ -931,6 +954,7 @@
             </div>
         </div>
         <div class="ah-filters">
+          <div class="ah-filter-row">
             <select id="ah-house" title="Auction house">
                 <option value="">All houses</option>
                 <option value="Alliance">Alliance</option>
@@ -946,17 +970,8 @@
                 <option value="">All</option>
                 <!-- options repopulated when category changes -->
             </select>
-            <label style="display:inline-flex; align-items:center; gap:4px; color:#aaa; font-size:0.85rem;">
-                <input type="checkbox" id="ah-exact"> Exact
-            </label>
-            <label style="display:inline-flex; align-items:center; gap:4px; color:#aaa; font-size:0.85rem;" title="Only items this character can equip (proficiency + required level)">
-                <input type="checkbox" id="ah-usable"> Usable <span id="ah-usable-label" style="color:#666;"></span>
-            </label>
-            <label style="display:inline-flex; align-items:center; gap:4px; color:#aaa; font-size:0.85rem;" title="Only items whose buyout is within this character's available gold">
-                <input type="checkbox" id="ah-affordable"> Affordable
-            </label>
-            <input type="number" id="ah-min-level" placeholder="Min lvl" min="0" max="80" style="width:80px;">
-            <input type="number" id="ah-max-level" placeholder="Max lvl" min="0" max="80" style="width:80px;">
+          </div>
+          <div class="ah-filter-row">
             <select id="ah-min-quality" title="Minimum quality">
                 <option value="">Any quality</option>
                 <option value="1">Common+</option>
@@ -1011,8 +1026,22 @@
                 <option value="relic">Relic</option>
                 <option value="bag">Bag</option>
             </select>
-            <button id="ah-go">Search</button>
-            <button class="reset-btn" id="ah-clear">Reset all</button>
+            <div class="ah-level-group">
+                <span class="ah-group-label">Lvl</span>
+                <input type="number" id="ah-min-level" placeholder="min" min="0" max="80">
+                <span class="ah-level-dash">–</span>
+                <input type="number" id="ah-max-level" placeholder="max" min="0" max="80">
+            </div>
+            <div class="ah-toggles">
+                <label title="Exact name match"><input type="checkbox" id="ah-exact"> Exact</label>
+                <label title="Only items this character can equip (proficiency + required level)"><input type="checkbox" id="ah-usable"> Usable <span id="ah-usable-label" style="color:#666;"></span></label>
+                <label title="Only items whose buyout is within this character's available gold"><input type="checkbox" id="ah-affordable"> Affordable</label>
+            </div>
+            <div class="ah-actions">
+                <button id="ah-go">Search</button>
+                <button class="reset-btn" id="ah-clear">Reset all</button>
+            </div>
+          </div>
         </div>
         <div id="ah-loading" class="loading" style="display:none;">Loading auctions…</div>
         <div id="ah-list-header" class="ah-header-row">
