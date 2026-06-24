@@ -2633,16 +2633,14 @@
             `Shopping for <strong>${escape(name)}</strong> &nbsp;·&nbsp; ` +
             `<span class="money">${formatCopper(copperTotal)}</span> available`;
 
-        // Label the Usable checkbox with the character's class + level so
-        // you can verify at a glance what the filter is checking against.
+        // Label the Usable checkbox with just the character's CLASS; the level
+        // is surfaced as the Min-lvl box's grey placeholder instead (below).
         const usableLabel = document.getElementById('ah-usable-label');
-        if (ahState.classSlug && ahState.charLevel) {
-            usableLabel.textContent = `(lvl ${ahState.charLevel} ${ahState.classSlug})`;
-        } else if (ahState.charLevel) {
-            usableLabel.textContent = `(lvl ${ahState.charLevel})`;
-        } else {
-            usableLabel.textContent = '';
-        }
+        usableLabel.textContent = ahState.classSlug ? `(${ahState.classSlug})` : '';
+        // Character's level becomes the Min-lvl placeholder (grey hint under the
+        // "Lvl" group), so you see what level you're filtering around at a glance.
+        const minLvlInput = document.getElementById('ah-min-level');
+        if (minLvlInput) minLvlInput.placeholder = ahState.charLevel ? String(ahState.charLevel) : 'min';
 
         // Back link: step back in history to the character page. The
         // popstate handler replays showCharacter() (which re-fetches, so
