@@ -253,7 +253,7 @@
     ['Armor Pen',       /armor penetration rating by (\d+)/i],
     ['Spell Power',     /(?:spell power|damage and healing) (?:done )?by (?:up to )?(\d+)/i],
     ['Attack Power',    /attack power by (\d+)/i],
-    ['MP5',             /(\d+)\s*mana\s+every\s+5\s+sec/i],
+    ['MP5',             /(\d+)\s*mana\s+(?:per|every)\s+5\s+sec/i],
   ];
   // Returns {ratingName: value} for an item's effects, or {} if none match.
   // Values are SUMMED across effect lines, not first-wins: a normal item has
@@ -279,7 +279,11 @@
     const idx = {};
     (item && item.stats || []).forEach(s => {
       const p = parseStatLine(s);
-      if (p) idx[p.name] = p.value;
+      // SUM same-named lines, don't overwrite: an item can carry a stat on both
+      // its base and a random suffix ("+8 Intellect" base + "+2 Intellect" of
+      // the Owl) = 10 total. Overwriting kept only the last (2), corrupting the
+      // delta. Single-stat items are unaffected (one line per name).
+      if (p) idx[p.name] = (idx[p.name] || 0) + p.value;
     });
     // Fold in effect-line rating stats so deltas span both the primary stat
     // block AND Equip-effect lines. Stats from effects use the same name

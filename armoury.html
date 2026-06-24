@@ -2284,7 +2284,7 @@
     // Strength"); non-numeric stat lines are deduped verbatim. Effects
     // are concatenated since all of them disappear together.
     const STAT_LINE_RE = /^([+-])(\d+)\s+(.+)$/;
-    function combineWeaponItemsForCompare(items) {
+    function combineWeaponItemsForCompare(items, label) {
         const statSum = {};
         const order   = [];   // preserve first-seen order for stable output
         const others  = [];
@@ -2307,7 +2307,7 @@
         }).concat(others);
         const effects = items.flatMap(it => it.effects || []);
         return {
-            name:    'Main Hand + Off Hand',
+            name:    label || 'Main Hand + Off Hand',
             color:   '#fff',
             invType: 'Combined',
             stats:   combinedStats,
@@ -2405,6 +2405,31 @@
                 return [
                     { label: `${who}: Main Hand (Two-Hand being replaced)`,
                       item:  compactForCompare(mh), reference: false },
+                ];
+            }
+
+            // === Dual same-slot (rings, trinkets) =============================
+            // A new ring/trinket replaces only ONE of the two equipped pieces
+            // (whichever swap is the bigger upgrade), so — unlike a 2H weapon —
+            // the inline delta must stay against a SINGLE piece (best-swap),
+            // NOT the sum, or every candidate looks like a downgrade vs two
+            // items. We keep both individual pieces as real delta targets and
+            // add a "Finger 1 + Finger 2" combined panel as a REFERENCE so the
+            // full picture (incl. Spell Power / MP5 across both) is visible.
+            if ((slotKey === 'Finger' || slotKey === 'Trinket')
+                && lastViewedEquipped[slots[0]] && lastViewedEquipped[slots[1]]) {
+                if (skipIf(slots)) return null;
+                const a = lastViewedEquipped[slots[0]];
+                const b = lastViewedEquipped[slots[1]];
+                const lblA = AH_SLOT_LABELS[slots[0]], lblB = AH_SLOT_LABELS[slots[1]];
+                return [
+                    { label: `${who}: ${lblA} + ${lblB}`,
+                      item:  combineWeaponItemsForCompare(
+                                 [compactForCompare(a), compactForCompare(b)],
+                                 `${lblA} + ${lblB}`),
+                      reference: true },
+                    { label: `${who}: ${lblA}`, item: compactForCompare(a), reference: false },
+                    { label: `${who}: ${lblB}`, item: compactForCompare(b), reference: false },
                 ];
             }
 
@@ -3225,7 +3250,7 @@
         ['Armor Pen',       /armor penetration rating by (\d+)/i],
         ['Spell Power',     /(?:spell power|damage and healing) (?:done )?by (?:up to )?(\d+)/i],
         ['Attack Power',    /attack power by (\d+)/i],
-        ['MP5',             /(\d+)\s*mana\s+every\s+5\s+sec/i],
+        ['MP5',             /(\d+)\s*mana\s+(?:per|every)\s+5\s+sec/i],
     ];
     function extractRatings(item) {
         const out = {};
