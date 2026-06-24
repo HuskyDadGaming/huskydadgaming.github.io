@@ -65,8 +65,9 @@
     #kcraft-tooltip .tt-compare-swap .tt-delta-up,
     #kcraft-tooltip .tt-compare-swap .tt-delta-down { font-size: 1em; margin-right: 7px; }
     #kcraft-tooltip .tt-compare-same   { color: #888; font-size: 0.85em; }
-    /* "If replacing Finger 1:" prefix on the top-tooltip swap lines. */
-    #kcraft-tooltip .tt-swap-label { color: #c8c8c8; font-weight: 600; }
+    /* Zero-delta tag in labelled (dual-slot) mode — grey, keeps F1/F2 columns
+       aligned even when one swap doesn't change that stat. */
+    #kcraft-tooltip .tt-delta-zero { color: #888; font-size: 0.85em; }
 
     /* Action-button band (e.g. "Find on AH"). Inline-block so multiple
        buttons can sit side by side; stopPropagation in onclick keeps
@@ -314,20 +315,31 @@
   // outcome. Gains (green) listed first, then losses (red). statIndexOf folds
   // in Equip-effect ratings, so Spell Power / MP5 are included. Returns a
   // "no change" line when the swap is a wash.
-  function buildSwapSummary(candidate, equipped, label) {
-    const candIdx = statIndexOf(candidate);
-    const eqIdx   = statIndexOf(equipped);
-    const names = Array.from(new Set(Object.keys(candIdx).concat(Object.keys(eqIdx))));
-    const gains = [], losses = [];
-    names.forEach(n => {
-      const d = (candIdx[n] || 0) - (eqIdx[n] || 0);
-      if (d > 0) gains.push(`<span class="tt-delta-up">+${d} ${escape(n)}</span>`);
-      else if (d < 0) losses.push(`<span class="tt-delta-down">${d} ${escape(n)}</span>`);
+  // "Finger 1" -> "F1", "Trinket 2" -> "T2". Labels dual-slot inline deltas.
+  function abbrevSlot(label) {
+    if (!label) return '';
+    const letter = (String(label).match(/[A-Za-z]/) || ['?'])[0].toUpperCase();
+    const num    = (String(label).match(/\d+/) || [''])[0];
+    return letter + num;
+  }
+
+  // Delta tag(s) for one stat line. `labelled` (dual-slot) -> one tag per
+  // baseline, prefixed with its abbreviation ("(F1 -4) (F2 +6)") and showing
+  // zero-deltas in grey so the columns align. Unlabelled (single baseline) ->
+  // the classic single "(+N)/(-N)", hidden when zero.
+  function multiDeltaTag(name, value, baselines, labelled) {
+    let out = '';
+    baselines.forEach(b => {
+      const d = value - (b.idx[name] || 0);
+      if (!labelled) {
+        if (d === 0) return;
+        out += ` <span class="${d > 0 ? 'tt-delta-up' : 'tt-delta-down'}">(${d > 0 ? '+' : ''}${d})</span>`;
+      } else {
+        const cls = d > 0 ? 'tt-delta-up' : (d < 0 ? 'tt-delta-down' : 'tt-delta-zero');
+        out += ` <span class="${cls}">(${b.abbr} ${d > 0 ? '+' : ''}${d})</span>`;
+      }
     });
-    const chips = gains.concat(losses);
-    const lbl = label ? `<span class="tt-swap-label">${escape(label)}</span> ` : '';
-    const body = chips.length ? chips.join(' ') : `<span class="tt-compare-same">no change</span>`;
-    return `<div class="tt-compare-swap">${lbl}${body}</div>`;
+    return out;
   }
 
   // Choose which equipped item the TOP tooltip's inline (+N)/(-N) deltas
@@ -354,13 +366,24 @@
   }
 
   // Build the in-game style tooltip HTML for an item.
-  // `compareTo` is optional. When provided, each primary-stat line gets a
-  // small "(+5)" / "(-3)" tag showing the delta vs the compareTo item.
-  // Used by the Upgrade Finder and AH compare flow so the hovered candidate
-  // shows at-a-glance gains/losses.
+  // `compareTo` is optional. It may be:
+  //   - a single equipped item -> each stat line gets one "(+5)/(-3)" delta;
+  //   - an array of {item,label} baselines (dual-slot rings/trinkets) -> each
+  //     stat line gets one SHORT-LABELLED delta per baseline, "(F1 -4)(F2 +6)",
+  //     so both swap outcomes show inline on the candidate's own stats.
+  // Used by the Upgrade Finder and AH compare flow.
   function buildTooltipHTML(it, compareTo) {
     const parts = [];
-    const compareIdx = compareTo ? statIndexOf(compareTo) : null;
+    const cmpArr = !compareTo ? []
+      : (Array.isArray(compareTo) ? compareTo : [{ item: compareTo, label: '' }]);
+    const baselines = cmpArr.filter(c => c && c.item).map(c => ({
+      abbr: abbrevSlot(c.label),
+      idx:  statIndexOf(c.item),
+    }));
+    // Labelled mode when there's >1 baseline or the lone one carries a label.
+    const labelled = baselines.length > 1 || !!(baselines[0] && baselines[0].abbr);
+    // dps delta only applies to a single equipped-weapon comparison.
+    const dpsCmp = (!Array.isArray(compareTo) && compareTo) ? compareTo : null;
 
     // Name in quality colour
     parts.push(
@@ -409,8 +432,8 @@
           // index (statIndexOf only covers stat/effect lines), so compare the
           // raw .dps fields directly. One decimal; ignore sub-0.05 rounding.
           let dpsDelta = '';
-          if (compareTo && compareTo.dps != null) {
-            const d = it.dps - compareTo.dps;
+          if (dpsCmp && dpsCmp.dps != null) {
+            const d = it.dps - dpsCmp.dps;
             if (Math.abs(d) >= 0.05) {
               const cls = d > 0 ? 'tt-delta-up' : 'tt-delta-down';
               dpsDelta = ` <span class="${cls}">(${d > 0 ? '+' : ''}${d.toFixed(1)})</span>`;
@@ -431,9 +454,9 @@
       const isBonus = /^[+]/.test(s);
       const cls = isBonus ? 'tt-stat tt-bonus' : 'tt-stat';
       let delta = '';
-      if (compareIdx) {
+      if (baselines.length) {
         const p = parseStatLine(s);
-        if (p) delta = deltaTag(p.name, p.value, compareIdx);
+        if (p) delta = multiDeltaTag(p.name, p.value, baselines, labelled);
       }
       parts.push(`<div class="${cls}">${escape(s)}${delta}</div>`);
     });
@@ -441,7 +464,7 @@
     // Rendered as a 0-value ghost line with a negative delta — tells the user
     // "you're losing 22 Armor by switching to this", which would otherwise be
     // invisible if you only look at the upgrade item's stats.
-    if (compareIdx) {
+    if (baselines.length) {
       const myStats = new Set((it.stats || []).map(s => {
         const p = parseStatLine(s); return p ? p.name : null;
       }).filter(Boolean));
@@ -452,15 +475,17 @@
       // helm with "Equip: crit by 14" vs an equipped "crit by 4" must show
       // ONLY "+10" on the effect line — not also "0 Critical Strike (-4)".
       Object.keys(extractEffectRatings(it)).forEach(n => myStats.add(n));
-      Object.keys(compareIdx).forEach(name => {
-        if (myStats.has(name)) return;
-        const otherVal = compareIdx[name];
-        if (!otherVal) return;
-        const delta = -otherVal;
-        const sign = delta > 0 ? '+' : '';
+      // Union across ALL baselines of stats the candidate lacks -> one ghost
+      // line each, with a labelled delta per baseline (multi) or a single
+      // "(-N)" (single). multiDeltaTag handles both.
+      const ghostNames = new Set();
+      baselines.forEach(b => Object.keys(b.idx).forEach(n => {
+        if (!myStats.has(n)) ghostNames.add(n);
+      }));
+      ghostNames.forEach(name => {
         parts.push(
-          `<div class="tt-stat tt-missing">0 ${escape(name)} ` +
-            `<span class="tt-delta-down">(${sign}${delta})</span>` +
+          `<div class="tt-stat tt-missing">0 ${escape(name)}` +
+            multiDeltaTag(name, 0, baselines, labelled) +
           `</div>`
         );
       });
@@ -500,10 +525,10 @@
     (it.effects || []).forEach(e => {
       const trigger = e.trigger ? `${escape(e.trigger)}: ` : '';
       let delta = '';
-      if (compareIdx && (!e.trigger || e.trigger === 'Equip')) {
+      if (baselines.length && (!e.trigger || e.trigger === 'Equip')) {
         for (const [name, re] of EFFECT_RATING_EXTRACTORS) {
           const m = re.exec(e.text || '');
-          if (m) { delta = deltaTag(name, parseInt(m[1], 10), compareIdx); break; }
+          if (m) { delta = multiDeltaTag(name, parseInt(m[1], 10), baselines, labelled); break; }
         }
       }
       parts.push(`<div class="tt-effect">${trigger}${escape(resolveFormulas(e.text))}${delta}</div>`);
@@ -626,24 +651,18 @@
     // target slots, the lone target, or null (empty target → candidate plain).
     const realTargets = realCompares.filter(c => c.item && !c.reference);
     // Dual-slot (rings/trinkets/1H either-hand): a new piece replaces ONE of
-    // two, and which one is the player's call. So instead of picking a single
-    // best-swap baseline for the top, leave the top tooltip PLAIN and show a
-    // per-piece "swap summary" under each equipped piece — the net change if
-    // you swapped THAT one. The player compares "swap Finger 1" vs "swap
-    // Finger 2" directly. Single-slot keeps the classic top inline deltas.
+    // two equipped pieces, and which one is the player's call. So the top
+    // tooltip shows a SHORT-LABELLED delta per target on each stat line —
+    // "+6 Intellect (F1 -4) (F2 +6)" — both swap outcomes inline. Single-slot
+    // passes the one equipped piece for the classic single delta.
     const isDualSlot = realTargets.length > 1;
-    const baseline = isDualSlot ? null : pickInlineBaseline(it, realTargets);
+    const baseline = isDualSlot
+      ? realTargets.map(t => ({
+          item:  t.item,
+          label: String(t.label || '').split(':').pop().trim(),
+        }))
+      : pickInlineBaseline(it, realTargets);
     let html = buildTooltipHTML(it, baseline);
-    // Dual-slot (rings/trinkets/1H): show BOTH swap outcomes in the top
-    // tooltip, right under the candidate's stats — "If replacing Finger 1: …"
-    // / "If replacing Finger 2: …" — so the player weighs both at a glance.
-    // The equipped pieces still render plain below for full-stat reference.
-    if (isDualSlot) {
-      realTargets.forEach(t => {
-        const slotName = String(t.label || '').split(':').pop().trim() || 'this slot';
-        html += buildSwapSummary(it, t.item, `If replacing ${slotName}:`);
-      });
-    }
     realCompares.forEach(cmp => {
       const label = cmp.label || 'Currently equipped';
       html += `<div class="tt-compare-sep"></div>`;
