@@ -2628,15 +2628,22 @@
         document.getElementById('ah-category').value    = '';
         populateAhSubcategories('');   // resets + disables subcategory
 
-        // Update header context line
+        // Update header context line. Class shown as an icon next to the name
+        // (zamimg, same source as the talents pages). dk -> deathknight for the URL.
+        const iconSlug = ahState.classSlug === 'dk' ? 'deathknight' : ahState.classSlug;
+        const classIcon = iconSlug
+            ? ` <img src="https://wow.zamimg.com/images/wow/icons/large/classicon_${iconSlug}.jpg" ` +
+              `alt="" title="${escape(ahState.classSlug)}" ` +
+              `style="width:18px;height:18px;vertical-align:text-bottom;border-radius:3px;" ` +
+              `onerror="this.style.display='none'">`
+            : '';
         document.getElementById('ah-context').innerHTML =
-            `Shopping for <strong>${escape(name)}</strong> &nbsp;·&nbsp; ` +
+            `Shopping for <strong>${escape(name)}</strong>${classIcon} &nbsp;·&nbsp; ` +
             `<span class="money">${formatCopper(copperTotal)}</span> available`;
 
-        // Label the Usable checkbox with just the character's CLASS; the level
-        // is surfaced as the Min-lvl box's grey placeholder instead (below).
-        const usableLabel = document.getElementById('ah-usable-label');
-        usableLabel.textContent = ahState.classSlug ? `(${ahState.classSlug})` : '';
+        // Usable checkbox label is now bare — the class is shown as an icon by
+        // the character name (above), and the level is the Min-lvl placeholder.
+        document.getElementById('ah-usable-label').textContent = '';
         // Character's level becomes the Min-lvl placeholder (grey hint under the
         // "Lvl" group), so you see what level you're filtering around at a glance.
         const minLvlInput = document.getElementById('ah-min-level');
