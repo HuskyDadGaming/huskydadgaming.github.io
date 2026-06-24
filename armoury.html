@@ -1662,6 +1662,7 @@
 
     // ----- Single character view -----
     window.showCharacter = async function(name) {
+        cameFromAH = false;  // on the character page -> next Find Upgrades entry is fresh (role resets)
         // Install the equipped-compare provider so hovering an item in the
         // backpack / equipped bags / bank shows the currently-equipped piece
         // (or pieces — rings, trinkets, weapons get both) below the tooltip.
@@ -2494,6 +2495,7 @@
     window.ahForItem = function(itemName) {
         const c = lastViewedCharacter;
         if (!c || !itemName) return;
+        cameFromAH = true;  // jumping to the AH from Find Upgrades -> keep role on return
         const totalCopper = (c.gold || 0) * 10000 + (c.silver || 0) * 100 + (c.copper || 0);
         // skipInitialLoad=true avoids a race: showAuctionHouse would otherwise
         // kick off a default-filtered fetch in parallel with our overridden
@@ -3139,6 +3141,11 @@
         [15, 'Main Hand'], [16, 'Off Hand'], [17, 'Ranged'],
     ];
 
+    // true only while returning from the AH back to Find Upgrades, so the role
+    // persists across that one round-trip but resets on a fresh entry (which
+    // always comes via the character page, where this gets cleared).
+    let cameFromAH = false;
+
     const upState = {
         charName:  '',
         classSlug: '',
@@ -3641,21 +3648,17 @@
     }
 
     window.showUpgrades = async function(name, classId, level) {
-        // Capture BEFORE overwrite so we can tell a fresh entry from a return.
-        const prevName = upState.charName;
-        const prevRole = upState.role;
+        const prevRole = upState.role;   // capture before overwrite
         upState.charName  = name;
         upState.classSlug = CLASS_ID_TO_SLUG[classId] || '';
         upState.charLevel = level || 0;
         upState.equipped  = lastViewedEquipped || {};
-        // Default to the FIRST viable role for the class (first entry in the
-        // CLASS_VIABLE_ROLES list, e.g. warrior -> tank, hunter -> ranged)
-        // ONLY on a fresh entry — a first visit, a different character, or a
-        // role no longer valid for this class. When RETURNING to the same
-        // character (e.g. back from the AH after buying), keep the role the
-        // user had selected instead of snapping back to the default.
+        // Keep the user's role ONLY when this entry is a return from the AH
+        // (cameFromAH, set on the AH jump and cleared on the character page).
+        // Any fresh entry — including character page -> Find Upgrades — resets
+        // to the class's first viable role (warrior -> tank, hunter -> ranged).
         const viable = CLASS_VIABLE_ROLES[upState.classSlug] || ['melee'];
-        upState.role = (prevName === name && prevRole && viable.includes(prevRole))
+        upState.role = (cameFromAH && prevRole && viable.includes(prevRole))
             ? prevRole
             : viable[0];
 
