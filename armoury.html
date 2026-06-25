@@ -1996,6 +1996,18 @@
         6: 'dk',      7: 'shaman',  8: 'mage',   9: 'warlock', 11: 'druid',
     };
 
+    // Small class-icon <img> for the context headers (AH + Find Upgrades).
+    // zamimg, same source as the talents pages; dk -> deathknight for the URL.
+    // Returns '' when no class; leading space so it sits just after the name.
+    function classIconHTML(slug) {
+        if (!slug) return '';
+        const iconSlug = slug === 'dk' ? 'deathknight' : slug;
+        return ` <img src="https://wow.zamimg.com/images/wow/icons/large/classicon_${iconSlug}.jpg" ` +
+               `alt="" title="${escape(slug)}" ` +
+               `style="width:18px;height:18px;vertical-align:text-bottom;border-radius:3px;" ` +
+               `onerror="this.style.display='none'">`;
+    }
+
     // KEEP IN SYNC with smart_filter_block.js (WEAPON_PROFICIENCY,
     // ARMOR_CLASS_RESTRICTIONS, CLASS_ARMOR_FLOOR) and build_dungeons.py.
     // Inlined here because the auction item payload uses a different field
@@ -2643,17 +2655,9 @@
         document.getElementById('ah-category').value    = '';
         populateAhSubcategories('');   // resets + disables subcategory
 
-        // Update header context line. Class shown as an icon next to the name
-        // (zamimg, same source as the talents pages). dk -> deathknight for the URL.
-        const iconSlug = ahState.classSlug === 'dk' ? 'deathknight' : ahState.classSlug;
-        const classIcon = iconSlug
-            ? ` <img src="https://wow.zamimg.com/images/wow/icons/large/classicon_${iconSlug}.jpg" ` +
-              `alt="" title="${escape(ahState.classSlug)}" ` +
-              `style="width:18px;height:18px;vertical-align:text-bottom;border-radius:3px;" ` +
-              `onerror="this.style.display='none'">`
-            : '';
+        // Update header context line — class icon next to the name.
         document.getElementById('ah-context').innerHTML =
-            `Shopping for <strong>${escape(name)}</strong>${classIcon} &nbsp;·&nbsp; ` +
+            `Shopping for <strong>${escape(name)}</strong>${classIconHTML(ahState.classSlug)} &nbsp;·&nbsp; ` +
             `<span class="money">${formatCopper(copperTotal)}</span> available`;
 
         // Usable checkbox label is now bare — the class is shown as an icon by
@@ -3676,7 +3680,7 @@
             : viable[0];
 
         document.getElementById('up-context').innerHTML =
-            `${escape(name)} &middot; Lvl ${upState.charLevel} ${escape(upState.classSlug)} ` +
+            `<strong>${escape(name)}</strong>${classIconHTML(upState.classSlug)} &middot; Lvl ${upState.charLevel} ${escape(upState.classSlug)} ` +
             `&middot; role: <strong>${upState.role}</strong>`;
 
         // history.back() pops to the character view via the popstate
@@ -3716,7 +3720,7 @@
     function updateUpgradeContext() {
         const tail = upState.role ? `role: <strong>${upState.role}</strong>` : 'pick a role';
         document.getElementById('up-context').innerHTML =
-            `${escape(upState.charName)} &middot; Lvl ${upState.charLevel} ` +
+            `<strong>${escape(upState.charName)}</strong>${classIconHTML(upState.classSlug)} &middot; Lvl ${upState.charLevel} ` +
             `${escape(upState.classSlug)} &middot; ${tail}`;
     }
 
