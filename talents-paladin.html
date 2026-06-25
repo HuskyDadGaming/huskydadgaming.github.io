@@ -384,7 +384,7 @@
         </div>
 
         <div class="instructions">
-            <strong>Left-click</strong> to add talent points • <strong>Right-click</strong> to remove points • Hover for tooltips
+            <strong>Click / tap</strong> to add • <strong>Right-click / hold</strong> to remove • Hover / tap for tooltips
         </div>
 
         <div class="talent-trees">
@@ -1061,6 +1061,31 @@
             });
             
             // Reset button
+            // --- Touch support (mobile): tap = add, long-press = remove, touch = info ---
+            (function(){
+                let tSlot = null, tTimer = null, tLong = false;
+                document.addEventListener('touchstart', (ev) => {
+                    const slot = ev.target.closest('.talent-slot[data-talent]');
+                    if (!slot) return;
+                    tSlot = slot; tLong = false;
+                    showTooltip(slot, ev.touches[0]);
+                    tTimer = setTimeout(() => { tLong = true; removeTalentPoint(slot); }, 450);
+                }, { passive: true });
+                document.addEventListener('touchmove', () => {
+                    if (tTimer) { clearTimeout(tTimer); tTimer = null; }
+                    if (tSlot) { hideTooltip(); tSlot = null; }
+                }, { passive: true });
+                document.addEventListener('touchend', (ev) => {
+                    if (tTimer) { clearTimeout(tTimer); tTimer = null; }
+                    if (tSlot) {
+                        ev.preventDefault();                // suppress the synthetic click (no double-add)
+                        if (!tLong) addTalentPoint(tSlot);  // quick tap = add (long-press already removed)
+                        setTimeout(hideTooltip, 1600);      // leave the info up briefly
+                        tSlot = null;
+                    }
+                }, { passive: false });
+            })();
+
             document.getElementById('reset-talents').addEventListener('click', () => {
                 resetAllTalents();
             });
