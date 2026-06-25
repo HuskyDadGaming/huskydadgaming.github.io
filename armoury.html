@@ -482,6 +482,19 @@
         .ah-filters button.reset-btn:hover {
             background: #6a2828; border-color: #6a2828;
         }
+        /* Mobile: stack the filter bar into clean paired rows instead of the
+           uneven desktop wrap. House+name pair, then dropdowns 2-per-row,
+           toggles + Search/Reset full width. */
+        @media (max-width: 600px) {
+            .ah-filters { padding: 0.55rem; }
+            .ah-filter-row { gap: 6px; }
+            .ah-filter-row > select           { flex: 1 1 45%; min-width: 0; }
+            .ah-filter-row > input[type=text] { flex: 1 1 52%; min-width: 0; }
+            .ah-level-group                   { flex: 1 1 45%; min-width: 0; justify-content: center; }
+            .ah-toggles                       { flex: 1 1 100%; justify-content: space-between; }
+            .ah-actions                       { flex: 1 1 100%; margin-left: 0; }
+            .ah-actions button                { flex: 1; }
+        }
 
         .ah-list {
             background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
