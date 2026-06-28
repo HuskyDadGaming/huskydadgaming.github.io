@@ -2557,6 +2557,8 @@
         if (!window.KCraftTooltip) return;
         window.KCraftTooltip.actionsHTML = function(item) {
             if (!item || !item.name) return '';
+            // No "Find on AH" for dungeon boss drops — those are farmed, not bought.
+            if (item.bossName && item.bossName !== 'World / AH') return '';
             const safeName = JSON.stringify(item.name).replace(/"/g, '&quot;');
             return `<a class="tt-action-btn" href="#" onclick="event.stopPropagation(); ` +
                    `window.KCraftTooltip.hide(); window.ahForItem(${safeName}); return false;">` +
@@ -3502,6 +3504,11 @@
             // Unique-Equipped: can't recommend an item already worn elsewhere
             // on the character (matters for Finger/Trinket dual slots).
             if (it.uniqueEquipped && uniqueWornIds.has(it.id)) return false;
+            // Only OBTAINABLE upgrades: items currently listed on the AH
+            // (it.onAH from the API) OR dungeon boss drops (a real dungeon source
+            // overlaid from loot-data; the live-pool tag is "World / AH"). Drops
+            // the rest of the item DB that you can neither buy nor farm right now.
+            if (!it.onAH && it.dungeon === 'World / AH') return false;
             return true;
         });
 
@@ -3582,22 +3589,25 @@
         const renderItem = (it, kind) => {
             if (!it) return `<div class="up-item up-empty">(none)</div>`;
             const json = JSON.stringify(it).replace(/"/g, '&quot;');
-            const drop = it.chanceStr ? `<span class="up-drop">${escape(it.chanceStr)}</span>` : '';
-            const source = it.bossName
-                ? `<span class="up-source">${escape(it.bossName)} &middot; ${escape(it.dungeon || '')}</span>`
-                : '';
-            // Inline "Find on AH" link — visible on desktop, hidden on mobile
-            // via CSS. On mobile, the same affordance lives inside the tooltip
-            // (via installUpgradeActionsProvider).
-            const ahLink = (kind === 'cand' && it.name)
+            // Dungeon boss drop (real source overlaid from loot-data) vs AH item
+            // (the live-pool tag "World / AH").
+            const isDungeon = it.bossName && it.bossName !== 'World / AH';
+            // Drop chance only for dungeon drops; AH items don't have one.
+            const drop = (kind === 'cand' && isDungeon && it.chanceStr)
+                ? `<span class="up-drop">${escape(it.chanceStr)}</span>` : '';
+            // Source: dungeon drops show "Boss &middot; Dungeon"; AH items show
+            // "Auction House"; the equipped row shows nothing.
+            const source = (kind !== 'cand') ? ''
+                : isDungeon
+                    ? `<span class="up-source">${escape(it.bossName)} &middot; ${escape(it.dungeon || '')}</span>`
+                    : `<span class="up-source">Auction House</span>`;
+            // "Find on AH" link — AH items only, NOT dungeon drops (you farm those).
+            const ahLink = (kind === 'cand' && it.name && !isDungeon)
                 ? `<a class="up-ah-link" href="#" title="Find on AH" ` +
                   `onclick="event.stopPropagation(); window.ahForItem(${JSON.stringify(it.name).replace(/"/g, '&quot;')}); return false;">🏛️</a>`
                 : '';
-            // Whole-row click on desktop also opens the AH for this item.
-            // Gated on viewport width so mobile taps still open the tooltip
-            // (their primary interaction). The 600px threshold matches
-            // tooltip.js's isMobileViewport() and the .up-ah-link CSS hide.
-            const rowClick = (kind === 'cand' && it.name)
+            // Whole-row click opens the AH on desktop — AH items only.
+            const rowClick = (kind === 'cand' && it.name && !isDungeon)
                 ? `onclick="if(window.innerWidth>600){window.ahForItem(${JSON.stringify(it.name).replace(/"/g, '&quot;')});}"`
                 : '';
             // Upgrade-delta badge: rounded role-fit gain over the equipped
@@ -3730,7 +3740,7 @@
                 const d = srcMap[it.id];
                 if (d) {
                     it.bossName = d.bossName; it.dungeon = d.dungeon; it.page = d.page;
-                    it.chance = d.chance; it.mapId = d.mapId;
+                    it.chance = d.chance; it.chanceStr = d.chanceStr; it.mapId = d.mapId;
                     it.faction = d.faction; it.wing = d.wing;
                 }
                 return it;
