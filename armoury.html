@@ -3259,8 +3259,13 @@
         },
         // ---- Healers — generic + Holy Paladin --------------------------
         heal: {
-            'Spell Power': 1.0, 'Spirit': 1.0,
-            'Intellect': 0.7, 'Critical Strike': 0.7, 'Haste': 0.7,
+            // Spell Power is the sole tier-1 healing stat — it drives heal
+            // SIZE (throughput). Spirit dropped to tier 2 (sustain): it's a
+            // mana-longevity stat (Meditation regen, + ~25% Spirit -> SP for
+            // priests via Spiritual Guidance), so it shouldn't win a swap that
+            // trades away raw spell power. Tom's call 2026-06-28.
+            'Spell Power': 1.0,
+            'Spirit': 0.7, 'Intellect': 0.7, 'Critical Strike': 0.7, 'Haste': 0.7,
             'MP5': 0.4,
             'Stamina': 0.2,
         },
