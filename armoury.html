@@ -2557,8 +2557,10 @@
         if (!window.KCraftTooltip) return;
         window.KCraftTooltip.actionsHTML = function(item) {
             if (!item || !item.name) return '';
-            // No "Find on AH" for dungeon boss drops — those are farmed, not bought.
-            if (item.bossName && item.bossName !== 'World / AH') return '';
+            // "Find on AH" only for items actually listed (it.onAH) — includes
+            // dungeon trash (BoE, gets listed). Boss loot not on the AH is
+            // looted-only, so no button.
+            if (!item.onAH) return '';
             const safeName = JSON.stringify(item.name).replace(/"/g, '&quot;');
             return `<a class="tt-action-btn" href="#" onclick="event.stopPropagation(); ` +
                    `window.KCraftTooltip.hide(); window.ahForItem(${safeName}); return false;">` +
@@ -3601,13 +3603,15 @@
                 : isDungeon
                     ? `<span class="up-source">${escape(it.bossName)} &middot; ${escape(it.dungeon || '')}</span>`
                     : `<span class="up-source">Auction House</span>`;
-            // "Find on AH" link — AH items only, NOT dungeon drops (you farm those).
-            const ahLink = (kind === 'cand' && it.name && !isDungeon)
+            // "Find on AH" link — keyed on it.onAH (actually listed), NOT on
+            // dungeon-vs-not. Dungeon TRASH is BoE and gets listed, so it's
+            // buyable; only boss loot that isn't on the AH stays looted-only.
+            const ahLink = (kind === 'cand' && it.name && it.onAH)
                 ? `<a class="up-ah-link" href="#" title="Find on AH" ` +
                   `onclick="event.stopPropagation(); window.ahForItem(${JSON.stringify(it.name).replace(/"/g, '&quot;')}); return false;">🏛️</a>`
                 : '';
-            // Whole-row click opens the AH on desktop — AH items only.
-            const rowClick = (kind === 'cand' && it.name && !isDungeon)
+            // Whole-row click opens the AH on desktop — listed items only.
+            const rowClick = (kind === 'cand' && it.name && it.onAH)
                 ? `onclick="if(window.innerWidth>600){window.ahForItem(${JSON.stringify(it.name).replace(/"/g, '&quot;')});}"`
                 : '';
             // Upgrade-delta badge: rounded role-fit gain over the equipped
