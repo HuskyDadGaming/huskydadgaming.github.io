@@ -3396,7 +3396,39 @@
         return null;
     }
 
-    function scoreItemForRole(item, weights) {
+    // ---- Stat-cap awareness -------------------------------------------------
+    // Four stats hit a hard cap in WotLK — points PAST the cap do nothing, so
+    // the finder shouldn't keep crediting them. When scoring, the over-cap
+    // portion of these stats (given the rest of your equipped gear) is
+    // discounted to ~0, so a piece stacked with a stat you're already capped
+    // on stops looking like an upgrade. Caps are level-scaled (rating-per-%
+    // rises with level) and Hit is role-split (casters chase the 17% spell-hit
+    // cap, physical the 8% melee/ranged cap). Approximate sub-80, ~exact at 80
+    // where it matters — you're effectively never capped while leveling.
+    const CAPPED_STATS = ['Hit', 'Expertise', 'Defense', 'Armor Pen'];
+    function computeStatCaps(level, role, cls) {
+        const f = Math.max(0.15, level / 80);   // rating-per-% level scaling
+        const spellHitRole = (role === 'ranged' && cls !== 'hunter');
+        return {
+            'Hit':       Math.round((spellHitRole ? 446 : 263) * f), // 17% spell / 8% phys
+            'Expertise': Math.round(213 * f),    // 26 expertise (dodge cap)
+            'Defense':   Math.round(540 * f),    // crit-immune vs raid boss
+            'Armor Pen': Math.round(1400 * f),   // 100% armor pen
+        };
+    }
+    // Sum the four capped stats across everything currently equipped.
+    function gearCappedTotals() {
+        const t = { 'Hit': 0, 'Expertise': 0, 'Defense': 0, 'Armor Pen': 0 };
+        for (const idx in (upState.equipped || {})) {
+            const eq = upState.equipped[idx];
+            if (!eq) continue;
+            const r = extractRatings(eq);
+            for (const s of CAPPED_STATS) t[s] += (r[s] || 0);
+        }
+        return t;
+    }
+
+    function scoreItemForRole(item, weights, capCtx) {
         let score = 0;
         // Stat-block stats from item.stats (Stamina, Strength, Armor, etc.)
         for (const s of (item.stats || [])) {
@@ -3409,7 +3441,17 @@
         // Rating stats from item.effects (Hit, Crit, Defense, Block Value, ...)
         const ratings = extractRatings(item);
         for (const name of Object.keys(ratings)) {
-            score += (ratings[name] / (STAT_NORM[name] || 1)) * (weights[name] || 0);
+            let val = ratings[name];
+            // Stat-cap: only the points that bring you UP TO the cap (given the
+            // rest of your gear, capCtx.other) carry value; surplus scores ~0.
+            // Marginal-below-cap = min(other+val,cap) - min(other,cap), so a
+            // candidate and the equipped piece are measured on the same headroom.
+            if (capCtx && capCtx.caps[name] != null) {
+                const other = capCtx.other[name] || 0;
+                const cap   = capCtx.caps[name];
+                val = Math.max(0, Math.min(other + val, cap) - Math.min(other, cap));
+            }
+            score += (val / (STAT_NORM[name] || 1)) * (weights[name] || 0);
         }
         // Weapon damage-per-second — the dominant value of a melee/ranged
         // weapon. Weighted per raw DPS point (no STAT_NORM); the per-role
@@ -3558,12 +3600,21 @@
         // Both gotchas were Pawn-style scoring blind spots that made the
         // +N badge mis-rank weapon swaps.
         const weights   = getStatWeights(role, cls);
+        // Stat-cap context for this slot: headroom = your TOTAL capped-stat
+        // rating minus this slot's own contribution, so candidates (and the
+        // equipped piece) are scored against the rest of your gear.
+        const statCaps      = computeStatCaps(level, role, cls);
+        const gearCapTotals = gearCappedTotals();
+        const curRatings    = currentItem ? extractRatings(currentItem) : {};
+        const capOther = {};
+        for (const s of CAPPED_STATS) capOther[s] = (gearCapTotals[s] || 0) - (curRatings[s] || 0);
+        const capCtx = { caps: statCaps, other: capOther };
         const equippedMH = upState.equipped[15];
         const equippedOH = upState.equipped[16];
         const equippedMHis2H = equippedMH && equippedMH.slotFilter === 'Two-Hand';
-        const mhScore = equippedMH ? scoreItemForRole(equippedMH, weights) : 0;
-        const ohScore = equippedOH ? scoreItemForRole(equippedOH, weights) : 0;
-        const currScore = currentItem ? scoreItemForRole(currentItem, weights) : 0;
+        const mhScore = equippedMH ? scoreItemForRole(equippedMH, weights, capCtx) : 0;
+        const ohScore = equippedOH ? scoreItemForRole(equippedOH, weights, capCtx) : 0;
+        const currScore = currentItem ? scoreItemForRole(currentItem, weights, capCtx) : 0;
 
         function baselineFor(it) {
             // Two-Hand candidate in main hand slot: lose MH + OH (unless
@@ -3582,7 +3633,7 @@
         }
 
         for (const it of unique) {
-            it.upgradeDelta = scoreItemForRole(it, weights) - baselineFor(it);
+            it.upgradeDelta = scoreItemForRole(it, weights, capCtx) - baselineFor(it);
         }
         // Minimum role-fit delta to count as a REAL upgrade. scoreItemForRole
         // already scored these with THIS slot's class/role weight profile, so
