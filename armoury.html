@@ -3579,7 +3579,13 @@
         for (const it of unique) {
             it.upgradeDelta = scoreItemForRole(it, weights) - baselineFor(it);
         }
-        const upgrades = unique.filter(it => it.upgradeDelta > 0);
+        // Minimum role-fit delta to count as a REAL upgrade. scoreItemForRole
+        // already scored these with THIS slot's class/role weight profile, so
+        // this single floor is class-agnostic — it applies to every class the
+        // same way. 1.5 hides wash sidegrades that round to "+1" (e.g. +5 Agi
+        // for -20 AP nets ~+1); raise to 2.5 to also drop "+2".
+        const MIN_UPGRADE_DELTA = 1.5;
+        const upgrades = unique.filter(it => it.upgradeDelta >= MIN_UPGRADE_DELTA);
         upgrades.sort((a, b) => {
             // When an empty slot pulled in items above the char's level, rank
             // currently-wearable picks above future ones so "you can equip
