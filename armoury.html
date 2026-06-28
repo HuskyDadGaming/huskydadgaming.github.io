@@ -3732,7 +3732,7 @@
                     ${deltaBadge}
                     <span class="up-ilvl">${it.ilvl || '—'}</span>
                 </div>
-                <div class="up-item-meta">${source}${drop}</div>
+                <div class="up-item-meta">${source}${drop}${it._inMail ? '<span class="up-source">📬 In mailbox</span>' : ''}</div>
             </div>`;
         };
 
@@ -3761,7 +3761,12 @@
         if (!items || !upState.role) return;
         const slotsEl = document.getElementById('up-slots');
         const cards = UPGRADE_SLOT_ORDER.map(([idx, label]) => {
-            const current     = upState.equipped[idx];
+            // An empty slot falls back to a matching mailbox item (e.g. an AH
+            // purchase not yet collected) so it shows under Equipped and
+            // upgrades are measured against it, not "nothing".
+            const current     = upState.equipped[idx]
+                             || (upState.mailBySlot && upState.mailBySlot[idx])
+                             || null;
             const candidates  = findUpgradesForSlot(items, idx, current);
             return renderUpgradeCard(idx, label, current, candidates);
         });
@@ -3825,10 +3830,31 @@
             // "All loot" candidate pool, queried LIVE for this character (class/
             // level-filtered) from the API — plus the static dungeon loot-data so
             // dungeon drops still show their boss/dungeon source.
-            const [up] = await Promise.all([
+            const guid = (lastViewedCharacter && lastViewedCharacter.guid) || 0;
+            const [up, , mailData] = await Promise.all([
                 api('/upgrades/' + encodeURIComponent(name)),
                 getLootData(),
+                guid ? api('/mail/' + guid).catch(() => ({ mail: [] }))
+                     : Promise.resolve({ mail: [] }),
             ]);
+            // Items waiting in the mailbox (e.g. an AH purchase not yet
+            // collected). Surface one under EQUIPPED for any EMPTY slot it fits,
+            // so an already-bought upgrade shows instead of "(none)" and you
+            // don't re-buy it. Greedy: each mail item fills at most one slot.
+            // Mail items carry `invType` (from _item_payload), which uses the
+            // same slot strings as UPGRADE_SLOT_INVTYPES.
+            const mailItems = [];
+            for (const m of (mailData.mail || []))
+                for (const it of (m.items || [])) mailItems.push(it);
+            const mailBySlot = {};
+            const usedMail = new Set();
+            for (const [idx] of UPGRADE_SLOT_ORDER) {
+                if (upState.equipped[idx]) continue;          // equipped wins
+                const invTypes = UPGRADE_SLOT_INVTYPES[idx] || [];
+                const m = mailItems.find(x => !usedMail.has(x) && invTypes.includes(x.invType));
+                if (m) { mailBySlot[idx] = Object.assign({}, m, { _inMail: true }); usedMail.add(m); }
+            }
+            upState.mailBySlot = mailBySlot;
             // Best (highest-chance) dungeon source per item id.
             const srcMap = {};
             for (const it of (lootDataCache.items || [])) {
