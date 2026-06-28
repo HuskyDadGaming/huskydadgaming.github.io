@@ -2596,6 +2596,25 @@
         return parts.join(' ');
     }
 
+    // Set the AH wallet balance everywhere it's cached: the live session
+    // (ahState.charMoney), the header line, AND the Upgrade-Finder re-entry
+    // source (lastViewedCharacter) — so navigating back into the AH shows the
+    // running balance instead of the stale load-time value. Only writes
+    // lastViewedCharacter when it's the same character we're shopping for.
+    function syncAhBalance(copper) {
+        ahState.charMoney = Math.max(0, copper | 0);
+        if (lastViewedCharacter && lastViewedCharacter.name === ahState.charName) {
+            const m = ahState.charMoney;
+            lastViewedCharacter.gold   = Math.floor(m / 10000);
+            lastViewedCharacter.silver = Math.floor((m % 10000) / 100);
+            lastViewedCharacter.copper = m % 100;
+        }
+        const ctx = document.getElementById('ah-context');
+        if (ctx) ctx.innerHTML =
+            `Shopping for <strong>${escape(ahState.charName)}</strong>${classIconHTML(ahState.classSlug)} &nbsp;·&nbsp; ` +
+            `<span class="money">${formatCopper(ahState.charMoney)}</span> available`;
+    }
+
     function formatTimeLeft(isoDate) {
         const t = new Date(isoDate).getTime();
         const diffSec = Math.floor((t - Date.now()) / 1000);
@@ -2850,6 +2869,10 @@
             });
             closeBuyModal();
             if (!result.ok) {
+                // insufficient_funds carries the TRUE server balance — use it
+                // to self-correct the displayed wallet (and lastViewedCharacter)
+                // in case it had drifted stale.
+                if (typeof result.balance === 'number') syncAhBalance(result.balance);
                 showToast({
                     kind: 'error',
                     title: 'Purchase failed',
@@ -2857,12 +2880,11 @@
                 });
                 return;
             }
-            // Reduce the displayed wallet by what we actually paid, and
-            // refresh the listing so the bought row disappears.
-            ahState.charMoney = Math.max(0, ahState.charMoney - (result.paidCopper || 0));
-            document.getElementById('ah-context').innerHTML =
-                `Shopping for <strong>${escape(ahState.charName)}</strong> &nbsp;·&nbsp; ` +
-                `<span class="money">${formatCopper(ahState.charMoney)}</span> available`;
+            // Reduce the displayed wallet by what we actually paid (and keep
+            // lastViewedCharacter in sync so re-entry from Find Upgrades shows
+            // the running balance), then refresh the listing so the bought row
+            // disappears.
+            syncAhBalance(ahState.charMoney - (result.paidCopper || 0));
             showToast({
                 kind: 'success',
                 title: 'Purchased',
