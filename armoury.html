@@ -801,6 +801,10 @@
             font-variant-numeric: tabular-nums; white-space: nowrap;
             background: rgba(90,195,90,0.13); border-radius: 3px;
             padding: 1px 5px;
+            /* Fixed width so +1 and +127 pills are the same size — keeps the
+               AH icon (left of it) and ilvl (right of it) in straight columns
+               across every row. */
+            min-width: 34px; text-align: center; box-sizing: border-box;
         }
         /* "Req N" chip — surfaces on candidates that require a higher
            character level than the viewer. Only used in the empty-slot
@@ -821,6 +825,13 @@
         /* Inline "Find on AH" affordance on the upgrade item row. Desktop
            only — mobile users get the equivalent button inside the tooltip
            since rows are too narrow to fit comfortably there. */
+        /* Fixed-width slot the AH icon lives in (or stays empty on looted-only
+           rows). Reserving the width keeps the delta + ilvl columns aligned
+           whether or not a row has a Find-on-AH icon. */
+        .up-ah-slot {
+            flex: none; width: 20px; display: inline-flex;
+            justify-content: center; align-items: baseline;
+        }
         .up-ah-link {
             color: #888; text-decoration: none; font-size: 0.95rem;
             padding: 0 4px; cursor: pointer;
@@ -836,8 +847,10 @@
         @media (max-width: 600px) {
             .up-slot-body { grid-template-columns: 1fr; }
             .up-current-col { padding-bottom: 4px; border-bottom: 1px dashed #333; }
-            /* Hide the inline AH link on mobile — same action is in the tooltip. */
+            /* Hide the inline AH link on mobile — same action is in the tooltip.
+               Drop its reserved slot too so rows don't carry dead space. */
             .up-ah-link { display: none; }
+            .up-ah-slot { display: none; }
             /* Keep all four role tabs on one row — flex:1 distributes width
                equally, smaller padding/font keeps them readable. */
             .up-role-tabs { flex-wrap: nowrap; gap: 0.3rem; }
@@ -3630,7 +3643,7 @@
             return `<div class="up-item up-${kind}" data-item-id="${it.id || ''}" data-item-json="${json}" ${rowClick}>
                 <div class="up-item-line">
                     <span class="up-name" style="color:${it.color || '#fff'}">${escape(it.name || '?')}</span>
-                    ${ahLink}
+                    <span class="up-ah-slot">${ahLink}</span>
                     ${reqBadge}
                     ${deltaBadge}
                     <span class="up-ilvl">${it.ilvl || '—'}</span>
