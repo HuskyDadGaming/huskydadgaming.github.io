@@ -3681,7 +3681,7 @@
         return upgrades.slice(0, 3);
     }
 
-    function renderUpgradeCard(slotIdx, label, currentItem, candidates) {
+    function renderUpgradeCard(slotIdx, label, currentItem, mailItem, candidates) {
         // Tooltip provider hooks on data-item-id. Embedding the JSON gives
         // us hover-tooltip + compareProvider-driven "Currently equipped"
         // comparison for free.
@@ -3736,7 +3736,12 @@
             </div>`;
         };
 
-        const currHtml = renderItem(currentItem, 'current');
+        // Equipped column: the worn item (or "(none)" if empty), PLUS any item
+        // waiting in the mailbox for this slot — shown even when something's
+        // equipped, so a bought-but-uncollected piece is always visible.
+        const currHtml = currentItem
+            ? renderItem(currentItem, 'current') + (mailItem ? renderItem(mailItem, 'current') : '')
+            : (mailItem ? renderItem(mailItem, 'current') : renderItem(null, 'current'));
         const candHtml = candidates.length
             ? candidates.map(c => renderItem(c, 'cand')).join('')
             : `<div class="up-item up-none">No upgrades for this slot at lvl ${upState.charLevel}.</div>`;
@@ -3761,14 +3766,12 @@
         if (!items || !upState.role) return;
         const slotsEl = document.getElementById('up-slots');
         const cards = UPGRADE_SLOT_ORDER.map(([idx, label]) => {
-            // An empty slot falls back to a matching mailbox item (e.g. an AH
-            // purchase not yet collected) so it shows under Equipped and
-            // upgrades are measured against it, not "nothing".
-            const current     = upState.equipped[idx]
-                             || (upState.mailBySlot && upState.mailBySlot[idx])
-                             || null;
-            const candidates  = findUpgradesForSlot(items, idx, current);
-            return renderUpgradeCard(idx, label, current, candidates);
+            const equipped = upState.equipped[idx] || null;
+            const mailItem = (upState.mailBySlot && upState.mailBySlot[idx]) || null;
+            // Rank against what you're wearing; if the slot is empty, rank
+            // against the mailbox item (your best available for that slot).
+            const candidates = findUpgradesForSlot(items, idx, equipped || mailItem);
+            return renderUpgradeCard(idx, label, equipped, mailItem, candidates);
         });
         slotsEl.innerHTML = cards.join('');
     }
@@ -3848,11 +3851,18 @@
                 for (const it of (m.items || [])) mailItems.push(it);
             const mailBySlot = {};
             const usedMail = new Set();
-            for (const [idx] of UPGRADE_SLOT_ORDER) {
-                if (upState.equipped[idx]) continue;          // equipped wins
-                const invTypes = UPGRADE_SLOT_INVTYPES[idx] || [];
-                const m = mailItems.find(x => !usedMail.has(x) && invTypes.includes(x.invType));
-                if (m) { mailBySlot[idx] = Object.assign({}, m, { _inMail: true }); usedMail.add(m); }
+            // Fill EMPTY slots first (replaces "(none)"), then surface any
+            // remaining mail items on OCCUPIED slots as extra info beneath the
+            // worn item. Each mail item fills at most one slot.
+            for (const wantEmpty of [true, false]) {
+                for (const [idx] of UPGRADE_SLOT_ORDER) {
+                    if (mailBySlot[idx]) continue;
+                    const isEmpty = !upState.equipped[idx];
+                    if (isEmpty !== wantEmpty) continue;
+                    const invTypes = UPGRADE_SLOT_INVTYPES[idx] || [];
+                    const m = mailItems.find(x => !usedMail.has(x) && invTypes.includes(x.invType));
+                    if (m) { mailBySlot[idx] = Object.assign({}, m, { _inMail: true }); usedMail.add(m); }
+                }
             }
             upState.mailBySlot = mailBySlot;
             // Best (highest-chance) dungeon source per item id.
