@@ -847,10 +847,9 @@
         @media (max-width: 600px) {
             .up-slot-body { grid-template-columns: 1fr; }
             .up-current-col { padding-bottom: 4px; border-bottom: 1px dashed #333; }
-            /* Hide the inline AH link on mobile — same action is in the tooltip.
-               Drop its reserved slot too so rows don't carry dead space. */
-            .up-ah-link { display: none; }
-            .up-ah-slot { display: none; }
+            /* Inline AH/dungeon icons stay visible on mobile too (tapping the
+               icon does its action via stopPropagation; tapping elsewhere on
+               the row still opens the tooltip). */
             /* Keep all four role tabs on one row — flex:1 distributes width
                equally, smaller padding/font keeps them readable. */
             .up-role-tabs { flex-wrap: nowrap; gap: 0.3rem; }
@@ -3707,6 +3706,14 @@
                 ? `<a class="up-ah-link" href="#" title="Find on AH" ` +
                   `onclick="event.stopPropagation(); window.ahForItem(${JSON.stringify(it.name).replace(/"/g, '&quot;')}); return false;">🏛️</a>`
                 : '';
+            // Dungeon drop NOT on the AH (looted only): a 🏰 link to the
+            // dungeon's loot page, parallel to the AH icon. Opens in a new tab
+            // so the upgrade finder stays put. (onAH items show the AH icon
+            // instead, so the two never both appear.)
+            const dungeonLink = (kind === 'cand' && !it.onAH && isDungeon && it.page)
+                ? `<a class="up-ah-link" href="${escape(it.page)}" target="_blank" rel="noopener" ` +
+                  `title="View ${escape(it.dungeon || 'dungeon')}" onclick="event.stopPropagation();">🏰</a>`
+                : '';
             // Whole-row click opens the AH on desktop — listed items only.
             const rowClick = (kind === 'cand' && it.name && it.onAH)
                 ? `onclick="if(window.innerWidth>600){window.ahForItem(${JSON.stringify(it.name).replace(/"/g, '&quot;')});}"`
@@ -3727,7 +3734,7 @@
             return `<div class="up-item up-${kind}" data-item-id="${it.id || ''}" data-item-json="${json}" ${rowClick}>
                 <div class="up-item-line">
                     <span class="up-name" style="color:${it.color || '#fff'}">${escape(it.name || '?')}</span>
-                    <span class="up-ah-slot">${ahLink}</span>
+                    <span class="up-ah-slot">${ahLink}${dungeonLink}</span>
                     ${reqBadge}
                     ${deltaBadge}
                     <span class="up-ilvl">${it.ilvl || '—'}</span>
