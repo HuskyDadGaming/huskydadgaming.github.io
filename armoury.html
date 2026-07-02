@@ -7025,11 +7025,12 @@
         return s;
     }
 
-    // Best USABLE enchant for a slot: applies to the equipped item's type, req
-    // level <= char level, and (if profession-locked) the char has that skill.
-    function bestEnchantForSlot(slotIdx, equipped) {
+    // Top USABLE enchants for a slot (best first): apply to the equipped item's
+    // type, req level <= char level, and (if profession-locked) the char has the
+    // skill. Returns up to `n` distinct enchants sorted by role-fit score.
+    function topEnchantsForSlot(slotIdx, equipped, n) {
         let pools = ENCHANT_SLOTS[slotIdx];
-        if (!pools) return null;
+        if (!pools) return [];
         // pick the right weapon / off-hand pool from what's actually equipped
         if (slotIdx === 15) {
             pools = (equipped && equipped.slotFilter === 'Two-Hand') ? ['Two-Hand'] : ['Weapon'];
@@ -7040,17 +7041,20 @@
         const weights = getStatWeights(upState.role, upState.classSlug);
         const profs   = upState.professions || [];
         const level   = upState.charLevel || 0;
-        let best = null;
+        const out = [], seen = new Set();
         for (const pool of pools) {
             for (const e of (ENCHANTS[pool] || [])) {
+                if (seen.has(e.name)) continue;
                 if ((e.req || 0) > level) continue;               // level gate
                 if (e.prof && !profs.includes(e.prof)) continue;  // profession gate
                 const sc = scoreEnchant(e.stats, weights);
                 if (sc <= 0) continue;
-                if (!best || sc > best._score) best = Object.assign({}, e, { _score: sc });
+                seen.add(e.name);
+                out.push(Object.assign({}, e, { _score: sc }));
             }
         }
-        return best;
+        out.sort((a, b) => b._score - a._score);
+        return out.slice(0, n || 3);
     }
 
     function findUpgradesForSlot(items, slotIdx, currentItem) {
@@ -7305,18 +7309,23 @@
             ? candidates.map(c => renderItem(c, 'cand')).join('')
             : `<div class="up-item up-none">No upgrades for this slot at lvl ${upState.charLevel}.</div>`;
 
-        // Best usable enchant for this slot (applies to whatever you wear here).
-        const bestE = bestEnchantForSlot(slotIdx, currentItem);
+        // Top 3 usable enchants for this slot (apply to whatever you wear here).
+        const topE = topEnchantsForSlot(slotIdx, currentItem, 3);
         let enchHtml = '';
-        if (bestE) {
-            const nm  = bestE.name.replace(/^Enchant [^-]+ - /, '');
-            const tip = Object.entries(bestE.stats).map(([k, v]) => `+${v} ${k}`).join(', ')
-                        + (bestE.note === 'proc' ? ' (on-proc effect)' : '');
-            enchHtml = `<div class="up-enchant" title="${escape(bestE.name + ' — ' + tip)}"
-                style="margin-top:6px;font-size:0.8rem;color:#79b8e0;display:flex;align-items:center;gap:6px;">
-                <span>&#128295; ${escape(nm)}</span>
-                <span class="up-delta" style="background:#1f3a2a;color:#7bd88f;">+${Math.round(bestE._score)}</span>
-            </div>`;
+        if (topE.length) {
+            const rows = topE.map((e, i) => {
+                const nm  = e.name.replace(/^Enchant [^-]+ - /, '');
+                const tip = Object.entries(e.stats).map(([k, v]) => `+${v} ${k}`).join(', ')
+                            + (e.note === 'proc' ? ' (on-proc effect)' : '');
+                const dim = i === 0 ? '' : 'opacity:0.72;';
+                return `<div class="up-enchant" title="${escape(e.name + ' — ' + tip)}"
+                    style="font-size:0.8rem;color:#79b8e0;display:flex;align-items:center;gap:6px;${dim}">
+                    <span>&#128295; ${escape(nm)}</span>
+                    <span class="up-delta" style="background:#1f3a2a;color:#7bd88f;">+${Math.round(e._score)}</span>
+                </div>`;
+            }).join('');
+            enchHtml = `<div style="margin-top:6px;display:flex;flex-direction:column;gap:3px;">
+                <div class="up-col-heading" style="opacity:0.7;">Enchants</div>${rows}</div>`;
         }
 
         return `<div class="up-slot-card">
