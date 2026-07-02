@@ -3535,14 +3535,15 @@
         }
         const offHandShieldOnly = shieldUserTank && slotIdx === 16;
 
-        // Build a set of item ids that are Unique-Equipped AND already worn
-        // in ANY slot. Such items can't be a valid upgrade for a different
-        // slot (e.g. you can't have two of the same unique-equipped ring).
-        // Items currently in THIS slot are filtered out separately below.
-        const uniqueWornIds = new Set();
+        // ids of every item currently worn (in ANY slot). Used below to drop a
+        // candidate that is the SAME item AND can't legally occupy a second
+        // slot: Unique-Equipped (can't wear two) or Unique / MaxCount-1 (can't
+        // own two). A plain non-unique ring/trinket/1H weapon is NOT dropped —
+        // you can wear two copies. Items in THIS slot are filtered separately.
+        const wornIds = new Set();
         for (const idx in (upState.equipped || {})) {
             const eq = upState.equipped[idx];
-            if (eq && eq.uniqueEquipped) uniqueWornIds.add(eq.id);
+            if (eq && eq.id != null) wornIds.add(eq.id);
         }
 
         // Empty slot? Lift the "can equip RIGHT NOW" cap so the player sees
@@ -3584,14 +3585,20 @@
             if (isHeavyArmorBlockedAtLevel(it, cls, level)) return false;
             // Exclude the item currently equipped in this slot.
             if (currentItem && currentItem.id === it.id) return false;
-            // Unique-Equipped: can't recommend an item already worn elsewhere
-            // on the character (matters for Finger/Trinket dual slots).
-            if (it.uniqueEquipped && uniqueWornIds.has(it.id)) return false;
+            // Can't recommend for a different slot an item you already wear
+            // that you couldn't have two of — Unique-Equipped (one worn) or
+            // Unique/MaxCount-1 (one owned). Non-unique dual-slot gear is
+            // allowed on both slots (matters for Finger/Trinket/1H weapon).
+            if ((it.uniqueEquipped || it.unique) && wornIds.has(it.id)) return false;
             // Already sitting in your mailbox (a bought upgrade not yet
-            // collected): it's shown under its slot's EQUIPPED as "In mailbox",
-            // so don't ALSO offer it as a buyable upgrade on another slot — you
-            // own it, and a Unique-Equipped one couldn't be worn twice anyway.
-            if (upState.mailItemIds && upState.mailItemIds.has(it.id)) return false;
+            // collected). Suppress it on OTHER slots ONLY when you couldn't put
+            // a second one there anyway: Unique-Equipped (can't wear two) or
+            // Unique / MaxCount-1 (can't own two). A plain non-unique ring,
+            // trinket or 1H weapon CAN go in both slots, so it stays a valid
+            // candidate for the sibling slot (get a second). Either way it's
+            // shown once under its best-fit slot's EQUIPPED as "In mailbox".
+            if (upState.mailItemIds && upState.mailItemIds.has(it.id)
+                && (it.uniqueEquipped || it.unique)) return false;
             // Only OBTAINABLE upgrades: items currently listed on the AH
             // (it.onAH from the API) OR dungeon boss drops (a real dungeon source
             // overlaid from loot-data; the live-pool tag is "World / AH"). Drops
