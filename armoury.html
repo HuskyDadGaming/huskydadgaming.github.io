@@ -3587,6 +3587,11 @@
             // Unique-Equipped: can't recommend an item already worn elsewhere
             // on the character (matters for Finger/Trinket dual slots).
             if (it.uniqueEquipped && uniqueWornIds.has(it.id)) return false;
+            // Already sitting in your mailbox (a bought upgrade not yet
+            // collected): it's shown under its slot's EQUIPPED as "In mailbox",
+            // so don't ALSO offer it as a buyable upgrade on another slot — you
+            // own it, and a Unique-Equipped one couldn't be worn twice anyway.
+            if (upState.mailItemIds && upState.mailItemIds.has(it.id)) return false;
             // Only OBTAINABLE upgrades: items currently listed on the AH
             // (it.onAH from the API) OR dungeon boss drops (a real dungeon source
             // overlaid from loot-data; the live-pool tag is "World / AH"). Drops
@@ -3858,20 +3863,36 @@
                 for (const it of (m.items || [])) mailItems.push(it);
             const mailBySlot = {};
             const usedMail = new Set();
-            // Fill EMPTY slots first (replaces "(none)"), then surface any
-            // remaining mail items on OCCUPIED slots as extra info beneath the
-            // worn item. Each mail item fills at most one slot.
-            for (const wantEmpty of [true, false]) {
+            const mailItemIds = new Set();
+            // Place each mail item under the slot it BEST fits, so a purchased
+            // ring/trinket/weapon sits under the finger (etc.) it actually goes
+            // into: prefer an empty slot, and among worn pieces pick the weakest
+            // (lowest iLvl) it would replace. Each mail item fills at most one
+            // slot, so two bought rings land one per finger (Finger 1 then
+            // Finger 2). Their ids are recorded so an item you already own in
+            // the mailbox isn't ALSO offered as a buyable upgrade on the other
+            // slot (esp. Unique-Equipped, which you could never wear twice).
+            for (const m of mailItems) {
+                if (usedMail.has(m)) continue;
+                let best = null;
                 for (const [idx] of UPGRADE_SLOT_ORDER) {
                     if (mailBySlot[idx]) continue;
-                    const isEmpty = !upState.equipped[idx];
-                    if (isEmpty !== wantEmpty) continue;
                     const invTypes = UPGRADE_SLOT_INVTYPES[idx] || [];
-                    const m = mailItems.find(x => !usedMail.has(x) && invTypes.includes(x.invType));
-                    if (m) { mailBySlot[idx] = Object.assign({}, m, { _inMail: true }); usedMail.add(m); }
+                    if (!invTypes.includes(m.invType)) continue;
+                    // Empty slots score as iLvl -1 so they sort ahead of any
+                    // worn piece; among worn pieces the lowest iLvl wins.
+                    const eq = upState.equipped[idx];
+                    const ilvl = eq ? (eq.ilvl || 0) : -1;
+                    if (!best || ilvl < best.ilvl) best = { idx, ilvl };
+                }
+                if (best) {
+                    mailBySlot[best.idx] = Object.assign({}, m, { _inMail: true });
+                    usedMail.add(m);
+                    if (m.id != null) mailItemIds.add(m.id);
                 }
             }
             upState.mailBySlot = mailBySlot;
+            upState.mailItemIds = mailItemIds;
             // Best (highest-chance) dungeon source per item id.
             const srcMap = {};
             for (const it of (lootDataCache.items || [])) {
