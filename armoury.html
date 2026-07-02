@@ -9889,12 +9889,16 @@
     let ENCHANTS = {};
     try { ENCHANTS = JSON.parse(document.getElementById('enchant-data').textContent || '{}'); }
     catch (e) { ENCHANTS = {}; }
-    // Enchant lookup by enchantment id, so the tooltip (tooltip.js) can render
-    // an item's currently-applied permanent enchant (item.enchant).
+    // Enchant lookups: by enchantment id (tooltip.js renders item.enchant) and
+    // by applying-item entry (map a bought scroll in the mailbox -> its enchant).
     window.KCraftEnchantById = {};
+    window.KCraftEnchantByScroll = {};
     for (const _sl in ENCHANTS)
-        for (const _e of ENCHANTS[_sl])
+        for (const _e of ENCHANTS[_sl]) {
             if (_e.ench != null && !window.KCraftEnchantById[_e.ench]) window.KCraftEnchantById[_e.ench] = _e;
+            for (const _it of (_e.items || []))
+                if (!window.KCraftEnchantByScroll[_it[0]]) window.KCraftEnchantByScroll[_it[0]] = _e;
+        }
 
     // finder equip-slot index -> enchant-data slot pool(s)
     const ENCHANT_SLOTS = {
@@ -9902,6 +9906,33 @@
         7:['Feet'], 8:['Wrist'], 9:['Hands'], 14:['Back'],
         10:['Finger'], 11:['Finger'], 15:['Weapon','Two-Hand'], 16:['Weapon','Shield','Held'],
     };
+    // Which enchant pool(s) apply to a slot, given what's equipped there. Shared
+    // by the ranking + mailbox detection so the weapon/off-hand rules stay in sync.
+    function enchantPoolsForSlot(slotIdx, equipped) {
+        let pools = ENCHANT_SLOTS[slotIdx];
+        if (!pools) return [];
+        if (slotIdx === 15) {
+            pools = (equipped && equipped.slotFilter === 'Two-Hand') ? ['Two-Hand'] : ['Weapon'];
+        } else if (slotIdx === 16) {
+            // Off hand: only a shield or a one-hand weapon can be enchanted;
+            // a held tome/orb (itemClass 4, not a shield) can't.
+            pools = !equipped ? []
+                  : (equipped.itemClass === 4 && equipped.subclass === 6) ? ['Shield']
+                  : (equipped.itemClass === 2) ? ['Weapon']
+                  : [];
+        }
+        return pools;
+    }
+    // The enchant whose scroll is sitting in the mailbox for this slot (bought,
+    // not yet applied), if any — the thing you'll enchant with next.
+    function mailEnchantForSlot(slotIdx, equipped) {
+        const ids = upState.mailEnchantIds;
+        if (!ids || !ids.size) return null;
+        for (const pool of enchantPoolsForSlot(slotIdx, equipped))
+            for (const e of (ENCHANTS[pool] || []))
+                if (ids.has(e.ench)) return e;
+        return null;
+    }
 
     // Score an enchant's flat {stat:value} map with the role weights, matching
     // scoreItemForRole's per-stat normalization. Procs (empty stats) score 0.
@@ -9919,37 +9950,28 @@
     // type, req level <= char level, and (if profession-locked) the char has the
     // skill. Returns up to `n` distinct enchants sorted by role-fit score.
     function topEnchantsForSlot(slotIdx, equipped, n, compareToCurrent) {
-        let pools = ENCHANT_SLOTS[slotIdx];
-        if (!pools) return [];
-        // pick the right weapon / off-hand pool from what's actually equipped
-        if (slotIdx === 15) {
-            pools = (equipped && equipped.slotFilter === 'Two-Hand') ? ['Two-Hand'] : ['Weapon'];
-        } else if (slotIdx === 16) {
-            // Off hand can only be enchanted if it's a SHIELD or a one-hand
-            // WEAPON (itemClass 2). A held item — tome/orb/caster off-hand
-            // (itemClass 4, not a shield) — can't be enchanted at all, so offer
-            // nothing rather than defaulting to weapon enchants.
-            pools = !equipped ? []
-                  : (equipped.itemClass === 4 && equipped.subclass === 6) ? ['Shield']
-                  : (equipped.itemClass === 2) ? ['Weapon']
-                  : [];
-        }
+        const pools = enchantPoolsForSlot(slotIdx, equipped);
+        if (!pools.length) return [];
         const weights = getStatWeights(upState.role, upState.classSlug);
         const profs   = upState.professions || [];
         const level   = upState.charLevel || 0;
         const ah      = upState.enchantsOnAH || new Set();
-        // compareToCurrent: measure suggestions against the enchant ALREADY on
-        // the item (only show ones that beat it; badge = gain over it). Off =
-        // absolute best for the slot (ignores what's currently applied).
-        const curEnch = (compareToCurrent && equipped && equipped.enchant && window.KCraftEnchantById)
+        // compareToCurrent: measure suggestions against the enchant you'll have
+        // NEXT — the one bought in the mailbox if there is one, else the one
+        // currently applied. Only show ones that beat it; badge = gain over it.
+        // Off = absolute best for the slot (ignores what's applied/in mailbox).
+        const mailEn = compareToCurrent ? mailEnchantForSlot(slotIdx, equipped) : null;
+        const curEn  = (compareToCurrent && equipped && equipped.enchant && window.KCraftEnchantById)
             ? window.KCraftEnchantById[equipped.enchant] : null;
-        const curScore = curEnch ? scoreEnchant(curEnch.stats, weights) : 0;
+        const baseEn = mailEn || curEn;
+        const curScore = baseEn ? scoreEnchant(baseEn.stats, weights) : 0;
         const out = [], seen = new Set();
         for (const pool of pools) {
             for (const e of (ENCHANTS[pool] || [])) {
                 if (seen.has(e.name)) continue;
                 if ((e.req || 0) > level) continue;               // level gate
                 if (compareToCurrent && equipped && e.ench === equipped.enchant) continue;  // skip the applied one
+                if (mailEn && e.ench === mailEn.ench) continue;   // skip the one already bought (in mailbox)
                 // Obtainable: a profession-crafted enchant needs the skill (you
                 // make it); everything else needs an applying scroll/item on the
                 // AH right now (you buy it) — capture it for the buy link.
@@ -10267,12 +10289,21 @@
             const nm = String(curEn.name).replace(/^Enchant [^-]+ - /, '');
             curEnchHtml = `<div style="font-size:0.78rem;color:#1eff00;margin-top:4px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</div>`;
         }
+        // Enchant scroll bought and waiting in the mailbox for this slot — the
+        // one you'll apply next, so the "Better enchants" below rank against it.
+        const mailEn = mailEnchantForSlot(slotIdx, currentItem);
+        let mailEnchHtml = '';
+        if (mailEn) {
+            const st = Object.entries(mailEn.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
+            const nm = String(mailEn.name).replace(/^Enchant [^-]+ - /, '');
+            mailEnchHtml = `<div style="font-size:0.78rem;color:#79b8e0;margin-top:2px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''} <span class="up-source">📬 In mailbox</span></div>`;
+        }
         const betterE = currentItem ? topEnchantsForSlot(slotIdx, currentItem, 2, true) : [];
         let eqEnchHtml = '';
-        if (curEnchHtml || betterE.length) {
-            let inner = curEnchHtml;
+        if (curEnchHtml || mailEnchHtml || betterE.length) {
+            let inner = curEnchHtml + mailEnchHtml;
             if (betterE.length) {
-                inner += `<div class="up-col-heading" style="opacity:0.7;">${curEn ? 'Better enchants' : 'Enchant'}</div>`
+                inner += `<div class="up-col-heading" style="opacity:0.7;">${(curEn || mailEn) ? 'Better enchants' : 'Enchant'}</div>`
                        + betterE.map(enchRow).join('');
             }
             eqEnchHtml = `<div style="margin-top:6px;display:flex;flex-direction:column;gap:3px;">${inner}</div>`;
@@ -10415,6 +10446,14 @@
             }
             upState.mailBySlot = mailBySlot;
             upState.mailItemIds = mailItemIds;
+            // Enchant scrolls sitting in the mailbox (bought, not yet applied) ->
+            // set of their enchantment ids, so the finder shows "in mailbox" and
+            // compares suggestions against the one you're about to apply.
+            upState.mailEnchantIds = new Set();
+            for (const m of mailItems) {
+                const me = window.KCraftEnchantByScroll && window.KCraftEnchantByScroll[m.id];
+                if (me && me.ench != null) upState.mailEnchantIds.add(me.ench);
+            }
             upState.professions = up.professions || [];  // skill ids, for enchant profession gate
             upState.enchantsOnAH = new Set(up.enchantsOnAH || []);  // enchant items buyable on AH now
             // Best (highest-chance) dungeon source per item id.
