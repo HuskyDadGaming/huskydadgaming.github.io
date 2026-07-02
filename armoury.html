@@ -10333,9 +10333,10 @@
         const cards = UPGRADE_SLOT_ORDER.map(([idx, label]) => {
             const equipped = upState.equipped[idx] || null;
             const mailItem = (upState.mailBySlot && upState.mailBySlot[idx]) || null;
-            // Rank against what you're wearing; if the slot is empty, rank
-            // against the mailbox item (your best available for that slot).
-            const candidates = findUpgradesForSlot(items, idx, equipped || mailItem);
+            // Rank against the piece you'll have NEXT: the mailbox item if one's
+            // waiting (bought, about to equip), else what you're wearing. Using
+            // it as the baseline also drops it from its own suggestions.
+            const candidates = findUpgradesForSlot(items, idx, mailItem || equipped);
             return renderUpgradeCard(idx, label, equipped, mailItem, candidates);
         });
         slotsEl.innerHTML = cards.join('');
