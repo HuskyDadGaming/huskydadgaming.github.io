@@ -208,7 +208,11 @@
             padding: 8px 12px; display: flex; align-items: center; gap: 12px;
             font-size: 0.85rem;
         }
-        .item-row.tooltip-active {
+        /* Universal yellow hover for every tooltip row — item rows (character
+           pages, Find Upgrades), enchant rows, and Auction House rows. */
+        .item-row.tooltip-active,
+        .up-enchant.tooltip-active,
+        .ah-row.tooltip-active {
             background: #2d2d2d; border-color: #ffd100;
             box-shadow: 0 0 0 1px #ffd100;
         }
@@ -235,14 +239,11 @@
             font-size: 0.7rem; font-weight: 600; flex-shrink: 0;
         }
 
-        /* Enchant rows — same boxed look as .item-row */
+        /* Enchant rows — identical box to .item-row, but no yellow hover. */
         .up-enchant {
             background: #232323; border: 1px solid #2d2d2d; border-radius: 4px;
-            padding: 6px 12px; display: flex; align-items: center; gap: 10px;
-            font-size: 0.82rem;
-        }
-        .up-enchant.tooltip-active {
-            background: #2d2d2d; border-color: #ffd100; box-shadow: 0 0 0 1px #ffd100;
+            padding: 8px 12px; display: flex; align-items: center; gap: 12px;
+            font-size: 0.85rem;
         }
         .up-enchant .up-ench-name { flex: 1; min-width: 0; color: #79b8e0; font-weight: 600;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
