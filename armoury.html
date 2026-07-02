@@ -7540,10 +7540,21 @@
     // _navReplaying guard reliably suppresses the re-push when the caller
     // is popstate itself.
     let _navReplaying = false;
+    // We manage scroll ourselves (the browser's auto-restore fires before our
+    // async views finish rendering, so it lands at the wrong spot).
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     function pushHistory(view, params) {
         if (_navReplaying) return;       // this transition IS a history replay
+        // Save the scroll position of the view we're LEAVING into its own
+        // history entry, so Back returns to exactly where we were.
+        if (history.state) {
+            try { history.replaceState(
+                Object.assign({}, history.state, { scrollY: window.scrollY }),
+                '', location.href); } catch (e) {}
+        }
         history.pushState(
-            { armouryView: view, armouryParams: params || {} }, '', '#' + view);
+            { armouryView: view, armouryParams: params || {}, scrollY: 0 }, '', '#' + view);
+        window.scrollTo(0, 0);           // a newly-opened view starts at the top
     }
     function replayView(state) {
         // No armoury marker => the entry from before armoury.html loaded;
@@ -7565,7 +7576,20 @@
             _navReplaying = false;
         }
     }
-    window.addEventListener('popstate', function(e) { replayView(e.state); });
+    // Restore the saved scroll position after the (async) view re-renders —
+    // retry across frames until the page has grown tall enough to reach it.
+    function restoreScroll(y) {
+        y = y || 0;
+        let tries = 0;
+        (function step() {
+            window.scrollTo(0, y);
+            if (Math.abs(window.scrollY - y) > 2 && tries++ < 60) requestAnimationFrame(step);
+        })();
+    }
+    window.addEventListener('popstate', function(e) {
+        replayView(e.state);
+        restoreScroll(e.state && e.state.scrollY);
+    });
 
     function showError(msg) {
         const el = document.getElementById('login-error');
