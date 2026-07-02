@@ -563,6 +563,18 @@
       });
     }
 
+    // Applied permanent enchant — green line below the stats, matching the
+    // in-game tooltip. item.enchant is the enchantment id; resolve name+stats
+    // from the enchant dataset exposed by armoury.html.
+    if (it.enchant && typeof window !== 'undefined' && window.KCraftEnchantById) {
+      const en = window.KCraftEnchantById[it.enchant];
+      if (en) {
+        const st = Object.entries(en.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
+        const nm = String(en.name || '').replace(/^Enchant [^-]+ - /, '');
+        parts.push(`<div class="tt-enchant" style="color:#1eff00;">Enchanted: ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</div>`);
+      }
+    }
+
     // Durability (if present — characters only; loot data omits)
     if (it.maxDurability) {
       const cur = (it.durability != null) ? it.durability : it.maxDurability;

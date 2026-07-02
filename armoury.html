@@ -9845,6 +9845,12 @@
     let ENCHANTS = {};
     try { ENCHANTS = JSON.parse(document.getElementById('enchant-data').textContent || '{}'); }
     catch (e) { ENCHANTS = {}; }
+    // Enchant lookup by enchantment id, so the tooltip (tooltip.js) can render
+    // an item's currently-applied permanent enchant (item.enchant).
+    window.KCraftEnchantById = {};
+    for (const _sl in ENCHANTS)
+        for (const _e of ENCHANTS[_sl])
+            if (_e.ench != null && !window.KCraftEnchantById[_e.ench]) window.KCraftEnchantById[_e.ench] = _e;
 
     // finder equip-slot index -> enchant-data slot pool(s)
     const ENCHANT_SLOTS = {
