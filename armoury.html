@@ -10189,8 +10189,12 @@
             const buyLink = e._buy
                 ? `<a class="up-ah-link" href="#" title="Buy scroll on the Auction House" onclick="event.stopPropagation(); window.ahForItem(${safeName}); return false;">&#127963;</a>`
                 : '';
-            return `<div class="up-enchant" data-item-id="${ttItem.id}" data-item-json="${ttJson}"
-                style="font-size:0.8rem;color:#79b8e0;display:flex;align-items:center;gap:6px;${dim}">
+            // Whole row is clickable -> jump to the AH for the scroll (like item
+            // rows). The AH icon keeps its own handler for a clear affordance.
+            const rowClick = e._buy ? `onclick="window.ahForItem(${safeName}); return false;"` : '';
+            const cursor   = e._buy ? 'cursor:pointer;' : '';
+            return `<div class="up-enchant" data-item-id="${ttItem.id}" data-item-json="${ttJson}" ${rowClick}
+                style="font-size:0.8rem;color:#79b8e0;display:flex;align-items:center;gap:6px;${cursor}${dim}">
                 <span>&#128295; ${escape(nm)}</span>
                 <span class="up-delta" style="background:#1f3a2a;color:#7bd88f;">+${Math.round(e._delta) >= 1 ? Math.round(e._delta) : e._delta.toFixed(1)}</span>
                 ${buyLink}
