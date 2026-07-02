@@ -9893,6 +9893,7 @@
             for (const e of (ENCHANTS[pool] || [])) {
                 if (seen.has(e.name)) continue;
                 if ((e.req || 0) > level) continue;               // level gate
+                if (equipped && equipped.enchant && e.ench === equipped.enchant) continue;  // already applied — don't re-suggest
                 // Obtainable: a profession-crafted enchant needs the skill (you
                 // make it); everything else needs an applying scroll/item on the
                 // AH right now (you buy it) — capture it for the buy link.
