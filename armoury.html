@@ -9874,7 +9874,7 @@
     // Top USABLE enchants for a slot (best first): apply to the equipped item's
     // type, req level <= char level, and (if profession-locked) the char has the
     // skill. Returns up to `n` distinct enchants sorted by role-fit score.
-    function topEnchantsForSlot(slotIdx, equipped, n) {
+    function topEnchantsForSlot(slotIdx, equipped, n, compareToCurrent) {
         let pools = ENCHANT_SLOTS[slotIdx];
         if (!pools) return [];
         // pick the right weapon / off-hand pool from what's actually equipped
@@ -9894,12 +9894,18 @@
         const profs   = upState.professions || [];
         const level   = upState.charLevel || 0;
         const ah      = upState.enchantsOnAH || new Set();
+        // compareToCurrent: measure suggestions against the enchant ALREADY on
+        // the item (only show ones that beat it; badge = gain over it). Off =
+        // absolute best for the slot (ignores what's currently applied).
+        const curEnch = (compareToCurrent && equipped && equipped.enchant && window.KCraftEnchantById)
+            ? window.KCraftEnchantById[equipped.enchant] : null;
+        const curScore = curEnch ? scoreEnchant(curEnch.stats, weights) : 0;
         const out = [], seen = new Set();
         for (const pool of pools) {
             for (const e of (ENCHANTS[pool] || [])) {
                 if (seen.has(e.name)) continue;
                 if ((e.req || 0) > level) continue;               // level gate
-                if (equipped && equipped.enchant && e.ench === equipped.enchant) continue;  // already applied — don't re-suggest
+                if (compareToCurrent && equipped && e.ench === equipped.enchant) continue;  // skip the applied one
                 // Obtainable: a profession-crafted enchant needs the skill (you
                 // make it); everything else needs an applying scroll/item on the
                 // AH right now (you buy it) — capture it for the buy link.
@@ -9907,12 +9913,13 @@
                 if (e.prof) { if (!profs.includes(e.prof)) continue; }
                 else { buy = (e.items || []).find(it => ah.has(it[0])); if (!buy) continue; }
                 const sc = scoreEnchant(e.stats, weights);
-                if (sc <= 0) continue;
+                const delta = sc - curScore;   // == sc when not comparing (curScore 0)
+                if (delta <= 0) continue;
                 seen.add(e.name);
-                out.push(Object.assign({}, e, { _score: sc, _buy: buy }));
+                out.push(Object.assign({}, e, { _score: sc, _delta: delta, _buy: buy }));
             }
         }
-        out.sort((a, b) => b._score - a._score);
+        out.sort((a, b) => b._delta - a._delta);
         return out.slice(0, n || 3);
     }
 
@@ -10168,32 +10175,55 @@
             ? candidates.map(c => renderItem(c, 'cand')).join('')
             : `<div class="up-item up-none">No upgrades for this slot at lvl ${upState.charLevel}.</div>`;
 
-        // Top 3 usable enchants for this slot, shown alongside the item
-        // upgrades. Each row carries the shared hover tooltip (via a synthetic
-        // item in data-item-json) and, when buyable, a AH link to its scroll.
-        const topE = topEnchantsForSlot(slotIdx, currentItem, 3);
-        let enchHtml = '';
-        if (topE.length) {
-            const rows = topE.map((e, i) => {
-                const nm  = e.name.replace(/^Enchant [^-]+ - /, '');
-                const statsArr = Object.entries(e.stats).map(([k, v]) => `+${v} ${k}`);
-                const dim = i === 0 ? '' : 'opacity:0.72;';
-                const ttItem = { id: (e._buy ? e._buy[0] : e.ench), name: e.name,
-                    stats: statsArr, color: '#a335ee', reqLevel: e.req || 0 };
-                const ttJson = JSON.stringify(ttItem).replace(/"/g, '&quot;');
-                const safeName = e._buy ? JSON.stringify(e._buy[1]).replace(/"/g, '&quot;') : '';
-                const buyLink = e._buy
-                    ? `<a class="up-ah-link" href="#" title="Buy scroll on the Auction House" onclick="event.stopPropagation(); window.ahForItem(${safeName}); return false;">&#127963;</a>`
-                    : '';
-                return `<div class="up-enchant" data-item-id="${ttItem.id}" data-item-json="${ttJson}"
-                    style="font-size:0.8rem;color:#79b8e0;display:flex;align-items:center;gap:6px;${dim}">
-                    <span>&#128295; ${escape(nm)}</span>
-                    <span class="up-delta" style="background:#1f3a2a;color:#7bd88f;">+${Math.round(e._score)}</span>
-                    ${buyLink}
-                </div>`;
-            }).join('');
-            enchHtml = `<div style="margin-top:8px;display:flex;flex-direction:column;gap:3px;">
-                <div class="up-col-heading" style="opacity:0.7;">Enchants</div>${rows}</div>`;
+        // One enchant row: shared hover tooltip (synthetic item in
+        // data-item-json) + AH-buy link; badge shows _delta (== absolute score
+        // for the upgrades column, == gain-over-current for the Equipped one).
+        const enchRow = (e, i) => {
+            const nm  = e.name.replace(/^Enchant [^-]+ - /, '');
+            const statsArr = Object.entries(e.stats).map(([k, v]) => `+${v} ${k}`);
+            const dim = i === 0 ? '' : 'opacity:0.72;';
+            const ttItem = { id: (e._buy ? e._buy[0] : e.ench), name: e.name,
+                stats: statsArr, color: '#a335ee', reqLevel: e.req || 0 };
+            const ttJson = JSON.stringify(ttItem).replace(/"/g, '&quot;');
+            const safeName = e._buy ? JSON.stringify(e._buy[1]).replace(/"/g, '&quot;') : '';
+            const buyLink = e._buy
+                ? `<a class="up-ah-link" href="#" title="Buy scroll on the Auction House" onclick="event.stopPropagation(); window.ahForItem(${safeName}); return false;">&#127963;</a>`
+                : '';
+            return `<div class="up-enchant" data-item-id="${ttItem.id}" data-item-json="${ttJson}"
+                style="font-size:0.8rem;color:#79b8e0;display:flex;align-items:center;gap:6px;${dim}">
+                <span>&#128295; ${escape(nm)}</span>
+                <span class="up-delta" style="background:#1f3a2a;color:#7bd88f;">+${Math.round(e._delta)}</span>
+                ${buyLink}
+            </div>`;
+        };
+
+        // Upgrades column: absolute top-3 enchants for the slot — they accompany
+        // the new item upgrades, so they ignore what's currently applied.
+        const topAbs = topEnchantsForSlot(slotIdx, currentItem, 3, false);
+        const enchHtml = topAbs.length
+            ? `<div style="margin-top:8px;display:flex;flex-direction:column;gap:3px;">
+                <div class="up-col-heading" style="opacity:0.7;">Enchants</div>${topAbs.map(enchRow).join('')}</div>`
+            : '';
+
+        // Equipped column: the enchant currently ON the item (green), plus up to
+        // 2 enchant upgrades measured AGAINST it (badge = gain over current).
+        const curEn = (currentItem && currentItem.enchant && window.KCraftEnchantById)
+            ? window.KCraftEnchantById[currentItem.enchant] : null;
+        let curEnchHtml = '';
+        if (curEn) {
+            const st = Object.entries(curEn.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
+            const nm = String(curEn.name).replace(/^Enchant [^-]+ - /, '');
+            curEnchHtml = `<div style="font-size:0.78rem;color:#1eff00;margin-top:4px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</div>`;
+        }
+        const betterE = currentItem ? topEnchantsForSlot(slotIdx, currentItem, 2, true) : [];
+        let eqEnchHtml = '';
+        if (curEnchHtml || betterE.length) {
+            let inner = curEnchHtml;
+            if (betterE.length) {
+                inner += `<div class="up-col-heading" style="opacity:0.7;">${curEn ? 'Better enchants' : 'Enchant'}</div>`
+                       + betterE.map(enchRow).join('');
+            }
+            eqEnchHtml = `<div style="margin-top:6px;display:flex;flex-direction:column;gap:3px;">${inner}</div>`;
         }
 
         return `<div class="up-slot-card">
@@ -10202,6 +10232,7 @@
                 <div class="up-current-col">
                     <div class="up-col-heading">Equipped</div>
                     ${currHtml}
+                    ${eqEnchHtml}
                 </div>
                 <div class="up-cand-col">
                     <div class="up-col-heading">Top 3 upgrades</div>
