@@ -10470,6 +10470,7 @@
             upState.enchantsOnAH = new Set(up.enchantsOnAH || []);  // enchant items buyable on AH now
             upState.enchantPrices = up.enchantPrices || {};   // scroll entry -> cheapest buyout (copper)
             upState.money = up.money || 0;                    // character's gold total (copper)
+            updateUpgradeContext();   // re-render the header now that the gold total is known
             // Best (highest-chance) dungeon source per item id.
             const srcMap = {};
             for (const it of (lootDataCache.items || [])) {
