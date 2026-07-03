@@ -7176,10 +7176,17 @@
     // retry across frames until the page has grown tall enough to reach it.
     function restoreScroll(y) {
         y = y || 0;
-        let tries = 0;
+        if (y <= 0) { window.scrollTo(0, 0); return; }
+        // Keep re-applying until the (async) view has grown tall enough to reach
+        // the saved position — up to ~6s, since re-fetching upgrades can take a
+        // couple seconds. Stop early once we're there, or if the user scrolls
+        // somewhere themselves (don't fight them).
+        let tries = 0, lastSet = -1;
         (function step() {
+            if (lastSet >= 0 && Math.abs(window.scrollY - lastSet) > 4) return;  // user scrolled — give up
             window.scrollTo(0, y);
-            if (Math.abs(window.scrollY - y) > 2 && tries++ < 60) requestAnimationFrame(step);
+            lastSet = window.scrollY;
+            if (Math.abs(window.scrollY - y) > 2 && tries++ < 360) requestAnimationFrame(step);
         })();
     }
     window.addEventListener('popstate', function(e) {
