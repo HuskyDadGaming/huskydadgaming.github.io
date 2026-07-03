@@ -9559,15 +9559,17 @@
         const profs   = upState.professions || [];
         const level   = upState.charLevel || 0;
         const ah      = upState.enchantsOnAH || new Set();
-        // compareToCurrent: measure suggestions against the enchant you'll have
-        // NEXT — the one bought in the mailbox if there is one, else the one
-        // currently applied. Only show ones that beat it; badge = gain over it.
+        // compareToCurrent: measure suggestions against the BETTER of what's
+        // applied vs what's bought in the mailbox — you won't downgrade, so only
+        // enchants beating your best-available count. (An applied Mongoose still
+        // wins even if a cheap Agility scroll is sitting in the mailbox.)
         // Off = absolute best for the slot (ignores what's applied/in mailbox).
         const mailEn = compareToCurrent ? mailEnchantForSlot(slotIdx, equipped) : null;
         const curEn  = (compareToCurrent && equipped && equipped.enchant && window.KCraftEnchantById)
             ? window.KCraftEnchantById[equipped.enchant] : null;
-        const baseEn = mailEn || curEn;
-        const curScore = baseEn ? scoreEnchant(baseEn.stats, weights) : 0;
+        const curScore = Math.max(
+            mailEn ? scoreEnchant(mailEn.stats, weights) : 0,
+            curEn  ? scoreEnchant(curEn.stats,  weights) : 0);
         const out = [], seen = new Set();
         for (const pool of pools) {
             for (const e of (ENCHANTS[pool] || [])) {
@@ -9592,7 +9594,7 @@
         return out.slice(0, n || 3);
     }
 
-    function findUpgradesForSlot(items, slotIdx, currentItem) {
+    function findUpgradesForSlot(items, slotIdx, currentItem, altItem) {
         let   invTypes = UPGRADE_SLOT_INVTYPES[slotIdx] || [];
         const cls   = upState.classSlug;
         const role  = upState.role;
@@ -9727,6 +9729,11 @@
         const mhScore = equippedMH ? scoreItemForRole(equippedMH, weights, capCtx) : 0;
         const ohScore = equippedOH ? scoreItemForRole(equippedOH, weights, capCtx) : 0;
         const currScore = currentItem ? scoreItemForRole(currentItem, weights, capCtx) : 0;
+        // Effective baseline = the BETTER of the mailbox item vs what's equipped.
+        // (altItem is the equipped piece when currentItem is the mailbox item.)
+        // You won't downgrade, so a worse mailed item must not lower the bar.
+        const altScore  = altItem ? scoreItemForRole(altItem, weights, capCtx) : 0;
+        const baseScore = Math.max(currScore, altScore);
 
         function baselineFor(it) {
             // Two-Hand candidate in main hand slot: lose MH + OH (unless
@@ -9734,14 +9741,14 @@
             // existing 2H is lost — which equals currScore).
             if (slotIdx === 15 && it.slotFilter === 'Two-Hand'
                 && equippedOH && !equippedMHis2H) {
-                return mhScore + ohScore;
+                return baseScore + ohScore;
             }
             // Off-hand candidate while currently wielding a 2H: replaces
             // the 2H rather than the (empty) OH slot.
             if (slotIdx === 16 && equippedMHis2H) {
                 return mhScore;
             }
-            return currScore;
+            return baseScore;
         }
 
         for (const it of unique) {
@@ -9945,8 +9952,10 @@
             const mailItem = (upState.mailBySlot && upState.mailBySlot[idx]) || null;
             // Rank against the piece you'll have NEXT: the mailbox item if one's
             // waiting (bought, about to equip), else what you're wearing. Using
-            // it as the baseline also drops it from its own suggestions.
-            const candidates = findUpgradesForSlot(items, idx, mailItem || equipped);
+            // it as the baseline also drops it from its own suggestions. Pass the
+            // equipped piece too so the score baseline is the BETTER of the two —
+            // a bought item that's actually a downgrade won't lower the bar.
+            const candidates = findUpgradesForSlot(items, idx, mailItem || equipped, mailItem ? equipped : null);
             return renderUpgradeCard(idx, label, equipped, mailItem, candidates);
         });
         slotsEl.innerHTML = cards.join('');
