@@ -805,6 +805,10 @@
            the AH icon + ilvl always sit at the right edge of the row,
            lined up across all upgrade cards. */
         .up-name { font-weight: 600; font-size: 0.9rem; flex: 1; min-width: 0; }
+        /* Cheapest-AH-buyout price shown inline (left of the AH icon). The
+           g/s/c spans colour themselves; this just sizes + spaces them. */
+        .up-price { font-size: 0.72rem; white-space: nowrap; flex-shrink: 0;
+            font-variant-numeric: tabular-nums; opacity: 0.9; }
         .up-ilvl {
             color: #888; font-size: 0.75rem;
             font-variant-numeric: tabular-nums; min-width: 28px; text-align: right;
@@ -10219,9 +10223,13 @@
             const reqBadge = (kind === 'cand' && (it.req || 0) > upState.charLevel)
                 ? `<span class="up-req-future" title="Requires character level ${it.req} — chase for later">Req ${it.req}</span>`
                 : '';
+            // Cheapest current AH buyout (copper), from the API.
+            const priceHtml = (kind === 'cand' && it.ahPrice)
+                ? `<span class="up-price" title="Cheapest Auction House buyout">${formatCopper(it.ahPrice)}</span>` : '';
             return `<div class="up-item up-${kind}" data-item-id="${it.id || ''}" data-item-json="${json}" ${rowClick}>
                 <div class="up-item-line">
                     <span class="up-name" style="color:${it.color || '#fff'}">${escape(it.name || '?')}</span>
+                    ${priceHtml}
                     <span class="up-ah-slot">${ahLink}${dungeonLink}</span>
                     ${reqBadge}
                     ${deltaBadge}
@@ -10262,9 +10270,12 @@
             // rows). The AH icon keeps its own handler for a clear affordance.
             const rowClick = e._buy ? `onclick="window.ahForItem(${safeName}); return false;"` : '';
             const cursor   = e._buy ? 'cursor:pointer;' : '';
+            const price    = (e._buy && upState.enchantPrices) ? upState.enchantPrices[e._buy[0]] : 0;
+            const priceHtml = price ? `<span class="up-price" title="Cheapest scroll buyout">${formatCopper(price)}</span>` : '';
             return `<div class="up-enchant" data-item-id="${ttItem.id}" data-item-json="${ttJson}" ${rowClick}
                 style="${cursor}${dim}">
                 <span class="up-ench-name">&#128295; ${escape(nm)}</span>
+                ${priceHtml}
                 <span class="up-ah-slot">${buyLink}</span>
                 <span class="up-delta">+${Math.round(e._delta) >= 1 ? Math.round(e._delta) : e._delta.toFixed(1)}</span>
                 <span class="up-ilvl"></span>
@@ -10457,6 +10468,8 @@
             }
             upState.professions = up.professions || [];  // skill ids, for enchant profession gate
             upState.enchantsOnAH = new Set(up.enchantsOnAH || []);  // enchant items buyable on AH now
+            upState.enchantPrices = up.enchantPrices || {};   // scroll entry -> cheapest buyout (copper)
+            upState.money = up.money || 0;                    // character's gold total (copper)
             // Best (highest-chance) dungeon source per item id.
             const srcMap = {};
             for (const it of (lootDataCache.items || [])) {
@@ -10485,9 +10498,11 @@
 
     function updateUpgradeContext() {
         const tail = upState.role ? `role: <strong>${upState.role}</strong>` : 'pick a role';
+        const goldHtml = upState.money
+            ? ` &middot; <span class="money" title="Gold available">${formatCopper(upState.money)}</span>` : '';
         document.getElementById('up-context').innerHTML =
             `<strong>${escape(upState.charName)}</strong>${classIconHTML(upState.classSlug)} &middot; Lvl ${upState.charLevel} ` +
-            `${escape(upState.classSlug)} &middot; ${tail}`;
+            `${escape(upState.classSlug)}${goldHtml} &middot; ${tail}`;
     }
 
     // Role tab clicks just re-render (loot data is already cached)
