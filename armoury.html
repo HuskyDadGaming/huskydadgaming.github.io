@@ -11126,10 +11126,17 @@
             const nm  = e.name.replace(/^Enchant [^-]+ - /, '');
             const statsArr = Object.entries(e.stats).map(([k, v]) => `+${v} ${k}`);
             const dim = '';   // all enchant rows uniform (no emphasis on the best)
+            // Real scroll tooltip effects ("Use: Permanently enchant...") from the
+            // API, keyed by scroll entry. When present, show them INSTEAD of the
+            // flattened stat line — the scroll's own tooltip has no separate stat
+            // line, and for procs (Crusader) "+100 Strength" misrepresents it.
+            const ttEffects = (e._buy && upState.enchantEffects) ? upState.enchantEffects[e._buy[0]] : null;
             // _ahName = the scroll's item name, so the tooltip "Find on AH"
             // action (mobile) searches the scroll, not the enchant.
             const ttItem = { id: (e._buy ? e._buy[0] : e.ench), name: e.name,
-                stats: statsArr, color: '#79b8e0', reqLevel: e.req || 0,
+                stats: (ttEffects && ttEffects.length) ? [] : statsArr,
+                effects: (ttEffects && ttEffects.length) ? ttEffects : undefined,
+                color: '#79b8e0', reqLevel: e.req || 0,
                 _ahName: (e._buy ? e._buy[1] : undefined) };
             const ttJson = JSON.stringify(ttItem).replace(/"/g, '&quot;');
             const safeName = e._buy ? JSON.stringify(e._buy[1]).replace(/"/g, '&quot;') : '';
@@ -11341,6 +11348,7 @@
             upState.professions = up.professions || [];  // skill ids, for enchant profession gate
             upState.enchantsOnAH = new Set(up.enchantsOnAH || []);  // enchant items buyable on AH now
             upState.enchantPrices = up.enchantPrices || {};   // scroll entry -> cheapest buyout (copper)
+            upState.enchantEffects = up.enchantEffects || {}; // scroll entry -> real [{trigger,text}] tooltip effects
             upState.money = up.money || 0;                    // character's gold total (copper)
             updateUpgradeContext();   // re-render the header now that the gold total is known
             // Best (highest-chance) dungeon source per item id.
