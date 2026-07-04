@@ -837,6 +837,17 @@
             background: rgba(217,147,0,0.13); border-radius: 3px;
             padding: 1px 5px;
         }
+        /* ⭐ set-piece flag on an upgrade candidate. Plain = just a set piece;
+           gold-filled = equipping it completes a set bonus. */
+        .up-set {
+            color: #c9b458; font-weight: 600; font-size: 0.72rem;
+            font-variant-numeric: tabular-nums; white-space: nowrap;
+            flex-shrink: 0; cursor: help;
+        }
+        .up-set-bonus {
+            color: #ffd100;
+            background: rgba(255,209,0,0.14); border-radius: 3px; padding: 1px 5px;
+        }
         .up-item-meta {
             display: flex; justify-content: space-between; gap: 0.5rem;
             color: #888; font-size: 0.75rem; margin-top: 2px;
@@ -10986,6 +10997,43 @@
         return upgrades.slice(0, 3);
     }
 
+    // Set-piece flag for an upgrade candidate. The finder isn't set-aware in its
+    // SCORING (see memory), but this shows a ⭐ so you can factor set bonuses in
+    // yourself. A candidate carries setId; equipped items carry a full `.set`
+    // ({name, items:[{id}], bonuses:[{pieces,text}]}), so we find the candidate's
+    // set via any equipped sibling (its id in that set's piece list) and count how
+    // many pieces you'd have AFTER the swap (siblings in OTHER slots + this one).
+    function setChipForCandidate(it, slotIdx) {
+        if (!it || !it.setId) return '';
+        let owned = 0, setObj = null;
+        for (const idx in (upState.equipped || {})) {
+            const eq = upState.equipped[idx];
+            if (!eq || !eq.set || !Array.isArray(eq.set.items)) continue;
+            if (!eq.set.items.some(p => Number(p.id) === Number(it.id))) continue; // same set?
+            setObj = eq.set;                        // name / items / bonuses
+            if (Number(idx) !== slotIdx) owned++;   // a sibling that survives the swap
+        }
+        const after = owned + 1;
+        const total = setObj ? setObj.items.length : 0;
+        const bonusAt = (setObj && Array.isArray(setObj.bonuses)
+            && setObj.bonuses.some(b => b.pieces === after)) ? after : null;
+        let label, cls, tip;
+        if (bonusAt) {
+            label = `&#11088; ${bonusAt}-set`;
+            cls   = 'up-set up-set-bonus';
+            tip   = `Equipping this completes the ${bonusAt}-piece set bonus${setObj.name ? ' (' + setObj.name + ')' : ''}`;
+        } else if (total) {
+            label = `&#11088; ${after}/${total}`;
+            cls   = 'up-set';
+            tip   = `${setObj.name || 'Set'} — you'd have ${after} of ${total} pieces`;
+        } else {
+            label = '&#11088;';
+            cls   = 'up-set';
+            tip   = 'Part of an item set';
+        }
+        return `<span class="${cls}" title="${escape(tip)}">${label}</span>`;
+    }
+
     function renderUpgradeCard(slotIdx, label, currentItem, mailItem, candidates) {
         // Tooltip provider hooks on data-item-id. Embedding the JSON gives
         // us hover-tooltip + compareProvider-driven "Currently equipped"
@@ -11040,9 +11088,12 @@
             // Cheapest current AH buyout (copper), from the API.
             const priceHtml = (kind === 'cand' && it.ahPrice)
                 ? `<span class="up-price" title="Cheapest Auction House buyout">${formatCopper(it.ahPrice)}</span>` : '';
+            // ⭐ set-piece flag (candidates only) — completes-N-set / N-of-total.
+            const setBadge = (kind === 'cand') ? setChipForCandidate(it, slotIdx) : '';
             return `<div class="up-item up-${kind}" data-item-id="${it.id || ''}" data-item-json="${json}" ${rowClick}>
                 <div class="up-item-line">
                     <span class="up-name" style="color:${it.color || '#fff'}">${escape(it.name || '?')}</span>
+                    ${setBadge}
                     ${priceHtml}
                     <span class="up-ah-slot">${ahLink}${dungeonLink}</span>
                     ${reqBadge}
