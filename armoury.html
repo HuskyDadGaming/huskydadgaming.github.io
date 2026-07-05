@@ -962,12 +962,40 @@
         <div style="display:flex; align-items:baseline; justify-content:space-between;
                     flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
             <h1 style="margin:0;">Characters</h1>
-            <a href="#" onclick="showSquads(); return false;"
-               style="font-size:0.9rem;">Manage squads →</a>
+            <span style="font-size:0.9rem;">
+                <a href="#" onclick="showLogs(); return false;">📊 Combat logs</a>
+                &nbsp;·&nbsp;
+                <a href="#" onclick="showSquads(); return false;">Manage squads →</a>
+            </span>
         </div>
         <div id="roster-loading" class="loading">Loading characters</div>
         <div id="roster-grid" class="roster-squads" style="display:none;"></div>
         <p id="roster-empty" style="display:none; color:#888;">No characters found.</p>
+    </div>
+
+    <!-- Combat logs view (Warcraft-Logs-style DPS/HPS reports) -->
+    <div id="view-logs" style="display:none;">
+        <p style="margin-bottom:0.5rem;">
+            <a href="#" onclick="showRoster(); return false;">← Back to roster</a>
+        </p>
+        <h1 style="margin-bottom:0.75rem;">📊 Combat Logs</h1>
+        <div id="logs-report"></div>
+        <div id="logs-list-wrap">
+            <div style="background:#222; border:1px solid #333; border-radius:6px; padding:0.9rem 1rem; margin-bottom:1rem;">
+                <label style="font-weight:bold;">Upload a WoWCombatLog.txt</label>
+                <p style="color:#888; font-size:0.8rem; margin:0.3rem 0 0.6rem;">
+                    From your WoW <code>Logs</code> folder (enable with <code>/combatlog</code> in-game).
+                    Parsed into per-pull DPS/HPS. Your squad's own combat only.
+                </p>
+                <input type="text" id="logs-label" placeholder="Optional label (e.g. SM run)"
+                       style="padding:0.3rem 0.5rem; margin-right:0.5rem; width:220px;">
+                <input type="file" id="logs-file" accept=".txt">
+                <button id="logs-upload-btn" onclick="doUploadLog()"
+                        style="margin-left:0.5rem; padding:0.3rem 0.8rem; cursor:pointer;">Upload</button>
+                <span id="logs-upload-status" style="margin-left:0.6rem; color:#888;"></span>
+            </div>
+            <div id="logs-list" class="loading">Loading reports</div>
+        </div>
     </div>
 
     <!-- Squad management view -->
@@ -8320,7 +8348,7 @@
 
     // ----- View management -----
     function showView(name) {
-        ['login', 'roster', 'character', 'ah', 'upgrades', 'squads'].forEach(v => {
+        ['login', 'roster', 'character', 'ah', 'upgrades', 'squads', 'logs'].forEach(v => {
             document.getElementById('view-' + v).style.display = (v === name) ? '' : 'none';
         });
         // Reflect auth state in the navbar. 'login' view = not signed in
@@ -8375,6 +8403,7 @@
                                       p.raceId, p.classId, p.level); break;
                 case 'upgrades':  showUpgrades(p.name, p.classId, p.level); break;
                 case 'squads':    showSquads(); break;
+                case 'logs':      showLogs(); break;
                 default:          showView('login');
             }
         } finally {
@@ -8659,6 +8688,111 @@
     //     characters: ['Tom','Brutus',...],       // every char on the account
     //     squads:     [['Tom','Brutus'], ...] }   // current draft layout
     let squadDraft = null;
+
+    // ----- Combat logs (Warcraft-Logs-style DPS/HPS reports) -----
+    window.showLogs = async function() {
+        showView('logs');
+        pushHistory('logs');
+        document.getElementById('logs-report').innerHTML = '';
+        document.getElementById('logs-list-wrap').style.display = '';
+        await refreshLogsList();
+    };
+
+    async function refreshLogsList() {
+        const el = document.getElementById('logs-list');
+        el.className = 'loading'; el.textContent = 'Loading reports';
+        try {
+            const d = await api('/logs');
+            const logs = d.logs || [];
+            if (!logs.length) { el.className = ''; el.innerHTML = '<p style="color:#888;">No reports yet — upload a log above.</p>'; return; }
+            el.className = '';
+            el.innerHTML = logs.map(l => {
+                const when = l.uploaded ? new Date(l.uploaded).toLocaleString() : l.id;
+                const lbl  = l.label ? escape(l.label) + ' · ' : '';
+                const mins = Math.round((l.combatSeconds || 0) / 60);
+                return `<div class="up-item" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;"
+                     onclick="showLogReport('${l.id}')">
+                     <span>${lbl}<strong>${l.pullCount} pulls</strong> <span style="color:#888;">· ${mins}m combat</span></span>
+                     <span style="color:#888; font-size:0.8rem;">${escape(when)}
+                        <a href="#" onclick="event.stopPropagation(); deleteLog('${l.id}'); return false;" style="margin-left:0.6rem; color:#a55;">✕</a></span>
+                   </div>`;
+            }).join('');
+        } catch (e) {
+            el.className = '';
+            if (e.message === 'Bad API key') { showView('login'); showError('Session expired'); return; }
+            el.innerHTML = '<p style="color:#a55;">Failed to load reports.</p>';
+        }
+    }
+
+    window.doUploadLog = async function() {
+        const fileEl = document.getElementById('logs-file');
+        const status = document.getElementById('logs-upload-status');
+        const btn    = document.getElementById('logs-upload-btn');
+        if (!fileEl.files.length) { status.textContent = 'Pick a .txt file first.'; return; }
+        const label = document.getElementById('logs-label').value || '';
+        const text  = await fileEl.files[0].text();
+        const { base, key } = getCreds();
+        btn.disabled = true; status.textContent = 'Parsing…';
+        try {
+            const r = await fetch(base + '/logs?label=' + encodeURIComponent(label), {
+                method: 'POST', headers: { 'X-API-Key': key, 'Content-Type': 'text/plain' }, body: text });
+            if (!r.ok) { const t = await r.text(); throw new Error(t || ('HTTP ' + r.status)); }
+            const d = await r.json();
+            status.textContent = `✓ ${d.pullCount} pulls parsed.`;
+            fileEl.value = ''; document.getElementById('logs-label').value = '';
+            await refreshLogsList();
+        } catch (e) {
+            status.textContent = '✗ ' + (e.message || 'upload failed');
+        } finally { btn.disabled = false; }
+    };
+
+    window.deleteLog = async function(id) {
+        if (!confirm('Delete this report?')) return;
+        try { await api('/logs/' + id, { method: 'DELETE' }); await refreshLogsList(); } catch (e) {}
+    };
+
+    window.showLogReport = async function(id) {
+        const rep = document.getElementById('logs-report');
+        document.getElementById('logs-list-wrap').style.display = 'none';
+        rep.innerHTML = '<div class="loading">Loading report</div>';
+        try { renderLogReport(rep, await api('/logs/' + id)); }
+        catch (e) { rep.innerHTML = '<p style="color:#a55;">Failed to load report.</p>'; }
+    };
+
+    function renderLogReport(el, payload) {
+        const r = payload.report || {}, pulls = r.pulls || [];
+        let html = `<p><a href="#" onclick="showLogs(); return false;">← All reports</a></p>`;
+        html += `<h2 style="margin:0.3rem 0;">${escape(payload.label || 'Combat report')}</h2>`;
+        html += `<p style="color:#888; margin-bottom:1rem;">${pulls.length} pulls · ${Math.round((r.combatSeconds || 0) / 60)}m combat · ${payload.uploaded ? new Date(payload.uploaded).toLocaleString() : ''}</p>`;
+        const bar = (name, val, unit, total, max, colour, nameColour) => {
+            const pct = Math.round(val / max * 100);
+            return `<tr>
+                <td style="width:120px; padding:1px 4px; ${nameColour ? 'color:' + nameColour + ';' : ''}">${escape(name)}</td>
+                <td style="padding:1px 4px;"><div style="background:${colour}; height:14px; width:${pct}%; min-width:2px; border-radius:2px;"></div></td>
+                <td style="width:82px; text-align:right; padding:1px 4px; font-variant-numeric:tabular-nums;">${val.toLocaleString()} ${unit}</td>
+                <td style="width:90px; text-align:right; padding:1px 4px; color:#888; font-variant-numeric:tabular-nums;">${total.toLocaleString()}</td>
+            </tr>`;
+        };
+        pulls.forEach(p => {
+            const dps = p.players.filter(x => x.damage > 0);
+            const heal = p.players.filter(x => x.healing > 0).sort((a, b) => b.hps - a.hps);
+            const dmax = Math.max(1, ...dps.map(x => x.dps));
+            const hmax = Math.max(1, ...heal.map(x => x.hps));
+            html += `<div style="margin-bottom:1.1rem;">
+                <div style="font-weight:bold; ${p.isBoss ? 'color:#ffd100;' : ''} margin-bottom:0.25rem;">
+                    ${p.isBoss ? '⚔️ ' : ''}${escape(p.name)} <span style="color:#888; font-weight:normal; font-size:0.85rem;">· ${p.duration}s</span></div>`;
+            html += `<table style="width:100%; border-collapse:collapse; font-size:0.85rem;">`;
+            dps.forEach(x => { html += bar(x.name, x.dps, 'dps', x.damage, dmax, '#3a5'); });
+            html += `</table>`;
+            if (heal.length) {
+                html += `<table style="width:100%; border-collapse:collapse; font-size:0.85rem; margin-top:0.3rem;">`;
+                heal.forEach(x => { html += bar(x.name, x.hps, 'hps', x.healing, hmax, '#4aa', '#7cc'); });
+                html += `</table>`;
+            }
+            html += `</div>`;
+        });
+        el.innerHTML = html;
+    }
 
     window.showSquads = async function() {
         showView('squads');
