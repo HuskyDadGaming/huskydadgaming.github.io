@@ -133,9 +133,11 @@
     #kcraft-tooltip .tt-set-piece {
       color: #888; padding-left: 6px; line-height: 1.3;
     }
+    #kcraft-tooltip .tt-set-piece-have { color: #fff; }        /* a piece you have equipped */
     #kcraft-tooltip .tt-set-bonus {
       color: #1eff00; line-height: 1.3; margin-top: 1px;
     }
+    #kcraft-tooltip .tt-set-bonus-inactive { color: #888; }    /* bonus not active at your piece count */
     #kcraft-tooltip .tt-set-bonus .tt-set-pieces { color: #888; }
     [data-item-id].tooltip-active { outline: 1px solid #555; outline-offset: -1px; }
 
@@ -618,23 +620,30 @@
       parts.push(`<div class="tt-effect">${trigger}${escape(resolveFormulas(e.text))}${delta}</div>`);
     });
 
-    // Item set block — yellow heading "Set Name (n/m)", greyed-out piece list,
-    // green bonus lines. Mirrors the in-game set tooltip; we don't know how
-    // many pieces the player owns so the heading shows total only ("(5)").
+    // Item set block — yellow heading "Set Name (owned/total)", piece list
+    // (equipped pieces white, the rest grey), bonus lines (active green, not-yet
+    // active greyed). The host page supplies the currently-viewed character's
+    // owned counts via globals keyed by set name / piece id; pages without that
+    // context (dungeon loot) fall back to total-only with every bonus green.
     if (it.set && it.set.name) {
       const s = it.set;
-      const pieceCount = (s.items || []).length;
-      const heading = pieceCount
-        ? `${escape(s.name)} (${pieceCount})`
+      const total = (s.items || []).length;
+      const counts     = (typeof window !== 'undefined' && window.KCraftEquippedSetCounts) || null;
+      const havePieces = (typeof window !== 'undefined' && window.KCraftEquippedSetPieces) || null;
+      const owned = (counts && counts[s.name]) || 0;
+      const heading = total
+        ? `${escape(s.name)} (${owned ? owned + '/' : ''}${total})`
         : escape(s.name);
       parts.push(`<div class="tt-set-heading">${heading}</div>`);
       (s.items || []).forEach(piece => {
-        const name = escape(piece.name || `Item ${piece.id}`);
-        parts.push(`<div class="tt-set-piece">${name}</div>`);
+        const have = havePieces && havePieces[piece.id];
+        parts.push(`<div class="tt-set-piece${have ? ' tt-set-piece-have' : ''}">${escape(piece.name || `Item ${piece.id}`)}</div>`);
       });
       (s.bonuses || []).forEach(b => {
+        // Grey out a bonus that isn't active yet (only when we know the count).
+        const inactive = owned > 0 && b.pieces > owned;
         parts.push(
-          `<div class="tt-set-bonus">` +
+          `<div class="tt-set-bonus${inactive ? ' tt-set-bonus-inactive' : ''}">` +
             `<span class="tt-set-pieces">(${b.pieces}) Set:</span> ` +
             `${escape(resolveFormulas(b.text))}` +
           `</div>`

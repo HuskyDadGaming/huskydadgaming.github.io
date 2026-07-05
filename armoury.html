@@ -9026,9 +9026,26 @@
                 <div class="mail-list">${rows}</div>`;
     }
 
+    // Expose the currently-viewed character's set-piece counts so the shared
+    // tooltip (tooltip.js) can show "Set (owned/total)" and grey out set bonuses
+    // that aren't active yet. Keyed by set name (counts) + piece item id (owned).
+    function updateEquippedSetIndex(equipped) {
+        const counts = {}, pieces = {};
+        for (const idx in (equipped || {})) {
+            const eq = equipped[idx];
+            if (eq && eq.set && eq.set.name) {
+                counts[eq.set.name] = (counts[eq.set.name] || 0) + 1;
+                if (eq.id != null) pieces[eq.id] = true;
+            }
+        }
+        window.KCraftEquippedSetCounts = counts;
+        window.KCraftEquippedSetPieces = pieces;
+    }
+
     function renderCharacter(c) {
         lastViewedEquipped = c.equipped || {};
         lastViewedCharacter = c;
+        updateEquippedSetIndex(lastViewedEquipped);
         // Equipped items in canonical order
         const equippedOrder = [
             [0, 'Head'], [1, 'Neck'], [2, 'Shoulder'], [14, 'Back'], [4, 'Chest'],
