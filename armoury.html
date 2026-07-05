@@ -11052,6 +11052,18 @@
         return `<span class="${cls}" title="${escape(tip)}">${label}</span>`;
     }
 
+    // ⭐ flag for an item you ALREADY have on (or a mailbox piece) — shows the set
+    // and how many pieces of it you currently have equipped (owned/total), using
+    // the same KCraftEquippedSetCounts the tooltip uses. No "completes" logic —
+    // that's only meaningful for a candidate you'd equip.
+    function setChipForEquipped(it) {
+        const s = it && it.set;
+        if (!s || !s.name || !(s.items || []).length) return '';
+        const total = s.items.length;
+        const owned = (window.KCraftEquippedSetCounts && window.KCraftEquippedSetCounts[s.name]) || 0;
+        return `<span class="up-set" title="${escape(s.name + ' — ' + owned + '/' + total + ' pieces equipped')}">&#11088; ${owned}/${total}</span>`;
+    }
+
     function renderUpgradeCard(slotIdx, label, currentItem, mailItem, candidates) {
         // Tooltip provider hooks on data-item-id. Embedding the JSON gives
         // us hover-tooltip + compareProvider-driven "Currently equipped"
@@ -11111,7 +11123,7 @@
             const priceHtml = (kind === 'cand' && it.ahPrice && !it.inBag)
                 ? `<span class="up-price" title="Cheapest Auction House buyout">${formatCopper(it.ahPrice)}</span>` : '';
             // ⭐ set-piece flag (candidates only) — completes-N-set / N-of-total.
-            const setBadge = (kind === 'cand') ? setChipForCandidate(it, slotIdx) : '';
+            const setBadge = (kind === 'cand') ? setChipForCandidate(it, slotIdx) : setChipForEquipped(it);
             return `<div class="up-item up-${kind}" data-item-id="${it.id || ''}" data-item-json="${json}" ${rowClick}>
                 <div class="up-item-line">
                     <span class="up-name" style="color:${it.color || '#fff'}">${escape(it.name || '?')}</span>
