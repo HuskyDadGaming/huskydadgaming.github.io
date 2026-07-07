@@ -10929,6 +10929,7 @@
         const profs   = upState.professions || [];
         const level   = upState.charLevel || 0;
         const ah      = upState.enchantsOnAH || new Set();
+        const owned   = upState.enchantsOwned || new Set();   // scrolls in bags/bank
         // compareToCurrent: measure suggestions against the BETTER of what's
         // applied vs what's bought in the mailbox — you won't downgrade, so only
         // enchants beating your best-available count. (An applied Mongoose still
@@ -10948,16 +10949,29 @@
                 if (compareToCurrent && equipped && e.ench === equipped.enchant) continue;  // skip the applied one
                 if (mailEn && e.ench === mailEn.ench) continue;   // skip the one already bought (in mailbox)
                 // Obtainable: a profession-crafted enchant needs the skill (you
-                // make it); everything else needs an applying scroll/item on the
-                // AH right now (you buy it) — capture it for the buy link.
-                let buy = null;
+                // make it); everything else needs an applying scroll/item you
+                // either already OWN (bags/bank — free to apply) or can buy on
+                // the AH right now. Prefer owned (it's free) over the buy link.
+                let buy = null, ownScroll = null;
                 if (e.prof) { if (!profs.includes(e.prof)) continue; }
-                else { buy = (e.items || []).find(it => ah.has(it[0])); if (!buy) continue; }
+                else {
+                    ownScroll = (e.items || []).find(it => owned.has(it[0]));
+                    buy       = (e.items || []).find(it => ah.has(it[0]));
+                    if (!ownScroll && !buy) continue;
+                }
                 const sc = scoreEnchant(e.stats, weights);
                 const delta = sc - curScore;   // == sc when not comparing (curScore 0)
                 if (delta <= 0) continue;
                 seen.add(e.name);
-                out.push(Object.assign({}, e, { _score: sc, _delta: delta, _buy: buy }));
+                // _scroll = the applying item to reference for the tooltip
+                // (owned one if we have it, else the AH one). _buy stays set only
+                // when it's an AH buy (drives the price + buy link); _owned flags
+                // "already in your bags" so no buy prompt shows.
+                out.push(Object.assign({}, e, {
+                    _score: sc, _delta: delta,
+                    _buy: ownScroll ? null : buy,
+                    _scroll: ownScroll || buy,
+                    _owned: !!ownScroll }));
             }
         }
         out.sort((a, b) => b._delta - a._delta);
@@ -11293,10 +11307,13 @@
             // API, keyed by scroll entry. When present, show them INSTEAD of the
             // flattened stat line — the scroll's own tooltip has no separate stat
             // line, and for procs (Crusader) "+100 Strength" misrepresents it.
-            const ttEffects = (e._buy && upState.enchantEffects) ? upState.enchantEffects[e._buy[0]] : null;
+            // The applying scroll to reference for the tooltip: owned one if we
+            // have it in bags, else the AH one (e._scroll covers both).
+            const scroll   = e._scroll || e._buy;
+            const ttEffects = (scroll && upState.enchantEffects) ? upState.enchantEffects[scroll[0]] : null;
             // _ahName = the scroll's item name, so the tooltip "Find on AH"
             // action (mobile) searches the scroll, not the enchant.
-            const ttItem = { id: (e._buy ? e._buy[0] : e.ench), name: e.name,
+            const ttItem = { id: (scroll ? scroll[0] : e.ench), name: e.name,
                 stats: (ttEffects && ttEffects.length) ? [] : statsArr,
                 effects: (ttEffects && ttEffects.length) ? ttEffects : undefined,
                 color: '#79b8e0', reqLevel: e.req || 0,
@@ -11308,10 +11325,12 @@
                 : '';
             // Whole row is clickable -> jump to the AH for the scroll (like item
             // rows). The AH icon keeps its own handler for a clear affordance.
+            // Owned scrolls have no AH action — nothing to buy.
             const rowClick = e._buy ? `onclick="window.ahForItem(${safeName}); return false;"` : '';
             const cursor   = e._buy ? 'cursor:pointer;' : '';
             const price    = (e._buy && upState.enchantPrices) ? upState.enchantPrices[e._buy[0]] : 0;
-            const priceHtml = price ? `<span class="up-price" title="Cheapest scroll buyout">${formatCopper(price)}</span>` : '';
+            const priceHtml = price ? `<span class="up-price" title="Cheapest scroll buyout">${formatCopper(price)}</span>`
+                : (e._owned ? `<span class="up-source" title="You already own this scroll (bags/bank)">🎒 In bags</span>` : '');
             return `<div class="up-enchant" data-item-id="${ttItem.id}" data-item-json="${ttJson}" ${rowClick}
                 style="${cursor}${dim}">
                 <span class="up-ench-name">&#128295; ${escape(nm)}</span>
@@ -11510,6 +11529,7 @@
             }
             upState.professions = up.professions || [];  // skill ids, for enchant profession gate
             upState.enchantsOnAH = new Set(up.enchantsOnAH || []);  // enchant items buyable on AH now
+            upState.enchantsOwned = new Set(up.enchantsOwned || []);  // enchant scrolls already in bags/bank
             upState.enchantPrices = up.enchantPrices || {};   // scroll entry -> cheapest buyout (copper)
             upState.enchantEffects = up.enchantEffects || {}; // scroll entry -> real [{trigger,text}] tooltip effects
             upState.money = up.money || 0;                    // character's gold total (copper)
