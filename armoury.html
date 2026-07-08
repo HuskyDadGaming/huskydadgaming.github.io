@@ -9770,7 +9770,13 @@
             const slotKey = item.invType || item.slotFilter;
             const slots = AH_INVTYPE_TO_EQUIP_SLOTS[slotKey];
             if (!slots) return null;
-            const who = ahState.charName || upState.charName || 'Currently equipped';
+            // Name the character whose gear we're comparing against. This MUST be
+            // the viewed character (lastViewedCharacter, set alongside
+            // lastViewedEquipped) — NOT ahState/upState.charName, which hold the
+            // last char used in the AH / Upgrade Finder and go stale when you then
+            // browse a different character's bags (showed "Aicha" over Tom's gear).
+            const who = (lastViewedCharacter && lastViewedCharacter.name)
+                     || ahState.charName || upState.charName || 'Currently equipped';
             const mh  = lastViewedEquipped[15];
             const oh  = lastViewedEquipped[16];
             const currMHis2H = mh && (mh.invType === 'Two-Hand');
