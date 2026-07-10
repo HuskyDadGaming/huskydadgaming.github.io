@@ -10862,11 +10862,20 @@
         if (after <= before) return 0;                // set-piece → set-piece: no change
         let score = 0;
         for (const b of setObj.bonuses) {
-            if (b.pieces > before && b.pieces <= after) {   // newly-crossed threshold
-                const stats = parseBonusStats(b.text);
-                for (const name in stats)
-                    score += (stats[name] / (STAT_NORM[name] || 1)) * (weights[name] || 0);
-            }
+            const T = b.pieces;
+            if (T <= 0) continue;
+            // Amortise each bonus across its T pieces: this swap moves you
+            // before→after pieces, so it earns the FRACTION of the bonus it
+            // covers — 1/T per piece up to the threshold, 0 beyond it. End-game
+            // is about assembling tier, so every piece toward a set gets valued
+            // (a 1st tier piece already earns a share of the 3/5/8-set bonuses),
+            // paying out fully by the time the set completes — not one lump at
+            // the exact threshold. Only flat/permanent bonus stats; procs → 0.
+            const gained = Math.min(after, T) - Math.min(before, T);
+            if (gained <= 0) continue;
+            const stats = parseBonusStats(b.text);
+            for (const name in stats)
+                score += (stats[name] / (STAT_NORM[name] || 1)) * (weights[name] || 0) * (gained / T);
         }
         return score;
     }
