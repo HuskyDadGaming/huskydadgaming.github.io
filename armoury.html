@@ -10844,6 +10844,51 @@
         while ((m = primRe.exec(t))) out[m[1]] = (out[m[1]] || 0) + parseInt(m[2], 10);
         return out;
     }
+    // --- Non-stat set bonuses (procs, cooldowns, resource, % modifiers, extra
+    // targets) -------------------------------------------------------------
+    // These can't be read as weighted stats, yet they're most of what makes
+    // tier tier. Value each as an equivalent number of PRIMARY-stat points,
+    // then route it through the player's own top scaling-stat weight. That keeps
+    // it in the same units as the stat score AND makes it role-aware for free:
+    // a warrior's bonus scales by Strength/Stamina, a mage's by Spell Power, a
+    // resto shaman's by Spell Power — no per-role bonus table needed.
+    const BONUS_ANCHOR_STATS = ['Strength', 'Agility', 'Intellect', 'Spirit', 'Spell Power', 'Stamina'];
+    const DEFAULT_BONUS_EQUIV = 22;   // flat floor for any non-stat bonus
+    // Curated overrides, keyed "Set Name|pieces". Build-defining raid-tier
+    // bonuses sit high; solid-but-not-defining procs mid; pure defensive/flavour
+    // procs low. Anything not listed rides DEFAULT_BONUS_EQUIV. Tunable — these
+    // are equivalent primary-stat points, so ~30-50 ≈ one extra strong item.
+    const SET_BONUS_EQUIV = {
+        // marquee — the reason you chase the set
+        'Bloodfang Armor|8': 50, 'Netherwind Regalia|8': 55,
+        'Giantstalker Armor|8': 50, 'Dragonstalker Armor|8': 50,
+        'Cenarion Raiment|8': 48, 'The Earthfury|8': 50,
+        'The Ten Storms|8': 46, 'Judgement Armor|8': 45,
+        'Lawbringer Armor|8': 45, 'Battlegear of Might|5': 45,
+        'Nightslayer Armor|3': 40, 'Vestments of Prophecy|8': 40,
+        // solid throughput procs (AP/SP-on-hit, rage/energy return, etc.)
+        'Desolation Battlegear|4': 35, 'Doomplate Battlegear|4': 35,
+        'Wastewalker Armor|4': 35, 'Mana-Etched Regalia|4': 35,
+        'The Elements|6': 40, 'Lightforge Armor|6': 35,
+        'Shadowcraft Armor|6': 35, 'Beaststalker Armor|6': 32,
+        'Battlegear of Wrath|5': 32, 'Assassination Armor|2': 30,
+        'The Earthfury|5': 30, 'Bloodfang Armor|3': 32,
+        // minor — defensive/flavour procs, small quality-of-life
+        'Dreadmist Raiment|6': 12, 'Vestments of the Devout|6': 12,
+        "Magister's Regalia|6": 12, 'Ironweave Battlesuit|4': 10,
+        'Spirit of Eskhandar|2': 12, "Spider's Kiss|2": 14,
+        'Vestments of Transcendence|5': 12, 'Battlegear of Wrath|8': 15,
+        'Nightslayer Armor|8': 15, 'Bold Armor|2': 14, 'Righteous Armor|2': 14,
+    };
+    function bonusEquiv(name, pieces) {
+        const v = SET_BONUS_EQUIV[`${name}|${pieces}`];
+        return v == null ? DEFAULT_BONUS_EQUIV : v;
+    }
+    function bonusAnchorWeight(weights) {
+        let best = 0;
+        for (const k of BONUS_ANCHOR_STATS) best = Math.max(best, weights[k] || 0);
+        return best;   // ~1.0 for the player's main scaling stat; 0 if unweighted
+    }
     // Weighted value of the set bonuses a candidate would NEWLY activate in this
     // slot, given the set pieces you'd still be wearing after the swap. Uses the
     // candidate's own set data (name/items/bonuses, attached by /upgrades).
@@ -10874,8 +10919,15 @@
             const gained = Math.min(after, T) - Math.min(before, T);
             if (gained <= 0) continue;
             const stats = parseBonusStats(b.text);
-            for (const name in stats)
-                score += (stats[name] / (STAT_NORM[name] || 1)) * (weights[name] || 0) * (gained / T);
+            if (Object.keys(stats).length) {
+                for (const name in stats)
+                    score += (stats[name] / (STAT_NORM[name] || 1)) * (weights[name] || 0) * (gained / T);
+            } else if (b.text && b.text.trim()) {
+                // Non-stat bonus (proc / cooldown / resource / % modifier /
+                // extra target): value it as equiv primary-stat points routed
+                // through the player's top scaling-stat weight, amortised 1/T.
+                score += bonusEquiv(setObj.name, T) * bonusAnchorWeight(weights) * (gained / T);
+            }
         }
         return score;
     }
