@@ -501,6 +501,7 @@
 
     <div class="tab-bar">
         <button class="tab-btn active" data-view="dungeons">📚 Browse Dungeons</button>
+        <button class="tab-btn" data-view="raids">🌋 Raids</button>
         <button class="tab-btn" data-view="finder">🔍 Find Loot</button>
         <a class="tab-btn tab-link" href="armoury.html">🛡️ Armoury</a>
         <a class="tab-btn tab-link" href="talents.html">📜 Talents</a>
@@ -1475,7 +1476,16 @@
             </div>
         </div>
     </div>
+    <!-- DUNGEON-BROWSER-END -->
 
+
+    </section>
+
+    <section id="view-raids" class="tab-view">
+
+    <!-- RAID-BROWSER-START — Auto-generated from build_config.yaml dungeon_browser
+         expansions with `tab: raids`. Do NOT edit cards here directly; edit the YAML
+         and run: python build_dungeons.py --update-index index.html -->
     <div class="expansion-section">
         <div class="expansion-header" style="border-color: #ff4d4d;">
             <h2>Raids</h2>
@@ -1610,8 +1620,7 @@
             </div>
         </div>
     </div>
-    <!-- DUNGEON-BROWSER-END -->
-
+    <!-- RAID-BROWSER-END -->
 
     </section>
 
@@ -2454,7 +2463,7 @@
     // Browse Dungeons and Find Loot share one HTML file (this one), so we
     // also swap the browser-tab favicon when the view changes so the
     // bookmark/title bar icon matches the active nav glyph.
-    const FAVICON_EMOJI = { dungeons: '📚', finder: '🔍' };
+    const FAVICON_EMOJI = { dungeons: '📚', raids: '🌋', finder: '🔍' };
     function setFavicon(emoji) {
         const link = document.querySelector('link[rel="icon"]');
         if (!link) return;
@@ -2479,7 +2488,7 @@
         // button returns to the previous tab. A popstate-driven switch
         // (fromHistory) must NOT push — that switch IS the Back navigation.
         if (history.pushState && !fromHistory) {
-            history.pushState(null, '', v === 'finder' ? '#finder' : window.location.pathname);
+            history.pushState(null, '', v === 'dungeons' ? window.location.pathname : '#' + v);
         }
         if (FAVICON_EMOJI[v]) setFavicon(FAVICON_EMOJI[v]);
         // Re-sync focus mode when tabs change so leaving Find Loot brings
@@ -2496,12 +2505,13 @@
 
     // Browser Back/Forward — restore the tab from the URL hash, no re-push.
     window.addEventListener('popstate', function() {
-        showView(window.location.hash === '#finder' ? 'finder' : 'dungeons', true);
+        const h = window.location.hash.slice(1);
+        showView(h === 'finder' || h === 'raids' ? h : 'dungeons', true);
     });
 
-    // Open finder if URL hash says so (deep link / refresh on #finder).
-    if (window.location.hash === '#finder') {
-        showView('finder', true);
+    // Open the tab named by the URL hash (deep link / refresh on #finder or #raids).
+    if (window.location.hash === '#finder' || window.location.hash === '#raids') {
+        showView(window.location.hash.slice(1), true);
     }
 
     // ----- Wire up sortable headers -----
