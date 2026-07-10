@@ -10892,9 +10892,21 @@
     // Weighted value of the set bonuses a candidate would NEWLY activate in this
     // slot, given the set pieces you'd still be wearing after the swap. Uses the
     // candidate's own set data (name/items/bonuses, attached by /upgrades).
-    function setBonusDelta(it, slotIdx, weights) {
+    function setBonusDelta(it, slotIdx, weights, role, cls) {
         const setObj = it && it.set;
         if (!setObj || !Array.isArray(setObj.items) || !Array.isArray(setObj.bonuses)) return 0;
+        // Only credit a set that's actually meant for this character. Routing the
+        // non-stat bonus through the anchor stat scales its MAGNITUDE by your main
+        // stat but not its RELEVANCE — without this gate a healer set's proc would
+        // score full credit for a warrior tank (its raw stats are a big downgrade,
+        // but the flat-floor bonus flipped it to a fake upgrade). Gate on the
+        // candidate's own inferred class+role fit; off-target gear then relies on
+        // raw stats, which correctly sink it. (Same role/class vocab as getStatWeights.)
+        // REQUIRE a positive match — an untagged set (empty roles/classes, e.g. a
+        // healing-plate set the classifier couldn't place) can't be confirmed
+        // relevant, so it earns no bonus rather than a spurious floor credit.
+        if (cls  && !(Array.isArray(it.classes) && it.classes.includes(cls)))  return 0;
+        if (role && !(Array.isArray(it.roles)   && it.roles.includes(role)))   return 0;
         const ids = new Set(setObj.items.map(p => Number(p.id)));
         let owned = 0, sameSlot = false;
         for (const idx in (upState.equipped || {})) {
@@ -11253,7 +11265,7 @@
 
         for (const it of unique) {
             it.upgradeDelta = scoreItemForRole(it, weights, capCtx) - baselineFor(it)
-                            + setBonusDelta(it, slotIdx, weights);
+                            + setBonusDelta(it, slotIdx, weights, role, cls);
         }
         // Minimum role-fit delta to count as a REAL upgrade. scoreItemForRole
         // already scored these with THIS slot's class/role weight profile, so
