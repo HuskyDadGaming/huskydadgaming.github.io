@@ -10824,6 +10824,53 @@
         return score;
     }
 
+    // --- Set-bonus scoring (permanent flat stats only; procs stay unscored) ---
+    // A tier/set bonus that grants always-on flat stats ("+28 crit rating",
+    // "block value +60", "+20 Stamina") IS quantifiable, so the finder credits a
+    // candidate that would NEWLY activate one. Conditional/proc bonuses ("X%
+    // chance to…", "for N sec", ability-specific %) are random/hard to value and
+    // are left to the ⭐ badge. Reuses RATING_EXTRACTORS — proc text simply
+    // doesn't match the flat "…by N" patterns, so it falls through to {}.
+    function parseBonusStats(text) {
+        const t = String(text || '');
+        if (/\b(chance|whenever|when |for \d+\s*sec|next|proc|after)\b/i.test(t)) return {};
+        const out = {};
+        for (const [name, re] of RATING_EXTRACTORS) {
+            const m = re.exec(t);
+            if (m) out[name] = (out[name] || 0) + parseInt(m[1], 10);
+        }
+        let m;
+        const primRe = /(?:increases|improves) your (Stamina|Strength|Agility|Intellect|Spirit) by (\d+)/gi;
+        while ((m = primRe.exec(t))) out[m[1]] = (out[m[1]] || 0) + parseInt(m[2], 10);
+        return out;
+    }
+    // Weighted value of the set bonuses a candidate would NEWLY activate in this
+    // slot, given the set pieces you'd still be wearing after the swap. Uses the
+    // candidate's own set data (name/items/bonuses, attached by /upgrades).
+    function setBonusDelta(it, slotIdx, weights) {
+        const setObj = it && it.set;
+        if (!setObj || !Array.isArray(setObj.items) || !Array.isArray(setObj.bonuses)) return 0;
+        const ids = new Set(setObj.items.map(p => Number(p.id)));
+        let owned = 0, sameSlot = false;
+        for (const idx in (upState.equipped || {})) {
+            const eq = upState.equipped[idx];
+            if (!eq || eq.id == null || !ids.has(Number(eq.id))) continue;
+            if (Number(idx) === slotIdx) sameSlot = true; else owned++;
+        }
+        const before = owned + (sameSlot ? 1 : 0);   // set pieces worn now
+        const after  = owned + 1;                     // …after equipping candidate
+        if (after <= before) return 0;                // set-piece → set-piece: no change
+        let score = 0;
+        for (const b of setObj.bonuses) {
+            if (b.pieces > before && b.pieces <= after) {   // newly-crossed threshold
+                const stats = parseBonusStats(b.text);
+                for (const name in stats)
+                    score += (stats[name] / (STAT_NORM[name] || 1)) * (weights[name] || 0);
+            }
+        }
+        return score;
+    }
+
     // Single in-memory cache of loot-data.json. Prefer the embedded
     // <script id="loot-data"> tag (populated by build_dungeons.py
     // --update-index) so the page works offline including file:// URLs.
@@ -11144,7 +11191,8 @@
         }
 
         for (const it of unique) {
-            it.upgradeDelta = scoreItemForRole(it, weights, capCtx) - baselineFor(it);
+            it.upgradeDelta = scoreItemForRole(it, weights, capCtx) - baselineFor(it)
+                            + setBonusDelta(it, slotIdx, weights);
         }
         // Minimum role-fit delta to count as a REAL upgrade. scoreItemForRole
         // already scored these with THIS slot's class/role weight profile, so
