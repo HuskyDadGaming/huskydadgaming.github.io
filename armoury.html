@@ -11042,8 +11042,19 @@
 
     // Score an enchant's flat {stat:value} map with the role weights, matching
     // scoreItemForRole's per-stat normalization. Procs (empty stats) score 0.
-    function scoreEnchant(stats, weights) {
+    function scoreEnchant(stats, weights, role) {
         let s = 0;
+        // A healer gets nothing from a melee weapon/armor enchant. Some carry a
+        // stat a caster's weight table still values in isolation — e.g. Mongoose
+        // is {Agility, Haste}: the Agility zeroes out but the melee-proc Haste
+        // (only fires on melee swings) would otherwise score. If an enchant
+        // carries ANY melee-only stat as a direct key it's a melee enchant, so
+        // veto the whole thing for the heal role. ("All Stats" is handled below
+        // and intentionally excluded — it also gives Int/Spirit/Stamina.)
+        if (role === 'heal') {
+            for (const m of ['Strength', 'Agility', 'Attack Power', 'Armor Pen', 'Expertise'])
+                if ((stats || {})[m]) return 0;
+        }
         for (const name in (stats || {})) {
             const val = stats[name];
             if (name === 'Weapon Damage') { s += val * (weights['Melee DPS'] || 0) * 0.3; continue; }
@@ -11054,9 +11065,16 @@
                     s += (val / (STAT_NORM[st] || 1)) * (weights[st] || 0);
                 continue;
             }
-            // School-labeled spell power ("Fire and Arcane Spell Power") is only
-            // a tooltip label — score it as generic Spell Power (not school-aware).
-            const key = / Spell Power$/.test(name) ? 'Spell Power' : name;
+            // School-labeled spell power — "Shadow Spell Power", "Frost and Shadow
+            // Spell Power" (Soulfrost), "Fire and Arcane Spell Power" (Sunfire) —
+            // boosts ONLY that damage school. A caster-DPS slots the enchant that
+            // matches their own school, so it's worth generic Spell Power to them:
+            // collapse it. But a HEALER gets nothing from a damage school — keep
+            // the school name so it has no weight and scores 0. Only generic
+            // "Spell Power" (Healing Power / Spellpower, which includes +healing)
+            // counts for healing.
+            const isSchoolSP = / Spell Power$/.test(name);  // bare "Spell Power" has no leading space -> excluded
+            const key = isSchoolSP ? (role === 'heal' ? name : 'Spell Power') : name;
             s += (val / (STAT_NORM[key] || 1)) * (weights[key] || 0);
         }
         return s;
@@ -11088,8 +11106,8 @@
         const curEn  = (compareToCurrent && equipped && equipped.enchant && window.KCraftEnchantById)
             ? window.KCraftEnchantById[equipped.enchant] : null;
         const curScore = Math.max(
-            mailEn ? scoreEnchant(mailEn.stats, weights) : 0,
-            curEn  ? scoreEnchant(curEn.stats,  weights) : 0);
+            mailEn ? scoreEnchant(mailEn.stats, weights, upState.role) : 0,
+            curEn  ? scoreEnchant(curEn.stats,  weights, upState.role) : 0);
         const out = [], seen = new Set();
         for (const pool of pools) {
             for (const e of (ENCHANTS[pool] || [])) {
@@ -11108,7 +11126,7 @@
                     buy       = (e.items || []).find(it => ah.has(it[0]));
                     if (!ownScroll && !buy) continue;
                 }
-                const sc = scoreEnchant(e.stats, weights);
+                const sc = scoreEnchant(e.stats, weights, upState.role);
                 const delta = sc - curScore;   // == sc when not comparing (curScore 0)
                 if (delta <= 0) continue;
                 seen.add(e.name);
