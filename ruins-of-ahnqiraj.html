@@ -503,7 +503,7 @@
                 <select id="class-dropdown">
                     <option value="all">All classes (85)</option>
                     <option value="warrior">Warrior (38)</option>
-                    <option value="paladin">Paladin (44)</option>
+                    <option value="paladin">Paladin (46)</option>
                     <option value="hunter">Hunter (18)</option>
                     <option value="rogue">Rogue (16)</option>
                     <option value="priest">Priest (22)</option>
@@ -519,7 +519,7 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">85</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">26</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">37</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">43</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">49</span>)</button>
             <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">48</span>)</button>
         </div>
@@ -1069,15 +1069,16 @@
                         <td class="text-end">11.1%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="heal melee"
                         data-classes="warrior paladin dk"
                         data-req="60"
                         data-item-id="21475"
-                        data-item-json="{&quot;id&quot;:21475,&quot;name&quot;:&quot;Legplates of the Destroyer&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:74,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Plate)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+670 Armor&quot;,&quot;+19 Strength&quot;,&quot;+18 Intellect&quot;,&quot;+18 Stamina&quot;,&quot;+10 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:42918,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:18,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:11.11111111111111,&quot;chanceStr&quot;:&quot;11.1%&quot;,&quot;bossId&quot;:15340,&quot;bossName&quot;:&quot;Moam&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:509,&quot;dungeon&quot;:&quot;Ruins of Ahn&#x27;Qiraj&quot;,&quot;page&quot;:&quot;ruins-of-ahnqiraj.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:21475,&quot;name&quot;:&quot;Legplates of the Destroyer&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:74,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Plate)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+670 Armor&quot;,&quot;+19 Strength&quot;,&quot;+18 Intellect&quot;,&quot;+18 Stamina&quot;,&quot;+10 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:42918,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:18,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:11.11111111111111,&quot;chanceStr&quot;:&quot;11.1%&quot;,&quot;bossId&quot;:15340,&quot;bossName&quot;:&quot;Moam&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:509,&quot;dungeon&quot;:&quot;Ruins of Ahn&#x27;Qiraj&quot;,&quot;page&quot;:&quot;ruins-of-ahnqiraj.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Legplates of the Destroyer</span></td>
                         <td><span class="slot-text">Legs (Plate)</span></td>
                         <td><span class="stat-text">+670 Armor, +19 Strength, +18 Intellect, +18 Stamina, +10 Agility</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -1307,15 +1308,16 @@
                         <td class="text-end">6.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="heal melee"
                         data-classes="warrior paladin dk"
                         data-req="60"
                         data-item-id="21486"
-                        data-item-json="{&quot;id&quot;:21486,&quot;name&quot;:&quot;Gloves of the Swarm&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Plate)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+550 Armor&quot;,&quot;+18 Intellect&quot;,&quot;+18 Stamina&quot;,&quot;+11 Strength&quot;,&quot;+10 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:55,&quot;sellPrice&quot;:25208,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:52,&quot;sellCopper&quot;:8,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:6.66667,&quot;chanceStr&quot;:&quot;6.7%&quot;,&quot;bossId&quot;:15370,&quot;bossName&quot;:&quot;Buru the Gorger&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:509,&quot;dungeon&quot;:&quot;Ruins of Ahn&#x27;Qiraj&quot;,&quot;page&quot;:&quot;ruins-of-ahnqiraj.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:21486,&quot;name&quot;:&quot;Gloves of the Swarm&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Plate)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+550 Armor&quot;,&quot;+18 Intellect&quot;,&quot;+18 Stamina&quot;,&quot;+11 Strength&quot;,&quot;+10 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:55,&quot;sellPrice&quot;:25208,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:52,&quot;sellCopper&quot;:8,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:6.66667,&quot;chanceStr&quot;:&quot;6.7%&quot;,&quot;bossId&quot;:15370,&quot;bossName&quot;:&quot;Buru the Gorger&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:509,&quot;dungeon&quot;:&quot;Ruins of Ahn&#x27;Qiraj&quot;,&quot;page&quot;:&quot;ruins-of-ahnqiraj.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Gloves of the Swarm</span></td>
                         <td><span class="slot-text">Hands (Plate)</span></td>
                         <td><span class="stat-text">+550 Armor, +18 Intellect, +18 Stamina, +11 Strength, +10 Agility</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -1376,15 +1378,16 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="heal melee"
                         data-classes="warrior paladin dk"
                         data-req="60"
                         data-item-id="21481"
-                        data-item-json="{&quot;id&quot;:21481,&quot;name&quot;:&quot;Boots of the Desert Protector&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:73,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Plate)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+519 Armor&quot;,&quot;+14 Strength&quot;,&quot;+14 Intellect&quot;,&quot;+14 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:29346,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:93,&quot;sellCopper&quot;:46,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:15.999998,&quot;chanceStr&quot;:&quot;16.0%&quot;,&quot;bossId&quot;:15369,&quot;bossName&quot;:&quot;Ayamiss the Hunter&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:509,&quot;dungeon&quot;:&quot;Ruins of Ahn&#x27;Qiraj&quot;,&quot;page&quot;:&quot;ruins-of-ahnqiraj.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:21481,&quot;name&quot;:&quot;Boots of the Desert Protector&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:73,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Plate)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+519 Armor&quot;,&quot;+14 Strength&quot;,&quot;+14 Intellect&quot;,&quot;+14 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:29346,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:93,&quot;sellCopper&quot;:46,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:15.999998,&quot;chanceStr&quot;:&quot;16.0%&quot;,&quot;bossId&quot;:15369,&quot;bossName&quot;:&quot;Ayamiss the Hunter&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:509,&quot;dungeon&quot;:&quot;Ruins of Ahn&#x27;Qiraj&quot;,&quot;page&quot;:&quot;ruins-of-ahnqiraj.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Boots of the Desert Protector</span></td>
                         <td><span class="slot-text">Feet (Plate)</span></td>
                         <td><span class="stat-text">+519 Armor, +14 Strength, +14 Intellect, +14 Stamina</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -1438,18 +1441,20 @@
                         <td class="text-end">16.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="21483"
-                        data-item-json="{&quot;id&quot;:21483,&quot;name&quot;:&quot;Ring of the Desert Winds&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:73,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your critical strike rating by 14.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 4 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:75303,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:53,&quot;sellCopper&quot;:3,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:15.999998,&quot;chanceStr&quot;:&quot;16.0%&quot;,&quot;bossId&quot;:15369,&quot;bossName&quot;:&quot;Ayamiss the Hunter&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:509,&quot;dungeon&quot;:&quot;Ruins of Ahn&#x27;Qiraj&quot;,&quot;page&quot;:&quot;ruins-of-ahnqiraj.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:21483,&quot;name&quot;:&quot;Ring of the Desert Winds&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:73,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your critical strike rating by 14.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 4 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:75303,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:53,&quot;sellCopper&quot;:3,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:15.999998,&quot;chanceStr&quot;:&quot;16.0%&quot;,&quot;bossId&quot;:15369,&quot;bossName&quot;:&quot;Ayamiss the Hunter&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:509,&quot;dungeon&quot;:&quot;Ruins of Ahn&#x27;Qiraj&quot;,&quot;page&quot;:&quot;ruins-of-ahnqiraj.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Ring of the Desert Winds</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+9 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1693,15 +1698,16 @@
                         <td class="text-end">0.12%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="heal melee"
                         data-classes="warrior paladin dk"
                         data-req="60"
                         data-item-id="21453"
-                        data-item-json="{&quot;id&quot;:21453,&quot;name&quot;:&quot;Mantle of the Horusath&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:72,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+697 Armor&quot;,&quot;+20 Intellect&quot;,&quot;+19 Stamina&quot;,&quot;+12 Strength&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:40467,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:4,&quot;sellCopper&quot;:67,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.11538461538461538,&quot;chanceStr&quot;:&quot;0.12%&quot;,&quot;bossId&quot;:15339,&quot;bossName&quot;:&quot;Ossirian the Unscarred&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:509,&quot;dungeon&quot;:&quot;Ruins of Ahn&#x27;Qiraj&quot;,&quot;page&quot;:&quot;ruins-of-ahnqiraj.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:21453,&quot;name&quot;:&quot;Mantle of the Horusath&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:72,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+697 Armor&quot;,&quot;+20 Intellect&quot;,&quot;+19 Stamina&quot;,&quot;+12 Strength&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:40467,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:4,&quot;sellCopper&quot;:67,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.11538461538461538,&quot;chanceStr&quot;:&quot;0.12%&quot;,&quot;bossId&quot;:15339,&quot;bossName&quot;:&quot;Ossirian the Unscarred&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:509,&quot;dungeon&quot;:&quot;Ruins of Ahn&#x27;Qiraj&quot;,&quot;page&quot;:&quot;ruins-of-ahnqiraj.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Mantle of the Horusath</span></td>
                         <td><span class="slot-text">Shoulder (Plate)</span></td>
                         <td><span class="stat-text">+697 Armor, +20 Intellect, +19 Stamina, +12 Strength</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -1966,19 +1972,19 @@
                         <td class="text-end">0.56%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal"
+                        data-classes="paladin"
                         data-req="60"
                         data-item-id="21803"
-                        data-item-json="{&quot;id&quot;:21803,&quot;name&quot;:&quot;Helm of the Holy Avenger&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Plate)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+574 Armor&quot;,&quot;+18 Intellect&quot;,&quot;+17 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 20.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your critical strike rating by 14.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:27935,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:79,&quot;sellCopper&quot;:35,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:0.4444,&quot;chanceStr&quot;:&quot;0.44%&quot;,&quot;bossId&quot;:9000509,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:509,&quot;dungeon&quot;:&quot;Ruins of Ahn&#x27;Qiraj&quot;,&quot;page&quot;:&quot;ruins-of-ahnqiraj.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:21803,&quot;name&quot;:&quot;Helm of the Holy Avenger&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Plate)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+574 Armor&quot;,&quot;+18 Intellect&quot;,&quot;+17 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 20.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your critical strike rating by 14.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:27935,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:79,&quot;sellCopper&quot;:35,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:0.4444,&quot;chanceStr&quot;:&quot;0.44%&quot;,&quot;bossId&quot;:9000509,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:509,&quot;dungeon&quot;:&quot;Ruins of Ahn&#x27;Qiraj&quot;,&quot;page&quot;:&quot;ruins-of-ahnqiraj.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Helm of the Holy Avenger</span></td>
                         <td><span class="slot-text">Head (Plate)</span></td>
                         <td><span class="stat-text">+574 Armor, +18 Intellect, +17 Stamina</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                         </td>
                         <td class="text-end">68</td>
                         <td class="text-end">0.44%</td>

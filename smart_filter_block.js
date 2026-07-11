@@ -104,6 +104,10 @@
         const isLeather = /\(Leather\)/.test(ic);
         const isCloth = /\(Cloth\)/.test(ic);
         const isWeapon = ['One-Hand','Two-Hand','Main Hand','Off-Hand','Ranged','Held','Thrown'].includes(slot);
+        // Typeless slots (rings, necks, trinkets, held): no armor subclass, not a
+        // weapon. Any class that clears passes_class_armor can equip them, so
+        // stat-based role logic isn't gated by an armor tier here.
+        const isTypeless = !(isPlate || isMail || isLeather || isCloth) && !isWeapon;
 
         // Class proficiency. WEAPON_PROFICIENCY (itemClass=2) and
         // ARMOR_CLASS_RESTRICTIONS (itemClass=4) are the authoritative
@@ -159,7 +163,10 @@
         if (role === 'heal') {
             if (!['priest','paladin','druid','shaman'].includes(cls)) return false;
             if (hasStat('Spirit') || hasStat('MP5') || hasStat('Spell Power')) return true;
-            if (hasStat('Intellect') && (isCloth || isLeather || isMail)) return true;
+            // Plate covers Holy Paladin Int-plate; typeless covers Int jewelry/necks.
+            // Only paladin among heal classes clears passes_class_armor for plate,
+            // so this can't mis-tag priest/druid/shaman.
+            if (hasStat('Intellect') && (isCloth || isLeather || isMail || isPlate || isTypeless)) return true;
             return false;
         }
 

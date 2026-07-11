@@ -504,7 +504,7 @@
                 <select id="class-dropdown">
                     <option value="all">All classes (25)</option>
                     <option value="warrior">Warrior (13)</option>
-                    <option value="paladin">Paladin (13)</option>
+                    <option value="paladin">Paladin (14)</option>
                     <option value="hunter">Hunter (7)</option>
                     <option value="rogue">Rogue (8)</option>
                     <option value="priest">Priest (5)</option>
@@ -520,7 +520,7 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">25</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">9</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">4</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">5</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">16</span>)</button>
             <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">11</span>)</button>
         </div>
@@ -808,18 +808,20 @@
                         <td class="text-end">55.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="17"
                         data-item-id="1156"
-                        data-item-json="{&quot;id&quot;:1156,&quot;name&quot;:&quot;Lavishly Jeweled Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:22,&quot;req&quot;:17,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 2.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:812,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:8,&quot;sellCopper&quot;:12,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:45.0,&quot;chanceStr&quot;:&quot;45.0%&quot;,&quot;bossId&quot;:1763,&quot;bossName&quot;:&quot;Gilnid&quot;,&quot;bossLvl&quot;:20,&quot;mapId&quot;:36,&quot;dungeon&quot;:&quot;The Deadmines&quot;,&quot;page&quot;:&quot;the-deadmines.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:1156,&quot;name&quot;:&quot;Lavishly Jeweled Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:22,&quot;req&quot;:17,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 2.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:812,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:8,&quot;sellCopper&quot;:12,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:45.0,&quot;chanceStr&quot;:&quot;45.0%&quot;,&quot;bossId&quot;:1763,&quot;bossName&quot;:&quot;Gilnid&quot;,&quot;bossLvl&quot;:20,&quot;mapId&quot;:36,&quot;dungeon&quot;:&quot;The Deadmines&quot;,&quot;page&quot;:&quot;the-deadmines.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Lavishly Jeweled Ring</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+6 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>

@@ -504,7 +504,7 @@
                 <select id="class-dropdown">
                     <option value="all">All classes (33)</option>
                     <option value="warrior">Warrior (10)</option>
-                    <option value="paladin">Paladin (13)</option>
+                    <option value="paladin">Paladin (15)</option>
                     <option value="hunter">Hunter (6)</option>
                     <option value="rogue">Rogue (6)</option>
                     <option value="priest">Priest (10)</option>
@@ -520,7 +520,7 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">33</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">8</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">13</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">17</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">11</span>)</button>
             <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">21</span>)</button>
         </div>
@@ -643,15 +643,16 @@
                         <td class="text-end">8.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="heal melee"
                         data-classes="warrior paladin dk"
                         data-req="68"
                         data-item-id="27884"
-                        data-item-json="{&quot;id&quot;:27884,&quot;name&quot;:&quot;Ornate Boots of the Sanctified&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Plate)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+780 Armor&quot;,&quot;+37 Strength&quot;,&quot;+18 Stamina&quot;,&quot;+20 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:44417,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:44,&quot;sellCopper&quot;:17,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18731,&quot;bossName&quot;:&quot;Ambassador Hellmaw&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27884,&quot;name&quot;:&quot;Ornate Boots of the Sanctified&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Plate)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+780 Armor&quot;,&quot;+37 Strength&quot;,&quot;+18 Stamina&quot;,&quot;+20 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:44417,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:44,&quot;sellCopper&quot;:17,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18731,&quot;bossName&quot;:&quot;Ambassador Hellmaw&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Ornate Boots of the Sanctified</span></td>
                         <td><span class="slot-text">Feet (Plate)</span></td>
                         <td><span class="stat-text">+780 Armor, +37 Strength, +18 Stamina, +20 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -747,18 +748,20 @@
                         <td class="text-end">8.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="68"
                         data-item-id="28134"
-                        data-item-json="{&quot;id&quot;:28134,&quot;name&quot;:&quot;Brooch of Heightened Potential&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+15 Stamina&quot;,&quot;+14 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 22.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 9.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22464,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:24,&quot;sellCopper&quot;:64,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18667,&quot;bossName&quot;:&quot;Blackheart the Inciter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:28134,&quot;name&quot;:&quot;Brooch of Heightened Potential&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+15 Stamina&quot;,&quot;+14 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 22.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 9.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22464,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:24,&quot;sellCopper&quot;:64,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18667,&quot;bossName&quot;:&quot;Blackheart the Inciter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Brooch of Heightened Potential</span></td>
                         <td><span class="slot-text">Neck</span></td>
                         <td><span class="stat-text">+15 Stamina, +14 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -812,15 +815,16 @@
                         <td class="text-end">8.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="heal melee"
                         data-classes="warrior paladin dk"
                         data-req="68"
                         data-item-id="27893"
-                        data-item-json="{&quot;id&quot;:27893,&quot;name&quot;:&quot;Ornate Leggings of the Venerated&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Plate)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+993 Armor&quot;,&quot;+35 Strength&quot;,&quot;+21 Stamina&quot;,&quot;+25 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:62913,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:13,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18667,&quot;bossName&quot;:&quot;Blackheart the Inciter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27893,&quot;name&quot;:&quot;Ornate Leggings of the Venerated&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Plate)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+993 Armor&quot;,&quot;+35 Strength&quot;,&quot;+21 Stamina&quot;,&quot;+25 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:62913,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:13,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18667,&quot;bossName&quot;:&quot;Blackheart the Inciter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Ornate Leggings of the Venerated</span></td>
                         <td><span class="slot-text">Legs (Plate)</span></td>
                         <td><span class="stat-text">+993 Armor, +35 Strength, +21 Stamina, +25 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -901,19 +905,19 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal"
+                        data-classes="paladin"
                         data-req="68"
                         data-item-id="27897"
-                        data-item-json="{&quot;id&quot;:27897,&quot;name&quot;:&quot;Breastplate of Many Graces&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Plate)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1135 Armor&quot;,&quot;+40 Stamina&quot;,&quot;+28 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 33.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 14 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:135,&quot;sellPrice&quot;:57778,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:77,&quot;sellCopper&quot;:78,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:18732,&quot;bossName&quot;:&quot;Grandmaster Vorpil&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27897,&quot;name&quot;:&quot;Breastplate of Many Graces&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:112,&quot;req&quot;:68,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Plate)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1135 Armor&quot;,&quot;+40 Stamina&quot;,&quot;+28 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 33.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 14 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:135,&quot;sellPrice&quot;:57778,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:77,&quot;sellCopper&quot;:78,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:18732,&quot;bossName&quot;:&quot;Grandmaster Vorpil&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:555,&quot;dungeon&quot;:&quot;Shadow Labyrinth&quot;,&quot;page&quot;:&quot;shadow-labyrinth.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Breastplate of Many Graces</span></td>
                         <td><span class="slot-text">Chest (Plate)</span></td>
                         <td><span class="stat-text">+1135 Armor, +40 Stamina, +28 Intellect</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                         </td>
                         <td class="text-end">112</td>
                         <td class="text-end">10.0%</td>

@@ -503,7 +503,7 @@
                 <select id="class-dropdown">
                     <option value="all">All classes (98)</option>
                     <option value="warrior">Warrior (43)</option>
-                    <option value="paladin">Paladin (45)</option>
+                    <option value="paladin">Paladin (46)</option>
                     <option value="hunter">Hunter (2)</option>
                     <option value="rogue">Rogue (12)</option>
                     <option value="priest">Priest (13)</option>
@@ -519,7 +519,7 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">98</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">28</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">19</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">20</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">28</span>)</button>
             <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">17</span>)</button>
         </div>
@@ -2630,18 +2630,20 @@
                         <td class="text-end">26.1%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="41"
                         data-item-id="10634"
-                        data-item-json="{&quot;id&quot;:10634,&quot;name&quot;:&quot;Mindseye Circle&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:46,&quot;req&quot;:41,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+5 Stamina&quot;,&quot;+8 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10812,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:8,&quot;sellCopper&quot;:12,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.0899,&quot;chanceStr&quot;:&quot;0.09%&quot;,&quot;bossId&quot;:9000109,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:10634,&quot;name&quot;:&quot;Mindseye Circle&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:46,&quot;req&quot;:41,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+5 Stamina&quot;,&quot;+8 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10812,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:8,&quot;sellCopper&quot;:12,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.0899,&quot;chanceStr&quot;:&quot;0.09%&quot;,&quot;bossId&quot;:9000109,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Mindseye Circle</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+5 Stamina, +8 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>

@@ -504,7 +504,7 @@
                 <select id="class-dropdown">
                     <option value="all">All classes (26)</option>
                     <option value="warrior">Warrior (9)</option>
-                    <option value="paladin">Paladin (12)</option>
+                    <option value="paladin">Paladin (14)</option>
                     <option value="hunter">Hunter (3)</option>
                     <option value="rogue">Rogue (4)</option>
                     <option value="priest">Priest (8)</option>
@@ -520,7 +520,7 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">26</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">10</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">11</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">13</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">10</span>)</button>
             <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">14</span>)</button>
         </div>
@@ -1003,18 +1003,20 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="70"
                         data-item-id="29354"
-                        data-item-json="{&quot;id&quot;:29354,&quot;name&quot;:&quot;Light-Touched Stole of Altruism&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+93 Armor&quot;,&quot;+22 Stamina&quot;,&quot;+21 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 29.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:34374,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:43,&quot;sellCopper&quot;:74,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:18373,&quot;bossName&quot;:&quot;Exarch Maladaar&quot;,&quot;bossLvl&quot;:67,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:29354,&quot;name&quot;:&quot;Light-Touched Stole of Altruism&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+93 Armor&quot;,&quot;+22 Stamina&quot;,&quot;+21 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 29.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:34374,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:43,&quot;sellCopper&quot;:74,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:18373,&quot;bossName&quot;:&quot;Exarch Maladaar&quot;,&quot;bossLvl&quot;:67,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Light-Touched Stole of Altruism</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+93 Armor, +22 Stamina, +21 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1105,18 +1107,20 @@
                         <td class="text-end">16.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="70"
                         data-item-id="27523"
-                        data-item-json="{&quot;id&quot;:27523,&quot;name&quot;:&quot;Exarch&#x27;s Diamond Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+19 Stamina&quot;,&quot;+19 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:14846,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:48,&quot;sellCopper&quot;:46,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18373,&quot;bossName&quot;:&quot;Exarch Maladaar&quot;,&quot;bossLvl&quot;:67,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27523,&quot;name&quot;:&quot;Exarch&#x27;s Diamond Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+19 Stamina&quot;,&quot;+19 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:14846,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:48,&quot;sellCopper&quot;:46,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18373,&quot;bossName&quot;:&quot;Exarch Maladaar&quot;,&quot;bossLvl&quot;:67,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Exarch's Diamond Band</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+19 Stamina, +19 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>

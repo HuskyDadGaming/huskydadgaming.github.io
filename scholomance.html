@@ -504,7 +504,7 @@
                 <select id="class-dropdown">
                     <option value="all">All classes (236)</option>
                     <option value="warrior">Warrior (90)</option>
-                    <option value="paladin">Paladin (98)</option>
+                    <option value="paladin">Paladin (106)</option>
                     <option value="hunter">Hunter (43)</option>
                     <option value="rogue">Rogue (28)</option>
                     <option value="priest">Priest (66)</option>
@@ -520,7 +520,7 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">236</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">82</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">113</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">121</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">79</span>)</button>
             <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">116</span>)</button>
         </div>
@@ -2040,18 +2040,20 @@
                         <td class="text-end">1.1%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="56"
                         data-item-id="18684"
-                        data-item-json="{&quot;id&quot;:18684,&quot;name&quot;:&quot;Dimly Opalescent Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:36141,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:1.1111111111111112,&quot;chanceStr&quot;:&quot;1.1%&quot;,&quot;bossId&quot;:11261,&quot;bossName&quot;:&quot;Doctor Theolen Krastinov&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18684,&quot;name&quot;:&quot;Dimly Opalescent Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:36141,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:1.1111111111111112,&quot;chanceStr&quot;:&quot;1.1%&quot;,&quot;bossId&quot;:11261,&quot;bossName&quot;:&quot;Doctor Theolen Krastinov&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Dimly Opalescent Ring</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+7 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -2645,18 +2647,20 @@
                         <td class="text-end">1.1%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="56"
                         data-item-id="18684"
-                        data-item-json="{&quot;id&quot;:18684,&quot;name&quot;:&quot;Dimly Opalescent Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:36141,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:1.1111111111111112,&quot;chanceStr&quot;:&quot;1.1%&quot;,&quot;bossId&quot;:10505,&quot;bossName&quot;:&quot;Instructor Malicia&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18684,&quot;name&quot;:&quot;Dimly Opalescent Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:36141,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:1.1111111111111112,&quot;chanceStr&quot;:&quot;1.1%&quot;,&quot;bossId&quot;:10505,&quot;bossName&quot;:&quot;Instructor Malicia&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Dimly Opalescent Ring</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+7 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -3227,18 +3231,20 @@
                         <td class="text-end">1.1%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="56"
                         data-item-id="18684"
-                        data-item-json="{&quot;id&quot;:18684,&quot;name&quot;:&quot;Dimly Opalescent Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:36141,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:1.1111111111111112,&quot;chanceStr&quot;:&quot;1.1%&quot;,&quot;bossId&quot;:10502,&quot;bossName&quot;:&quot;Lady Illucia Barov&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18684,&quot;name&quot;:&quot;Dimly Opalescent Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:36141,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:1.1111111111111112,&quot;chanceStr&quot;:&quot;1.1%&quot;,&quot;bossId&quot;:10502,&quot;bossName&quot;:&quot;Lady Illucia Barov&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Dimly Opalescent Ring</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+7 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -3830,18 +3836,20 @@
                         <td class="text-end">2.2%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="56"
                         data-item-id="18684"
-                        data-item-json="{&quot;id&quot;:18684,&quot;name&quot;:&quot;Dimly Opalescent Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:36141,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:2.2222222222222223,&quot;chanceStr&quot;:&quot;2.2%&quot;,&quot;bossId&quot;:10504,&quot;bossName&quot;:&quot;Lord Alexei Barov&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18684,&quot;name&quot;:&quot;Dimly Opalescent Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:36141,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:2.2222222222222223,&quot;chanceStr&quot;:&quot;2.2%&quot;,&quot;bossId&quot;:10504,&quot;bossName&quot;:&quot;Lord Alexei Barov&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Dimly Opalescent Ring</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+7 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -4522,18 +4530,20 @@
                         <td class="text-end">1.1%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="56"
                         data-item-id="18684"
-                        data-item-json="{&quot;id&quot;:18684,&quot;name&quot;:&quot;Dimly Opalescent Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:36141,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:1.1111111111111112,&quot;chanceStr&quot;:&quot;1.1%&quot;,&quot;bossId&quot;:10901,&quot;bossName&quot;:&quot;Lorekeeper Polkelt&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18684,&quot;name&quot;:&quot;Dimly Opalescent Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:36141,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:1.1111111111111112,&quot;chanceStr&quot;:&quot;1.1%&quot;,&quot;bossId&quot;:10901,&quot;bossName&quot;:&quot;Lorekeeper Polkelt&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Dimly Opalescent Ring</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+7 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -5123,18 +5133,20 @@
                         <td class="text-end">1.1%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="56"
                         data-item-id="18684"
-                        data-item-json="{&quot;id&quot;:18684,&quot;name&quot;:&quot;Dimly Opalescent Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:36141,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:1.1111111111111112,&quot;chanceStr&quot;:&quot;1.1%&quot;,&quot;bossId&quot;:10507,&quot;bossName&quot;:&quot;The Ravenian&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18684,&quot;name&quot;:&quot;Dimly Opalescent Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:36141,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:41,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:1.1111111111111112,&quot;chanceStr&quot;:&quot;1.1%&quot;,&quot;bossId&quot;:10507,&quot;bossName&quot;:&quot;The Ravenian&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Dimly Opalescent Ring</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+7 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -5353,18 +5365,20 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="56"
                         data-item-id="18691"
-                        data-item-json="{&quot;id&quot;:18691,&quot;name&quot;:&quot;Dark Advisor&#x27;s Pendant&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+7 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:31400,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:0,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:7.0,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:10432,&quot;bossName&quot;:&quot;Vectus&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18691,&quot;name&quot;:&quot;Dark Advisor&#x27;s Pendant&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+7 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:31400,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:0,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:7.0,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:10432,&quot;bossName&quot;:&quot;Vectus&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Dark Advisor's Pendant</span></td>
                         <td><span class="slot-text">Neck</span></td>
                         <td><span class="stat-text">+8 Stamina, +7 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -5798,19 +5812,19 @@
                         <td class="text-end">0.04%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal"
+                        data-classes="paladin"
                         data-req="55"
                         data-item-id="18702"
-                        data-item-json="{&quot;id&quot;:18702,&quot;name&quot;:&quot;Belt of the Ordained&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:60,&quot;req&quot;:55,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Waist (Plate)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+353 Armor&quot;,&quot;+8 Intellect&quot;,&quot;+9 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 22.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:17064,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:70,&quot;sellCopper&quot;:64,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:9000289,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:18702,&quot;name&quot;:&quot;Belt of the Ordained&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:60,&quot;req&quot;:55,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Waist (Plate)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+353 Armor&quot;,&quot;+8 Intellect&quot;,&quot;+9 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 22.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:17064,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:70,&quot;sellCopper&quot;:64,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:9000289,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:289,&quot;dungeon&quot;:&quot;Scholomance&quot;,&quot;page&quot;:&quot;scholomance.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Belt of the Ordained</span></td>
                         <td><span class="slot-text">Waist (Plate)</span></td>
                         <td><span class="stat-text">+353 Armor, +8 Intellect, +9 Stamina</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                         </td>
                         <td class="text-end">60</td>
                         <td class="text-end">0.02%</td>

@@ -504,7 +504,7 @@
                 <select id="class-dropdown">
                     <option value="all">All classes (28)</option>
                     <option value="warrior">Warrior (10)</option>
-                    <option value="paladin">Paladin (13)</option>
+                    <option value="paladin">Paladin (16)</option>
                     <option value="hunter">Hunter (5)</option>
                     <option value="rogue">Rogue (5)</option>
                     <option value="priest">Priest (8)</option>
@@ -520,7 +520,7 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">28</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">9</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">9</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">14</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">13</span>)</button>
             <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">15</span>)</button>
         </div>
@@ -608,15 +608,16 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="heal melee"
                         data-classes="warrior paladin dk"
                         data-req="60"
                         data-item-id="24021"
-                        data-item-json="{&quot;id&quot;:24021,&quot;name&quot;:&quot;Light-Touched Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:85,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Plate)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+873 Armor&quot;,&quot;+26 Strength&quot;,&quot;+25 Stamina&quot;,&quot;+25 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 6 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:135,&quot;sellPrice&quot;:44959,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:49,&quot;sellCopper&quot;:59,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17306,&quot;bossName&quot;:&quot;Watchkeeper Gargolmar&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:543,&quot;dungeon&quot;:&quot;Hellfire Ramparts&quot;,&quot;page&quot;:&quot;hellfire-ramparts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:24021,&quot;name&quot;:&quot;Light-Touched Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:85,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Plate)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+873 Armor&quot;,&quot;+26 Strength&quot;,&quot;+25 Stamina&quot;,&quot;+25 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 6 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:135,&quot;sellPrice&quot;:44959,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:49,&quot;sellCopper&quot;:59,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17306,&quot;bossName&quot;:&quot;Watchkeeper Gargolmar&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:543,&quot;dungeon&quot;:&quot;Hellfire Ramparts&quot;,&quot;page&quot;:&quot;hellfire-ramparts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Light-Touched Breastplate</span></td>
                         <td><span class="slot-text">Chest (Plate)</span></td>
                         <td><span class="stat-text">+873 Armor, +26 Strength, +25 Stamina, +25 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -749,15 +750,16 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="heal melee"
                         data-classes="warrior paladin dk"
                         data-req="70"
                         data-item-id="27447"
-                        data-item-json="{&quot;id&quot;:27447,&quot;name&quot;:&quot;Bracers of Just Rewards&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Plate)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+509 Armor&quot;,&quot;+23 Strength&quot;,&quot;+16 Stamina&quot;,&quot;+15 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:29989,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:99,&quot;sellCopper&quot;:89,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17306,&quot;bossName&quot;:&quot;Watchkeeper Gargolmar&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:543,&quot;dungeon&quot;:&quot;Hellfire Ramparts&quot;,&quot;page&quot;:&quot;hellfire-ramparts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27447,&quot;name&quot;:&quot;Bracers of Just Rewards&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Plate)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+509 Armor&quot;,&quot;+23 Strength&quot;,&quot;+16 Stamina&quot;,&quot;+15 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:29989,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:99,&quot;sellCopper&quot;:89,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17306,&quot;bossName&quot;:&quot;Watchkeeper Gargolmar&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:543,&quot;dungeon&quot;:&quot;Hellfire Ramparts&quot;,&quot;page&quot;:&quot;hellfire-ramparts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Bracers of Just Rewards</span></td>
                         <td><span class="slot-text">Wrist (Plate)</span></td>
                         <td><span class="stat-text">+509 Armor, +23 Strength, +16 Stamina, +15 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -921,18 +923,20 @@
                         <td class="text-end">16.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="24096"
-                        data-item-json="{&quot;id&quot;:24096,&quot;name&quot;:&quot;Heartblood Prayer Beads&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:85,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+15 Stamina&quot;,&quot;+15 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:44030,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17308,&quot;bossName&quot;:&quot;Omor the Unscarred&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:543,&quot;dungeon&quot;:&quot;Hellfire Ramparts&quot;,&quot;page&quot;:&quot;hellfire-ramparts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:24096,&quot;name&quot;:&quot;Heartblood Prayer Beads&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:85,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+15 Stamina&quot;,&quot;+15 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:44030,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17308,&quot;bossName&quot;:&quot;Omor the Unscarred&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:543,&quot;dungeon&quot;:&quot;Hellfire Ramparts&quot;,&quot;page&quot;:&quot;hellfire-ramparts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Heartblood Prayer Beads</span></td>
                         <td><span class="slot-text">Neck</span></td>
                         <td><span class="stat-text">+15 Stamina, +15 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1101,19 +1105,19 @@
                         <td class="text-end">16.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal"
+                        data-classes="paladin"
                         data-req="70"
                         data-item-id="27539"
-                        data-item-json="{&quot;id&quot;:27539,&quot;name&quot;:&quot;Justice Bearer&#x27;s Pauldrons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+873 Armor&quot;,&quot;+25 Stamina&quot;,&quot;+25 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 9 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 29.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:44476,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:44,&quot;sellCopper&quot;:76,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17308,&quot;bossName&quot;:&quot;Omor the Unscarred&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:543,&quot;dungeon&quot;:&quot;Hellfire Ramparts&quot;,&quot;page&quot;:&quot;hellfire-ramparts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27539,&quot;name&quot;:&quot;Justice Bearer&#x27;s Pauldrons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+873 Armor&quot;,&quot;+25 Stamina&quot;,&quot;+25 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 9 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 29.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:44476,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:44,&quot;sellCopper&quot;:76,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17308,&quot;bossName&quot;:&quot;Omor the Unscarred&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:543,&quot;dungeon&quot;:&quot;Hellfire Ramparts&quot;,&quot;page&quot;:&quot;hellfire-ramparts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Justice Bearer's Pauldrons</span></td>
                         <td><span class="slot-text">Shoulder (Plate)</span></td>
                         <td><span class="stat-text">+873 Armor, +25 Stamina, +25 Intellect</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                         </td>
                         <td class="text-end">115</td>
                         <td class="text-end">16.7%</td>
@@ -1140,18 +1144,20 @@
                         <td class="text-end">16.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="70"
                         data-item-id="27464"
-                        data-item-json="{&quot;id&quot;:27464,&quot;name&quot;:&quot;Omor&#x27;s Unyielding Will&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+19 Intellect&quot;,&quot;+19 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22464,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:24,&quot;sellCopper&quot;:64,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17308,&quot;bossName&quot;:&quot;Omor the Unscarred&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:543,&quot;dungeon&quot;:&quot;Hellfire Ramparts&quot;,&quot;page&quot;:&quot;hellfire-ramparts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27464,&quot;name&quot;:&quot;Omor&#x27;s Unyielding Will&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+19 Intellect&quot;,&quot;+19 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22464,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:24,&quot;sellCopper&quot;:64,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:17308,&quot;bossName&quot;:&quot;Omor the Unscarred&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:543,&quot;dungeon&quot;:&quot;Hellfire Ramparts&quot;,&quot;page&quot;:&quot;hellfire-ramparts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Omor's Unyielding Will</span></td>
                         <td><span class="slot-text">Neck</span></td>
                         <td><span class="stat-text">+19 Intellect, +19 Stamina</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>

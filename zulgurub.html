@@ -504,7 +504,7 @@
                 <select id="class-dropdown">
                     <option value="all">All classes (130)</option>
                     <option value="warrior">Warrior (50)</option>
-                    <option value="paladin">Paladin (56)</option>
+                    <option value="paladin">Paladin (73)</option>
                     <option value="hunter">Hunter (20)</option>
                     <option value="rogue">Rogue (21)</option>
                     <option value="priest">Priest (47)</option>
@@ -520,7 +520,7 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">130</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">50</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">34</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">51</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">45</span>)</button>
             <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">73</span>)</button>
         </div>
@@ -643,36 +643,38 @@
                         <td class="text-end">14.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal"
+                        data-classes="paladin"
                         data-req="60"
                         data-item-id="20265"
-                        data-item-json="{&quot;id&quot;:20265,&quot;name&quot;:&quot;Peacekeeper Boots&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Plate)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+486 Armor&quot;,&quot;+12 Intellect&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 8 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:28353,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:83,&quot;sellCopper&quot;:53,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:14517,&quot;bossName&quot;:&quot;High Priestess Jeklik&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:20265,&quot;name&quot;:&quot;Peacekeeper Boots&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Plate)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+486 Armor&quot;,&quot;+12 Intellect&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 8 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:28353,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:83,&quot;sellCopper&quot;:53,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:14517,&quot;bossName&quot;:&quot;High Priestess Jeklik&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Peacekeeper Boots</span></td>
                         <td><span class="slot-text">Feet (Plate)</span></td>
                         <td><span class="stat-text">+486 Armor, +12 Intellect, +10 Stamina</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                         </td>
                         <td class="text-end">68</td>
                         <td class="text-end">14.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="19920"
-                        data-item-json="{&quot;id&quot;:19920,&quot;name&quot;:&quot;Primalist&#x27;s Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:465,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Intellect&quot;,&quot;+8 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 8 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:56037,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:60,&quot;sellCopper&quot;:37,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:14517,&quot;bossName&quot;:&quot;High Priestess Jeklik&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Prayer of the Primal&quot;,&quot;items&quot;:[{&quot;id&quot;:19863,&quot;name&quot;:&quot;Primalist&#x27;s Seal&quot;,&quot;quality&quot;:3},{&quot;id&quot;:19920,&quot;name&quot;:&quot;Primalist&#x27;s Band&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;quality&quot;:3}}">
+                        data-item-json="{&quot;id&quot;:19920,&quot;name&quot;:&quot;Primalist&#x27;s Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:465,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Intellect&quot;,&quot;+8 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 8 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:56037,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:60,&quot;sellCopper&quot;:37,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:14517,&quot;bossName&quot;:&quot;High Priestess Jeklik&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Prayer of the Primal&quot;,&quot;items&quot;:[{&quot;id&quot;:19863,&quot;name&quot;:&quot;Primalist&#x27;s Seal&quot;,&quot;quality&quot;:3},{&quot;id&quot;:19920,&quot;name&quot;:&quot;Primalist&#x27;s Band&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;quality&quot;:3}}">
                         <td><span style="color:#0070dd; font-weight:600;">Primalist's Band</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+10 Intellect, +8 Stamina</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -724,18 +726,20 @@
                         <td class="text-end">14.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="22721"
-                        data-item-json="{&quot;id&quot;:22721,&quot;name&quot;:&quot;Band of Servitude&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:65,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:64030,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14517,&quot;bossName&quot;:&quot;High Priestess Jeklik&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:22721,&quot;name&quot;:&quot;Band of Servitude&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:65,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:64030,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14517,&quot;bossName&quot;:&quot;High Priestess Jeklik&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Band of Servitude</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+8 Stamina, +9 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -790,18 +794,20 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="22711"
-                        data-item-json="{&quot;id&quot;:22711,&quot;name&quot;:&quot;Cloak of the Hakkari Worshippers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+48 Armor&quot;,&quot;+6 Stamina&quot;,&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22162,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14517,&quot;bossName&quot;:&quot;High Priestess Jeklik&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:22711,&quot;name&quot;:&quot;Cloak of the Hakkari Worshippers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+48 Armor&quot;,&quot;+6 Stamina&quot;,&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22162,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14517,&quot;bossName&quot;:&quot;High Priestess Jeklik&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Cloak of the Hakkari Worshippers</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+48 Armor, +6 Stamina, +6 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1030,18 +1036,20 @@
                         <td class="text-end">16.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="19905"
-                        data-item-json="{&quot;id&quot;:19905,&quot;name&quot;:&quot;Zanzil&#x27;s Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:462,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+13 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your hit rating by 8.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:45253,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:52,&quot;sellCopper&quot;:53,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:14507,&quot;bossName&quot;:&quot;High Priest Venoxis&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Zanzil&#x27;s Concentration&quot;,&quot;items&quot;:[{&quot;id&quot;:19893,&quot;name&quot;:&quot;Zanzil&#x27;s Seal&quot;,&quot;quality&quot;:3},{&quot;id&quot;:19905,&quot;name&quot;:&quot;Zanzil&#x27;s Band&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases your hit rating by 8.&quot;},{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;quality&quot;:3}}">
+                        data-item-json="{&quot;id&quot;:19905,&quot;name&quot;:&quot;Zanzil&#x27;s Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:462,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+13 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your hit rating by 8.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:45253,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:52,&quot;sellCopper&quot;:53,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:14507,&quot;bossName&quot;:&quot;High Priest Venoxis&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Zanzil&#x27;s Concentration&quot;,&quot;items&quot;:[{&quot;id&quot;:19893,&quot;name&quot;:&quot;Zanzil&#x27;s Seal&quot;,&quot;quality&quot;:3},{&quot;id&quot;:19905,&quot;name&quot;:&quot;Zanzil&#x27;s Band&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases your hit rating by 8.&quot;},{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;quality&quot;:3}}">
                         <td><span style="color:#0070dd; font-weight:600;">Zanzil's Band</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+13 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1096,18 +1104,20 @@
                         <td class="text-end">16.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="22721"
-                        data-item-json="{&quot;id&quot;:22721,&quot;name&quot;:&quot;Band of Servitude&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:65,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:64030,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14507,&quot;bossName&quot;:&quot;High Priest Venoxis&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:22721,&quot;name&quot;:&quot;Band of Servitude&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:65,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:64030,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14507,&quot;bossName&quot;:&quot;High Priest Venoxis&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Band of Servitude</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+8 Stamina, +9 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1162,18 +1172,20 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="22711"
-                        data-item-json="{&quot;id&quot;:22711,&quot;name&quot;:&quot;Cloak of the Hakkari Worshippers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+48 Armor&quot;,&quot;+6 Stamina&quot;,&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22162,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14507,&quot;bossName&quot;:&quot;High Priest Venoxis&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:22711,&quot;name&quot;:&quot;Cloak of the Hakkari Worshippers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+48 Armor&quot;,&quot;+6 Stamina&quot;,&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22162,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14507,&quot;bossName&quot;:&quot;High Priest Venoxis&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Cloak of the Hakkari Worshippers</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+48 Armor, +6 Stamina, +6 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1464,18 +1476,20 @@
                         <td class="text-end">16.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="22721"
-                        data-item-json="{&quot;id&quot;:22721,&quot;name&quot;:&quot;Band of Servitude&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:65,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:64030,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14510,&quot;bossName&quot;:&quot;High Priestess Mar&#x27;li&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:22721,&quot;name&quot;:&quot;Band of Servitude&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:65,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:64030,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14510,&quot;bossName&quot;:&quot;High Priestess Mar&#x27;li&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Band of Servitude</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+8 Stamina, +9 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1530,18 +1544,20 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="22711"
-                        data-item-json="{&quot;id&quot;:22711,&quot;name&quot;:&quot;Cloak of the Hakkari Worshippers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+48 Armor&quot;,&quot;+6 Stamina&quot;,&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22162,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14510,&quot;bossName&quot;:&quot;High Priestess Mar&#x27;li&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:22711,&quot;name&quot;:&quot;Cloak of the Hakkari Worshippers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+48 Armor&quot;,&quot;+6 Stamina&quot;,&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22162,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14510,&quot;bossName&quot;:&quot;High Priestess Mar&#x27;li&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Cloak of the Hakkari Worshippers</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+48 Armor, +6 Stamina, +6 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1725,19 +1741,19 @@
                         <td class="text-end">14.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal"
+                        data-classes="paladin"
                         data-req="60"
                         data-item-id="20266"
-                        data-item-json="{&quot;id&quot;:20266,&quot;name&quot;:&quot;Peacekeeper Leggings&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Plate)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+618 Armor&quot;,&quot;+18 Intellect&quot;,&quot;+14 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 20.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 9 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:38019,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:80,&quot;sellCopper&quot;:19,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:14509,&quot;bossName&quot;:&quot;High Priest Thekal&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:20266,&quot;name&quot;:&quot;Peacekeeper Leggings&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Plate)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+618 Armor&quot;,&quot;+18 Intellect&quot;,&quot;+14 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 20.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 9 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:38019,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:80,&quot;sellCopper&quot;:19,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:14509,&quot;bossName&quot;:&quot;High Priest Thekal&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Peacekeeper Leggings</span></td>
                         <td><span class="slot-text">Legs (Plate)</span></td>
                         <td><span class="stat-text">+618 Armor, +18 Intellect, +14 Stamina</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                         </td>
                         <td class="text-end">68</td>
                         <td class="text-end">14.3%</td>
@@ -1848,18 +1864,20 @@
                         <td class="text-end">14.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="22721"
-                        data-item-json="{&quot;id&quot;:22721,&quot;name&quot;:&quot;Band of Servitude&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:65,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:64030,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14509,&quot;bossName&quot;:&quot;High Priest Thekal&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:22721,&quot;name&quot;:&quot;Band of Servitude&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:65,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:64030,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14509,&quot;bossName&quot;:&quot;High Priest Thekal&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Band of Servitude</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+8 Stamina, +9 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1914,18 +1932,20 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="22711"
-                        data-item-json="{&quot;id&quot;:22711,&quot;name&quot;:&quot;Cloak of the Hakkari Worshippers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+48 Armor&quot;,&quot;+6 Stamina&quot;,&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22162,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14509,&quot;bossName&quot;:&quot;High Priest Thekal&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:22711,&quot;name&quot;:&quot;Cloak of the Hakkari Worshippers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+48 Armor&quot;,&quot;+6 Stamina&quot;,&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22162,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14509,&quot;bossName&quot;:&quot;High Priest Thekal&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Cloak of the Hakkari Worshippers</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+48 Armor, +6 Stamina, +6 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -2187,18 +2207,20 @@
                         <td class="text-end">20.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="22721"
-                        data-item-json="{&quot;id&quot;:22721,&quot;name&quot;:&quot;Band of Servitude&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:65,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:64030,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14515,&quot;bossName&quot;:&quot;High Priestess Arlokk&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:22721,&quot;name&quot;:&quot;Band of Servitude&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:65,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:64030,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14515,&quot;bossName&quot;:&quot;High Priestess Arlokk&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Band of Servitude</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+8 Stamina, +9 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -2253,18 +2275,20 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="22711"
-                        data-item-json="{&quot;id&quot;:22711,&quot;name&quot;:&quot;Cloak of the Hakkari Worshippers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+48 Armor&quot;,&quot;+6 Stamina&quot;,&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22162,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14515,&quot;bossName&quot;:&quot;High Priestess Arlokk&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:22711,&quot;name&quot;:&quot;Cloak of the Hakkari Worshippers&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+48 Armor&quot;,&quot;+6 Stamina&quot;,&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22162,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:14515,&quot;bossName&quot;:&quot;High Priestess Arlokk&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Cloak of the Hakkari Worshippers</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+48 Armor, +6 Stamina, +6 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -2661,18 +2685,20 @@
                         <td class="text-end">8.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="19893"
-                        data-item-json="{&quot;id&quot;:19893,&quot;name&quot;:&quot;Zanzil&#x27;s Seal&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:71,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:462,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Intellect&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your hit rating by 8.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 11.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:55355,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:53,&quot;sellCopper&quot;:55,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:11382,&quot;bossName&quot;:&quot;Bloodlord Mandokir&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Zanzil&#x27;s Concentration&quot;,&quot;items&quot;:[{&quot;id&quot;:19893,&quot;name&quot;:&quot;Zanzil&#x27;s Seal&quot;,&quot;quality&quot;:3},{&quot;id&quot;:19905,&quot;name&quot;:&quot;Zanzil&#x27;s Band&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases your hit rating by 8.&quot;},{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;quality&quot;:3}}">
+                        data-item-json="{&quot;id&quot;:19893,&quot;name&quot;:&quot;Zanzil&#x27;s Seal&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:71,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:462,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+10 Intellect&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your hit rating by 8.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 11.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:55355,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:53,&quot;sellCopper&quot;:55,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:11382,&quot;bossName&quot;:&quot;Bloodlord Mandokir&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Zanzil&#x27;s Concentration&quot;,&quot;items&quot;:[{&quot;id&quot;:19893,&quot;name&quot;:&quot;Zanzil&#x27;s Seal&quot;,&quot;quality&quot;:3},{&quot;id&quot;:19905,&quot;name&quot;:&quot;Zanzil&#x27;s Band&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases your hit rating by 8.&quot;},{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;quality&quot;:3}}">
                         <td><span style="color:#0070dd; font-weight:600;">Zanzil's Seal</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+10 Intellect, +10 Stamina</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -3197,18 +3223,20 @@
                         <td class="text-end">14.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="19857"
-                        data-item-json="{&quot;id&quot;:19857,&quot;name&quot;:&quot;Cloak of Consumption&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+60 Armor&quot;,&quot;+10 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your hit rating by 8.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22550,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:25,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:14834,&quot;bossName&quot;:&quot;Hakkar&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:19857,&quot;name&quot;:&quot;Cloak of Consumption&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+60 Armor&quot;,&quot;+10 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your hit rating by 8.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22550,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:25,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:14834,&quot;bossName&quot;:&quot;Hakkar&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Cloak of Consumption</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+60 Armor, +10 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -3258,19 +3286,19 @@
                         <td class="text-end">14.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal"
+                        data-classes="paladin"
                         data-req="60"
                         data-item-id="20264"
-                        data-item-json="{&quot;id&quot;:20264,&quot;name&quot;:&quot;Peacekeeper Gauntlets&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Plate)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+550 Armor&quot;,&quot;+12 Intellect&quot;,&quot;+7 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 32.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:55,&quot;sellPrice&quot;:25299,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:52,&quot;sellCopper&quot;:99,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:14834,&quot;bossName&quot;:&quot;Hakkar&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:20264,&quot;name&quot;:&quot;Peacekeeper Gauntlets&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:68,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Plate)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+550 Armor&quot;,&quot;+12 Intellect&quot;,&quot;+7 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 32.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:55,&quot;sellPrice&quot;:25299,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:52,&quot;sellCopper&quot;:99,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:14834,&quot;bossName&quot;:&quot;Hakkar&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:309,&quot;dungeon&quot;:&quot;Zul&#x27;Gurub&quot;,&quot;page&quot;:&quot;zulgurub.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Peacekeeper Gauntlets</span></td>
                         <td><span class="slot-text">Hands (Plate)</span></td>
                         <td><span class="stat-text">+550 Armor, +12 Intellect, +7 Stamina</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                         </td>
                         <td class="text-end">68</td>
                         <td class="text-end">14.3%</td>

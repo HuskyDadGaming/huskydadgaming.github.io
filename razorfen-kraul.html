@@ -503,7 +503,7 @@
                 <select id="class-dropdown">
                     <option value="all">All classes (82)</option>
                     <option value="warrior">Warrior (39)</option>
-                    <option value="paladin">Paladin (42)</option>
+                    <option value="paladin">Paladin (45)</option>
                     <option value="hunter">Hunter (21)</option>
                     <option value="rogue">Rogue (22)</option>
                     <option value="priest">Priest (19)</option>
@@ -519,7 +519,7 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">82</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">28</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">24</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">27</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">49</span>)</button>
             <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">35</span>)</button>
         </div>
@@ -1170,18 +1170,20 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="24"
                         data-item-id="2039"
-                        data-item-json="{&quot;id&quot;:2039,&quot;name&quot;:&quot;Plains Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:24,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+3 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:750,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:7,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:4842,&quot;bossName&quot;:&quot;Earthcaller Halmgar&quot;,&quot;bossLvl&quot;:27,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:2039,&quot;name&quot;:&quot;Plains Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:24,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+3 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:750,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:7,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:4842,&quot;bossName&quot;:&quot;Earthcaller Halmgar&quot;,&quot;bossLvl&quot;:27,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Plains Ring</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+8 Stamina, +3 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1474,18 +1476,20 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="24"
                         data-item-id="2039"
-                        data-item-json="{&quot;id&quot;:2039,&quot;name&quot;:&quot;Plains Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:24,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+3 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:750,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:7,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:4425,&quot;bossName&quot;:&quot;Blind Hunter&quot;,&quot;bossLvl&quot;:27,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:2039,&quot;name&quot;:&quot;Plains Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:24,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+3 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:750,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:7,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:4425,&quot;bossName&quot;:&quot;Blind Hunter&quot;,&quot;bossLvl&quot;:27,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Plains Ring</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+8 Stamina, +3 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -2029,18 +2033,20 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="24"
                         data-item-id="2039"
-                        data-item-json="{&quot;id&quot;:2039,&quot;name&quot;:&quot;Plains Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:24,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+3 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:750,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:7,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:9000047,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:26,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:2039,&quot;name&quot;:&quot;Plains Ring&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:24,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+8 Stamina&quot;,&quot;+3 Intellect&quot;],&quot;effects&quot;:[],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:750,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:7,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:9000047,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:26,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Plains Ring</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+8 Stamina, +3 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>

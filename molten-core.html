@@ -504,7 +504,7 @@
                 <select id="class-dropdown">
                     <option value="all">All classes (284)</option>
                     <option value="warrior">Warrior (86)</option>
-                    <option value="paladin">Paladin (116)</option>
+                    <option value="paladin">Paladin (118)</option>
                     <option value="hunter">Hunter (32)</option>
                     <option value="rogue">Rogue (28)</option>
                     <option value="priest">Priest (61)</option>
@@ -520,7 +520,7 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">284</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">69</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">116</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">118</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">105</span>)</button>
             <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">121</span>)</button>
         </div>
@@ -3759,18 +3759,20 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="19140"
-                        data-item-json="{&quot;id&quot;:19140,&quot;name&quot;:&quot;Cauterizing Band&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:71,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+12 Intellect&quot;,&quot;+9 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:60256,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:56,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:12018,&quot;bossName&quot;:&quot;Majordomo Executus&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:409,&quot;dungeon&quot;:&quot;Molten Core&quot;,&quot;page&quot;:&quot;molten-core.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:19140,&quot;name&quot;:&quot;Cauterizing Band&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:71,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+12 Intellect&quot;,&quot;+9 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:60256,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:56,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:12018,&quot;bossName&quot;:&quot;Majordomo Executus&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:409,&quot;dungeon&quot;:&quot;Molten Core&quot;,&quot;page&quot;:&quot;molten-core.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Cauterizing Band</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+12 Intellect, +9 Stamina</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -4040,18 +4042,20 @@
                         <td class="text-end">20.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="60"
                         data-item-id="18814"
-                        data-item-json="{&quot;id&quot;:18814,&quot;name&quot;:&quot;Choker of the Fire Lord&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:78,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;,&quot;+7 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 34.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:89135,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:91,&quot;sellCopper&quot;:35,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:11502,&quot;bossName&quot;:&quot;Ragnaros&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:409,&quot;dungeon&quot;:&quot;Molten Core&quot;,&quot;page&quot;:&quot;molten-core.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18814,&quot;name&quot;:&quot;Choker of the Fire Lord&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:78,&quot;req&quot;:60,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Intellect&quot;,&quot;+7 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 34.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:89135,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:91,&quot;sellCopper&quot;:35,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:11502,&quot;bossName&quot;:&quot;Ragnaros&quot;,&quot;bossLvl&quot;:63,&quot;mapId&quot;:409,&quot;dungeon&quot;:&quot;Molten Core&quot;,&quot;page&quot;:&quot;molten-core.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Choker of the Fire Lord</span></td>
                         <td><span class="slot-text">Neck</span></td>
                         <td><span class="stat-text">+7 Intellect, +7 Stamina</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>

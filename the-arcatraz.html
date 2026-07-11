@@ -504,7 +504,7 @@
                 <select id="class-dropdown">
                     <option value="all">All classes (31)</option>
                     <option value="warrior">Warrior (9)</option>
-                    <option value="paladin">Paladin (11)</option>
+                    <option value="paladin">Paladin (13)</option>
                     <option value="hunter">Hunter (3)</option>
                     <option value="rogue">Rogue (5)</option>
                     <option value="priest">Priest (11)</option>
@@ -520,7 +520,7 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">31</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">9</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">11</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">13</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">10</span>)</button>
             <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">18</span>)</button>
         </div>
@@ -885,18 +885,20 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="70"
                         data-item-id="28394"
-                        data-item-json="{&quot;id&quot;:28394,&quot;name&quot;:&quot;Ryngo&#x27;s Band of Ingenuity&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+12 Stamina&quot;,&quot;+14 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 25.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:41903,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:19,&quot;sellCopper&quot;:3,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:20886,&quot;bossName&quot;:&quot;Wrath-Scryer Soccothrates&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:552,&quot;dungeon&quot;:&quot;The Arcatraz&quot;,&quot;page&quot;:&quot;the-arcatraz.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:28394,&quot;name&quot;:&quot;Ryngo&#x27;s Band of Ingenuity&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+12 Stamina&quot;,&quot;+14 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 25.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:41903,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:19,&quot;sellCopper&quot;:3,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:20886,&quot;bossName&quot;:&quot;Wrath-Scryer Soccothrates&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:552,&quot;dungeon&quot;:&quot;The Arcatraz&quot;,&quot;page&quot;:&quot;the-arcatraz.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Ryngo's Band of Ingenuity</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+12 Stamina, +14 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1275,19 +1277,19 @@
                         <td class="text-end">25.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal"
+                        data-classes="paladin"
                         data-req="70"
                         data-item-id="29252"
-                        data-item-json="{&quot;id&quot;:29252,&quot;name&quot;:&quot;Bracers of Dignity&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Plate)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+608 Armor&quot;,&quot;+30 Stamina&quot;,&quot;+12 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 19.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:55,&quot;sellPrice&quot;:37965,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:79,&quot;sellCopper&quot;:65,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:20912,&quot;bossName&quot;:&quot;Harbinger Skyriss&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:552,&quot;dungeon&quot;:&quot;The Arcatraz&quot;,&quot;page&quot;:&quot;the-arcatraz.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:29252,&quot;name&quot;:&quot;Bracers of Dignity&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Plate)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+608 Armor&quot;,&quot;+30 Stamina&quot;,&quot;+12 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 19.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:55,&quot;sellPrice&quot;:37965,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:79,&quot;sellCopper&quot;:65,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:20912,&quot;bossName&quot;:&quot;Harbinger Skyriss&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:552,&quot;dungeon&quot;:&quot;The Arcatraz&quot;,&quot;page&quot;:&quot;the-arcatraz.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Bracers of Dignity</span></td>
                         <td><span class="slot-text">Wrist (Plate)</span></td>
                         <td><span class="stat-text">+608 Armor, +30 Stamina, +12 Intellect</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                         </td>
                         <td class="text-end">110</td>
                         <td class="text-end">25.0%</td>

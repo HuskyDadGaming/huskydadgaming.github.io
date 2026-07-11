@@ -504,7 +504,7 @@
                 <select id="class-dropdown">
                     <option value="all">All classes (59)</option>
                     <option value="warrior">Warrior (20)</option>
-                    <option value="paladin">Paladin (25)</option>
+                    <option value="paladin">Paladin (29)</option>
                     <option value="hunter">Hunter (13)</option>
                     <option value="rogue">Rogue (12)</option>
                     <option value="priest">Priest (16)</option>
@@ -520,7 +520,7 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">59</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">16</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">22</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">29</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">26</span>)</button>
             <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">36</span>)</button>
         </div>
@@ -628,15 +628,16 @@
                         <td class="text-end">8.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="heal melee"
                         data-classes="warrior paladin dk"
                         data-req="64"
                         data-item-id="25942"
-                        data-item-json="{&quot;id&quot;:25942,&quot;name&quot;:&quot;Faith Bearer&#x27;s Gauntlets&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:97,&quot;req&quot;:64,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Plate)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+619 Armor&quot;,&quot;+24 Strength&quot;,&quot;+18 Stamina&quot;,&quot;+19 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 4 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:26119,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:19,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18341,&quot;bossName&quot;:&quot;Pandemonius&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:25942,&quot;name&quot;:&quot;Faith Bearer&#x27;s Gauntlets&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:97,&quot;req&quot;:64,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Plate)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+619 Armor&quot;,&quot;+24 Strength&quot;,&quot;+18 Stamina&quot;,&quot;+19 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 4 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:26119,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:19,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18341,&quot;bossName&quot;:&quot;Pandemonius&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Faith Bearer's Gauntlets</span></td>
                         <td><span class="slot-text">Hands (Plate)</span></td>
                         <td><span class="stat-text">+619 Armor, +24 Strength, +18 Stamina, +19 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -867,18 +868,20 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="64"
                         data-item-id="25945"
-                        data-item-json="{&quot;id&quot;:25945,&quot;name&quot;:&quot;Cloak of Revival&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:97,&quot;req&quot;:64,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+66 Armor&quot;,&quot;+15 Stamina&quot;,&quot;+16 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 19.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22512,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:25,&quot;sellCopper&quot;:12,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18343,&quot;bossName&quot;:&quot;Tavarok&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:25945,&quot;name&quot;:&quot;Cloak of Revival&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:97,&quot;req&quot;:64,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+66 Armor&quot;,&quot;+15 Stamina&quot;,&quot;+16 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 19.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:22512,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:25,&quot;sellCopper&quot;:12,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:18343,&quot;bossName&quot;:&quot;Tavarok&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Cloak of Revival</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+66 Armor, +15 Stamina, +16 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1276,18 +1279,20 @@
                         <td class="text-end">16.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="64"
                         data-item-id="25954"
-                        data-item-json="{&quot;id&quot;:25954,&quot;name&quot;:&quot;Sigil of Shaffar&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:97,&quot;req&quot;:64,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+18 Stamina&quot;,&quot;+16 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8377,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:83,&quot;sellCopper&quot;:77,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18344,&quot;bossName&quot;:&quot;Nexus-Prince Shaffar&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:25954,&quot;name&quot;:&quot;Sigil of Shaffar&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:97,&quot;req&quot;:64,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+18 Stamina&quot;,&quot;+16 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8377,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:83,&quot;sellCopper&quot;:77,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18344,&quot;bossName&quot;:&quot;Nexus-Prince Shaffar&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Sigil of Shaffar</span></td>
                         <td><span class="slot-text">Neck</span></td>
                         <td><span class="stat-text">+18 Stamina, +16 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1335,18 +1340,20 @@
                         <td class="text-end">25.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman mage warlock druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="70"
                         data-item-id="29352"
-                        data-item-json="{&quot;id&quot;:29352,&quot;name&quot;:&quot;Cobalt Band of Tyrigosa&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+19 Stamina&quot;,&quot;+17 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 35.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:60256,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:56,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:18344,&quot;bossName&quot;:&quot;Nexus-Prince Shaffar&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:29352,&quot;name&quot;:&quot;Cobalt Band of Tyrigosa&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+19 Stamina&quot;,&quot;+17 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 35.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:60256,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:56,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:18344,&quot;bossName&quot;:&quot;Nexus-Prince Shaffar&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Cobalt Band of Tyrigosa</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+19 Stamina, +17 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
@@ -1421,19 +1428,19 @@
                         <td class="text-end">16.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal"
+                        data-classes="paladin"
                         data-req="70"
                         data-item-id="27798"
-                        data-item-json="{&quot;id&quot;:27798,&quot;name&quot;:&quot;Gauntlets of Vindication&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Plate)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+728 Armor&quot;,&quot;+24 Stamina&quot;,&quot;+25 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 9 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 11.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:32175,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:75,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18344,&quot;bossName&quot;:&quot;Nexus-Prince Shaffar&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27798,&quot;name&quot;:&quot;Gauntlets of Vindication&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Plate)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+728 Armor&quot;,&quot;+24 Stamina&quot;,&quot;+25 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 9 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 11.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:32175,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18344,&quot;bossName&quot;:&quot;Nexus-Prince Shaffar&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Gauntlets of Vindication</span></td>
                         <td><span class="slot-text">Hands (Plate)</span></td>
                         <td><span class="stat-text">+728 Armor, +24 Stamina, +25 Intellect</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                         </td>
                         <td class="text-end">115</td>
                         <td class="text-end">16.7%</td>
@@ -1519,15 +1526,16 @@
                         <td class="text-end">16.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="heal melee"
                         data-classes="warrior paladin dk"
                         data-req="70"
                         data-item-id="27844"
-                        data-item-json="{&quot;id&quot;:27844,&quot;name&quot;:&quot;Pauldrons of Swift Retribution&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+873 Armor&quot;,&quot;+29 Strength&quot;,&quot;+24 Stamina&quot;,&quot;+20 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 19.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:45504,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:55,&quot;sellCopper&quot;:4,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18344,&quot;bossName&quot;:&quot;Nexus-Prince Shaffar&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27844,&quot;name&quot;:&quot;Pauldrons of Swift Retribution&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+873 Armor&quot;,&quot;+29 Strength&quot;,&quot;+24 Stamina&quot;,&quot;+20 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 19.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:45504,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:55,&quot;sellCopper&quot;:4,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18344,&quot;bossName&quot;:&quot;Nexus-Prince Shaffar&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Pauldrons of Swift Retribution</span></td>
                         <td><span class="slot-text">Shoulder (Plate)</span></td>
                         <td><span class="stat-text">+873 Armor, +29 Strength, +24 Stamina, +20 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -1702,15 +1710,16 @@
                         <td class="text-end">0.04%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="heal melee"
                         data-classes="warrior paladin dk"
                         data-req="67"
                         data-item-id="31276"
-                        data-item-json="{&quot;id&quot;:31276,&quot;name&quot;:&quot;Boots of Zealotry&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:106,&quot;req&quot;:67,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Plate)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+740 Armor&quot;,&quot;+22 Strength&quot;,&quot;+17 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 10 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 21.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:40842,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:8,&quot;sellCopper&quot;:42,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.038461538461538464,&quot;chanceStr&quot;:&quot;0.04%&quot;,&quot;bossId&quot;:9000557,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:31276,&quot;name&quot;:&quot;Boots of Zealotry&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:106,&quot;req&quot;:67,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Plate)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+740 Armor&quot;,&quot;+22 Strength&quot;,&quot;+17 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 10 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 21.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:40842,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:8,&quot;sellCopper&quot;:42,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.038461538461538464,&quot;chanceStr&quot;:&quot;0.04%&quot;,&quot;bossId&quot;:9000557,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:557,&quot;dungeon&quot;:&quot;Mana-Tombs&quot;,&quot;page&quot;:&quot;mana-tombs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Boots of Zealotry</span></td>
                         <td><span class="slot-text">Feet (Plate)</span></td>
                         <td><span class="stat-text">+740 Armor, +22 Strength, +17 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
