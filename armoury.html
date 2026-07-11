@@ -11071,6 +11071,12 @@
         const weights = getStatWeights(upState.role, upState.classSlug);
         const profs   = upState.professions || [];
         const level   = upState.charLevel || 0;
+        // An enchant's `req` is the minimum REQUIRED-LEVEL of the *item* it can go
+        // on ("Requires a level 60 or higher item"), NOT a character-level gate.
+        // So a level-60 player still can't put a req-60 enchant on a req-57 piece.
+        // Gate against the equipped item's reqLevel; empty slot falls back to the
+        // char level (speculative — for whatever you'll slot there next).
+        const itemReq = equipped ? (equipped.reqLevel || 0) : level;
         const ah      = upState.enchantsOnAH || new Set();
         const owned   = upState.enchantsOwned || new Set();   // scrolls in bags/bank
         // compareToCurrent: measure suggestions against the BETTER of what's
@@ -11088,7 +11094,7 @@
         for (const pool of pools) {
             for (const e of (ENCHANTS[pool] || [])) {
                 if (seen.has(e.name)) continue;
-                if ((e.req || 0) > level) continue;               // level gate
+                if ((e.req || 0) > itemReq) continue;             // item's req-level gate (not char level)
                 if (compareToCurrent && equipped && e.ench === equipped.enchant) continue;  // skip the applied one
                 if (mailEn && e.ench === mailEn.ench) continue;   // skip the one already bought (in mailbox)
                 // Obtainable: a profession-crafted enchant needs the skill (you
