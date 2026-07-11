@@ -10509,6 +10509,19 @@
         druid:   ['tank', 'heal', 'melee', 'ranged'],
     };
 
+    // Class-level union of caster damage schools — the fallback for school-aware
+    // enchant scoring when the API can't detect a spec (no talents). A Frost
+    // enchant is worthless to a Warlock regardless of spec, so this alone fixes
+    // the cross-class cases; the API's per-spec `schools` refines it further
+    // (e.g. a Fire mage drops Frost). Non-casters are absent -> no restriction.
+    const CLASS_CASTER_SCHOOLS = {
+        priest:  ['Shadow'],                    // Shadow (Holy is healing = generic SP)
+        mage:    ['Frost', 'Fire', 'Arcane'],
+        warlock: ['Shadow', 'Fire'],
+        shaman:  ['Nature', 'Fire', 'Frost'],   // Elemental
+        druid:   ['Arcane', 'Nature'],          // Balance
+    };
+
     // Equip slot index -> list of invType strings that fit it. Mostly 1:1,
     // but Chest accepts Robe, weapon slots accept multiple, etc.
     const UPGRADE_SLOT_INVTYPES = {
@@ -11042,7 +11055,7 @@
 
     // Score an enchant's flat {stat:value} map with the role weights, matching
     // scoreItemForRole's per-stat normalization. Procs (empty stats) score 0.
-    function scoreEnchant(stats, weights, role) {
+    function scoreEnchant(stats, weights, role, schools) {
         let s = 0;
         // A healer gets nothing from a melee weapon/armor enchant. Some carry a
         // stat a caster's weight table still values in isolation — e.g. Mongoose
@@ -11067,14 +11080,27 @@
             }
             // School-labeled spell power — "Shadow Spell Power", "Frost and Shadow
             // Spell Power" (Soulfrost), "Fire and Arcane Spell Power" (Sunfire) —
-            // boosts ONLY that damage school. A caster-DPS slots the enchant that
-            // matches their own school, so it's worth generic Spell Power to them:
-            // collapse it. But a HEALER gets nothing from a damage school — keep
-            // the school name so it has no weight and scores 0. Only generic
-            // "Spell Power" (Healing Power / Spellpower, which includes +healing)
-            // counts for healing.
+            // boosts ONLY that damage school. Score depends on who's asking:
+            //  - HEALER: a damage school heals for nothing -> keep the school name
+            //    so it has no weight and scores 0. Only generic "Spell Power"
+            //    (Healing Power / Spellpower, which includes +healing) counts.
+            //  - CASTER-DPS with known schools (`schools`): the enchant is only
+            //    useful if one of ITS schools is one the caster casts — a Frost
+            //    enchant is dead on a Warlock. Match -> generic Spell Power value;
+            //    no match -> keep school name -> 0.
+            //  - Unknown schools: credit generically (old behaviour).
             const isSchoolSP = / Spell Power$/.test(name);  // bare "Spell Power" has no leading space -> excluded
-            const key = isSchoolSP ? (role === 'heal' ? name : 'Spell Power') : name;
+            let key = name;
+            if (isSchoolSP) {
+                if (role === 'heal') {
+                    key = name;
+                } else if (schools && schools.length) {
+                    const eSchools = name.replace(/ Spell Power$/, '').split(/ and /);
+                    key = eSchools.some(x => schools.includes(x)) ? 'Spell Power' : name;
+                } else {
+                    key = 'Spell Power';
+                }
+            }
             s += (val / (STAT_NORM[key] || 1)) * (weights[key] || 0);
         }
         return s;
@@ -11106,8 +11132,8 @@
         const curEn  = (compareToCurrent && equipped && equipped.enchant && window.KCraftEnchantById)
             ? window.KCraftEnchantById[equipped.enchant] : null;
         const curScore = Math.max(
-            mailEn ? scoreEnchant(mailEn.stats, weights, upState.role) : 0,
-            curEn  ? scoreEnchant(curEn.stats,  weights, upState.role) : 0);
+            mailEn ? scoreEnchant(mailEn.stats, weights, upState.role, upState.schools) : 0,
+            curEn  ? scoreEnchant(curEn.stats,  weights, upState.role, upState.schools) : 0);
         const out = [], seen = new Set();
         for (const pool of pools) {
             for (const e of (ENCHANTS[pool] || [])) {
@@ -11126,7 +11152,7 @@
                     buy       = (e.items || []).find(it => ah.has(it[0]));
                     if (!ownScroll && !buy) continue;
                 }
-                const sc = scoreEnchant(e.stats, weights, upState.role);
+                const sc = scoreEnchant(e.stats, weights, upState.role, upState.schools);
                 const delta = sc - curScore;   // == sc when not comparing (curScore 0)
                 if (delta <= 0) continue;
                 seen.add(e.name);
@@ -11651,6 +11677,10 @@
             // a Ret paladin opens on 'melee', not 'tank'. Only on a fresh entry
             // (a return from the AH keeps the user's manual pick) and only if the
             // detected role is viable for the class. The role toggle still works.
+            // Caster damage school(s) for school-aware enchant scoring — from the
+            // API's detected spec, falling back to the class-level union so a
+            // spec-less caster still won't be told to slot the wrong school.
+            upState.schools = (up && up.schools) || CLASS_CASTER_SCHOOLS[upState.classSlug] || null;
             const viableRoles = CLASS_VIABLE_ROLES[upState.classSlug] || [];
             if (!cameFromAH && up && up.role && viableRoles.includes(up.role)
                     && up.role !== upState.role) {
