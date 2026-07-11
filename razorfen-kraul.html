@@ -502,26 +502,26 @@
             <div class="dropdown">
                 <select id="class-dropdown">
                     <option value="all">All classes (82)</option>
-                    <option value="warrior">Warrior (39)</option>
-                    <option value="paladin">Paladin (45)</option>
+                    <option value="warrior">Warrior (37)</option>
+                    <option value="paladin">Paladin (47)</option>
                     <option value="hunter">Hunter (21)</option>
                     <option value="rogue">Rogue (22)</option>
-                    <option value="priest">Priest (19)</option>
-                    <option value="dk">Death Knight (30)</option>
-                    <option value="shaman">Shaman (55)</option>
-                    <option value="mage">Mage (13)</option>
-                    <option value="warlock">Warlock (13)</option>
-                    <option value="druid">Druid (34)</option>
+                    <option value="priest">Priest (23)</option>
+                    <option value="dk">Death Knight (31)</option>
+                    <option value="shaman">Shaman (56)</option>
+                    <option value="mage">Mage (17)</option>
+                    <option value="warlock">Warlock (17)</option>
+                    <option value="druid">Druid (36)</option>
                 </select>
             </div>
         </div>
         <div class="filter-row row-role">
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">82</span>)</button>
-            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">28</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">27</span>)</button>
-            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">49</span>)</button>
-            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">35</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">30</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">31</span>)</button>
+            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">46</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">41</span>)</button>
         </div>
         <div class="filter-row row-quality">
             <span class="label">Quality:</span>
@@ -810,16 +810,17 @@
                         <td class="text-end">40.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="paladin priest shaman druid"
                         data-req="27"
                         data-item-id="2816"
-                        data-item-json="{&quot;id&quot;:2816,&quot;name&quot;:&quot;Death Speaker Scepter&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:33,&quot;req&quot;:27,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;42–78 Damage&quot;,&quot;speed&quot;:2.8,&quot;dps&quot;:21.4,&quot;stats&quot;:[&quot;+1 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:7324,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:73,&quot;sellCopper&quot;:24,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:4428,&quot;bossName&quot;:&quot;Death Speaker Jargba&quot;,&quot;bossLvl&quot;:27,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:2816,&quot;name&quot;:&quot;Death Speaker Scepter&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:33,&quot;req&quot;:27,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;42–78 Damage&quot;,&quot;speed&quot;:2.8,&quot;dps&quot;:21.4,&quot;stats&quot;:[&quot;+1 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:7324,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:73,&quot;sellCopper&quot;:24,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:4428,&quot;bossName&quot;:&quot;Death Speaker Jargba&quot;,&quot;bossLvl&quot;:27,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Death Speaker Scepter</span></td>
                         <td><span class="slot-text">Main Hand</span></td>
                         <td><span class="stat-text">+1 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
@@ -1083,16 +1084,17 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="shaman druid"
                         data-req="27"
                         data-item-id="6688"
-                        data-item-json="{&quot;id&quot;:6688,&quot;name&quot;:&quot;Whisperwind Headdress&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:32,&quot;req&quot;:27,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Leather)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+86 Armor&quot;,&quot;+3 Stamina&quot;,&quot;+7 Intellect&quot;,&quot;+7 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:2471,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:24,&quot;sellCopper&quot;:71,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:50.0,&quot;chanceStr&quot;:&quot;50.0%&quot;,&quot;bossId&quot;:4842,&quot;bossName&quot;:&quot;Earthcaller Halmgar&quot;,&quot;bossLvl&quot;:27,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:6688,&quot;name&quot;:&quot;Whisperwind Headdress&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:32,&quot;req&quot;:27,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Leather)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+86 Armor&quot;,&quot;+3 Stamina&quot;,&quot;+7 Intellect&quot;,&quot;+7 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:2471,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:24,&quot;sellCopper&quot;:71,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:50.0,&quot;chanceStr&quot;:&quot;50.0%&quot;,&quot;bossId&quot;:4842,&quot;bossName&quot;:&quot;Earthcaller Halmgar&quot;,&quot;bossLvl&quot;:27,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Whisperwind Headdress</span></td>
                         <td><span class="slot-text">Head (Leather)</span></td>
                         <td><span class="stat-text">+86 Armor, +3 Stamina, +7 Intellect, +7 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
@@ -1256,20 +1258,23 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
-                        data-classes="warrior shaman druid"
+                        data-roles="heal ranged"
+                        data-classes="priest shaman mage warlock druid"
                         data-req="22"
                         data-item-id="2549"
-                        data-item-json="{&quot;id&quot;:2549,&quot;name&quot;:&quot;Staff of the Shade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:27,&quot;req&quot;:22,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;46–70 Damage&quot;,&quot;speed&quot;:2.6,&quot;dps&quot;:22.3,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:5016,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:50,&quot;sellCopper&quot;:16,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:4842,&quot;bossName&quot;:&quot;Earthcaller Halmgar&quot;,&quot;bossLvl&quot;:27,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:2549,&quot;name&quot;:&quot;Staff of the Shade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:27,&quot;req&quot;:22,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;46–70 Damage&quot;,&quot;speed&quot;:2.6,&quot;dps&quot;:22.3,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:5016,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:50,&quot;sellCopper&quot;:16,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:4842,&quot;bossName&quot;:&quot;Earthcaller Halmgar&quot;,&quot;bossLvl&quot;:27,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Staff of the Shade</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">27</td>
@@ -1562,20 +1567,23 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
-                        data-classes="warrior shaman druid"
+                        data-roles="heal ranged"
+                        data-classes="priest shaman mage warlock druid"
                         data-req="22"
                         data-item-id="2549"
-                        data-item-json="{&quot;id&quot;:2549,&quot;name&quot;:&quot;Staff of the Shade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:27,&quot;req&quot;:22,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;46–70 Damage&quot;,&quot;speed&quot;:2.6,&quot;dps&quot;:22.3,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:5016,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:50,&quot;sellCopper&quot;:16,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:4425,&quot;bossName&quot;:&quot;Blind Hunter&quot;,&quot;bossLvl&quot;:27,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:2549,&quot;name&quot;:&quot;Staff of the Shade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:27,&quot;req&quot;:22,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;46–70 Damage&quot;,&quot;speed&quot;:2.6,&quot;dps&quot;:22.3,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:5016,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:50,&quot;sellCopper&quot;:16,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:4425,&quot;bossName&quot;:&quot;Blind Hunter&quot;,&quot;bossLvl&quot;:27,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Staff of the Shade</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">27</td>
@@ -1705,19 +1713,25 @@
                         <td class="text-end">79.6%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="17"
                         data-item-id="2879"
-                        data-item-json="{&quot;id&quot;:2879,&quot;name&quot;:&quot;Antipodean Rod&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:22,&quot;req&quot;:17,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 5.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:3121,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:31,&quot;sellCopper&quot;:21,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000047,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:26,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:2879,&quot;name&quot;:&quot;Antipodean Rod&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:22,&quot;req&quot;:17,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 5.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:3121,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:31,&quot;sellCopper&quot;:21,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000047,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:26,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Antipodean Rod</span></td>
                         <td><span class="slot-text">Held</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">22</td>
                         <td class="text-end">0.06%</td>
@@ -1805,19 +1819,22 @@
                         <td class="text-end">0.06%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="tank"
+                        data-classes="warrior paladin dk druid"
                         data-req="17"
                         data-item-id="12985"
-                        data-item-json="{&quot;id&quot;:12985,&quot;name&quot;:&quot;Ring of Defense&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:22,&quot;req&quot;:17,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+20 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:1153,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:11,&quot;sellCopper&quot;:53,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000047,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:26,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:12985,&quot;name&quot;:&quot;Ring of Defense&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:22,&quot;req&quot;:17,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+20 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:1153,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:11,&quot;sellCopper&quot;:53,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000047,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:26,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Ring of Defense</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+20 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">22</td>
                         <td class="text-end">0.06%</td>
@@ -1969,15 +1986,16 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="tank melee"
                         data-classes="warrior paladin dk"
                         data-req="21"
                         data-item-id="13041"
-                        data-item-json="{&quot;id&quot;:13041,&quot;name&quot;:&quot;Guardian Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:26,&quot;req&quot;:21,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;50–76 Damage&quot;,&quot;speed&quot;:2.9,&quot;dps&quot;:21.7,&quot;stats&quot;:[&quot;+40 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 13.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:4516,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:45,&quot;sellCopper&quot;:16,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:9000047,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:26,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:13041,&quot;name&quot;:&quot;Guardian Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:26,&quot;req&quot;:21,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;50–76 Damage&quot;,&quot;speed&quot;:2.9,&quot;dps&quot;:21.7,&quot;stats&quot;:[&quot;+40 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 13.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:4516,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:45,&quot;sellCopper&quot;:16,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:9000047,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:26,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Guardian Blade</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+40 Armor</span></td>
                         <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -2139,20 +2157,23 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
-                        data-classes="warrior shaman druid"
+                        data-roles="heal ranged"
+                        data-classes="priest shaman mage warlock druid"
                         data-req="22"
                         data-item-id="2549"
-                        data-item-json="{&quot;id&quot;:2549,&quot;name&quot;:&quot;Staff of the Shade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:27,&quot;req&quot;:22,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;46–70 Damage&quot;,&quot;speed&quot;:2.6,&quot;dps&quot;:22.3,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:5016,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:50,&quot;sellCopper&quot;:16,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:9000047,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:26,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:2549,&quot;name&quot;:&quot;Staff of the Shade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:27,&quot;req&quot;:22,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;46–70 Damage&quot;,&quot;speed&quot;:2.6,&quot;dps&quot;:22.3,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:5016,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:50,&quot;sellCopper&quot;:16,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:9000047,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:26,&quot;mapId&quot;:47,&quot;dungeon&quot;:&quot;Razorfen Kraul&quot;,&quot;page&quot;:&quot;razorfen-kraul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Staff of the Shade</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">27</td>

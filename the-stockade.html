@@ -502,15 +502,15 @@
             <div class="dropdown">
                 <select id="class-dropdown">
                     <option value="all">All classes (74)</option>
-                    <option value="warrior">Warrior (33)</option>
-                    <option value="paladin">Paladin (44)</option>
+                    <option value="warrior">Warrior (37)</option>
+                    <option value="paladin">Paladin (46)</option>
                     <option value="hunter">Hunter (19)</option>
                     <option value="rogue">Rogue (16)</option>
                     <option value="priest">Priest (21)</option>
-                    <option value="dk">Death Knight (29)</option>
+                    <option value="dk">Death Knight (33)</option>
                     <option value="shaman">Shaman (46)</option>
-                    <option value="mage">Mage (10)</option>
-                    <option value="warlock">Warlock (10)</option>
+                    <option value="mage">Mage (15)</option>
+                    <option value="warlock">Warlock (15)</option>
                     <option value="druid">Druid (29)</option>
                 </select>
             </div>
@@ -518,10 +518,10 @@
         <div class="filter-row row-role">
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">74</span>)</button>
-            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">20</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">25</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">27</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">26</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">39</span>)</button>
-            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">32</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">37</span>)</button>
         </div>
         <div class="filter-row row-quality">
             <span class="label">Quality:</span>
@@ -596,15 +596,16 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="ranged"
+                        data-roles="heal ranged"
                         data-classes="priest shaman mage warlock druid"
                         data-req="22"
                         data-item-id="2280"
-                        data-item-json="{&quot;id&quot;:2280,&quot;name&quot;:&quot;Kam&#x27;s Walking Stick&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:27,&quot;req&quot;:22,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;50–75 Damage&quot;,&quot;speed&quot;:2.8,&quot;dps&quot;:22.3,&quot;stats&quot;:[&quot;+10 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:4828,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:48,&quot;sellCopper&quot;:28,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:1.0,&quot;chanceStr&quot;:&quot;1.0%&quot;,&quot;bossId&quot;:1666,&quot;bossName&quot;:&quot;Kam Deepfury&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:2280,&quot;name&quot;:&quot;Kam&#x27;s Walking Stick&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:27,&quot;req&quot;:22,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;50–75 Damage&quot;,&quot;speed&quot;:2.8,&quot;dps&quot;:22.3,&quot;stats&quot;:[&quot;+10 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:4828,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:48,&quot;sellCopper&quot;:28,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:1.0,&quot;chanceStr&quot;:&quot;1.0%&quot;,&quot;bossId&quot;:1666,&quot;bossName&quot;:&quot;Kam Deepfury&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Kam's Walking Stick</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+10 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
@@ -749,39 +750,45 @@
                         <td class="text-end">0.06%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="priest"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
                         data-req="24"
                         data-item-id="13099"
-                        data-item-json="{&quot;id&quot;:13099,&quot;name&quot;:&quot;Moccasins of the White Hare&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:24,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+32 Armor&quot;,&quot;+8 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 4.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:1431,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:31,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;priest&quot;],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:1717,&quot;bossName&quot;:&quot;Hamhock&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:13099,&quot;name&quot;:&quot;Moccasins of the White Hare&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:24,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+32 Armor&quot;,&quot;+8 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 4.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:1431,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:31,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:1717,&quot;bossName&quot;:&quot;Hamhock&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Moccasins of the White Hare</span></td>
                         <td><span class="slot-text">Feet (Cloth)</span></td>
                         <td><span class="stat-text">+32 Armor, +8 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
                         <td class="text-end">29</td>
                         <td class="text-end">0.06%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="paladin priest shaman druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="23"
                         data-item-id="13031"
-                        data-item-json="{&quot;id&quot;:13031,&quot;name&quot;:&quot;Orb of Mistmantle&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:28,&quot;req&quot;:23,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+4 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:1401,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:1,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:1717,&quot;bossName&quot;:&quot;Hamhock&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:13031,&quot;name&quot;:&quot;Orb of Mistmantle&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:28,&quot;req&quot;:23,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+4 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:1401,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:1,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:1717,&quot;bossName&quot;:&quot;Hamhock&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Orb of Mistmantle</span></td>
                         <td><span class="slot-text">Held</span></td>
                         <td><span class="stat-text">+4 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">28</td>
@@ -900,15 +907,16 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="tank melee"
                         data-classes="warrior paladin dk"
                         data-req="21"
                         data-item-id="13041"
-                        data-item-json="{&quot;id&quot;:13041,&quot;name&quot;:&quot;Guardian Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:26,&quot;req&quot;:21,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;50–76 Damage&quot;,&quot;speed&quot;:2.9,&quot;dps&quot;:21.7,&quot;stats&quot;:[&quot;+40 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 13.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:4516,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:45,&quot;sellCopper&quot;:16,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1717,&quot;bossName&quot;:&quot;Hamhock&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:13041,&quot;name&quot;:&quot;Guardian Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:26,&quot;req&quot;:21,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;50–76 Damage&quot;,&quot;speed&quot;:2.9,&quot;dps&quot;:21.7,&quot;stats&quot;:[&quot;+40 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 13.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:4516,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:45,&quot;sellCopper&quot;:16,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1717,&quot;bossName&quot;:&quot;Hamhock&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Guardian Blade</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+40 Armor</span></td>
                         <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -1068,37 +1076,42 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="paladin"
+                        data-roles="tank heal"
+                        data-classes="warrior paladin dk"
                         data-req="26"
                         data-item-id="13049"
-                        data-item-json="{&quot;id&quot;:13049,&quot;name&quot;:&quot;Deanship Claymore&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:26,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;53–80 Damage&quot;,&quot;speed&quot;:2.8,&quot;dps&quot;:23.8,&quot;stats&quot;:[&quot;+4 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 15.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:6191,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:91,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:0.04545454545454546,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1717,&quot;bossName&quot;:&quot;Hamhock&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:13049,&quot;name&quot;:&quot;Deanship Claymore&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:26,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;53–80 Damage&quot;,&quot;speed&quot;:2.8,&quot;dps&quot;:23.8,&quot;stats&quot;:[&quot;+4 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 15.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:6191,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:91,&quot;roles&quot;:[&quot;tank&quot;,&quot;heal&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.04545454545454546,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1717,&quot;bossName&quot;:&quot;Hamhock&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Deanship Claymore</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+4 Spirit</span></td>
                         <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                         </td>
                         <td class="text-end">29</td>
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="tank"
+                        data-classes="warrior paladin dk"
                         data-req="25"
                         data-item-id="1717"
-                        data-item-json="{&quot;id&quot;:1717,&quot;name&quot;:&quot;Double Link Tunic&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:30,&quot;req&quot;:25,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+278 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 14.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:3108,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:31,&quot;sellCopper&quot;:8,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:0.04545454545454546,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1717,&quot;bossName&quot;:&quot;Hamhock&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:1717,&quot;name&quot;:&quot;Double Link Tunic&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:30,&quot;req&quot;:25,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+278 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 14.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:3108,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:31,&quot;sellCopper&quot;:8,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.04545454545454546,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1717,&quot;bossName&quot;:&quot;Hamhock&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Double Link Tunic</span></td>
                         <td><span class="slot-text">Chest (Mail)</span></td>
                         <td><span class="stat-text">+278 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                         </td>
                         <td class="text-end">30</td>
                         <td class="text-end">0.05%</td>
@@ -1411,39 +1424,45 @@
                         <td class="text-end">0.06%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="priest"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
                         data-req="24"
                         data-item-id="13099"
-                        data-item-json="{&quot;id&quot;:13099,&quot;name&quot;:&quot;Moccasins of the White Hare&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:24,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+32 Armor&quot;,&quot;+8 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 4.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:1431,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:31,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;priest&quot;],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:13099,&quot;name&quot;:&quot;Moccasins of the White Hare&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:24,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+32 Armor&quot;,&quot;+8 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 4.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:1431,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:31,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Moccasins of the White Hare</span></td>
                         <td><span class="slot-text">Feet (Cloth)</span></td>
                         <td><span class="stat-text">+32 Armor, +8 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
                         <td class="text-end">29</td>
                         <td class="text-end">0.06%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="paladin priest shaman druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="23"
                         data-item-id="13031"
-                        data-item-json="{&quot;id&quot;:13031,&quot;name&quot;:&quot;Orb of Mistmantle&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:28,&quot;req&quot;:23,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+4 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:1401,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:1,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:13031,&quot;name&quot;:&quot;Orb of Mistmantle&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:28,&quot;req&quot;:23,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+4 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:1401,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:1,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Orb of Mistmantle</span></td>
                         <td><span class="slot-text">Held</span></td>
                         <td><span class="stat-text">+4 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">28</td>
@@ -1683,15 +1702,16 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="tank melee"
                         data-classes="warrior paladin dk shaman"
                         data-req="28"
                         data-item-id="9405"
-                        data-item-json="{&quot;id&quot;:9405,&quot;name&quot;:&quot;Girdle of Golem Strength&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:33,&quot;req&quot;:28,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Waist (Mail)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+128 Armor&quot;,&quot;+12 Strength&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 5.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2055,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:20,&quot;sellCopper&quot;:55,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:9405,&quot;name&quot;:&quot;Girdle of Golem Strength&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:33,&quot;req&quot;:28,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Waist (Mail)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+128 Armor&quot;,&quot;+12 Strength&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 5.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:2055,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:20,&quot;sellCopper&quot;:55,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Girdle of Golem Strength</span></td>
                         <td><span class="slot-text">Waist (Mail)</span></td>
                         <td><span class="stat-text">+128 Armor, +12 Strength</span></td>
                         <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -1704,15 +1724,16 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
+                        data-roles="tank melee"
                         data-classes="warrior paladin dk"
                         data-req="21"
                         data-item-id="13041"
-                        data-item-json="{&quot;id&quot;:13041,&quot;name&quot;:&quot;Guardian Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:26,&quot;req&quot;:21,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;50–76 Damage&quot;,&quot;speed&quot;:2.9,&quot;dps&quot;:21.7,&quot;stats&quot;:[&quot;+40 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 13.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:4516,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:45,&quot;sellCopper&quot;:16,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:13041,&quot;name&quot;:&quot;Guardian Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:26,&quot;req&quot;:21,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;50–76 Damage&quot;,&quot;speed&quot;:2.9,&quot;dps&quot;:21.7,&quot;stats&quot;:[&quot;+40 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 13.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:4516,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:45,&quot;sellCopper&quot;:16,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Guardian Blade</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+40 Armor</span></td>
                         <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
                         <td>
@@ -1742,19 +1763,22 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="priest"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
                         data-req="27"
                         data-item-id="2721"
-                        data-item-json="{&quot;id&quot;:2721,&quot;name&quot;:&quot;Holy Shroud&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:32,&quot;req&quot;:27,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+40 Armor&quot;,&quot;+6 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:1982,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:19,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;priest&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:2721,&quot;name&quot;:&quot;Holy Shroud&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:32,&quot;req&quot;:27,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+40 Armor&quot;,&quot;+6 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:1982,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:19,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:0.05,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Holy Shroud</span></td>
                         <td><span class="slot-text">Head (Cloth)</span></td>
                         <td><span class="stat-text">+40 Armor, +6 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
                         <td class="text-end">32</td>
                         <td class="text-end">0.05%</td>
@@ -1930,37 +1954,42 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="paladin"
+                        data-roles="tank heal"
+                        data-classes="warrior paladin dk"
                         data-req="26"
                         data-item-id="13049"
-                        data-item-json="{&quot;id&quot;:13049,&quot;name&quot;:&quot;Deanship Claymore&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:26,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;53–80 Damage&quot;,&quot;speed&quot;:2.8,&quot;dps&quot;:23.8,&quot;stats&quot;:[&quot;+4 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 15.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:6191,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:91,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:0.04545454545454546,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:13049,&quot;name&quot;:&quot;Deanship Claymore&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:29,&quot;req&quot;:26,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;53–80 Damage&quot;,&quot;speed&quot;:2.8,&quot;dps&quot;:23.8,&quot;stats&quot;:[&quot;+4 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 15.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:6191,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:91,&quot;roles&quot;:[&quot;tank&quot;,&quot;heal&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.04545454545454546,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Deanship Claymore</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+4 Spirit</span></td>
                         <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                         </td>
                         <td class="text-end">29</td>
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="tank"
+                        data-classes="warrior paladin dk"
                         data-req="25"
                         data-item-id="1717"
-                        data-item-json="{&quot;id&quot;:1717,&quot;name&quot;:&quot;Double Link Tunic&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:30,&quot;req&quot;:25,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+278 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 14.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:3108,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:31,&quot;sellCopper&quot;:8,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:0.04545454545454546,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:1717,&quot;name&quot;:&quot;Double Link Tunic&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:30,&quot;req&quot;:25,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+278 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 14.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:3108,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:31,&quot;sellCopper&quot;:8,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.04545454545454546,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:1716,&quot;bossName&quot;:&quot;Bazil Thredd&quot;,&quot;bossLvl&quot;:25,&quot;mapId&quot;:34,&quot;dungeon&quot;:&quot;The Stockade&quot;,&quot;page&quot;:&quot;the-stockade.html&quot;,&quot;faction&quot;:&quot;Alliance&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Double Link Tunic</span></td>
                         <td><span class="slot-text">Chest (Mail)</span></td>
                         <td><span class="stat-text">+278 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                         </td>
                         <td class="text-end">30</td>
                         <td class="text-end">0.05%</td>

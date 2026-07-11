@@ -503,26 +503,26 @@
             <div class="dropdown">
                 <select id="class-dropdown">
                     <option value="all">All classes (37)</option>
-                    <option value="warrior">Warrior (16)</option>
+                    <option value="warrior">Warrior (20)</option>
                     <option value="paladin">Paladin (18)</option>
-                    <option value="hunter">Hunter (8)</option>
-                    <option value="rogue">Rogue (6)</option>
-                    <option value="priest">Priest (8)</option>
-                    <option value="dk">Death Knight (11)</option>
-                    <option value="shaman">Shaman (15)</option>
-                    <option value="mage">Mage (8)</option>
-                    <option value="warlock">Warlock (8)</option>
-                    <option value="druid">Druid (11)</option>
+                    <option value="hunter">Hunter (12)</option>
+                    <option value="rogue">Rogue (8)</option>
+                    <option value="priest">Priest (9)</option>
+                    <option value="dk">Death Knight (15)</option>
+                    <option value="shaman">Shaman (18)</option>
+                    <option value="mage">Mage (9)</option>
+                    <option value="warlock">Warlock (9)</option>
+                    <option value="druid">Druid (14)</option>
                 </select>
             </div>
         </div>
         <div class="filter-row row-role">
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">37</span>)</button>
-            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">16</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">14</span>)</button>
-            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">16</span>)</button>
-            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">18</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">17</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">16</span>)</button>
+            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">19</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">23</span>)</button>
         </div>
         <div class="filter-row row-quality">
             <span class="label">Quality:</span>
@@ -662,20 +662,24 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal ranged"
-                        data-classes="paladin shaman"
+                        data-roles="heal melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="70"
                         data-item-id="28306"
-                        data-item-json="{&quot;id&quot;:28306,&quot;name&quot;:&quot;Towering Mantle of the Hunt&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Mail)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+489 Armor&quot;,&quot;+21 Stamina&quot;,&quot;+23 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 48.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:37788,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:77,&quot;sellCopper&quot;:88,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17976,&quot;bossName&quot;:&quot;Commander Sarannis&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:28306,&quot;name&quot;:&quot;Towering Mantle of the Hunt&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Mail)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+489 Armor&quot;,&quot;+21 Stamina&quot;,&quot;+23 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 48.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:37788,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:77,&quot;sellCopper&quot;:88,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17976,&quot;bossName&quot;:&quot;Commander Sarannis&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Towering Mantle of the Hunt</span></td>
                         <td><span class="slot-text">Shoulder (Mail)</span></td>
                         <td><span class="stat-text">+489 Armor, +21 Stamina, +23 Intellect</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">115</td>
@@ -728,10 +732,10 @@
                     </tr>
                     <tr class="item-row"
                         data-roles="tank"
-                        data-classes="warrior paladin dk"
+                        data-classes="warrior paladin dk druid"
                         data-req="70"
                         data-item-id="28321"
-                        data-item-json="{&quot;id&quot;:28321,&quot;name&quot;:&quot;Enchanted Thorium Torque&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+27 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 21.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8788,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:87,&quot;sellCopper&quot;:88,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17975,&quot;bossName&quot;:&quot;High Botanist Freywinn&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:28321,&quot;name&quot;:&quot;Enchanted Thorium Torque&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+27 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 21.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8788,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:87,&quot;sellCopper&quot;:88,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17975,&quot;bossName&quot;:&quot;High Botanist Freywinn&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Enchanted Thorium Torque</span></td>
                         <td><span class="slot-text">Neck</span></td>
                         <td><span class="stat-text">+27 Stamina</span></td>
@@ -742,6 +746,7 @@
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">115</td>
                         <td class="text-end">10.0%</td>
@@ -789,19 +794,24 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="melee ranged"
+                        data-classes="warrior hunter rogue shaman druid"
                         data-req="70"
                         data-item-id="28315"
-                        data-item-json="{&quot;id&quot;:28315,&quot;name&quot;:&quot;Stormreaver Warblades&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Off-Hand&quot;,&quot;slotFilter&quot;:&quot;Off-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:13,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Fist&quot;,&quot;damage&quot;:&quot;80–149 Damage&quot;,&quot;speed&quot;:1.6,&quot;dps&quot;:71.6,&quot;stats&quot;:[&quot;+13 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:86506,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:65,&quot;sellCopper&quot;:6,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17975,&quot;bossName&quot;:&quot;High Botanist Freywinn&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:28315,&quot;name&quot;:&quot;Stormreaver Warblades&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Off-Hand&quot;,&quot;slotFilter&quot;:&quot;Off-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:13,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Fist&quot;,&quot;damage&quot;:&quot;80–149 Damage&quot;,&quot;speed&quot;:1.6,&quot;dps&quot;:71.6,&quot;stats&quot;:[&quot;+13 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:86506,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:65,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17975,&quot;bossName&quot;:&quot;High Botanist Freywinn&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Stormreaver Warblades</span></td>
                         <td><span class="slot-text">Off-Hand</span></td>
                         <td><span class="stat-text">+13 Stamina</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">115</td>
                         <td class="text-end">10.0%</td>
@@ -901,41 +911,49 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="tank"
-                        data-classes="warrior paladin dk"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter rogue dk shaman druid"
                         data-req="70"
                         data-item-id="28323"
-                        data-item-json="{&quot;id&quot;:28323,&quot;name&quot;:&quot;Ring of Umbral Doom&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+18 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 40.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 20.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:7102,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:71,&quot;sellCopper&quot;:2,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17978,&quot;bossName&quot;:&quot;Thorngrin the Tender&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:28323,&quot;name&quot;:&quot;Ring of Umbral Doom&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+18 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 40.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 20.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:7102,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:71,&quot;sellCopper&quot;:2,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17978,&quot;bossName&quot;:&quot;Thorngrin the Tender&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Ring of Umbral Doom</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text">+18 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">115</td>
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
-                        data-classes="warrior rogue shaman druid"
+                        data-roles="heal ranged"
+                        data-classes="priest shaman mage warlock druid"
                         data-req="70"
                         data-item-id="28322"
-                        data-item-json="{&quot;id&quot;:28322,&quot;name&quot;:&quot;Runed Dagger of Solace&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;30–95 Damage&quot;,&quot;speed&quot;:1.5,&quot;dps&quot;:41.7,&quot;stats&quot;:[&quot;+24 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 121.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your resilience rating by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:91099,&quot;sellGold&quot;:9,&quot;sellSilver&quot;:10,&quot;sellCopper&quot;:99,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17978,&quot;bossName&quot;:&quot;Thorngrin the Tender&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:28322,&quot;name&quot;:&quot;Runed Dagger of Solace&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;30–95 Damage&quot;,&quot;speed&quot;:1.5,&quot;dps&quot;:41.7,&quot;stats&quot;:[&quot;+24 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 121.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your resilience rating by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:91099,&quot;sellGold&quot;:9,&quot;sellSilver&quot;:10,&quot;sellCopper&quot;:99,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17978,&quot;bossName&quot;:&quot;Thorngrin the Tender&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Runed Dagger of Solace</span></td>
                         <td><span class="slot-text">Main Hand</span></td>
                         <td><span class="stat-text">+24 Stamina</span></td>
                         <td>
-                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
-                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">115</td>
@@ -968,18 +986,23 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="tank"
-                        data-classes="druid"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
                         data-req="70"
                         data-item-id="28339"
-                        data-item-json="{&quot;id&quot;:28339,&quot;name&quot;:&quot;Boots of the Shifting Sands&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+201 Armor&quot;,&quot;+30 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 40.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 19.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:33796,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:37,&quot;sellCopper&quot;:96,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17980,&quot;bossName&quot;:&quot;Laj&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:28339,&quot;name&quot;:&quot;Boots of the Shifting Sands&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+201 Armor&quot;,&quot;+30 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 40.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 19.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:33796,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:37,&quot;sellCopper&quot;:96,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17980,&quot;bossName&quot;:&quot;Laj&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Boots of the Shifting Sands</span></td>
                         <td><span class="slot-text">Feet (Leather)</span></td>
                         <td><span class="stat-text">+201 Armor, +30 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">115</td>
@@ -1007,16 +1030,17 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="shaman druid"
                         data-req="70"
                         data-item-id="28340"
-                        data-item-json="{&quot;id&quot;:28340,&quot;name&quot;:&quot;Mantle of Autumn&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Leather)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+219 Armor&quot;,&quot;+31 Stamina&quot;,&quot;+22 Intellect&quot;,&quot;+21 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:33918,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:39,&quot;sellCopper&quot;:18,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17980,&quot;bossName&quot;:&quot;Laj&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:28340,&quot;name&quot;:&quot;Mantle of Autumn&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Leather)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+219 Armor&quot;,&quot;+31 Stamina&quot;,&quot;+22 Intellect&quot;,&quot;+21 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:33918,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:39,&quot;sellCopper&quot;:18,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17980,&quot;bossName&quot;:&quot;Laj&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Mantle of Autumn</span></td>
                         <td><span class="slot-text">Shoulder (Leather)</span></td>
                         <td><span class="stat-text">+219 Armor, +31 Stamina, +22 Intellect, +21 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
@@ -1046,19 +1070,22 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="paladin"
+                        data-roles="tank heal"
+                        data-classes="warrior paladin dk"
                         data-req="70"
                         data-item-id="27739"
-                        data-item-json="{&quot;id&quot;:27739,&quot;name&quot;:&quot;Spaulders of the Righteous&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:623,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+873 Armor&quot;,&quot;+22 Stamina&quot;,&quot;+22 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 15.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 20.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:46860,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:68,&quot;sellCopper&quot;:60,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17980,&quot;bossName&quot;:&quot;Laj&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Righteous Armor&quot;,&quot;items&quot;:[{&quot;id&quot;:28203,&quot;name&quot;:&quot;Breastplate of the Righteous&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27535,&quot;name&quot;:&quot;Gauntlets of the Righteous&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28285,&quot;name&quot;:&quot;Helm of the Righteous&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27839,&quot;name&quot;:&quot;Legplates of the Righteous&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27739,&quot;name&quot;:&quot;Spaulders of the Righteous&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Your Consecration ability costs 15% less mana.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Reduces the cooldown on your Righteous Defense ability by 2 sec.&quot;}],&quot;quality&quot;:3}}">
+                        data-item-json="{&quot;id&quot;:27739,&quot;name&quot;:&quot;Spaulders of the Righteous&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:623,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+873 Armor&quot;,&quot;+22 Stamina&quot;,&quot;+22 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 15.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 20.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:46860,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:68,&quot;sellCopper&quot;:60,&quot;roles&quot;:[&quot;tank&quot;,&quot;heal&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:17980,&quot;bossName&quot;:&quot;Laj&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Righteous Armor&quot;,&quot;items&quot;:[{&quot;id&quot;:28203,&quot;name&quot;:&quot;Breastplate of the Righteous&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27535,&quot;name&quot;:&quot;Gauntlets of the Righteous&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28285,&quot;name&quot;:&quot;Helm of the Righteous&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27839,&quot;name&quot;:&quot;Legplates of the Righteous&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27739,&quot;name&quot;:&quot;Spaulders of the Righteous&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Your Consecration ability costs 15% less mana.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Reduces the cooldown on your Righteous Defense ability by 2 sec.&quot;}],&quot;quality&quot;:3}}">
                         <td><span style="color:#0070dd; font-weight:600;">Spaulders of the Righteous</span></td>
                         <td><span class="slot-text">Shoulder (Plate)</span></td>
                         <td><span class="stat-text">+873 Armor, +22 Stamina, +22 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                         </td>
                         <td class="text-end">115</td>
                         <td class="text-end">10.0%</td>
@@ -1217,10 +1244,10 @@
                     </tr>
                     <tr class="item-row"
                         data-roles="heal melee ranged"
-                        data-classes="paladin hunter shaman"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="70"
                         data-item-id="28228"
-                        data-item-json="{&quot;id&quot;:28228,&quot;name&quot;:&quot;Beast Lord Cuirass&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:650,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+652 Armor&quot;,&quot;+20 Agility&quot;,&quot;+30 Stamina&quot;,&quot;+24 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 40.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:54458,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:44,&quot;sellCopper&quot;:58,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;hunter&quot;,&quot;shaman&quot;],&quot;chance&quot;:7.142857142857143,&quot;chanceStr&quot;:&quot;7.1%&quot;,&quot;bossId&quot;:17977,&quot;bossName&quot;:&quot;Warp Splinter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Beast Lord Armor&quot;,&quot;items&quot;:[{&quot;id&quot;:28228,&quot;name&quot;:&quot;Beast Lord Cuirass&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27474,&quot;name&quot;:&quot;Beast Lord Handguards&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28275,&quot;name&quot;:&quot;Beast Lord Helm&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27874,&quot;name&quot;:&quot;Beast Lord Leggings&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27801,&quot;name&quot;:&quot;Beast Lord Mantle&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Reduces the cooldown on your traps by sec.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Each time you use your Kill Command ability, you gain an additional 85 armor penetration rating for 15 sec.&quot;}],&quot;quality&quot;:3}}">
+                        data-item-json="{&quot;id&quot;:28228,&quot;name&quot;:&quot;Beast Lord Cuirass&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:650,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+652 Armor&quot;,&quot;+20 Agility&quot;,&quot;+30 Stamina&quot;,&quot;+24 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 40.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:54458,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:44,&quot;sellCopper&quot;:58,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:7.142857142857143,&quot;chanceStr&quot;:&quot;7.1%&quot;,&quot;bossId&quot;:17977,&quot;bossName&quot;:&quot;Warp Splinter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;,&quot;set&quot;:{&quot;name&quot;:&quot;Beast Lord Armor&quot;,&quot;items&quot;:[{&quot;id&quot;:28228,&quot;name&quot;:&quot;Beast Lord Cuirass&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27474,&quot;name&quot;:&quot;Beast Lord Handguards&quot;,&quot;quality&quot;:3},{&quot;id&quot;:28275,&quot;name&quot;:&quot;Beast Lord Helm&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27874,&quot;name&quot;:&quot;Beast Lord Leggings&quot;,&quot;quality&quot;:3},{&quot;id&quot;:27801,&quot;name&quot;:&quot;Beast Lord Mantle&quot;,&quot;quality&quot;:3}],&quot;bonuses&quot;:[{&quot;pieces&quot;:2,&quot;text&quot;:&quot;Reduces the cooldown on your traps by sec.&quot;},{&quot;pieces&quot;:4,&quot;text&quot;:&quot;Each time you use your Kill Command ability, you gain an additional 85 armor penetration rating for 15 sec.&quot;}],&quot;quality&quot;:3}}">
                         <td><span style="color:#0070dd; font-weight:600;">Beast Lord Cuirass</span></td>
                         <td><span class="slot-text">Chest (Mail)</span></td>
                         <td><span class="stat-text">+652 Armor, +20 Agility, +30 Stamina, +24 Intellect</span></td>
@@ -1230,8 +1257,10 @@
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">115</td>
@@ -1353,15 +1382,16 @@
                         <td class="text-end">7.1%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
+                        data-roles="heal ranged"
                         data-classes="priest shaman mage warlock druid"
                         data-req="70"
                         data-item-id="28341"
-                        data-item-json="{&quot;id&quot;:28341,&quot;name&quot;:&quot;Warpstaff of Arcanum&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;106–196 Damage&quot;,&quot;speed&quot;:2.4,&quot;dps&quot;:62.9,&quot;stats&quot;:[&quot;+37 Stamina&quot;,&quot;+38 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 121.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 16.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 26.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:113456,&quot;sellGold&quot;:11,&quot;sellSilver&quot;:34,&quot;sellCopper&quot;:56,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:7.142857142857143,&quot;chanceStr&quot;:&quot;7.1%&quot;,&quot;bossId&quot;:17977,&quot;bossName&quot;:&quot;Warp Splinter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:28341,&quot;name&quot;:&quot;Warpstaff of Arcanum&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;106–196 Damage&quot;,&quot;speed&quot;:2.4,&quot;dps&quot;:62.9,&quot;stats&quot;:[&quot;+37 Stamina&quot;,&quot;+38 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 121.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 16.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 26.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:113456,&quot;sellGold&quot;:11,&quot;sellSilver&quot;:34,&quot;sellCopper&quot;:56,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:7.142857142857143,&quot;chanceStr&quot;:&quot;7.1%&quot;,&quot;bossId&quot;:17977,&quot;bossName&quot;:&quot;Warp Splinter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Warpstaff of Arcanum</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+37 Stamina, +38 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
@@ -1413,10 +1443,10 @@
                     </tr>
                     <tr class="item-row"
                         data-roles="heal melee ranged"
-                        data-classes="paladin hunter shaman"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="70"
                         data-item-id="29262"
-                        data-item-json="{&quot;id&quot;:29262,&quot;name&quot;:&quot;Boots of the Endless Hunt&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Mail)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+535 Armor&quot;,&quot;+26 Agility&quot;,&quot;+19 Stamina&quot;,&quot;+23 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 48.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 8 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:51974,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:19,&quot;sellCopper&quot;:74,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;hunter&quot;,&quot;shaman&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:17977,&quot;bossName&quot;:&quot;Warp Splinter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:29262,&quot;name&quot;:&quot;Boots of the Endless Hunt&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:110,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Mail)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+535 Armor&quot;,&quot;+26 Agility&quot;,&quot;+19 Stamina&quot;,&quot;+23 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 48.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 8 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:51974,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:19,&quot;sellCopper&quot;:74,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:17977,&quot;bossName&quot;:&quot;Warp Splinter&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:553,&quot;dungeon&quot;:&quot;The Botanica&quot;,&quot;page&quot;:&quot;the-botanica.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#a335ee; font-weight:600;">Boots of the Endless Hunt</span></td>
                         <td><span class="slot-text">Feet (Mail)</span></td>
                         <td><span class="stat-text">+535 Armor, +26 Agility, +19 Stamina, +23 Intellect</span></td>
@@ -1426,8 +1456,10 @@
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">110</td>

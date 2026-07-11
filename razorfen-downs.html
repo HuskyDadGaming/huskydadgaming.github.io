@@ -503,15 +503,15 @@
                 <select id="class-dropdown">
                     <option value="all">All classes (50)</option>
                     <option value="warrior">Warrior (16)</option>
-                    <option value="paladin">Paladin (17)</option>
-                    <option value="hunter">Hunter (13)</option>
+                    <option value="paladin">Paladin (19)</option>
+                    <option value="hunter">Hunter (17)</option>
                     <option value="rogue">Rogue (7)</option>
-                    <option value="priest">Priest (16)</option>
+                    <option value="priest">Priest (18)</option>
                     <option value="dk">Death Knight (14)</option>
-                    <option value="shaman">Shaman (19)</option>
-                    <option value="mage">Mage (20)</option>
-                    <option value="warlock">Warlock (16)</option>
-                    <option value="druid">Druid (9)</option>
+                    <option value="shaman">Shaman (21)</option>
+                    <option value="mage">Mage (22)</option>
+                    <option value="warlock">Warlock (18)</option>
+                    <option value="druid">Druid (11)</option>
                 </select>
             </div>
         </div>
@@ -519,9 +519,9 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">50</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">14</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">18</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">21</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">21</span>)</button>
-            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">35</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">42</span>)</button>
         </div>
         <div class="filter-row row-quality">
             <span class="label">Quality:</span>
@@ -730,21 +730,23 @@
                         <td class="text-end">0.06%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="tank melee"
-                        data-classes="warrior paladin dk shaman"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="34"
                         data-item-id="10570"
-                        data-item-json="{&quot;id&quot;:10570,&quot;name&quot;:&quot;Manslayer&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:39,&quot;req&quot;:34,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;88–133 Damage&quot;,&quot;speed&quot;:3.2,&quot;dps&quot;:34.5,&quot;stats&quot;:[&quot;+8 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 38.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:15875,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:58,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7354,&quot;bossName&quot;:&quot;Ragglesnout&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10570,&quot;name&quot;:&quot;Manslayer&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:39,&quot;req&quot;:34,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;88–133 Damage&quot;,&quot;speed&quot;:3.2,&quot;dps&quot;:34.5,&quot;stats&quot;:[&quot;+8 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 38.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:15875,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:58,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7354,&quot;bossName&quot;:&quot;Ragglesnout&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Manslayer</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+8 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
@@ -1025,21 +1027,23 @@
                         <td class="text-end">0.06%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="tank melee"
-                        data-classes="warrior paladin dk shaman"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="34"
                         data-item-id="10570"
-                        data-item-json="{&quot;id&quot;:10570,&quot;name&quot;:&quot;Manslayer&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:39,&quot;req&quot;:34,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;88–133 Damage&quot;,&quot;speed&quot;:3.2,&quot;dps&quot;:34.5,&quot;stats&quot;:[&quot;+8 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 38.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:15875,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:58,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7358,&quot;bossName&quot;:&quot;Amnennar the Coldbringer&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10570,&quot;name&quot;:&quot;Manslayer&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:39,&quot;req&quot;:34,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;88–133 Damage&quot;,&quot;speed&quot;:3.2,&quot;dps&quot;:34.5,&quot;stats&quot;:[&quot;+8 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 38.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:15875,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:58,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7358,&quot;bossName&quot;:&quot;Amnennar the Coldbringer&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Manslayer</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+8 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
@@ -1205,15 +1209,16 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="ranged"
+                        data-roles="heal ranged"
                         data-classes="priest mage warlock"
                         data-req="36"
                         data-item-id="23177"
-                        data-item-json="{&quot;id&quot;:23177,&quot;name&quot;:&quot;Lady Falther&#x27;ess&#x27; Finger&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:true,&quot;itemClass&quot;:2,&quot;subclass&quot;:19,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Wand&quot;,&quot;damage&quot;:&quot;34–65 Damage&quot;,&quot;speed&quot;:1.3,&quot;dps&quot;:38.1,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 8.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:10536,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:5,&quot;sellCopper&quot;:36,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:50.0,&quot;chanceStr&quot;:&quot;50.0%&quot;,&quot;bossId&quot;:14686,&quot;bossName&quot;:&quot;Lady Falther&#x27;ess&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:23177,&quot;name&quot;:&quot;Lady Falther&#x27;ess&#x27; Finger&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:true,&quot;itemClass&quot;:2,&quot;subclass&quot;:19,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Wand&quot;,&quot;damage&quot;:&quot;34–65 Damage&quot;,&quot;speed&quot;:1.3,&quot;dps&quot;:38.1,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 8.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:10536,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:5,&quot;sellCopper&quot;:36,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:50.0,&quot;chanceStr&quot;:&quot;50.0%&quot;,&quot;bossId&quot;:14686,&quot;bossName&quot;:&quot;Lady Falther&#x27;ess&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Lady Falther'ess' Finger</span></td>
                         <td><span class="slot-text">Ranged</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
@@ -1296,37 +1301,49 @@
                         <td class="text-end">33.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="36"
                         data-item-id="10769"
-                        data-item-json="{&quot;id&quot;:10769,&quot;name&quot;:&quot;Glowing Eye of Mordresh&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 11.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:5277,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:52,&quot;sellCopper&quot;:77,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:7357,&quot;bossName&quot;:&quot;Mordresh Fire Eye&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10769,&quot;name&quot;:&quot;Glowing Eye of Mordresh&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 11.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:5277,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:52,&quot;sellCopper&quot;:77,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:7357,&quot;bossName&quot;:&quot;Mordresh Fire Eye&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Glowing Eye of Mordresh</span></td>
                         <td><span class="slot-text">Neck</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">41</td>
                         <td class="text-end">33.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="36"
                         data-item-id="10770"
-                        data-item-json="{&quot;id&quot;:10770,&quot;name&quot;:&quot;Mordresh&#x27;s Lifeless Skull&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+5 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 13.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:7835,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:78,&quot;sellCopper&quot;:35,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:7357,&quot;bossName&quot;:&quot;Mordresh Fire Eye&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10770,&quot;name&quot;:&quot;Mordresh&#x27;s Lifeless Skull&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+5 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 13.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:7835,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:78,&quot;sellCopper&quot;:35,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:7357,&quot;bossName&quot;:&quot;Mordresh Fire Eye&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Mordresh's Lifeless Skull</span></td>
                         <td><span class="slot-text">Held</span></td>
                         <td><span class="stat-text">+5 Stamina</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">41</td>
                         <td class="text-end">33.3%</td>
@@ -1415,21 +1432,23 @@
                         <td class="text-end">0.06%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="tank melee"
-                        data-classes="warrior paladin dk shaman"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="34"
                         data-item-id="10570"
-                        data-item-json="{&quot;id&quot;:10570,&quot;name&quot;:&quot;Manslayer&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:39,&quot;req&quot;:34,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;88–133 Damage&quot;,&quot;speed&quot;:3.2,&quot;dps&quot;:34.5,&quot;stats&quot;:[&quot;+8 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 38.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:15875,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:58,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7357,&quot;bossName&quot;:&quot;Mordresh Fire Eye&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10570,&quot;name&quot;:&quot;Manslayer&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:39,&quot;req&quot;:34,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;88–133 Damage&quot;,&quot;speed&quot;:3.2,&quot;dps&quot;:34.5,&quot;stats&quot;:[&quot;+8 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 38.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:15875,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:58,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7357,&quot;bossName&quot;:&quot;Mordresh Fire Eye&quot;,&quot;bossLvl&quot;:37,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Manslayer</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+8 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
@@ -1635,21 +1654,23 @@
                         <td class="text-end">0.06%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="tank melee"
-                        data-classes="warrior paladin dk shaman"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="34"
                         data-item-id="10570"
-                        data-item-json="{&quot;id&quot;:10570,&quot;name&quot;:&quot;Manslayer&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:39,&quot;req&quot;:34,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;88–133 Damage&quot;,&quot;speed&quot;:3.2,&quot;dps&quot;:34.5,&quot;stats&quot;:[&quot;+8 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 38.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:15875,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:58,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000129,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:10570,&quot;name&quot;:&quot;Manslayer&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:39,&quot;req&quot;:34,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;88–133 Damage&quot;,&quot;speed&quot;:3.2,&quot;dps&quot;:34.5,&quot;stats&quot;:[&quot;+8 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 38.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:15875,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:58,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000129,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Manslayer</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+8 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
@@ -1718,16 +1739,17 @@
                         <td class="text-end">0.06%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="shaman druid"
                         data-req="31"
                         data-item-id="10582"
-                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+78 Armor&quot;,&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.0583,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000129,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:10582,&quot;name&quot;:&quot;Briar Tredders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:36,&quot;req&quot;:31,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+78 Armor&quot;,&quot;+8 Spirit&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:3606,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:6,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.0583,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000129,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:36,&quot;mapId&quot;:129,&quot;dungeon&quot;:&quot;Razorfen Downs&quot;,&quot;page&quot;:&quot;razorfen-downs.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Briar Tredders</span></td>
                         <td><span class="slot-text">Feet (Leather)</span></td>
                         <td><span class="stat-text">+78 Armor, +8 Spirit, +9 Intellect</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>

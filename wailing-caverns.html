@@ -503,26 +503,26 @@
             <div class="dropdown">
                 <select id="class-dropdown">
                     <option value="all">All classes (24)</option>
-                    <option value="warrior">Warrior (10)</option>
+                    <option value="warrior">Warrior (9)</option>
                     <option value="paladin">Paladin (11)</option>
                     <option value="hunter">Hunter (9)</option>
                     <option value="rogue">Rogue (8)</option>
-                    <option value="priest">Priest (6)</option>
-                    <option value="dk">Death Knight (6)</option>
-                    <option value="shaman">Shaman (15)</option>
-                    <option value="mage">Mage (3)</option>
-                    <option value="warlock">Warlock (3)</option>
-                    <option value="druid">Druid (12)</option>
+                    <option value="priest">Priest (8)</option>
+                    <option value="dk">Death Knight (5)</option>
+                    <option value="shaman">Shaman (16)</option>
+                    <option value="mage">Mage (6)</option>
+                    <option value="warlock">Warlock (6)</option>
+                    <option value="druid">Druid (13)</option>
                 </select>
             </div>
         </div>
         <div class="filter-row row-role">
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">24</span>)</button>
-            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">11</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">6</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">10</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">8</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">11</span>)</button>
-            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">12</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">15</span>)</button>
         </div>
         <div class="filter-row row-quality">
             <span class="label">Quality:</span>
@@ -655,19 +655,22 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="priest"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
                         data-req="17"
                         data-item-id="6465"
-                        data-item-json="{&quot;id&quot;:6465,&quot;name&quot;:&quot;Robe of the Moccasin&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:22,&quot;req&quot;:17,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+40 Armor&quot;,&quot;+6 Spirit&quot;,&quot;+6 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:922,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:22,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;priest&quot;],&quot;chance&quot;:60.0,&quot;chanceStr&quot;:&quot;60.0%&quot;,&quot;bossId&quot;:3669,&quot;bossName&quot;:&quot;Lord Cobrahn&quot;,&quot;bossLvl&quot;:20,&quot;mapId&quot;:43,&quot;dungeon&quot;:&quot;Wailing Caverns&quot;,&quot;page&quot;:&quot;wailing-caverns.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:6465,&quot;name&quot;:&quot;Robe of the Moccasin&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:22,&quot;req&quot;:17,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+40 Armor&quot;,&quot;+6 Spirit&quot;,&quot;+6 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:922,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:9,&quot;sellCopper&quot;:22,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:60.0,&quot;chanceStr&quot;:&quot;60.0%&quot;,&quot;bossId&quot;:3669,&quot;bossName&quot;:&quot;Lord Cobrahn&quot;,&quot;bossLvl&quot;:20,&quot;mapId&quot;:43,&quot;dungeon&quot;:&quot;Wailing Caverns&quot;,&quot;page&quot;:&quot;wailing-caverns.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Robe of the Moccasin</span></td>
                         <td><span class="slot-text">Chest (Cloth)</span></td>
                         <td><span class="stat-text">+40 Armor, +6 Spirit, +6 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
                         <td class="text-end">22</td>
                         <td class="text-end">60.0%</td>
@@ -1061,20 +1064,23 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="priest shaman druid"
+                        data-roles="heal ranged"
+                        data-classes="priest shaman mage warlock druid"
                         data-req="20"
                         data-item-id="6631"
-                        data-item-json="{&quot;id&quot;:6631,&quot;name&quot;:&quot;Living Root&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:25,&quot;req&quot;:20,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;49–74 Damage&quot;,&quot;speed&quot;:2.9,&quot;dps&quot;:21.2,&quot;stats&quot;:[&quot;+12 Spirit&quot;,&quot;+2 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:4053,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:53,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:5775,&quot;bossName&quot;:&quot;Verdan the Everliving&quot;,&quot;bossLvl&quot;:20,&quot;mapId&quot;:43,&quot;dungeon&quot;:&quot;Wailing Caverns&quot;,&quot;page&quot;:&quot;wailing-caverns.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:6631,&quot;name&quot;:&quot;Living Root&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:25,&quot;req&quot;:20,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;49–74 Damage&quot;,&quot;speed&quot;:2.9,&quot;dps&quot;:21.2,&quot;stats&quot;:[&quot;+12 Spirit&quot;,&quot;+2 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 6.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:4053,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:53,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:5775,&quot;bossName&quot;:&quot;Verdan the Everliving&quot;,&quot;bossLvl&quot;:20,&quot;mapId&quot;:43,&quot;dungeon&quot;:&quot;Wailing Caverns&quot;,&quot;page&quot;:&quot;wailing-caverns.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Living Root</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+12 Spirit, +2 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">25</td>
@@ -1195,19 +1201,19 @@
                         <td class="text-end">33.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal"
+                        data-classes="priest"
                         data-req="20"
                         data-item-id="6461"
-                        data-item-json="{&quot;id&quot;:6461,&quot;name&quot;:&quot;Slime-encrusted Pads&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:27,&quot;req&quot;:20,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+34 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:1190,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:11,&quot;sellCopper&quot;:90,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:33.3333,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:3654,&quot;bossName&quot;:&quot;Mutanus the Devourer&quot;,&quot;bossLvl&quot;:20,&quot;mapId&quot;:43,&quot;dungeon&quot;:&quot;Wailing Caverns&quot;,&quot;page&quot;:&quot;wailing-caverns.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:6461,&quot;name&quot;:&quot;Slime-encrusted Pads&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:27,&quot;req&quot;:20,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+34 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:1190,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:11,&quot;sellCopper&quot;:90,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;priest&quot;],&quot;chance&quot;:33.3333,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:3654,&quot;bossName&quot;:&quot;Mutanus the Devourer&quot;,&quot;bossLvl&quot;:20,&quot;mapId&quot;:43,&quot;dungeon&quot;:&quot;Wailing Caverns&quot;,&quot;page&quot;:&quot;wailing-caverns.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Slime-encrusted Pads</span></td>
                         <td><span class="slot-text">Shoulder (Cloth)</span></td>
                         <td><span class="stat-text">+34 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                         </td>
                         <td class="text-end">27</td>
                         <td class="text-end">33.3%</td>
@@ -1239,21 +1245,25 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="tank"
-                        data-classes="warrior paladin dk"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="15"
                         data-item-id="6632"
-                        data-item-json="{&quot;id&quot;:6632,&quot;name&quot;:&quot;Feyscale Cloak&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:20,&quot;req&quot;:15,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+19 Armor&quot;,&quot;+4 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 5.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:511,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:5,&quot;sellCopper&quot;:11,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:50.0,&quot;chanceStr&quot;:&quot;50.0%&quot;,&quot;bossId&quot;:5912,&quot;bossName&quot;:&quot;Deviate Faerie Dragon&quot;,&quot;bossLvl&quot;:19,&quot;mapId&quot;:43,&quot;dungeon&quot;:&quot;Wailing Caverns&quot;,&quot;page&quot;:&quot;wailing-caverns.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:6632,&quot;name&quot;:&quot;Feyscale Cloak&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:20,&quot;req&quot;:15,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+19 Armor&quot;,&quot;+4 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 5.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:511,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:5,&quot;sellCopper&quot;:11,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:50.0,&quot;chanceStr&quot;:&quot;50.0%&quot;,&quot;bossId&quot;:5912,&quot;bossName&quot;:&quot;Deviate Faerie Dragon&quot;,&quot;bossLvl&quot;:19,&quot;mapId&quot;:43,&quot;dungeon&quot;:&quot;Wailing Caverns&quot;,&quot;page&quot;:&quot;wailing-caverns.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Feyscale Cloak</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+19 Armor, +4 Stamina</span></td>
                         <td>
-                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
-                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">20</td>
                         <td class="text-end">50.0%</td>

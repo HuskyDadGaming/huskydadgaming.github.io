@@ -501,26 +501,26 @@
             <div class="dropdown">
                 <select id="class-dropdown">
                     <option value="all">All classes (44)</option>
-                    <option value="warrior">Warrior (25)</option>
-                    <option value="paladin">Paladin (22)</option>
-                    <option value="hunter">Hunter (8)</option>
+                    <option value="warrior">Warrior (26)</option>
+                    <option value="paladin">Paladin (24)</option>
+                    <option value="hunter">Hunter (9)</option>
                     <option value="rogue">Rogue (11)</option>
-                    <option value="priest">Priest (11)</option>
-                    <option value="dk">Death Knight (21)</option>
-                    <option value="shaman">Shaman (27)</option>
-                    <option value="mage">Mage (10)</option>
-                    <option value="warlock">Warlock (10)</option>
-                    <option value="druid">Druid (15)</option>
+                    <option value="priest">Priest (12)</option>
+                    <option value="dk">Death Knight (22)</option>
+                    <option value="shaman">Shaman (28)</option>
+                    <option value="mage">Mage (11)</option>
+                    <option value="warlock">Warlock (11)</option>
+                    <option value="druid">Druid (16)</option>
                 </select>
             </div>
         </div>
         <div class="filter-row row-role">
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">44</span>)</button>
-            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">11</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">10</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">12</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">13</span>)</button>
             <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">29</span>)</button>
-            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">19</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">21</span>)</button>
         </div>
         <div class="filter-row row-quality">
             <span class="label">Quality:</span>
@@ -1014,21 +1014,25 @@
                         <td class="text-end">60.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee ranged"
-                        data-classes="hunter rogue shaman druid"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter rogue dk shaman druid"
                         data-req="20"
                         data-item-id="6314"
-                        data-item-json="{&quot;id&quot;:6314,&quot;name&quot;:&quot;Wolfmaster Cape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:27,&quot;req&quot;:20,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+22 Armor&quot;,&quot;+5 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 6.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:1217,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:12,&quot;sellCopper&quot;:17,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:3927,&quot;bossName&quot;:&quot;Wolf Master Nandos&quot;,&quot;bossLvl&quot;:21,&quot;mapId&quot;:33,&quot;dungeon&quot;:&quot;Shadowfang Keep&quot;,&quot;page&quot;:&quot;shadowfang-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:6314,&quot;name&quot;:&quot;Wolfmaster Cape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:27,&quot;req&quot;:20,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+22 Armor&quot;,&quot;+5 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 6.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:1217,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:12,&quot;sellCopper&quot;:17,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:3927,&quot;bossName&quot;:&quot;Wolf Master Nandos&quot;,&quot;bossLvl&quot;:21,&quot;mapId&quot;:33,&quot;dungeon&quot;:&quot;Shadowfang Keep&quot;,&quot;page&quot;:&quot;shadowfang-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Wolfmaster Cape</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+22 Armor, +5 Agility</span></td>
                         <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
@@ -1151,20 +1155,22 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="melee"
-                        data-classes="warrior paladin dk"
+                        data-roles="melee ranged"
+                        data-classes="warrior paladin hunter dk"
                         data-req="20"
                         data-item-id="6641"
-                        data-item-json="{&quot;id&quot;:6641,&quot;name&quot;:&quot;Haunting Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:26,&quot;req&quot;:20,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;66–99 Damage&quot;,&quot;speed&quot;:3.8,&quot;dps&quot;:21.7,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 28.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:4410,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:44,&quot;sellCopper&quot;:10,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:60.0,&quot;chanceStr&quot;:&quot;60.0%&quot;,&quot;bossId&quot;:3872,&quot;bossName&quot;:&quot;Deathsworn Captain&quot;,&quot;bossLvl&quot;:21,&quot;mapId&quot;:33,&quot;dungeon&quot;:&quot;Shadowfang Keep&quot;,&quot;page&quot;:&quot;shadowfang-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:6641,&quot;name&quot;:&quot;Haunting Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:26,&quot;req&quot;:20,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;66–99 Damage&quot;,&quot;speed&quot;:3.8,&quot;dps&quot;:21.7,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 28.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:95,&quot;sellPrice&quot;:4410,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:44,&quot;sellCopper&quot;:10,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;],&quot;chance&quot;:60.0,&quot;chanceStr&quot;:&quot;60.0%&quot;,&quot;bossId&quot;:3872,&quot;bossName&quot;:&quot;Deathsworn Captain&quot;,&quot;bossLvl&quot;:21,&quot;mapId&quot;:33,&quot;dungeon&quot;:&quot;Shadowfang Keep&quot;,&quot;page&quot;:&quot;shadowfang-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Haunting Blade</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                         </td>
                         <td class="text-end">26</td>
@@ -1408,15 +1414,16 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
+                        data-roles="heal ranged"
                         data-classes="priest shaman mage warlock druid"
                         data-req="17"
                         data-item-id="1484"
-                        data-item-json="{&quot;id&quot;:1484,&quot;name&quot;:&quot;Witching Stave&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:22,&quot;req&quot;:17,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;55–83 Damage&quot;,&quot;speed&quot;:3.6,&quot;dps&quot;:19.2,&quot;stats&quot;:[&quot;+8 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:2922,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:22,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.04545454545454546,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:3872,&quot;bossName&quot;:&quot;Deathsworn Captain&quot;,&quot;bossLvl&quot;:21,&quot;mapId&quot;:33,&quot;dungeon&quot;:&quot;Shadowfang Keep&quot;,&quot;page&quot;:&quot;shadowfang-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:1484,&quot;name&quot;:&quot;Witching Stave&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:22,&quot;req&quot;:17,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;55–83 Damage&quot;,&quot;speed&quot;:3.6,&quot;dps&quot;:19.2,&quot;stats&quot;:[&quot;+8 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:2922,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:22,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.04545454545454546,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:3872,&quot;bossName&quot;:&quot;Deathsworn Captain&quot;,&quot;bossLvl&quot;:21,&quot;mapId&quot;:33,&quot;dungeon&quot;:&quot;Shadowfang Keep&quot;,&quot;page&quot;:&quot;shadowfang-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Witching Stave</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+8 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
@@ -1505,19 +1512,25 @@
                         <td class="text-end">50.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="14"
                         data-item-id="6341"
-                        data-item-json="{&quot;id&quot;:6341,&quot;name&quot;:&quot;Eerie Stable Lantern&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:19,&quot;req&quot;:14,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+4 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 5.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:666,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:6,&quot;sellCopper&quot;:66,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:6.0,&quot;chanceStr&quot;:&quot;6.0%&quot;,&quot;bossId&quot;:9000033,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:21,&quot;mapId&quot;:33,&quot;dungeon&quot;:&quot;Shadowfang Keep&quot;,&quot;page&quot;:&quot;shadowfang-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:6341,&quot;name&quot;:&quot;Eerie Stable Lantern&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:19,&quot;req&quot;:14,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+4 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 5.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:666,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:6,&quot;sellCopper&quot;:66,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:6.0,&quot;chanceStr&quot;:&quot;6.0%&quot;,&quot;bossId&quot;:9000033,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:21,&quot;mapId&quot;:33,&quot;dungeon&quot;:&quot;Shadowfang Keep&quot;,&quot;page&quot;:&quot;shadowfang-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Eerie Stable Lantern</span></td>
                         <td><span class="slot-text">Held</span></td>
                         <td><span class="stat-text">+4 Stamina</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">19</td>
                         <td class="text-end">6.0%</td>
@@ -1738,15 +1751,16 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
+                        data-roles="heal ranged"
                         data-classes="priest shaman mage warlock druid"
                         data-req="17"
                         data-item-id="1484"
-                        data-item-json="{&quot;id&quot;:1484,&quot;name&quot;:&quot;Witching Stave&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:22,&quot;req&quot;:17,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;55–83 Damage&quot;,&quot;speed&quot;:3.6,&quot;dps&quot;:19.2,&quot;stats&quot;:[&quot;+8 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:2922,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:22,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.04545454545454546,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:9000033,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:21,&quot;mapId&quot;:33,&quot;dungeon&quot;:&quot;Shadowfang Keep&quot;,&quot;page&quot;:&quot;shadowfang-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:1484,&quot;name&quot;:&quot;Witching Stave&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:22,&quot;req&quot;:17,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;55–83 Damage&quot;,&quot;speed&quot;:3.6,&quot;dps&quot;:19.2,&quot;stats&quot;:[&quot;+8 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:2922,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:22,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.04545454545454546,&quot;chanceStr&quot;:&quot;0.05%&quot;,&quot;bossId&quot;:9000033,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:21,&quot;mapId&quot;:33,&quot;dungeon&quot;:&quot;Shadowfang Keep&quot;,&quot;page&quot;:&quot;shadowfang-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Witching Stave</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text">+8 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>

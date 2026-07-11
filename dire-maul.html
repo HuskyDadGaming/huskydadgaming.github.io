@@ -502,26 +502,26 @@
             <div class="dropdown">
                 <select id="class-dropdown">
                     <option value="all">All classes (86)</option>
-                    <option value="warrior">Warrior (30)</option>
-                    <option value="paladin">Paladin (45)</option>
-                    <option value="hunter">Hunter (15)</option>
-                    <option value="rogue">Rogue (11)</option>
-                    <option value="priest">Priest (23)</option>
-                    <option value="dk">Death Knight (28)</option>
-                    <option value="shaman">Shaman (44)</option>
-                    <option value="mage">Mage (23)</option>
-                    <option value="warlock">Warlock (23)</option>
-                    <option value="druid">Druid (29)</option>
+                    <option value="warrior">Warrior (32)</option>
+                    <option value="paladin">Paladin (51)</option>
+                    <option value="hunter">Hunter (19)</option>
+                    <option value="rogue">Rogue (10)</option>
+                    <option value="priest">Priest (26)</option>
+                    <option value="dk">Death Knight (31)</option>
+                    <option value="shaman">Shaman (47)</option>
+                    <option value="mage">Mage (25)</option>
+                    <option value="warlock">Warlock (25)</option>
+                    <option value="druid">Druid (32)</option>
                 </select>
             </div>
         </div>
         <div class="filter-row row-role">
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">86</span>)</button>
-            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">28</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">42</span>)</button>
-            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">34</span>)</button>
-            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">43</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">32</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">49</span>)</button>
+            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">35</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">56</span>)</button>
         </div>
         <div class="filter-row row-quality">
             <span class="label">Quality:</span>
@@ -605,36 +605,39 @@
                         <td class="text-end">12.5%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
-                        data-classes="warrior paladin dk"
+                        data-roles="melee ranged"
+                        data-classes="warrior paladin hunter dk"
                         data-req="58"
                         data-item-id="18520"
-                        data-item-json="{&quot;id&quot;:18520,&quot;name&quot;:&quot;Barbarous Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:63,&quot;req&quot;:58,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;138–207 Damage&quot;,&quot;speed&quot;:3.2,&quot;dps&quot;:53.9,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your critical strike rating by 14.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 60.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:6579,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:65,&quot;sellCopper&quot;:79,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:12.5,&quot;chanceStr&quot;:&quot;12.5%&quot;,&quot;bossId&quot;:11501,&quot;bossName&quot;:&quot;King Gordok&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18520,&quot;name&quot;:&quot;Barbarous Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:63,&quot;req&quot;:58,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;138–207 Damage&quot;,&quot;speed&quot;:3.2,&quot;dps&quot;:53.9,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your critical strike rating by 14.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 60.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:6579,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:65,&quot;sellCopper&quot;:79,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;],&quot;chance&quot;:12.5,&quot;chanceStr&quot;:&quot;12.5%&quot;,&quot;bossId&quot;:11501,&quot;bossName&quot;:&quot;King Gordok&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Barbarous Blade</span></td>
                         <td><span class="slot-text">Two-Hand</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                         </td>
                         <td class="text-end">63</td>
                         <td class="text-end">12.5%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="shaman druid"
                         data-req="58"
                         data-item-id="18525"
-                        data-item-json="{&quot;id&quot;:18525,&quot;name&quot;:&quot;Bracers of Prosperity&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:63,&quot;req&quot;:58,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+77 Armor&quot;,&quot;+10 Intellect&quot;,&quot;+8 Stamina&quot;,&quot;+5 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:1339,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:13,&quot;sellCopper&quot;:39,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:12.5,&quot;chanceStr&quot;:&quot;12.5%&quot;,&quot;bossId&quot;:11501,&quot;bossName&quot;:&quot;King Gordok&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18525,&quot;name&quot;:&quot;Bracers of Prosperity&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:63,&quot;req&quot;:58,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+77 Armor&quot;,&quot;+10 Intellect&quot;,&quot;+8 Stamina&quot;,&quot;+5 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:1339,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:13,&quot;sellCopper&quot;:39,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:12.5,&quot;chanceStr&quot;:&quot;12.5%&quot;,&quot;bossId&quot;:11501,&quot;bossName&quot;:&quot;King Gordok&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Bracers of Prosperity</span></td>
                         <td><span class="slot-text">Wrist (Leather)</span></td>
                         <td><span class="stat-text">+77 Armor, +10 Intellect, +8 Stamina, +5 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
@@ -644,19 +647,25 @@
                         <td class="text-end">12.5%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="58"
                         data-item-id="18523"
-                        data-item-json="{&quot;id&quot;:18523,&quot;name&quot;:&quot;Brightly Glowing Stone&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:63,&quot;req&quot;:58,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 20.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:3481,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:34,&quot;sellCopper&quot;:81,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:12.5,&quot;chanceStr&quot;:&quot;12.5%&quot;,&quot;bossId&quot;:11501,&quot;bossName&quot;:&quot;King Gordok&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18523,&quot;name&quot;:&quot;Brightly Glowing Stone&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:63,&quot;req&quot;:58,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+7 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 20.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:3481,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:34,&quot;sellCopper&quot;:81,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:12.5,&quot;chanceStr&quot;:&quot;12.5%&quot;,&quot;bossId&quot;:11501,&quot;bossName&quot;:&quot;King Gordok&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Brightly Glowing Stone</span></td>
                         <td><span class="slot-text">Held</span></td>
                         <td><span class="stat-text">+7 Stamina</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">63</td>
                         <td class="text-end">12.5%</td>
@@ -704,16 +713,17 @@
                         <td class="text-end">12.5%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="paladin shaman"
                         data-req="58"
                         data-item-id="18527"
-                        data-item-json="{&quot;id&quot;:18527,&quot;name&quot;:&quot;Harmonious Gauntlets&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:63,&quot;req&quot;:58,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+231 Armor&quot;,&quot;+5 Intellect&quot;,&quot;+5 Spirit&quot;,&quot;+5 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 27.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:1619,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:16,&quot;sellCopper&quot;:19,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:12.5,&quot;chanceStr&quot;:&quot;12.5%&quot;,&quot;bossId&quot;:11501,&quot;bossName&quot;:&quot;King Gordok&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18527,&quot;name&quot;:&quot;Harmonious Gauntlets&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:63,&quot;req&quot;:58,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+231 Armor&quot;,&quot;+5 Intellect&quot;,&quot;+5 Spirit&quot;,&quot;+5 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 27.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:1619,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:16,&quot;sellCopper&quot;:19,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:12.5,&quot;chanceStr&quot;:&quot;12.5%&quot;,&quot;bossId&quot;:11501,&quot;bossName&quot;:&quot;King Gordok&quot;,&quot;bossLvl&quot;:62,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Harmonious Gauntlets</span></td>
                         <td><span class="slot-text">Hands (Mail)</span></td>
                         <td><span class="stat-text">+231 Armor, +5 Intellect, +5 Spirit, +5 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
@@ -879,15 +889,16 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="heal melee"
+                        data-roles="tank heal melee"
                         data-classes="warrior paladin dk"
                         data-req="57"
                         data-item-id="18384"
-                        data-item-json="{&quot;id&quot;:18384,&quot;name&quot;:&quot;Bile-etched Spaulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+485 Armor&quot;,&quot;+17 Strength&quot;,&quot;+6 Stamina&quot;,&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 10.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:26209,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:62,&quot;sellCopper&quot;:9,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11496,&quot;bossName&quot;:&quot;Immol&#x27;thar&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18384,&quot;name&quot;:&quot;Bile-etched Spaulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+485 Armor&quot;,&quot;+17 Strength&quot;,&quot;+6 Stamina&quot;,&quot;+6 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 10.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:26209,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:62,&quot;sellCopper&quot;:9,&quot;roles&quot;:[&quot;tank&quot;,&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11496,&quot;bossName&quot;:&quot;Immol&#x27;thar&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Bile-etched Spaulders</span></td>
                         <td><span class="slot-text">Shoulder (Plate)</span></td>
                         <td><span class="stat-text">+485 Armor, +17 Strength, +6 Stamina, +6 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
@@ -900,22 +911,23 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="tank melee"
-                        data-classes="warrior rogue shaman druid"
+                        data-roles="heal ranged"
+                        data-classes="priest shaman mage warlock druid"
                         data-req="57"
                         data-item-id="18372"
-                        data-item-json="{&quot;id&quot;:18372,&quot;name&quot;:&quot;Blade of the New Moon&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;40–74 Damage&quot;,&quot;speed&quot;:1.4,&quot;dps&quot;:40.7,&quot;stats&quot;:[&quot;+5 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 15.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:52881,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:28,&quot;sellCopper&quot;:81,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11496,&quot;bossName&quot;:&quot;Immol&#x27;thar&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18372,&quot;name&quot;:&quot;Blade of the New Moon&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;40–74 Damage&quot;,&quot;speed&quot;:1.4,&quot;dps&quot;:40.7,&quot;stats&quot;:[&quot;+5 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 15.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:52881,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:28,&quot;sellCopper&quot;:81,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11496,&quot;bossName&quot;:&quot;Immol&#x27;thar&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Blade of the New Moon</span></td>
                         <td><span class="slot-text">One-Hand</span></td>
                         <td><span class="stat-text">+5 Stamina</span></td>
                         <td>
-                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
-                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
-                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">62</td>
@@ -946,41 +958,49 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="tank"
-                        data-classes="warrior paladin dk"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="57"
                         data-item-id="18394"
-                        data-item-json="{&quot;id&quot;:18394,&quot;name&quot;:&quot;Demon Howl Wristguards&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Mail)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+160 Armor&quot;,&quot;+17 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:15974,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:59,&quot;sellCopper&quot;:74,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11496,&quot;bossName&quot;:&quot;Immol&#x27;thar&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18394,&quot;name&quot;:&quot;Demon Howl Wristguards&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Mail)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+160 Armor&quot;,&quot;+17 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:15974,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:59,&quot;sellCopper&quot;:74,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11496,&quot;bossName&quot;:&quot;Immol&#x27;thar&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Demon Howl Wristguards</span></td>
                         <td><span class="slot-text">Wrist (Mail)</span></td>
                         <td><span class="stat-text">+160 Armor, +17 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">62</td>
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee ranged"
-                        data-classes="hunter rogue shaman druid"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter rogue dk shaman druid"
                         data-req="57"
                         data-item-id="18381"
-                        data-item-json="{&quot;id&quot;:18381,&quot;name&quot;:&quot;Evil Eye Pendant&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+15 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 10.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:21635,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:16,&quot;sellCopper&quot;:35,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11496,&quot;bossName&quot;:&quot;Immol&#x27;thar&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18381,&quot;name&quot;:&quot;Evil Eye Pendant&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+15 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 10.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:21635,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:16,&quot;sellCopper&quot;:35,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11496,&quot;bossName&quot;:&quot;Immol&#x27;thar&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Evil Eye Pendant</span></td>
                         <td><span class="slot-text">Neck</span></td>
                         <td><span class="stat-text">+15 Agility</span></td>
                         <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
@@ -1008,20 +1028,24 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal ranged"
-                        data-classes="paladin shaman"
+                        data-roles="heal melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="57"
                         data-item-id="18379"
-                        data-item-json="{&quot;id&quot;:18379,&quot;name&quot;:&quot;Odious Greaves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Mail)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+251 Armor&quot;,&quot;+18 Stamina&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:22182,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11496,&quot;bossName&quot;:&quot;Immol&#x27;thar&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18379,&quot;name&quot;:&quot;Odious Greaves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Mail)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+251 Armor&quot;,&quot;+18 Stamina&quot;,&quot;+9 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:22182,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11496,&quot;bossName&quot;:&quot;Immol&#x27;thar&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Odious Greaves</span></td>
                         <td><span class="slot-text">Feet (Mail)</span></td>
                         <td><span class="stat-text">+251 Armor, +18 Stamina, +9 Intellect</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">62</td>
@@ -1072,19 +1096,22 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="tank"
+                        data-classes="warrior paladin dk druid"
                         data-req="57"
                         data-item-id="18370"
-                        data-item-json="{&quot;id&quot;:18370,&quot;name&quot;:&quot;Vigilance Charm&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 24.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:21612,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:16,&quot;sellCopper&quot;:12,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11496,&quot;bossName&quot;:&quot;Immol&#x27;thar&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18370,&quot;name&quot;:&quot;Vigilance Charm&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 24.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:21612,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:16,&quot;sellCopper&quot;:12,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11496,&quot;bossName&quot;:&quot;Immol&#x27;thar&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Vigilance Charm</span></td>
                         <td><span class="slot-text">Trinket</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">62</td>
                         <td class="text-end">10.0%</td>
@@ -1139,16 +1166,17 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="shaman druid"
                         data-req="57"
                         data-item-id="18373"
-                        data-item-json="{&quot;id&quot;:18373,&quot;name&quot;:&quot;Chestplate of Tranquility&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Leather)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+174 Armor&quot;,&quot;+20 Intellect&quot;,&quot;+6 Spirit&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:26535,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:65,&quot;sellCopper&quot;:35,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11486,&quot;bossName&quot;:&quot;Prince Tortheldrin&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18373,&quot;name&quot;:&quot;Chestplate of Tranquility&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Leather)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+174 Armor&quot;,&quot;+20 Intellect&quot;,&quot;+6 Spirit&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:26535,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:65,&quot;sellCopper&quot;:35,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11486,&quot;bossName&quot;:&quot;Prince Tortheldrin&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Chestplate of Tranquility</span></td>
                         <td><span class="slot-text">Chest (Leather)</span></td>
                         <td><span class="stat-text">+174 Armor, +20 Intellect, +6 Spirit, +10 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
@@ -1239,18 +1267,20 @@
                         <td class="text-end">10.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="mage warlock"
+                        data-roles="heal ranged"
+                        data-classes="paladin mage warlock"
                         data-req="57"
                         data-item-id="18396"
-                        data-item-json="{&quot;id&quot;:18396,&quot;name&quot;:&quot;Mind Carver&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:7,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;57–106 Damage&quot;,&quot;speed&quot;:2.0,&quot;dps&quot;:40.8,&quot;stats&quot;:[&quot;+8 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:53627,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11486,&quot;bossName&quot;:&quot;Prince Tortheldrin&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18396,&quot;name&quot;:&quot;Mind Carver&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:62,&quot;req&quot;:57,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:7,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;57–106 Damage&quot;,&quot;speed&quot;:2.0,&quot;dps&quot;:40.8,&quot;stats&quot;:[&quot;+8 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:53627,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:36,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11486,&quot;bossName&quot;:&quot;Prince Tortheldrin&quot;,&quot;bossLvl&quot;:61,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Mind Carver</span></td>
                         <td><span class="slot-text">Main Hand</span></td>
                         <td><span class="stat-text">+8 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
                             <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
@@ -1346,20 +1376,22 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="melee"
-                        data-classes="warrior paladin rogue dk"
+                        data-roles="melee ranged"
+                        data-classes="warrior paladin hunter rogue dk"
                         data-req="56"
                         data-item-id="18484"
-                        data-item-json="{&quot;id&quot;:18484,&quot;name&quot;:&quot;Cho&#x27;Rush&#x27;s Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:7,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;67–125 Damage&quot;,&quot;speed&quot;:2.4,&quot;dps&quot;:40.0,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 28.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:51975,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:19,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;rogue&quot;,&quot;dk&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:14324,&quot;bossName&quot;:&quot;Cho&#x27;Rush the Observer&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18484,&quot;name&quot;:&quot;Cho&#x27;Rush&#x27;s Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:7,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;67–125 Damage&quot;,&quot;speed&quot;:2.4,&quot;dps&quot;:40.0,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 28.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:51975,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:19,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;dk&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:14324,&quot;bossName&quot;:&quot;Cho&#x27;Rush the Observer&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Cho'Rush's Blade</span></td>
                         <td><span class="slot-text">One-Hand</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                         </td>
@@ -1367,16 +1399,17 @@
                         <td class="text-end">25.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="shaman druid"
                         data-req="56"
                         data-item-id="18490"
-                        data-item-json="{&quot;id&quot;:18490,&quot;name&quot;:&quot;Insightful Hood&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Leather)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+139 Armor&quot;,&quot;+15 Intellect&quot;,&quot;+9 Spirit&quot;,&quot;+12 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your critical strike rating by 14.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:18015,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:80,&quot;sellCopper&quot;:15,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:14324,&quot;bossName&quot;:&quot;Cho&#x27;Rush the Observer&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18490,&quot;name&quot;:&quot;Insightful Hood&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Leather)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+139 Armor&quot;,&quot;+15 Intellect&quot;,&quot;+9 Spirit&quot;,&quot;+12 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your critical strike rating by 14.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:18015,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:80,&quot;sellCopper&quot;:15,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:14324,&quot;bossName&quot;:&quot;Cho&#x27;Rush the Observer&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Insightful Hood</span></td>
                         <td><span class="slot-text">Head (Leather)</span></td>
                         <td><span class="stat-text">+139 Armor, +15 Intellect, +9 Spirit, +12 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
@@ -1386,15 +1419,16 @@
                         <td class="text-end">25.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
+                        data-roles="heal ranged"
                         data-classes="priest mage warlock"
                         data-req="56"
                         data-item-id="18483"
-                        data-item-json="{&quot;id&quot;:18483,&quot;name&quot;:&quot;Mana Channeling Wand&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:true,&quot;itemClass&quot;:2,&quot;subclass&quot;:19,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Wand&quot;,&quot;damage&quot;:&quot;68–127 Damage&quot;,&quot;speed&quot;:1.6,&quot;dps&quot;:60.9,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:37839,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:78,&quot;sellCopper&quot;:39,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:14324,&quot;bossName&quot;:&quot;Cho&#x27;Rush the Observer&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18483,&quot;name&quot;:&quot;Mana Channeling Wand&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:true,&quot;itemClass&quot;:2,&quot;subclass&quot;:19,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Wand&quot;,&quot;damage&quot;:&quot;68–127 Damage&quot;,&quot;speed&quot;:1.6,&quot;dps&quot;:60.9,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:37839,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:78,&quot;sellCopper&quot;:39,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:14324,&quot;bossName&quot;:&quot;Cho&#x27;Rush the Observer&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Mana Channeling Wand</span></td>
                         <td><span class="slot-text">Ranged</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
@@ -1580,19 +1614,22 @@
                         <td class="text-end">20.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal"
+                        data-classes="paladin priest shaman druid"
                         data-req="56"
                         data-item-id="18371"
-                        data-item-json="{&quot;id&quot;:18371,&quot;name&quot;:&quot;Mindtap Talisman&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 14 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:20737,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:7,&quot;sellCopper&quot;:37,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:9.0,&quot;chanceStr&quot;:&quot;9.0%&quot;,&quot;bossId&quot;:11487,&quot;bossName&quot;:&quot;Magister Kalendris&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18371,&quot;name&quot;:&quot;Mindtap Talisman&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 14 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:20737,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:7,&quot;sellCopper&quot;:37,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:9.0,&quot;chanceStr&quot;:&quot;9.0%&quot;,&quot;bossId&quot;:11487,&quot;bossName&quot;:&quot;Magister Kalendris&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Mindtap Talisman</span></td>
                         <td><span class="slot-text">Trinket</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">61</td>
                         <td class="text-end">9.0%</td>
@@ -1845,15 +1882,16 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="heal melee"
+                        data-roles="tank heal melee"
                         data-classes="warrior paladin dk"
                         data-req="55"
                         data-item-id="18493"
-                        data-item-json="{&quot;id&quot;:18493,&quot;name&quot;:&quot;Bulky Iron Spaulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:60,&quot;req&quot;:55,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+470 Armor&quot;,&quot;+15 Strength&quot;,&quot;+12 Stamina&quot;,&quot;+5 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:25113,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:51,&quot;sellCopper&quot;:13,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:14326,&quot;bossName&quot;:&quot;Guard Mol&#x27;dar&quot;,&quot;bossLvl&quot;:59,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18493,&quot;name&quot;:&quot;Bulky Iron Spaulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:60,&quot;req&quot;:55,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+470 Armor&quot;,&quot;+15 Strength&quot;,&quot;+12 Stamina&quot;,&quot;+5 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:25113,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:51,&quot;sellCopper&quot;:13,&quot;roles&quot;:[&quot;tank&quot;,&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:14326,&quot;bossName&quot;:&quot;Guard Mol&#x27;dar&quot;,&quot;bossLvl&quot;:59,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Bulky Iron Spaulders</span></td>
                         <td><span class="slot-text">Shoulder (Plate)</span></td>
                         <td><span class="stat-text">+470 Armor, +15 Strength, +12 Stamina, +5 Spirit</span></td>
                         <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
@@ -1866,16 +1904,17 @@
                         <td class="text-end">7.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="paladin shaman"
                         data-req="55"
                         data-item-id="18494"
-                        data-item-json="{&quot;id&quot;:18494,&quot;name&quot;:&quot;Denwatcher&#x27;s Shoulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:60,&quot;req&quot;:55,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Mail)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+266 Armor&quot;,&quot;+10 Intellect&quot;,&quot;+10 Spirit&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:21743,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:17,&quot;sellCopper&quot;:43,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:14326,&quot;bossName&quot;:&quot;Guard Mol&#x27;dar&quot;,&quot;bossLvl&quot;:59,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18494,&quot;name&quot;:&quot;Denwatcher&#x27;s Shoulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:60,&quot;req&quot;:55,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Mail)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+266 Armor&quot;,&quot;+10 Intellect&quot;,&quot;+10 Spirit&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:21743,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:17,&quot;sellCopper&quot;:43,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:14326,&quot;bossName&quot;:&quot;Guard Mol&#x27;dar&quot;,&quot;bossLvl&quot;:59,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Denwatcher's Shoulders</span></td>
                         <td><span class="slot-text">Shoulder (Mail)</span></td>
                         <td><span class="stat-text">+266 Armor, +10 Intellect, +10 Spirit, +10 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
@@ -1978,15 +2017,16 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="heal melee"
+                        data-roles="tank heal melee"
                         data-classes="warrior paladin dk"
                         data-req="55"
                         data-item-id="18493"
-                        data-item-json="{&quot;id&quot;:18493,&quot;name&quot;:&quot;Bulky Iron Spaulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:60,&quot;req&quot;:55,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+470 Armor&quot;,&quot;+15 Strength&quot;,&quot;+12 Stamina&quot;,&quot;+5 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:25113,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:51,&quot;sellCopper&quot;:13,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:14323,&quot;bossName&quot;:&quot;Guard Slip&#x27;kik&quot;,&quot;bossLvl&quot;:59,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18493,&quot;name&quot;:&quot;Bulky Iron Spaulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:60,&quot;req&quot;:55,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Plate)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+470 Armor&quot;,&quot;+15 Strength&quot;,&quot;+12 Stamina&quot;,&quot;+5 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:25113,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:51,&quot;sellCopper&quot;:13,&quot;roles&quot;:[&quot;tank&quot;,&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:14323,&quot;bossName&quot;:&quot;Guard Slip&#x27;kik&quot;,&quot;bossLvl&quot;:59,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Bulky Iron Spaulders</span></td>
                         <td><span class="slot-text">Shoulder (Plate)</span></td>
                         <td><span class="stat-text">+470 Armor, +15 Strength, +12 Stamina, +5 Spirit</span></td>
                         <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                         </td>
@@ -1999,16 +2039,17 @@
                         <td class="text-end">7.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="paladin shaman"
                         data-req="55"
                         data-item-id="18494"
-                        data-item-json="{&quot;id&quot;:18494,&quot;name&quot;:&quot;Denwatcher&#x27;s Shoulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:60,&quot;req&quot;:55,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Mail)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+266 Armor&quot;,&quot;+10 Intellect&quot;,&quot;+10 Spirit&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:21743,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:17,&quot;sellCopper&quot;:43,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:14323,&quot;bossName&quot;:&quot;Guard Slip&#x27;kik&quot;,&quot;bossLvl&quot;:59,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18494,&quot;name&quot;:&quot;Denwatcher&#x27;s Shoulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:60,&quot;req&quot;:55,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Mail)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+266 Armor&quot;,&quot;+10 Intellect&quot;,&quot;+10 Spirit&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:21743,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:17,&quot;sellCopper&quot;:43,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:14323,&quot;bossName&quot;:&quot;Guard Slip&#x27;kik&quot;,&quot;bossLvl&quot;:59,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Denwatcher's Shoulders</span></td>
                         <td><span class="slot-text">Shoulder (Mail)</span></td>
                         <td><span class="stat-text">+266 Armor, +10 Intellect, +10 Spirit, +10 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
@@ -2124,18 +2165,20 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="ranged"
-                        data-classes="priest shaman druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman druid"
                         data-req="54"
                         data-item-id="18321"
-                        data-item-json="{&quot;id&quot;:18321,&quot;name&quot;:&quot;Energetic Rod&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:59,&quot;req&quot;:54,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;71–107 Damage&quot;,&quot;speed&quot;:2.3,&quot;dps&quot;:38.7,&quot;stats&quot;:[&quot;+5 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:49320,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:93,&quot;sellCopper&quot;:20,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11492,&quot;bossName&quot;:&quot;Alzzin the Wildshaper&quot;,&quot;bossLvl&quot;:58,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18321,&quot;name&quot;:&quot;Energetic Rod&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:59,&quot;req&quot;:54,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;71–107 Damage&quot;,&quot;speed&quot;:2.3,&quot;dps&quot;:38.7,&quot;stats&quot;:[&quot;+5 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:49320,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:93,&quot;sellCopper&quot;:20,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:10.0,&quot;chanceStr&quot;:&quot;10.0%&quot;,&quot;bossId&quot;:11492,&quot;bossName&quot;:&quot;Alzzin the Wildshaper&quot;,&quot;bossLvl&quot;:58,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Energetic Rod</span></td>
                         <td><span class="slot-text">Main Hand</span></td>
                         <td><span class="stat-text">+5 Intellect</span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
@@ -2386,16 +2429,17 @@
                         <td class="text-end">20.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="shaman druid"
                         data-req="53"
                         data-item-id="18322"
-                        data-item-json="{&quot;id&quot;:18322,&quot;name&quot;:&quot;Waterspout Boots&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:58,&quot;req&quot;:53,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+114 Armor&quot;,&quot;+6 Intellect&quot;,&quot;+6 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:17677,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:76,&quot;sellCopper&quot;:77,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:13280,&quot;bossName&quot;:&quot;Hydrospawn&quot;,&quot;bossLvl&quot;:57,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:18322,&quot;name&quot;:&quot;Waterspout Boots&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:58,&quot;req&quot;:53,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+114 Armor&quot;,&quot;+6 Intellect&quot;,&quot;+6 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:17677,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:76,&quot;sellCopper&quot;:77,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:13280,&quot;bossName&quot;:&quot;Hydrospawn&quot;,&quot;bossLvl&quot;:57,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Waterspout Boots</span></td>
                         <td><span class="slot-text">Feet (Leather)</span></td>
                         <td><span class="stat-text">+114 Armor, +6 Intellect, +6 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
@@ -2785,15 +2829,16 @@
                         <td class="text-end">0.75%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="ranged"
+                        data-roles="heal ranged"
                         data-classes="priest mage warlock"
                         data-req="54"
                         data-item-id="18338"
-                        data-item-json="{&quot;id&quot;:18338,&quot;name&quot;:&quot;Wand of Arcane Potency&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:59,&quot;req&quot;:54,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:true,&quot;itemClass&quot;:2,&quot;subclass&quot;:19,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Wand&quot;,&quot;damage&quot;:&quot;65–122 Damage&quot;,&quot;speed&quot;:1.6,&quot;dps&quot;:58.4,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 13.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:36595,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:65,&quot;sellCopper&quot;:95,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:0.75,&quot;chanceStr&quot;:&quot;0.75%&quot;,&quot;bossId&quot;:9000429,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:18338,&quot;name&quot;:&quot;Wand of Arcane Potency&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:59,&quot;req&quot;:54,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:true,&quot;itemClass&quot;:2,&quot;subclass&quot;:19,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Wand&quot;,&quot;damage&quot;:&quot;65–122 Damage&quot;,&quot;speed&quot;:1.6,&quot;dps&quot;:58.4,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 13.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:36595,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:65,&quot;sellCopper&quot;:95,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:0.75,&quot;chanceStr&quot;:&quot;0.75%&quot;,&quot;bossId&quot;:9000429,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Wand of Arcane Potency</span></td>
                         <td><span class="slot-text">Ranged</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
@@ -2826,16 +2871,17 @@
                         <td class="text-end">0.58%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="shaman druid"
                         data-req="56"
                         data-item-id="18528"
-                        data-item-json="{&quot;id&quot;:18528,&quot;name&quot;:&quot;Cyclone Spaulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Leather)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+129 Armor&quot;,&quot;+11 Intellect&quot;,&quot;+9 Spirit&quot;,&quot;+11 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:1976,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:19,&quot;sellCopper&quot;:76,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:9000429,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:18528,&quot;name&quot;:&quot;Cyclone Spaulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:61,&quot;req&quot;:56,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Leather)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+129 Armor&quot;,&quot;+11 Intellect&quot;,&quot;+9 Spirit&quot;,&quot;+11 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:1976,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:19,&quot;sellCopper&quot;:76,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:9000429,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:60,&quot;mapId&quot;:429,&quot;dungeon&quot;:&quot;Dire Maul&quot;,&quot;page&quot;:&quot;dire-maul.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Cyclone Spaulders</span></td>
                         <td><span class="slot-text">Shoulder (Leather)</span></td>
                         <td><span class="stat-text">+129 Armor, +11 Intellect, +9 Spirit, +11 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>

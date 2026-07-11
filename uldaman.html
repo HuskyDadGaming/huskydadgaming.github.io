@@ -502,26 +502,26 @@
             <div class="dropdown">
                 <select id="class-dropdown">
                     <option value="all">All classes (70)</option>
-                    <option value="warrior">Warrior (39)</option>
+                    <option value="warrior">Warrior (42)</option>
                     <option value="paladin">Paladin (41)</option>
-                    <option value="hunter">Hunter (25)</option>
-                    <option value="rogue">Rogue (22)</option>
+                    <option value="hunter">Hunter (28)</option>
+                    <option value="rogue">Rogue (24)</option>
                     <option value="priest">Priest (11)</option>
                     <option value="dk">Death Knight (34)</option>
-                    <option value="shaman">Shaman (30)</option>
-                    <option value="mage">Mage (5)</option>
-                    <option value="warlock">Warlock (5)</option>
-                    <option value="druid">Druid (20)</option>
+                    <option value="shaman">Shaman (33)</option>
+                    <option value="mage">Mage (9)</option>
+                    <option value="warlock">Warlock (9)</option>
+                    <option value="druid">Druid (22)</option>
                 </select>
             </div>
         </div>
         <div class="filter-row row-role">
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">70</span>)</button>
-            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">30</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">12</span>)</button>
-            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">43</span>)</button>
-            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">32</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">29</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">13</span>)</button>
+            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">46</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">38</span>)</button>
         </div>
         <div class="filter-row row-quality">
             <span class="label">Quality:</span>
@@ -603,20 +603,24 @@
                         <td class="text-end">50.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal ranged"
-                        data-classes="paladin shaman"
+                        data-roles="heal melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="40"
                         data-item-id="9411"
-                        data-item-json="{&quot;id&quot;:9411,&quot;name&quot;:&quot;Rockshard Pauldrons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:45,&quot;req&quot;:40,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Mail)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+205 Armor&quot;,&quot;+9 Stamina&quot;,&quot;+2 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 28.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:8587,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:85,&quot;sellCopper&quot;:87,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:50.0,&quot;chanceStr&quot;:&quot;50.0%&quot;,&quot;bossId&quot;:7206,&quot;bossName&quot;:&quot;Ancient Stone Keeper&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:9411,&quot;name&quot;:&quot;Rockshard Pauldrons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:45,&quot;req&quot;:40,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Mail)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+205 Armor&quot;,&quot;+9 Stamina&quot;,&quot;+2 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 28.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:8587,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:85,&quot;sellCopper&quot;:87,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:50.0,&quot;chanceStr&quot;:&quot;50.0%&quot;,&quot;bossId&quot;:7206,&quot;bossName&quot;:&quot;Ancient Stone Keeper&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Rockshard Pauldrons</span></td>
                         <td><span class="slot-text">Shoulder (Mail)</span></td>
                         <td><span class="stat-text">+205 Armor, +9 Stamina, +2 Intellect</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">45</td>
@@ -668,10 +672,10 @@
                     </tr>
                     <tr class="item-row"
                         data-roles="melee ranged"
-                        data-classes="hunter rogue"
+                        data-classes="warrior hunter rogue"
                         data-req="36"
                         data-item-id="9426"
-                        data-item-json="{&quot;id&quot;:9426,&quot;name&quot;:&quot;Monolithic Bow&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Bow&quot;,&quot;damage&quot;:&quot;52–97 Damage&quot;,&quot;speed&quot;:2.7,&quot;dps&quot;:27.6,&quot;stats&quot;:[&quot;+3 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 12.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:10275,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7206,&quot;bossName&quot;:&quot;Ancient Stone Keeper&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:9426,&quot;name&quot;:&quot;Monolithic Bow&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Bow&quot;,&quot;damage&quot;:&quot;52–97 Damage&quot;,&quot;speed&quot;:2.7,&quot;dps&quot;:27.6,&quot;stats&quot;:[&quot;+3 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 12.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:10275,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7206,&quot;bossName&quot;:&quot;Ancient Stone Keeper&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Monolithic Bow</span></td>
                         <td><span class="slot-text">Ranged</span></td>
                         <td><span class="stat-text">+3 Agility</span></td>
@@ -680,6 +684,7 @@
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
                         </td>
@@ -928,19 +933,22 @@
                         <td class="text-end">40.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="priest"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
                         data-req="40"
                         data-item-id="11310"
-                        data-item-json="{&quot;id&quot;:11310,&quot;name&quot;:&quot;Flameseer Mantle&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:47,&quot;req&quot;:40,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+51 Armor&quot;,&quot;+10 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:6598,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:65,&quot;sellCopper&quot;:98,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;priest&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:7291,&quot;bossName&quot;:&quot;Galgann Firehammer&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:11310,&quot;name&quot;:&quot;Flameseer Mantle&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:47,&quot;req&quot;:40,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+51 Armor&quot;,&quot;+10 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:6598,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:65,&quot;sellCopper&quot;:98,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:7291,&quot;bossName&quot;:&quot;Galgann Firehammer&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Flameseer Mantle</span></td>
                         <td><span class="slot-text">Shoulder (Cloth)</span></td>
                         <td><span class="stat-text">+51 Armor, +10 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
                         <td class="text-end">47</td>
                         <td class="text-end">20.0%</td>
@@ -1174,10 +1182,10 @@
                     </tr>
                     <tr class="item-row"
                         data-roles="melee ranged"
-                        data-classes="hunter rogue"
+                        data-classes="warrior hunter rogue"
                         data-req="36"
                         data-item-id="9426"
-                        data-item-json="{&quot;id&quot;:9426,&quot;name&quot;:&quot;Monolithic Bow&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Bow&quot;,&quot;damage&quot;:&quot;52–97 Damage&quot;,&quot;speed&quot;:2.7,&quot;dps&quot;:27.6,&quot;stats&quot;:[&quot;+3 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 12.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:10275,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7023,&quot;bossName&quot;:&quot;Obsidian Sentinel&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:9426,&quot;name&quot;:&quot;Monolithic Bow&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Bow&quot;,&quot;damage&quot;:&quot;52–97 Damage&quot;,&quot;speed&quot;:2.7,&quot;dps&quot;:27.6,&quot;stats&quot;:[&quot;+3 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 12.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:10275,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:7023,&quot;bossName&quot;:&quot;Obsidian Sentinel&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Monolithic Bow</span></td>
                         <td><span class="slot-text">Ranged</span></td>
                         <td><span class="stat-text">+3 Agility</span></td>
@@ -1186,6 +1194,7 @@
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
                         </td>
@@ -1302,19 +1311,23 @@
                         <td class="text-end">0.06%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="melee ranged"
+                        data-classes="hunter rogue shaman druid"
                         data-req="30"
                         data-item-id="9428"
-                        data-item-json="{&quot;id&quot;:9428,&quot;name&quot;:&quot;Unearthed Bands&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:35,&quot;req&quot;:30,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+49 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 8.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:2096,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:20,&quot;sellCopper&quot;:96,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:0.03,&quot;chanceStr&quot;:&quot;0.03%&quot;,&quot;bossId&quot;:7023,&quot;bossName&quot;:&quot;Obsidian Sentinel&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:9428,&quot;name&quot;:&quot;Unearthed Bands&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:35,&quot;req&quot;:30,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+49 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 8.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:2096,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:20,&quot;sellCopper&quot;:96,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.03,&quot;chanceStr&quot;:&quot;0.03%&quot;,&quot;bossId&quot;:7023,&quot;bossName&quot;:&quot;Obsidian Sentinel&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Unearthed Bands</span></td>
                         <td><span class="slot-text">Wrist (Leather)</span></td>
                         <td><span class="stat-text">+49 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">35</td>
                         <td class="text-end">0.03%</td>
@@ -1343,21 +1356,24 @@
                         <td class="text-end">0.02%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="paladin priest shaman druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="33"
                         data-item-id="9393"
-                        data-item-json="{&quot;id&quot;:9393,&quot;name&quot;:&quot;Beacon of Hope&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:38,&quot;req&quot;:33,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+4 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:7882,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:78,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7023,&quot;bossName&quot;:&quot;Obsidian Sentinel&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:9393,&quot;name&quot;:&quot;Beacon of Hope&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:38,&quot;req&quot;:33,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+4 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:7882,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:78,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:7023,&quot;bossName&quot;:&quot;Obsidian Sentinel&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Beacon of Hope</span></td>
                         <td><span class="slot-text">Held</span></td>
                         <td><span class="stat-text">+4 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">38</td>
@@ -1593,19 +1609,22 @@
                         <td class="text-end">40.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="priest"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
                         data-req="35"
                         data-item-id="9407"
-                        data-item-json="{&quot;id&quot;:9407,&quot;name&quot;:&quot;Stoneweaver Leggings&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:40,&quot;req&quot;:35,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+51 Armor&quot;,&quot;+15 Spirit&quot;,&quot;+9 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:5094,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:50,&quot;sellCopper&quot;:94,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;priest&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:7228,&quot;bossName&quot;:&quot;Ironaya&quot;,&quot;bossLvl&quot;:39,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:9407,&quot;name&quot;:&quot;Stoneweaver Leggings&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:40,&quot;req&quot;:35,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+51 Armor&quot;,&quot;+15 Spirit&quot;,&quot;+9 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:5094,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:50,&quot;sellCopper&quot;:94,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:40.0,&quot;chanceStr&quot;:&quot;40.0%&quot;,&quot;bossId&quot;:7228,&quot;bossName&quot;:&quot;Ironaya&quot;,&quot;bossLvl&quot;:39,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Stoneweaver Leggings</span></td>
                         <td><span class="slot-text">Legs (Cloth)</span></td>
                         <td><span class="stat-text">+51 Armor, +15 Spirit, +9 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
                         <td class="text-end">40</td>
                         <td class="text-end">40.0%</td>
@@ -1964,10 +1983,10 @@
                     </tr>
                     <tr class="item-row"
                         data-roles="melee ranged"
-                        data-classes="hunter rogue"
+                        data-classes="warrior hunter rogue"
                         data-req="36"
                         data-item-id="9426"
-                        data-item-json="{&quot;id&quot;:9426,&quot;name&quot;:&quot;Monolithic Bow&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Bow&quot;,&quot;damage&quot;:&quot;52–97 Damage&quot;,&quot;speed&quot;:2.7,&quot;dps&quot;:27.6,&quot;stats&quot;:[&quot;+3 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 12.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:10275,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000070,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:9426,&quot;name&quot;:&quot;Monolithic Bow&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:41,&quot;req&quot;:36,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Bow&quot;,&quot;damage&quot;:&quot;52–97 Damage&quot;,&quot;speed&quot;:2.7,&quot;dps&quot;:27.6,&quot;stats&quot;:[&quot;+3 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 12.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:10275,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;],&quot;chance&quot;:0.0625,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000070,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Monolithic Bow</span></td>
                         <td><span class="slot-text">Ranged</span></td>
                         <td><span class="stat-text">+3 Agility</span></td>
@@ -1976,6 +1995,7 @@
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
                         </td>
@@ -2159,19 +2179,23 @@
                         <td class="text-end">0.06%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="melee ranged"
+                        data-classes="hunter rogue shaman druid"
                         data-req="30"
                         data-item-id="9428"
-                        data-item-json="{&quot;id&quot;:9428,&quot;name&quot;:&quot;Unearthed Bands&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:35,&quot;req&quot;:30,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+49 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 8.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:2096,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:20,&quot;sellCopper&quot;:96,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:0.06,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000070,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:9428,&quot;name&quot;:&quot;Unearthed Bands&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:35,&quot;req&quot;:30,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+49 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 8.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:2096,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:20,&quot;sellCopper&quot;:96,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.06,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000070,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Unearthed Bands</span></td>
                         <td><span class="slot-text">Wrist (Leather)</span></td>
                         <td><span class="stat-text">+49 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">35</td>
                         <td class="text-end">0.06%</td>
@@ -2198,21 +2222,24 @@
                         <td class="text-end">0.05%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="paladin priest shaman druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="33"
                         data-item-id="9393"
-                        data-item-json="{&quot;id&quot;:9393,&quot;name&quot;:&quot;Beacon of Hope&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:38,&quot;req&quot;:33,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+4 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:7882,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:78,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.04,&quot;chanceStr&quot;:&quot;0.04%&quot;,&quot;bossId&quot;:9000070,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:9393,&quot;name&quot;:&quot;Beacon of Hope&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:38,&quot;req&quot;:33,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+4 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:7882,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:78,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:0.04,&quot;chanceStr&quot;:&quot;0.04%&quot;,&quot;bossId&quot;:9000070,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Beacon of Hope</span></td>
                         <td><span class="slot-text">Held</span></td>
                         <td><span class="stat-text">+4 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">38</td>
@@ -2309,21 +2336,20 @@
                         <td class="text-end">0.04%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="tank"
-                        data-classes="warrior paladin dk"
+                        data-roles="heal"
+                        data-classes="paladin shaman"
                         data-req="40"
                         data-item-id="9430"
-                        data-item-json="{&quot;id&quot;:9430,&quot;name&quot;:&quot;Spaulders of a Lost Age&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:45,&quot;req&quot;:40,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Mail)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+205 Armor&quot;,&quot;+15 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:8553,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:85,&quot;sellCopper&quot;:53,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:9000070,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:9430,&quot;name&quot;:&quot;Spaulders of a Lost Age&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:45,&quot;req&quot;:40,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Mail)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+205 Armor&quot;,&quot;+15 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:8553,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:85,&quot;sellCopper&quot;:53,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.02,&quot;chanceStr&quot;:&quot;0.02%&quot;,&quot;bossId&quot;:9000070,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:40,&quot;mapId&quot;:70,&quot;dungeon&quot;:&quot;Uldaman&quot;,&quot;page&quot;:&quot;uldaman.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Spaulders of a Lost Age</span></td>
                         <td><span class="slot-text">Shoulder (Mail)</span></td>
                         <td><span class="stat-text">+205 Armor, +15 Stamina</span></td>
                         <td>
-                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                         </td>
                         <td>
-                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
-                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">45</td>
                         <td class="text-end">0.02%</td>

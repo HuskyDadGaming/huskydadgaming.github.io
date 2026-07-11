@@ -502,26 +502,26 @@
             <div class="dropdown">
                 <select id="class-dropdown">
                     <option value="all">All classes (98)</option>
-                    <option value="warrior">Warrior (43)</option>
-                    <option value="paladin">Paladin (46)</option>
-                    <option value="hunter">Hunter (2)</option>
+                    <option value="warrior">Warrior (55)</option>
+                    <option value="paladin">Paladin (60)</option>
+                    <option value="hunter">Hunter (11)</option>
                     <option value="rogue">Rogue (12)</option>
-                    <option value="priest">Priest (13)</option>
-                    <option value="dk">Death Knight (39)</option>
-                    <option value="shaman">Shaman (21)</option>
-                    <option value="mage">Mage (10)</option>
-                    <option value="warlock">Warlock (10)</option>
-                    <option value="druid">Druid (19)</option>
+                    <option value="priest">Priest (23)</option>
+                    <option value="dk">Death Knight (50)</option>
+                    <option value="shaman">Shaman (31)</option>
+                    <option value="mage">Mage (23)</option>
+                    <option value="warlock">Warlock (23)</option>
+                    <option value="druid">Druid (31)</option>
                 </select>
             </div>
         </div>
         <div class="filter-row row-role">
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">98</span>)</button>
-            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">28</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">20</span>)</button>
-            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">28</span>)</button>
-            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">17</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">32</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">31</span>)</button>
+            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">35</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">42</span>)</button>
         </div>
         <div class="filter-row row-quality">
             <span class="label">Quality:</span>
@@ -583,16 +583,17 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="shaman druid"
                         data-req="48"
                         data-item-id="12464"
-                        data-item-json="{&quot;id&quot;:12464,&quot;name&quot;:&quot;Bloodfire Talons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+96 Armor&quot;,&quot;+9 Spirit&quot;,&quot;+5 Intellect&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:8520,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:85,&quot;sellCopper&quot;:20,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5721,&quot;bossName&quot;:&quot;Dreamscythe&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:12464,&quot;name&quot;:&quot;Bloodfire Talons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+96 Armor&quot;,&quot;+9 Spirit&quot;,&quot;+5 Intellect&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:8520,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:85,&quot;sellCopper&quot;:20,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5721,&quot;bossName&quot;:&quot;Dreamscythe&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Bloodfire Talons</span></td>
                         <td><span class="slot-text">Hands (Leather)</span></td>
                         <td><span class="stat-text">+96 Armor, +9 Spirit, +5 Intellect, +10 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
@@ -623,19 +624,22 @@
                         <td class="text-end">5.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="tank"
+                        data-classes="warrior paladin dk druid"
                         data-req="49"
                         data-item-id="10795"
-                        data-item-json="{&quot;id&quot;:10795,&quot;name&quot;:&quot;Drakeclaw Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 6.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:5542,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:55,&quot;sellCopper&quot;:42,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5721,&quot;bossName&quot;:&quot;Dreamscythe&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10795,&quot;name&quot;:&quot;Drakeclaw Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 6.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:5542,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:55,&quot;sellCopper&quot;:42,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5721,&quot;bossName&quot;:&quot;Dreamscythe&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Drakeclaw Band</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">54</td>
                         <td class="text-end">5.0%</td>
@@ -661,19 +665,25 @@
                         <td class="text-end">5.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="49"
                         data-item-id="10796"
-                        data-item-json="{&quot;id&quot;:10796,&quot;name&quot;:&quot;Drakestone&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8982,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:89,&quot;sellCopper&quot;:82,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5721,&quot;bossName&quot;:&quot;Dreamscythe&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10796,&quot;name&quot;:&quot;Drakestone&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8982,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:89,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5721,&quot;bossName&quot;:&quot;Dreamscythe&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Drakestone</span></td>
                         <td><span class="slot-text">Held</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">54</td>
                         <td class="text-end">5.0%</td>
@@ -701,10 +711,10 @@
                     </tr>
                     <tr class="item-row"
                         data-roles="tank"
-                        data-classes="warrior paladin dk"
+                        data-classes="warrior paladin dk druid"
                         data-req="48"
                         data-item-id="12465"
-                        data-item-json="{&quot;id&quot;:12465,&quot;name&quot;:&quot;Nightfall Drape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+38 Armor&quot;,&quot;+14 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 8.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10261,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:61,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5721,&quot;bossName&quot;:&quot;Dreamscythe&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:12465,&quot;name&quot;:&quot;Nightfall Drape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+38 Armor&quot;,&quot;+14 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 8.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10261,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:61,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5721,&quot;bossName&quot;:&quot;Dreamscythe&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Nightfall Drape</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+38 Armor, +14 Stamina</span></td>
@@ -715,6 +725,7 @@
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">53</td>
                         <td class="text-end">5.0%</td>
@@ -766,16 +777,17 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="shaman druid"
                         data-req="48"
                         data-item-id="12464"
-                        data-item-json="{&quot;id&quot;:12464,&quot;name&quot;:&quot;Bloodfire Talons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+96 Armor&quot;,&quot;+9 Spirit&quot;,&quot;+5 Intellect&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:8520,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:85,&quot;sellCopper&quot;:20,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5722,&quot;bossName&quot;:&quot;Hazzas&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:12464,&quot;name&quot;:&quot;Bloodfire Talons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+96 Armor&quot;,&quot;+9 Spirit&quot;,&quot;+5 Intellect&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:8520,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:85,&quot;sellCopper&quot;:20,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5722,&quot;bossName&quot;:&quot;Hazzas&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Bloodfire Talons</span></td>
                         <td><span class="slot-text">Hands (Leather)</span></td>
                         <td><span class="stat-text">+96 Armor, +9 Spirit, +5 Intellect, +10 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
@@ -806,19 +818,22 @@
                         <td class="text-end">5.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="tank"
+                        data-classes="warrior paladin dk druid"
                         data-req="49"
                         data-item-id="10795"
-                        data-item-json="{&quot;id&quot;:10795,&quot;name&quot;:&quot;Drakeclaw Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 6.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:5542,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:55,&quot;sellCopper&quot;:42,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5722,&quot;bossName&quot;:&quot;Hazzas&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10795,&quot;name&quot;:&quot;Drakeclaw Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 6.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:5542,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:55,&quot;sellCopper&quot;:42,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5722,&quot;bossName&quot;:&quot;Hazzas&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Drakeclaw Band</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">54</td>
                         <td class="text-end">5.0%</td>
@@ -844,19 +859,25 @@
                         <td class="text-end">5.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="49"
                         data-item-id="10796"
-                        data-item-json="{&quot;id&quot;:10796,&quot;name&quot;:&quot;Drakestone&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8982,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:89,&quot;sellCopper&quot;:82,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5722,&quot;bossName&quot;:&quot;Hazzas&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10796,&quot;name&quot;:&quot;Drakestone&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8982,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:89,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5722,&quot;bossName&quot;:&quot;Hazzas&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Drakestone</span></td>
                         <td><span class="slot-text">Held</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">54</td>
                         <td class="text-end">5.0%</td>
@@ -884,10 +905,10 @@
                     </tr>
                     <tr class="item-row"
                         data-roles="tank"
-                        data-classes="warrior paladin dk"
+                        data-classes="warrior paladin dk druid"
                         data-req="48"
                         data-item-id="12465"
-                        data-item-json="{&quot;id&quot;:12465,&quot;name&quot;:&quot;Nightfall Drape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+38 Armor&quot;,&quot;+14 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 8.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10261,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:61,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5722,&quot;bossName&quot;:&quot;Hazzas&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:12465,&quot;name&quot;:&quot;Nightfall Drape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+38 Armor&quot;,&quot;+14 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 8.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10261,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:61,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5722,&quot;bossName&quot;:&quot;Hazzas&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Nightfall Drape</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+38 Armor, +14 Stamina</span></td>
@@ -898,6 +919,7 @@
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">53</td>
                         <td class="text-end">5.0%</td>
@@ -949,19 +971,22 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="priest"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
                         data-req="50"
                         data-item-id="10808"
-                        data-item-json="{&quot;id&quot;:10808,&quot;name&quot;:&quot;Gloves of the Atal&#x27;ai Prophet&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:55,&quot;req&quot;:50,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+49 Armor&quot;,&quot;+5 Spirit&quot;,&quot;+6 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:7629,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:76,&quot;sellCopper&quot;:29,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;priest&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:5710,&quot;bossName&quot;:&quot;Jammal&#x27;an the Prophet&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10808,&quot;name&quot;:&quot;Gloves of the Atal&#x27;ai Prophet&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:55,&quot;req&quot;:50,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+49 Armor&quot;,&quot;+5 Spirit&quot;,&quot;+6 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:7629,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:76,&quot;sellCopper&quot;:29,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:5710,&quot;bossName&quot;:&quot;Jammal&#x27;an the Prophet&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Gloves of the Atal'ai Prophet</span></td>
                         <td><span class="slot-text">Hands (Cloth)</span></td>
                         <td><span class="stat-text">+49 Armor, +5 Spirit, +6 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
                         <td class="text-end">55</td>
                         <td class="text-end">33.3%</td>
@@ -1035,16 +1060,17 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="shaman druid"
                         data-req="48"
                         data-item-id="12464"
-                        data-item-json="{&quot;id&quot;:12464,&quot;name&quot;:&quot;Bloodfire Talons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+96 Armor&quot;,&quot;+9 Spirit&quot;,&quot;+5 Intellect&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:8520,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:85,&quot;sellCopper&quot;:20,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5719,&quot;bossName&quot;:&quot;Morphaz&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:12464,&quot;name&quot;:&quot;Bloodfire Talons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+96 Armor&quot;,&quot;+9 Spirit&quot;,&quot;+5 Intellect&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:8520,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:85,&quot;sellCopper&quot;:20,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5719,&quot;bossName&quot;:&quot;Morphaz&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Bloodfire Talons</span></td>
                         <td><span class="slot-text">Hands (Leather)</span></td>
                         <td><span class="stat-text">+96 Armor, +9 Spirit, +5 Intellect, +10 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
@@ -1075,19 +1101,22 @@
                         <td class="text-end">5.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="tank"
+                        data-classes="warrior paladin dk druid"
                         data-req="49"
                         data-item-id="10795"
-                        data-item-json="{&quot;id&quot;:10795,&quot;name&quot;:&quot;Drakeclaw Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 6.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:5542,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:55,&quot;sellCopper&quot;:42,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5719,&quot;bossName&quot;:&quot;Morphaz&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10795,&quot;name&quot;:&quot;Drakeclaw Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 6.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:5542,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:55,&quot;sellCopper&quot;:42,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5719,&quot;bossName&quot;:&quot;Morphaz&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Drakeclaw Band</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">54</td>
                         <td class="text-end">5.0%</td>
@@ -1113,19 +1142,25 @@
                         <td class="text-end">5.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="49"
                         data-item-id="10796"
-                        data-item-json="{&quot;id&quot;:10796,&quot;name&quot;:&quot;Drakestone&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8982,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:89,&quot;sellCopper&quot;:82,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5719,&quot;bossName&quot;:&quot;Morphaz&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10796,&quot;name&quot;:&quot;Drakestone&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8982,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:89,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5719,&quot;bossName&quot;:&quot;Morphaz&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Drakestone</span></td>
                         <td><span class="slot-text">Held</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">54</td>
                         <td class="text-end">5.0%</td>
@@ -1153,10 +1188,10 @@
                     </tr>
                     <tr class="item-row"
                         data-roles="tank"
-                        data-classes="warrior paladin dk"
+                        data-classes="warrior paladin dk druid"
                         data-req="48"
                         data-item-id="12465"
-                        data-item-json="{&quot;id&quot;:12465,&quot;name&quot;:&quot;Nightfall Drape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+38 Armor&quot;,&quot;+14 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 8.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10261,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:61,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5719,&quot;bossName&quot;:&quot;Morphaz&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:12465,&quot;name&quot;:&quot;Nightfall Drape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+38 Armor&quot;,&quot;+14 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 8.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10261,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:61,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5719,&quot;bossName&quot;:&quot;Morphaz&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Nightfall Drape</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+38 Armor, +14 Stamina</span></td>
@@ -1167,6 +1202,7 @@
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">53</td>
                         <td class="text-end">5.0%</td>
@@ -1218,16 +1254,17 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="tank ranged"
+                        data-roles="tank heal ranged"
                         data-classes="warrior paladin shaman"
                         data-req="50"
                         data-item-id="10835"
-                        data-item-json="{&quot;id&quot;:10835,&quot;name&quot;:&quot;Crest of Supremacy&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:56,&quot;req&quot;:50,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Off-Hand (Shield)&quot;,&quot;slotFilter&quot;:&quot;Off-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:6,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Shield&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1930 Armor&quot;,&quot;+10 Stamina&quot;,&quot;+10 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:24645,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:46,&quot;sellCopper&quot;:45,&quot;roles&quot;:[&quot;tank&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:17.25,&quot;chanceStr&quot;:&quot;17.2%&quot;,&quot;bossId&quot;:5709,&quot;bossName&quot;:&quot;Shade of Eranikus&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10835,&quot;name&quot;:&quot;Crest of Supremacy&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:56,&quot;req&quot;:50,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Off-Hand (Shield)&quot;,&quot;slotFilter&quot;:&quot;Off-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:6,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Shield&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1930 Armor&quot;,&quot;+10 Stamina&quot;,&quot;+10 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:24645,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:46,&quot;sellCopper&quot;:45,&quot;roles&quot;:[&quot;tank&quot;,&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:17.25,&quot;chanceStr&quot;:&quot;17.2%&quot;,&quot;bossId&quot;:5709,&quot;bossName&quot;:&quot;Shade of Eranikus&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Crest of Supremacy</span></td>
                         <td><span class="slot-text">Off-Hand (Shield)</span></td>
                         <td><span class="stat-text">+1930 Armor, +10 Stamina, +10 Intellect</span></td>
                         <td>
                             <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
@@ -1279,21 +1316,24 @@
                         <td class="text-end">17.2%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="paladin priest shaman druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="50"
                         data-item-id="10829"
-                        data-item-json="{&quot;id&quot;:10829,&quot;name&quot;:&quot;The Dragon&#x27;s Eye&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:56,&quot;req&quot;:50,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+6 Stamina&quot;,&quot;+10 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10680,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:6,&quot;sellCopper&quot;:80,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:17.25,&quot;chanceStr&quot;:&quot;17.2%&quot;,&quot;bossId&quot;:5709,&quot;bossName&quot;:&quot;Shade of Eranikus&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10829,&quot;name&quot;:&quot;The Dragon&#x27;s Eye&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:56,&quot;req&quot;:50,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+6 Stamina&quot;,&quot;+10 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10680,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:6,&quot;sellCopper&quot;:80,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:17.25,&quot;chanceStr&quot;:&quot;17.2%&quot;,&quot;bossId&quot;:5709,&quot;bossName&quot;:&quot;Shade of Eranikus&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">The Dragon's Eye</span></td>
                         <td><span class="slot-text">Neck</span></td>
                         <td><span class="stat-text">+6 Stamina, +10 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">56</td>
@@ -1390,16 +1430,17 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="heal"
+                        data-roles="heal ranged"
                         data-classes="shaman druid"
                         data-req="48"
                         data-item-id="12464"
-                        data-item-json="{&quot;id&quot;:12464,&quot;name&quot;:&quot;Bloodfire Talons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+96 Armor&quot;,&quot;+9 Spirit&quot;,&quot;+5 Intellect&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:8520,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:85,&quot;sellCopper&quot;:20,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5720,&quot;bossName&quot;:&quot;Weaver&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:12464,&quot;name&quot;:&quot;Bloodfire Talons&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+96 Armor&quot;,&quot;+9 Spirit&quot;,&quot;+5 Intellect&quot;,&quot;+10 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:8520,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:85,&quot;sellCopper&quot;:20,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5720,&quot;bossName&quot;:&quot;Weaver&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Bloodfire Talons</span></td>
                         <td><span class="slot-text">Hands (Leather)</span></td>
                         <td><span class="stat-text">+96 Armor, +9 Spirit, +5 Intellect, +10 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
@@ -1430,19 +1471,22 @@
                         <td class="text-end">5.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="tank"
+                        data-classes="warrior paladin dk druid"
                         data-req="49"
                         data-item-id="10795"
-                        data-item-json="{&quot;id&quot;:10795,&quot;name&quot;:&quot;Drakeclaw Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 6.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:5542,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:55,&quot;sellCopper&quot;:42,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5720,&quot;bossName&quot;:&quot;Weaver&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10795,&quot;name&quot;:&quot;Drakeclaw Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 6.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:5542,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:55,&quot;sellCopper&quot;:42,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5720,&quot;bossName&quot;:&quot;Weaver&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Drakeclaw Band</span></td>
                         <td><span class="slot-text">Finger</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">54</td>
                         <td class="text-end">5.0%</td>
@@ -1468,19 +1512,25 @@
                         <td class="text-end">5.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="49"
                         data-item-id="10796"
-                        data-item-json="{&quot;id&quot;:10796,&quot;name&quot;:&quot;Drakestone&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8982,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:89,&quot;sellCopper&quot;:82,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5720,&quot;bossName&quot;:&quot;Weaver&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10796,&quot;name&quot;:&quot;Drakestone&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 7.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8982,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:89,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5720,&quot;bossName&quot;:&quot;Weaver&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Drakestone</span></td>
                         <td><span class="slot-text">Held</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">54</td>
                         <td class="text-end">5.0%</td>
@@ -1508,10 +1558,10 @@
                     </tr>
                     <tr class="item-row"
                         data-roles="tank"
-                        data-classes="warrior paladin dk"
+                        data-classes="warrior paladin dk druid"
                         data-req="48"
                         data-item-id="12465"
-                        data-item-json="{&quot;id&quot;:12465,&quot;name&quot;:&quot;Nightfall Drape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+38 Armor&quot;,&quot;+14 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 8.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10261,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:61,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5720,&quot;bossName&quot;:&quot;Weaver&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:12465,&quot;name&quot;:&quot;Nightfall Drape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:53,&quot;req&quot;:48,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+38 Armor&quot;,&quot;+14 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 8.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10261,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:61,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:5.0,&quot;chanceStr&quot;:&quot;5.0%&quot;,&quot;bossId&quot;:5720,&quot;bossName&quot;:&quot;Weaver&quot;,&quot;bossLvl&quot;:50,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Nightfall Drape</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+38 Armor, +14 Stamina</span></td>
@@ -1522,6 +1572,7 @@
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">53</td>
                         <td class="text-end">5.0%</td>
@@ -1703,19 +1754,22 @@
                         <td class="text-end">8.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
                         data-req="47"
                         data-item-id="10787"
-                        data-item-json="{&quot;id&quot;:10787,&quot;name&quot;:&quot;Atal&#x27;ai Gloves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+47 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:6382,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:63,&quot;sellCopper&quot;:82,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:6.9984,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:5713,&quot;bossName&quot;:&quot;Gasher&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10787,&quot;name&quot;:&quot;Atal&#x27;ai Gloves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+47 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:6382,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:63,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:6.9984,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:5713,&quot;bossName&quot;:&quot;Gasher&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Atal'ai Gloves</span></td>
                         <td><span class="slot-text">Hands (Cloth)</span></td>
                         <td><span class="stat-text">+47 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
                         <td class="text-end">52</td>
                         <td class="text-end">7.0%</td>
@@ -1757,19 +1811,24 @@
                         <td class="text-end">4.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="47"
                         data-item-id="10784"
-                        data-item-json="{&quot;id&quot;:10784,&quot;name&quot;:&quot;Atal&#x27;ai Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+311 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:18432,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:84,&quot;sellCopper&quot;:32,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:2.9988,&quot;chanceStr&quot;:&quot;3.0%&quot;,&quot;bossId&quot;:5713,&quot;bossName&quot;:&quot;Gasher&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10784,&quot;name&quot;:&quot;Atal&#x27;ai Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+311 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:18432,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:84,&quot;sellCopper&quot;:32,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:2.9988,&quot;chanceStr&quot;:&quot;3.0%&quot;,&quot;bossId&quot;:5713,&quot;bossName&quot;:&quot;Gasher&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Atal'ai Breastplate</span></td>
                         <td><span class="slot-text">Chest (Mail)</span></td>
                         <td><span class="stat-text">+311 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">52</td>
                         <td class="text-end">3.0%</td>
@@ -1841,19 +1900,22 @@
                         <td class="text-end">8.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
                         data-req="47"
                         data-item-id="10787"
-                        data-item-json="{&quot;id&quot;:10787,&quot;name&quot;:&quot;Atal&#x27;ai Gloves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+47 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:6382,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:63,&quot;sellCopper&quot;:82,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:6.9984,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:5715,&quot;bossName&quot;:&quot;Hukku&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10787,&quot;name&quot;:&quot;Atal&#x27;ai Gloves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+47 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:6382,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:63,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:6.9984,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:5715,&quot;bossName&quot;:&quot;Hukku&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Atal'ai Gloves</span></td>
                         <td><span class="slot-text">Hands (Cloth)</span></td>
                         <td><span class="stat-text">+47 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
                         <td class="text-end">52</td>
                         <td class="text-end">7.0%</td>
@@ -1895,19 +1957,24 @@
                         <td class="text-end">4.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="47"
                         data-item-id="10784"
-                        data-item-json="{&quot;id&quot;:10784,&quot;name&quot;:&quot;Atal&#x27;ai Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+311 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:18432,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:84,&quot;sellCopper&quot;:32,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:2.9988,&quot;chanceStr&quot;:&quot;3.0%&quot;,&quot;bossId&quot;:5715,&quot;bossName&quot;:&quot;Hukku&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10784,&quot;name&quot;:&quot;Atal&#x27;ai Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+311 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:18432,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:84,&quot;sellCopper&quot;:32,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:2.9988,&quot;chanceStr&quot;:&quot;3.0%&quot;,&quot;bossId&quot;:5715,&quot;bossName&quot;:&quot;Hukku&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Atal'ai Breastplate</span></td>
                         <td><span class="slot-text">Chest (Mail)</span></td>
                         <td><span class="stat-text">+311 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">52</td>
                         <td class="text-end">3.0%</td>
@@ -1979,19 +2046,22 @@
                         <td class="text-end">8.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
                         data-req="47"
                         data-item-id="10787"
-                        data-item-json="{&quot;id&quot;:10787,&quot;name&quot;:&quot;Atal&#x27;ai Gloves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+47 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:6382,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:63,&quot;sellCopper&quot;:82,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:6.9984,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:5714,&quot;bossName&quot;:&quot;Loro&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10787,&quot;name&quot;:&quot;Atal&#x27;ai Gloves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+47 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:6382,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:63,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:6.9984,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:5714,&quot;bossName&quot;:&quot;Loro&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Atal'ai Gloves</span></td>
                         <td><span class="slot-text">Hands (Cloth)</span></td>
                         <td><span class="stat-text">+47 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
                         <td class="text-end">52</td>
                         <td class="text-end">7.0%</td>
@@ -2033,19 +2103,24 @@
                         <td class="text-end">4.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="47"
                         data-item-id="10784"
-                        data-item-json="{&quot;id&quot;:10784,&quot;name&quot;:&quot;Atal&#x27;ai Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+311 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:18432,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:84,&quot;sellCopper&quot;:32,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:2.9988,&quot;chanceStr&quot;:&quot;3.0%&quot;,&quot;bossId&quot;:5714,&quot;bossName&quot;:&quot;Loro&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10784,&quot;name&quot;:&quot;Atal&#x27;ai Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+311 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:18432,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:84,&quot;sellCopper&quot;:32,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:2.9988,&quot;chanceStr&quot;:&quot;3.0%&quot;,&quot;bossId&quot;:5714,&quot;bossName&quot;:&quot;Loro&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Atal'ai Breastplate</span></td>
                         <td><span class="slot-text">Chest (Mail)</span></td>
                         <td><span class="stat-text">+311 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">52</td>
                         <td class="text-end">3.0%</td>
@@ -2117,19 +2192,22 @@
                         <td class="text-end">8.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
                         data-req="47"
                         data-item-id="10787"
-                        data-item-json="{&quot;id&quot;:10787,&quot;name&quot;:&quot;Atal&#x27;ai Gloves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+47 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:6382,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:63,&quot;sellCopper&quot;:82,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:6.9984,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:5717,&quot;bossName&quot;:&quot;Mijan&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10787,&quot;name&quot;:&quot;Atal&#x27;ai Gloves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+47 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:6382,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:63,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:6.9984,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:5717,&quot;bossName&quot;:&quot;Mijan&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Atal'ai Gloves</span></td>
                         <td><span class="slot-text">Hands (Cloth)</span></td>
                         <td><span class="stat-text">+47 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
                         <td class="text-end">52</td>
                         <td class="text-end">7.0%</td>
@@ -2171,19 +2249,24 @@
                         <td class="text-end">4.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="47"
                         data-item-id="10784"
-                        data-item-json="{&quot;id&quot;:10784,&quot;name&quot;:&quot;Atal&#x27;ai Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+311 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:18432,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:84,&quot;sellCopper&quot;:32,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:2.9988,&quot;chanceStr&quot;:&quot;3.0%&quot;,&quot;bossId&quot;:5717,&quot;bossName&quot;:&quot;Mijan&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10784,&quot;name&quot;:&quot;Atal&#x27;ai Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+311 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:18432,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:84,&quot;sellCopper&quot;:32,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:2.9988,&quot;chanceStr&quot;:&quot;3.0%&quot;,&quot;bossId&quot;:5717,&quot;bossName&quot;:&quot;Mijan&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Atal'ai Breastplate</span></td>
                         <td><span class="slot-text">Chest (Mail)</span></td>
                         <td><span class="stat-text">+311 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">52</td>
                         <td class="text-end">3.0%</td>
@@ -2215,20 +2298,22 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="melee"
-                        data-classes="warrior paladin rogue dk"
+                        data-roles="melee ranged"
+                        data-classes="warrior paladin hunter rogue dk"
                         data-req="49"
                         data-item-id="10803"
-                        data-item-json="{&quot;id&quot;:10803,&quot;name&quot;:&quot;Blade of the Wretched&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:7,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;52–98 Damage&quot;,&quot;speed&quot;:2.1,&quot;dps&quot;:35.7,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Chance on hit&quot;,&quot;text&quot;:&quot;Corrupts the target, causing 90 Shadow damage over 3 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:35329,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:53,&quot;sellCopper&quot;:29,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;rogue&quot;,&quot;dk&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:5711,&quot;bossName&quot;:&quot;Ogom the Wretched&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10803,&quot;name&quot;:&quot;Blade of the Wretched&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:7,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;52–98 Damage&quot;,&quot;speed&quot;:2.1,&quot;dps&quot;:35.7,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Chance on hit&quot;,&quot;text&quot;:&quot;Corrupts the target, causing 90 Shadow damage over 3 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:35329,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:53,&quot;sellCopper&quot;:29,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;dk&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:5711,&quot;bossName&quot;:&quot;Ogom the Wretched&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Blade of the Wretched</span></td>
                         <td><span class="slot-text">One-Hand</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                         </td>
@@ -2236,21 +2321,23 @@
                         <td class="text-end">33.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="tank melee"
-                        data-classes="warrior paladin rogue dk shaman"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter rogue dk shaman"
                         data-req="49"
                         data-item-id="10805"
-                        data-item-json="{&quot;id&quot;:10805,&quot;name&quot;:&quot;Eater of the Dead&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;55–103 Damage&quot;,&quot;speed&quot;:2.2,&quot;dps&quot;:35.9,&quot;stats&quot;:[&quot;+8 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 30 when fighting Undead.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:35594,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:55,&quot;sellCopper&quot;:94,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:5711,&quot;bossName&quot;:&quot;Ogom the Wretched&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10805,&quot;name&quot;:&quot;Eater of the Dead&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:54,&quot;req&quot;:49,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;55–103 Damage&quot;,&quot;speed&quot;:2.2,&quot;dps&quot;:35.9,&quot;stats&quot;:[&quot;+8 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 30 when fighting Undead.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:35594,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:55,&quot;sellCopper&quot;:94,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:5711,&quot;bossName&quot;:&quot;Ogom the Wretched&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Eater of the Dead</span></td>
                         <td><span class="slot-text">One-Hand</span></td>
                         <td><span class="stat-text">+8 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
@@ -2346,19 +2433,22 @@
                         <td class="text-end">8.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
                         data-req="47"
                         data-item-id="10787"
-                        data-item-json="{&quot;id&quot;:10787,&quot;name&quot;:&quot;Atal&#x27;ai Gloves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+47 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:6382,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:63,&quot;sellCopper&quot;:82,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:6.9984,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:5712,&quot;bossName&quot;:&quot;Zolo&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10787,&quot;name&quot;:&quot;Atal&#x27;ai Gloves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+47 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:6382,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:63,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:6.9984,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:5712,&quot;bossName&quot;:&quot;Zolo&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Atal'ai Gloves</span></td>
                         <td><span class="slot-text">Hands (Cloth)</span></td>
                         <td><span class="stat-text">+47 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
                         <td class="text-end">52</td>
                         <td class="text-end">7.0%</td>
@@ -2400,19 +2490,24 @@
                         <td class="text-end">4.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="47"
                         data-item-id="10784"
-                        data-item-json="{&quot;id&quot;:10784,&quot;name&quot;:&quot;Atal&#x27;ai Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+311 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:18432,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:84,&quot;sellCopper&quot;:32,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:2.9988,&quot;chanceStr&quot;:&quot;3.0%&quot;,&quot;bossId&quot;:5712,&quot;bossName&quot;:&quot;Zolo&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10784,&quot;name&quot;:&quot;Atal&#x27;ai Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+311 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:18432,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:84,&quot;sellCopper&quot;:32,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:2.9988,&quot;chanceStr&quot;:&quot;3.0%&quot;,&quot;bossId&quot;:5712,&quot;bossName&quot;:&quot;Zolo&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Atal'ai Breastplate</span></td>
                         <td><span class="slot-text">Chest (Mail)</span></td>
                         <td><span class="stat-text">+311 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">52</td>
                         <td class="text-end">3.0%</td>
@@ -2484,19 +2579,22 @@
                         <td class="text-end">8.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
                         data-req="47"
                         data-item-id="10787"
-                        data-item-json="{&quot;id&quot;:10787,&quot;name&quot;:&quot;Atal&#x27;ai Gloves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+47 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:6382,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:63,&quot;sellCopper&quot;:82,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:6.9984,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:5716,&quot;bossName&quot;:&quot;Zul&#x27;Lor&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10787,&quot;name&quot;:&quot;Atal&#x27;ai Gloves&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+47 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 9.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:30,&quot;sellPrice&quot;:6382,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:63,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:6.9984,&quot;chanceStr&quot;:&quot;7.0%&quot;,&quot;bossId&quot;:5716,&quot;bossName&quot;:&quot;Zul&#x27;Lor&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Atal'ai Gloves</span></td>
                         <td><span class="slot-text">Hands (Cloth)</span></td>
                         <td><span class="stat-text">+47 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                         </td>
                         <td class="text-end">52</td>
                         <td class="text-end">7.0%</td>
@@ -2538,19 +2636,24 @@
                         <td class="text-end">4.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="47"
                         data-item-id="10784"
-                        data-item-json="{&quot;id&quot;:10784,&quot;name&quot;:&quot;Atal&#x27;ai Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+311 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:18432,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:84,&quot;sellCopper&quot;:32,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:2.9988,&quot;chanceStr&quot;:&quot;3.0%&quot;,&quot;bossId&quot;:5716,&quot;bossName&quot;:&quot;Zul&#x27;Lor&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:10784,&quot;name&quot;:&quot;Atal&#x27;ai Breastplate&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+311 Armor&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 22.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:18432,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:84,&quot;sellCopper&quot;:32,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:2.9988,&quot;chanceStr&quot;:&quot;3.0%&quot;,&quot;bossId&quot;:5716,&quot;bossName&quot;:&quot;Zul&#x27;Lor&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Atal'ai Breastplate</span></td>
                         <td><span class="slot-text">Chest (Mail)</span></td>
                         <td><span class="stat-text">+311 Armor</span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">52</td>
                         <td class="text-end">3.0%</td>
@@ -2609,21 +2712,24 @@
                         <td class="text-end">47.4%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal"
-                        data-classes="paladin priest shaman druid"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="47"
                         data-item-id="10802"
-                        data-item-json="{&quot;id&quot;:10802,&quot;name&quot;:&quot;Wingveil Cloak&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+37 Armor&quot;,&quot;+12 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:9397,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:93,&quot;sellCopper&quot;:97,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:26.078,&quot;chanceStr&quot;:&quot;26.1%&quot;,&quot;bossId&quot;:9000109,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:10802,&quot;name&quot;:&quot;Wingveil Cloak&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:52,&quot;req&quot;:47,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+37 Armor&quot;,&quot;+12 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:9397,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:93,&quot;sellCopper&quot;:97,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:26.078,&quot;chanceStr&quot;:&quot;26.1%&quot;,&quot;bossId&quot;:9000109,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Wingveil Cloak</span></td>
                         <td><span class="slot-text">Back</span></td>
                         <td><span class="stat-text">+37 Armor, +12 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">52</td>
@@ -2696,20 +2802,24 @@
                         <td class="text-end">0.08%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal ranged"
-                        data-classes="paladin shaman"
+                        data-roles="heal melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="41"
                         data-item-id="10631"
-                        data-item-json="{&quot;id&quot;:10631,&quot;name&quot;:&quot;Murkwater Gauntlets&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:46,&quot;req&quot;:41,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+174 Armor&quot;,&quot;+12 Stamina&quot;,&quot;+4 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 26.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:6086,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:60,&quot;sellCopper&quot;:86,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0604,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000109,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:10631,&quot;name&quot;:&quot;Murkwater Gauntlets&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:46,&quot;req&quot;:41,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+174 Armor&quot;,&quot;+12 Stamina&quot;,&quot;+4 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 26.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:6086,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:60,&quot;sellCopper&quot;:86,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.0604,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000109,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Murkwater Gauntlets</span></td>
                         <td><span class="slot-text">Hands (Mail)</span></td>
                         <td><span class="stat-text">+174 Armor, +12 Stamina, +4 Intellect</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">46</td>
@@ -2863,10 +2973,10 @@
                     </tr>
                     <tr class="item-row"
                         data-roles="melee ranged"
-                        data-classes="hunter rogue"
+                        data-classes="warrior hunter rogue"
                         data-req="42"
                         data-item-id="10624"
-                        data-item-json="{&quot;id&quot;:10624,&quot;name&quot;:&quot;Stinging Bow&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:47,&quot;req&quot;:42,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Bow&quot;,&quot;damage&quot;:&quot;61–114 Damage&quot;,&quot;speed&quot;:2.8,&quot;dps&quot;:31.3,&quot;stats&quot;:[&quot;+3 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 14.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:17249,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:72,&quot;sellCopper&quot;:49,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000109,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        data-item-json="{&quot;id&quot;:10624,&quot;name&quot;:&quot;Stinging Bow&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:47,&quot;req&quot;:42,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Bow&quot;,&quot;damage&quot;:&quot;61–114 Damage&quot;,&quot;speed&quot;:2.8,&quot;dps&quot;:31.3,&quot;stats&quot;:[&quot;+3 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 14.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:17249,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:72,&quot;sellCopper&quot;:49,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;],&quot;chance&quot;:0.05555555555555555,&quot;chanceStr&quot;:&quot;0.06%&quot;,&quot;bossId&quot;:9000109,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:49,&quot;mapId&quot;:109,&quot;dungeon&quot;:&quot;Sunken Temple&quot;,&quot;page&quot;:&quot;sunken-temple.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Stinging Bow</span></td>
                         <td><span class="slot-text">Ranged</span></td>
                         <td><span class="stat-text">+3 Agility</span></td>
@@ -2875,6 +2985,7 @@
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
                         </td>

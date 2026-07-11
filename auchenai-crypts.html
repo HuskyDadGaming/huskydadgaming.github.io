@@ -503,16 +503,16 @@
             <div class="dropdown">
                 <select id="class-dropdown">
                     <option value="all">All classes (26)</option>
-                    <option value="warrior">Warrior (9)</option>
-                    <option value="paladin">Paladin (14)</option>
-                    <option value="hunter">Hunter (3)</option>
-                    <option value="rogue">Rogue (4)</option>
-                    <option value="priest">Priest (8)</option>
-                    <option value="dk">Death Knight (8)</option>
-                    <option value="shaman">Shaman (12)</option>
-                    <option value="mage">Mage (8)</option>
-                    <option value="warlock">Warlock (8)</option>
-                    <option value="druid">Druid (8)</option>
+                    <option value="warrior">Warrior (12)</option>
+                    <option value="paladin">Paladin (16)</option>
+                    <option value="hunter">Hunter (7)</option>
+                    <option value="rogue">Rogue (6)</option>
+                    <option value="priest">Priest (9)</option>
+                    <option value="dk">Death Knight (11)</option>
+                    <option value="shaman">Shaman (15)</option>
+                    <option value="mage">Mage (9)</option>
+                    <option value="warlock">Warlock (9)</option>
+                    <option value="druid">Druid (11)</option>
                 </select>
             </div>
         </div>
@@ -520,9 +520,9 @@
             <span class="label">Role:</span>
             <button class="filter-btn active" data-role="all">All (<span id="count-all">26</span>)</button>
             <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">10</span>)</button>
-            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">13</span>)</button>
-            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">10</span>)</button>
-            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">14</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">14</span>)</button>
+            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">13</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">19</span>)</button>
         </div>
         <div class="filter-row row-quality">
             <span class="label">Quality:</span>
@@ -627,35 +627,42 @@
                         <td class="text-end">20.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
                         data-req="65"
                         data-item-id="26055"
-                        data-item-json="{&quot;id&quot;:26055,&quot;name&quot;:&quot;Oculus of the Hidden Eye&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:100,&quot;req&quot;:65,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 33.&quot;},{&quot;trigger&quot;:&quot;Use&quot;,&quot;text&quot;:&quot;The next opponent you kill within 10 sec1 that yields experience or honor will restore 900 mana.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:92386,&quot;sellGold&quot;:9,&quot;sellSilver&quot;:23,&quot;sellCopper&quot;:86,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:18371,&quot;bossName&quot;:&quot;Shirrak the Dead Watcher&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:26055,&quot;name&quot;:&quot;Oculus of the Hidden Eye&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:100,&quot;req&quot;:65,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 33.&quot;},{&quot;trigger&quot;:&quot;Use&quot;,&quot;text&quot;:&quot;The next opponent you kill within 10 sec1 that yields experience or honor will restore 900 mana.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:92386,&quot;sellGold&quot;:9,&quot;sellSilver&quot;:23,&quot;sellCopper&quot;:86,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:18371,&quot;bossName&quot;:&quot;Shirrak the Dead Watcher&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Oculus of the Hidden Eye</span></td>
                         <td><span class="slot-text">Trinket</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">100</td>
                         <td class="text-end">20.0%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="heal melee"
+                        data-roles="heal melee ranged"
                         data-classes="shaman druid"
                         data-req="65"
                         data-item-id="27409"
-                        data-item-json="{&quot;id&quot;:27409,&quot;name&quot;:&quot;Raven-Heart Headdress&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:100,&quot;req&quot;:65,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Leather)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+208 Armor&quot;,&quot;+22 Strength&quot;,&quot;+24 Stamina&quot;,&quot;+23 Intellect&quot;,&quot;+16 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 19.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:28382,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:83,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:18371,&quot;bossName&quot;:&quot;Shirrak the Dead Watcher&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27409,&quot;name&quot;:&quot;Raven-Heart Headdress&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:100,&quot;req&quot;:65,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Leather)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+208 Armor&quot;,&quot;+22 Strength&quot;,&quot;+24 Stamina&quot;,&quot;+23 Intellect&quot;,&quot;+16 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 19.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:28382,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:83,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:20.0,&quot;chanceStr&quot;:&quot;20.0%&quot;,&quot;bossId&quot;:18371,&quot;bossName&quot;:&quot;Shirrak the Dead Watcher&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Raven-Heart Headdress</span></td>
                         <td><span class="slot-text">Head (Leather)</span></td>
                         <td><span class="stat-text">+208 Armor, +22 Strength, +24 Stamina, +23 Intellect, +16 Spirit</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
@@ -703,39 +710,45 @@
                 </thead>
                 <tbody>
                     <tr class="item-row"
-                        data-roles="heal ranged"
-                        data-classes="paladin shaman"
+                        data-roles="heal melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="70"
                         data-item-id="27865"
-                        data-item-json="{&quot;id&quot;:27865,&quot;name&quot;:&quot;Bracers of Shirrak&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Mail)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+285 Armor&quot;,&quot;+17 Stamina&quot;,&quot;+14 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 48.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 6 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:26147,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:47,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18371,&quot;bossName&quot;:&quot;Shirrak the Dead Watcher&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27865,&quot;name&quot;:&quot;Bracers of Shirrak&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Mail)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+285 Armor&quot;,&quot;+17 Stamina&quot;,&quot;+14 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 48.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 6 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:26147,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:61,&quot;sellCopper&quot;:47,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18371,&quot;bossName&quot;:&quot;Shirrak the Dead Watcher&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Bracers of Shirrak</span></td>
                         <td><span class="slot-text">Wrist (Mail)</span></td>
                         <td><span class="stat-text">+285 Armor, +17 Stamina, +14 Intellect</span></td>
                         <td>
                             <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">115</td>
                         <td class="text-end">16.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="melee"
-                        data-classes="warrior rogue shaman druid"
+                        data-roles="melee ranged"
+                        data-classes="warrior hunter rogue shaman druid"
                         data-req="70"
                         data-item-id="27846"
-                        data-item-json="{&quot;id&quot;:27846,&quot;name&quot;:&quot;Claw of the Watcher&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:13,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Fist&quot;,&quot;damage&quot;:&quot;125–233 Damage&quot;,&quot;speed&quot;:2.5,&quot;dps&quot;:71.6,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 24.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:87492,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:74,&quot;sellCopper&quot;:92,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18371,&quot;bossName&quot;:&quot;Shirrak the Dead Watcher&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27846,&quot;name&quot;:&quot;Claw of the Watcher&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:13,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Fist&quot;,&quot;damage&quot;:&quot;125–233 Damage&quot;,&quot;speed&quot;:2.5,&quot;dps&quot;:71.6,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 24.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 12.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:87492,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:74,&quot;sellCopper&quot;:92,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18371,&quot;bossName&quot;:&quot;Shirrak the Dead Watcher&quot;,&quot;bossLvl&quot;:66,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Claw of the Watcher</span></td>
                         <td><span class="slot-text">Main Hand</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
                             <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
                             <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
@@ -877,19 +890,26 @@
                         <td class="text-end">16.7%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles=""
-                        data-classes=""
+                        data-roles="melee ranged"
+                        data-classes="warrior paladin hunter rogue dk shaman druid"
                         data-req="65"
                         data-item-id="27416"
-                        data-item-json="{&quot;id&quot;:27416,&quot;name&quot;:&quot;Fetish of the Fallen&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:100,&quot;req&quot;:65,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 56.&quot;},{&quot;trigger&quot;:&quot;Use&quot;,&quot;text&quot;:&quot;The next opponent killed within 15 sec1 that yields experience or honor will restore 900 health.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10307,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:3,&quot;sellCopper&quot;:7,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18373,&quot;bossName&quot;:&quot;Exarch Maladaar&quot;,&quot;bossLvl&quot;:67,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27416,&quot;name&quot;:&quot;Fetish of the Fallen&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:100,&quot;req&quot;:65,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 56.&quot;},{&quot;trigger&quot;:&quot;Use&quot;,&quot;text&quot;:&quot;The next opponent killed within 15 sec1 that yields experience or honor will restore 900 health.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:10307,&quot;sellGold&quot;:1,&quot;sellSilver&quot;:3,&quot;sellCopper&quot;:7,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18373,&quot;bossName&quot;:&quot;Exarch Maladaar&quot;,&quot;bossLvl&quot;:67,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Fetish of the Fallen</span></td>
                         <td><span class="slot-text">Trinket</span></td>
                         <td><span class="stat-text"></span></td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
-                            <span class="pill-empty">—</span>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">100</td>
                         <td class="text-end">16.7%</td>
@@ -919,10 +939,10 @@
                     </tr>
                     <tr class="item-row"
                         data-roles="heal melee ranged"
-                        data-classes="paladin hunter shaman"
+                        data-classes="warrior paladin hunter dk shaman"
                         data-req="65"
                         data-item-id="27414"
-                        data-item-json="{&quot;id&quot;:27414,&quot;name&quot;:&quot;Mok&#x27;Nathal Beast-Mask&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:100,&quot;req&quot;:65,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Mail)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+463 Armor&quot;,&quot;+23 Agility&quot;,&quot;+22 Stamina&quot;,&quot;+15 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 44.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:34701,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:47,&quot;sellCopper&quot;:1,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;hunter&quot;,&quot;shaman&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18373,&quot;bossName&quot;:&quot;Exarch Maladaar&quot;,&quot;bossLvl&quot;:67,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27414,&quot;name&quot;:&quot;Mok&#x27;Nathal Beast-Mask&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:100,&quot;req&quot;:65,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Mail)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+463 Armor&quot;,&quot;+23 Agility&quot;,&quot;+22 Stamina&quot;,&quot;+15 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 44.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:34701,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:47,&quot;sellCopper&quot;:1,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18373,&quot;bossName&quot;:&quot;Exarch Maladaar&quot;,&quot;bossLvl&quot;:67,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Mok'Nathal Beast-Mask</span></td>
                         <td><span class="slot-text">Head (Mail)</span></td>
                         <td><span class="stat-text">+463 Armor, +23 Agility, +22 Stamina, +15 Intellect</span></td>
@@ -932,8 +952,10 @@
                             <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
                             <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                         </td>
                         <td class="text-end">100</td>
@@ -1068,18 +1090,23 @@
                         <td class="text-end">33.3%</td>
                     </tr>
                     <tr class="item-row"
-                        data-roles="tank"
-                        data-classes="druid"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
                         data-req="70"
                         data-item-id="27867"
-                        data-item-json="{&quot;id&quot;:27867,&quot;name&quot;:&quot;Boots of the Unjust&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+201 Armor&quot;,&quot;+25 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 64.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 19.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 13.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:32925,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:25,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18373,&quot;bossName&quot;:&quot;Exarch Maladaar&quot;,&quot;bossLvl&quot;:67,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27867,&quot;name&quot;:&quot;Boots of the Unjust&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Leather)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+201 Armor&quot;,&quot;+25 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 64.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 19.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 13.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:32925,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:25,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18373,&quot;bossName&quot;:&quot;Exarch Maladaar&quot;,&quot;bossLvl&quot;:67,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Boots of the Unjust</span></td>
                         <td><span class="slot-text">Feet (Leather)</span></td>
                         <td><span class="stat-text">+201 Armor, +25 Stamina</span></td>
                         <td>
                             <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
                         </td>
                         <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
                             <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">115</td>
@@ -1132,10 +1159,10 @@
                     </tr>
                     <tr class="item-row"
                         data-roles="tank"
-                        data-classes="warrior paladin dk"
+                        data-classes="warrior paladin dk druid"
                         data-req="70"
                         data-item-id="27871"
-                        data-item-json="{&quot;id&quot;:27871,&quot;name&quot;:&quot;Maladaar&#x27;s Blessed Chaplet&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+30 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 12.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 20.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8788,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:87,&quot;sellCopper&quot;:88,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18373,&quot;bossName&quot;:&quot;Exarch Maladaar&quot;,&quot;bossLvl&quot;:67,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        data-item-json="{&quot;id&quot;:27871,&quot;name&quot;:&quot;Maladaar&#x27;s Blessed Chaplet&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:115,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+30 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 12.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 20.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:8788,&quot;sellGold&quot;:0,&quot;sellSilver&quot;:87,&quot;sellCopper&quot;:88,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:16.666666666666668,&quot;chanceStr&quot;:&quot;16.7%&quot;,&quot;bossId&quot;:18373,&quot;bossName&quot;:&quot;Exarch Maladaar&quot;,&quot;bossLvl&quot;:67,&quot;mapId&quot;:558,&quot;dungeon&quot;:&quot;Auchenai Crypts&quot;,&quot;page&quot;:&quot;auchenai-crypts.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
                         <td><span style="color:#0070dd; font-weight:600;">Maladaar's Blessed Chaplet</span></td>
                         <td><span class="slot-text">Neck</span></td>
                         <td><span class="stat-text">+30 Stamina</span></td>
@@ -1146,6 +1173,7 @@
                             <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
                             <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
                             <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
                         </td>
                         <td class="text-end">115</td>
                         <td class="text-end">16.7%</td>
