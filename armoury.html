@@ -10854,6 +10854,13 @@
     // resto shaman's by Spell Power — no per-role bonus table needed.
     const BONUS_ANCHOR_STATS = ['Strength', 'Agility', 'Intellect', 'Spirit', 'Spell Power', 'Stamina'];
     const DEFAULT_BONUS_EQUIV = 22;   // flat floor for any non-stat bonus
+    // A set well below your level shouldn't win a slot on set-bonus credit alone.
+    // FULL credit if the set is within SET_BONUS_FULL_MARGIN levels of you, fading
+    // to ZERO by SET_BONUS_ZERO_MARGIN levels below. Kills trivial old sets
+    // (il36-43 Scarlet/Fang, req<=40) while keeping current dungeon/raid sets
+    // (req 54-60) at full value. Candidate req level is the set's level proxy.
+    const SET_BONUS_FULL_MARGIN = 6;
+    const SET_BONUS_ZERO_MARGIN = 20;
     // Curated overrides, keyed "Set Name|pieces". Build-defining raid-tier
     // bonuses sit high; solid-but-not-defining procs mid; pure defensive/flavour
     // procs low. Anything not listed rides DEFAULT_BONUS_EQUIV. Tunable — these
@@ -10941,7 +10948,16 @@
                 score += bonusEquiv(setObj.name, T) * bonusAnchorWeight(weights) * (gained / T);
             }
         }
-        return score;
+        // Under-level discount — scale the whole set bonus by how close the set
+        // is to your level (candidate req = the set's level proxy). Full credit
+        // at/above your level, 0 by SET_LEVEL_WINDOW levels below. Keeps an old
+        // dungeon set from winning a slot on set-bonus credit alone.
+        const charLvl = upState.charLevel || (it.req || 0);
+        const reqLvl  = it.req || charLvl;
+        const span    = SET_BONUS_ZERO_MARGIN - SET_BONUS_FULL_MARGIN;
+        const lvlFactor = Math.min(1, Math.max(0,
+            (reqLvl - (charLvl - SET_BONUS_ZERO_MARGIN)) / span));
+        return score * lvlFactor;
     }
 
     // Single in-memory cache of loot-data.json. Prefer the embedded
@@ -11606,6 +11622,18 @@
                 guid ? api('/mail/' + guid).catch(() => ({ mail: [] }))
                      : Promise.resolve({ mail: [] }),
             ]);
+            // Default the finder to the character's ACTUAL spec (detected from
+            // talents by the API) rather than the class's first viable role — e.g.
+            // a Ret paladin opens on 'melee', not 'tank'. Only on a fresh entry
+            // (a return from the AH keeps the user's manual pick) and only if the
+            // detected role is viable for the class. The role toggle still works.
+            const viableRoles = CLASS_VIABLE_ROLES[upState.classSlug] || [];
+            if (!cameFromAH && up && up.role && viableRoles.includes(up.role)
+                    && up.role !== upState.role) {
+                upState.role = up.role;
+                updateUpgradeContext();
+                syncRoleTabs();
+            }
             // Items waiting in the mailbox (e.g. an AH purchase not yet
             // collected). Surface one under EQUIPPED for any EMPTY slot it fits,
             // so an already-bought upgrade shows instead of "(none)" and you
