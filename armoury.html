@@ -11062,9 +11062,15 @@
         // is {Agility, Haste}: the Agility zeroes out but the melee-proc Haste
         // (only fires on melee swings) would otherwise score. If an enchant
         // carries ANY melee-only stat as a direct key it's a melee enchant, so
-        // veto the whole thing for the heal role. ("All Stats" is handled below
-        // and intentionally excluded — it also gives Int/Spirit/Stamina.)
-        if (role === 'heal') {
+        // veto the whole thing for a caster. ("All Stats" is handled below and
+        // intentionally excluded — it also gives Int/Spirit/Stamina.)
+        // Applies to healers AND caster-DPS. Gated on the caster ROLE, not just
+        // "has schools": Enhancement shaman / Feral druid are melee specs of a
+        // class that carries caster schools, and they genuinely want Mongoose —
+        // role 'melee' skips the veto; role 'ranged' only vetoes when the char
+        // is actually a caster (schools set), so hunters keep their melee procs.
+        const isCaster = role === 'heal' || (role === 'ranged' && schools && schools.length);
+        if (isCaster) {
             for (const m of ['Strength', 'Agility', 'Attack Power', 'Armor Pen', 'Expertise'])
                 if ((stats || {})[m]) return 0;
         }
