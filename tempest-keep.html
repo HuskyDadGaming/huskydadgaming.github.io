@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tempest Keep: The Eye — KCraft</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💫</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #1a1a1a; color: #ddd; padding-bottom: 3rem; }
+        .container { max-width: 1100px; }
+        h1, h2, h3 { color: #ffd100; }
+        a { color: #4ea8de; text-decoration: none; }
+        a:hover { color: #88c5f0; }
+        .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .card { background: #232323; border: 1px solid #3a3a3a; margin-bottom: 1.5rem; }
+        .card-title { color: #ffd100; margin-bottom: 0.25rem; }
+        .boss-meta { color: #777; font-size: 0.85rem; margin-bottom: 1rem; }
+        .loot-group-heading { font-size: 0.8rem; font-weight: 700; letter-spacing: .04em;
+            text-transform: uppercase; color: #9aa; margin: 0.25rem 0 0.35rem; }
+        .loot-group-heading.heroic { color: #ff8c42; }
+
+        /* Collapsible boss cards. The whole card is a <details> element;
+           clicking the summary header toggles the items table below.
+           Defaults to open so the page reads exactly like before — the
+           collapse is opt-in, useful when scrolling through a dungeon
+           with many bosses. The trash section's inner cards inherit
+           this behavior since they share render_boss_card.
+           Arrow is anchored to the top-right corner of the card via
+           absolute positioning so it lines up consistently regardless
+           of how long the boss-meta line wraps. */
+        .boss-card {
+            display: block;  /* override Bootstrap card flex */
+            padding: 0;
+            position: relative;
+        }
+        .boss-card > summary {
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            /* Right padding leaves room for the absolutely-positioned arrow */
+            padding: 0.85rem 2.5rem 0.85rem 1rem;
+            transition: background 0.15s;
+        }
+        .boss-card > summary:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .boss-card > summary::-webkit-details-marker { display: none; }
+        .boss-card::after {
+            content: '▼';
+            position: absolute;
+            top: 0.95rem;
+            right: 1rem;
+            color: #888;
+            font-size: 0.95em;
+            pointer-events: none;  /* let the click pass through to summary */
+            transition: color 0.15s;
+        }
+        .boss-card[open]::after { content: '▲'; color: #ffd100; }
+        /* Title is the only line in summary now — meta moved into content
+           so it collapses with the table. No bottom margin needed. */
+        .boss-card > summary .card-title { margin-bottom: 0; }
+        .boss-card > .boss-card-content {
+            padding: 0.5rem 1rem 1rem;
+        }
+        .boss-card > .boss-card-content .boss-meta {
+            margin-top: 0;
+            margin-bottom: 0.85rem;
+        }
+        table.table { color: #ddd; margin-bottom: 0; }
+        table.table > :not(caption) > * > * {
+            background-color: transparent; color: #ddd;
+            border-bottom-color: #3a3a3a; vertical-align: middle;
+        }
+        table.table > thead {
+            color: #999; font-size: 0.78rem;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        table.table tbody tr:hover { background: #2a2a2a; }
+
+        .filter-bar {
+            margin-bottom: 1.5rem; padding: 1rem;
+            background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        /* Collapsible filter wrapper. The whole <details> sticks to the top
+           of the viewport on scroll so users can change filters from
+           anywhere on a long dungeon page without scrolling back up.
+           Desktop: summary is hidden, content always visible. Mobile:
+           closed by default (set by dungeon_filter.js on init), summary
+           shown as a single-line summary that toggles the filter content.
+           The HTML defaults to <details open> so non-JS users get the
+           working default of expanded. */
+        .filter-bar-collapsible {
+            margin-bottom: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #1a1a1a;  /* matches body so scrolled content doesn't peek through */
+        }
+        .filter-bar-collapsible > .filter-bar {
+            margin-bottom: 0;  /* details element provides outer spacing */
+        }
+        .filter-bar-collapsible > summary {
+            display: none;  /* hidden on desktop */
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            padding: 0.7rem 0.9rem;
+            background: #232323;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            color: #ccc;
+            font-size: 0.92rem;
+        }
+        .filter-bar-collapsible > summary::-webkit-details-marker { display: none; }
+        .filter-bar-collapsible > summary::after {
+            content: ' ▼';
+            color: #888;
+            float: right;
+            font-size: 0.85em;
+        }
+        .filter-bar-collapsible[open] > summary::after { content: ' ▲'; }
+        .filter-bar-collapsible[open] > summary {
+            border-radius: 6px 6px 0 0;
+            border-bottom: 0;
+            margin-bottom: 0;
+        }
+        .filter-bar-collapsible[open] > .filter-bar {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+        .filter-row {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            align-items: center; margin-bottom: 8px;
+        }
+        .filter-row:last-child { margin-bottom: 0; }
+        .filter-row > .label { color: #999; font-size: 0.9rem; min-width: 90px; }
+        .filter-btn {
+            padding: 8px 14px; border-radius: 5px; border: 2px solid #555;
+            background: #2a2a2a; color: #ccc; cursor: pointer;
+            font-size: 0.85rem; transition: all 0.2s ease;
+        }
+        .filter-btn:hover { background: #3a3a3a; border-color: #777; }
+        .filter-btn.active {
+            background: #ffd100; color: #1a1a1a; border-color: #ffd100;
+            font-weight: 600;
+        }
+        /* Apply / Reset buttons. Visually identical across all pages
+           (Find Loot tab on index.html uses the same .reset-btn spec).
+           Apply is the primary action (brand yellow); Reset is destructive
+           but stays subtle so it doesn't shout for attention.
+           Override .filter-btn padding/border so these read as polished
+           action buttons rather than the chunky role-toggle base style.
+           Apply is hidden on desktop — the filter bar is always visible
+           there so collapsing-via-Apply isn't useful — and only shown
+           inside the mobile @media block below. */
+        .filter-btn.apply-btn {
+            display: none;
+            margin-left: 10px; padding: 6px 14px;
+            background: #ffd100; color: #1a1a1a;
+            border: 1px solid #ffd100; border-radius: 4px;
+            font-size: 0.85rem; font-weight: 600;
+        }
+        .filter-btn.apply-btn:hover { background: #ffe14d; border-color: #ffe14d; }
+        .filter-btn.reset-btn {
+            margin-left: 10px; padding: 6px 14px;
+            background: #4a1818; color: #ff9b9b;
+            border: 1px solid #6a2828; border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        .filter-btn.reset-btn:hover { background: #6a2828; border-color: #6a2828; }
+        /* Reset lives at the right edge of the Quality row (mirrors the
+           Find Loot finder bar). margin-left:auto pushes it past the
+           dropdown to the end of the flex row on desktop. */
+        .filter-row.row-quality .filter-btn.reset-btn { margin-left: auto; }
+        /* Desktop hides the Apply row entirely (Apply is mobile-only and
+           is the only control left in row-buttons after Reset moved out).
+           Mobile re-enables the row inside the @media block below. */
+        .filter-row.row-buttons { display: none; }
+
+        /* Expand all / Collapse all controls — sit between the filter
+           bar and the first boss card so they're always reachable. */
+        .expand-controls {
+            display: flex; gap: 0.5rem; flex-wrap: wrap;
+            margin: 0 0 1rem 0;
+        }
+        .expand-controls .expand-btn {
+            padding: 6px 12px; background: #2d2d2d; color: #ccc;
+            border: 1px solid #3a3a3a; border-radius: 4px;
+            cursor: pointer; font-size: 0.85rem;
+            transition: color 0.1s ease, border-color 0.1s ease;
+        }
+        .expand-controls .expand-btn:hover {
+            color: #ffd100; border-color: #ffd100;
+        }
+
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown select {
+            padding: 8px 12px; background: #2a2a2a; color: #ccc;
+            border: 2px solid #555; border-radius: 5px; font-size: 0.85rem;
+            min-width: 150px;
+        }
+
+        .role-pill {
+            display: inline-block; padding: 2px 7px; border-radius: 4px;
+            font-size: 0.75rem; margin-right: 3px; cursor: default;
+            font-weight: 600;
+        }
+        .class-pill {
+            display: inline-block; width: 18px; height: 18px;
+            line-height: 18px; text-align: center; border-radius: 3px;
+            font-size: 0.7rem; font-weight: 700;
+            color: #1a1a1a; margin-right: 2px; cursor: default;
+        }
+        .pill-empty {
+            color: #555; font-size: 1rem; font-weight: 400; cursor: default;
+        }
+
+        .no-loot { color: #777; font-style: italic; text-align: center; padding: 1rem; }
+        .stat-text { color: #4ea8de; font-size: 0.85rem; }
+        .slot-text { color: #bbb; font-size: 0.85rem; }
+
+        /* Notable trash collapsible — secondary content, visually quieter */
+        .trash-section {
+            margin-top: 1.5rem;
+            border-top: 1px solid #333;
+            padding-top: 1rem;
+        }
+        .trash-section > summary {
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ddd;
+            padding: 0.5rem 0;
+            list-style: none;
+            user-select: none;
+        }
+        .trash-section > summary::-webkit-details-marker { display: none; }
+        .trash-section > summary::before {
+            content: '▶';
+            display: inline-block;
+            margin-right: 8px;
+            color: #888;
+            transition: transform 0.15s ease;
+        }
+        .trash-section[open] > summary::before { transform: rotate(90deg); }
+        .trash-section > summary:hover { color: #ffd100; }
+        .trash-section .trash-count { color: #888; font-weight: normal; font-size: 0.95rem; }
+        .trash-section .trash-blurb {
+            color: #999; font-size: 0.85rem; font-style: italic;
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        /* Sortable headers (sortable.js wires up clicks) */
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.1s ease;
+            white-space: nowrap;  /* keep header text + indicator on one line */
+        }
+        th.sortable:hover { color: #ffd100; }
+        th.sortable::after {
+            content: ' ⇅';
+            color: #444;
+            font-size: 0.75em;
+            margin-left: 4px;
+        }
+        th.sortable.sort-asc::after  { content: ' ▲'; color: #ffd100; }
+        th.sortable.sort-desc::after { content: ' ▼'; color: #ffd100; }
+
+        /* ============================================================
+           Mobile (≤600px): boss-card tables become labeled cards.
+           Mirrors the Find Loot card pattern for consistency.
+           Column order: 1=ITEM 2=SLOT 3=STATS 4=ROLES 5=CLASSES 6=ILVL 7=DROP
+           ============================================================ */
+        @media (max-width: 600px) {
+            body { font-size: 0.92rem; }
+            .container { padding: 0 0.5rem; }
+
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.2rem; }
+            .summary-block { padding: 0.7rem 0.8rem; font-size: 0.88rem; }
+
+            /* Filter bar: each row stacks (label on top, controls below).
+               Role buttons go into a 2-col grid for a uniform look — when
+               there's an odd count (we have 5 roles) the last button spans
+               both columns so nothing is stranded as a half-width cell.
+               Class/Quality/Reset stack vertically as full-width controls. */
+            /* Filter bar layout. Each row gets a named class (.row-class,
+               .row-role, .row-quality, .row-buttons, .row-legend) for
+               targeted styling. HTML order is the visual order on mobile:
+               Class → Role → Quality → Reset → Apply → Legend. */
+            .filter-bar { padding: 0.75rem; }
+
+            /* Collapsible summary visible on mobile only */
+            .filter-bar-collapsible > summary {
+                display: block;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+                margin-bottom: 12px;
+            }
+            .filter-row > .label {
+                min-width: 0 !important;
+                font-size: 0.85rem;
+                margin-bottom: 0;
+                /* Override inline margin-left:18px on the Quality label */
+                margin-left: 0 !important;
+            }
+
+            /* Class & Quality dropdown rows: full-width selects */
+            .filter-row.row-class .dropdown,
+            .filter-row.row-quality .dropdown {
+                width: 100%;
+            }
+            .filter-row.row-class select,
+            .filter-row.row-quality select {
+                width: 100%;
+                font-size: 0.9rem;
+                padding: 8px 10px;
+            }
+
+            /* Role row: 2-col button grid, label spans full width.
+               5 buttons total — the lone last one (odd-position) spans
+               both cols so nothing is stranded as a half-width cell. */
+            .filter-row.row-role {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+                align-items: stretch;
+            }
+            .filter-row.row-role > .label {
+                grid-column: 1 / -1;
+            }
+            .filter-row.row-role > .filter-btn {
+                font-size: 0.82rem;
+                padding: 8px 10px;
+                margin: 0;
+            }
+            .filter-row.row-role > .filter-btn:last-child:nth-child(odd) {
+                grid-column: 1 / -1;
+            }
+
+            /* Apply row (mobile only — desktop hides it via the base
+               `.filter-row.row-buttons { display: none }` rule). Reset
+               now lives in the Quality row, so this row only contains
+               Apply; flex:1 stretches it to full width. */
+            .filter-row.row-buttons {
+                display: flex;
+                flex-direction: row;
+                gap: 6px;
+            }
+            .filter-row.row-buttons .filter-btn.apply-btn {
+                display: block;
+                flex: 1 1 0;
+                margin-left: 0;
+                padding: 10px;
+            }
+            /* Reset (mobile): stacks below the Quality dropdown as a
+               full-width control. margin-left:auto from desktop is
+               cancelled — column flow makes it a vertical stack. */
+            .filter-row.row-quality .filter-btn.reset-btn {
+                margin-left: 0;
+                padding: 10px;
+                width: 100%;
+            }
+
+            /* Legend: pills wrap naturally, just make text smaller. Each
+               entry is a .legend-item that holds the pill + name together
+               so multi-word classes (e.g. Death Knight) never split. */
+            .filter-row.row-legend .legend {
+                font-size: 0.8rem !important;
+                line-height: 1.7;
+            }
+            .filter-row.row-legend .legend-item {
+                white-space: nowrap;
+                display: inline-block;
+                margin-right: 8px;
+            }
+
+            /* Boss cards: tighter, full-width. Padding lives on summary
+               and content children (the card is a <details>). */
+            .boss-card { padding: 0; margin-bottom: 1rem; }
+            .boss-card > summary { padding: 0.7rem 0.85rem; }
+            .boss-card > .boss-card-content { padding: 0 0.85rem 0.85rem; }
+            .boss-card h3 { font-size: 1.1rem; }
+            .boss-meta { font-size: 0.8rem; }
+
+            /* Table → card list. Sortable headers don't help on mobile
+               since each row is a card with labeled fields. */
+            .boss-card table,
+            .boss-card thead,
+            .boss-card tbody,
+            .boss-card tr,
+            .boss-card td { display: block; width: 100%; }
+            .boss-card thead { display: none; }
+
+            .boss-card tbody tr {
+                background: #232323; border: 1px solid #2d2d2d;
+                border-radius: 6px;
+                padding: 0.65rem 0.85rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .boss-card tbody tr td {
+                padding: 4px 0; border: 0;
+                font-size: 0.85rem; line-height: 1.5;
+            }
+            .boss-card tbody tr td::before {
+                display: block;
+                color: #777; font-size: 0.7rem;
+                text-transform: uppercase; letter-spacing: 0.5px;
+                margin-bottom: 2px;
+            }
+            .boss-card tbody tr td:nth-child(2)::before { content: 'Slot'; }
+            .boss-card tbody tr td:nth-child(3)::before { content: 'Stats'; }
+            .boss-card tbody tr td:nth-child(4)::before { content: 'Roles'; }
+            .boss-card tbody tr td:nth-child(5)::before { content: 'Classes'; }
+            .boss-card tbody tr td:nth-child(6)::before { content: 'iLvl'; }
+            .boss-card tbody tr td:nth-child(7)::before { content: 'Drop'; }
+
+            /* Stats list: inline with spacing */
+            .boss-card .stat-text {
+                font-size: 0.82rem;
+            }
+            .boss-card .role-pill, .boss-card .class-pill {
+                margin: 0 2px 2px 0; vertical-align: middle;
+            }
+
+            /* Item name as full-width header */
+            .boss-card tbody tr td:nth-child(1) {
+                font-size: 0.95rem; font-weight: 600;
+                margin-bottom: 6px; padding: 0 0 6px 0;
+                border-bottom: 1px solid #2d2d2d;
+            }
+            .boss-card tbody tr td:nth-child(1)::before { content: none; }
+
+            /* Inline label/value for short fields: Slot, iLvl, Drop.
+               Override .text-end which would right-align the value. */
+            .boss-card tbody tr td:nth-child(2),
+            .boss-card tbody tr td:nth-child(6),
+            .boss-card tbody tr td:nth-child(7) {
+                display: flex; gap: 12px;
+                align-items: baseline;
+                font-size: 0.82rem;
+                text-align: left !important;
+            }
+            .boss-card tbody tr td:nth-child(2)::before,
+            .boss-card tbody tr td:nth-child(6)::before,
+            .boss-card tbody tr td:nth-child(7)::before {
+                display: inline-block; margin-bottom: 0;
+            }
+
+            /* Trash section: tighten */
+            .trash-section > summary { font-size: 1rem; }
+            .trash-section .trash-blurb {
+                margin: 0.5rem 0 0.75rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html" style="color: #ffd100;">⚔️ KCraft</a>
+    </div>
+</nav>
+
+<div class="container">
+    <p class="mb-2"><a href="index.html">← All dungeons</a></p>
+
+    <h1>💫 Tempest Keep: The Eye</h1>
+    <p class="mb-3" style="color:#bbb; font-style:italic;">"The Eye of Tempest Keep — Kael'thas Sunstrider's crystalline satellite fortress in Netherstorm, where the blood elf prince marshals the Burning Legion's stolen arsenal before his betrayal is laid bare."</p>
+
+    <div class="alert alert-dark mt-3 mb-4" style="background:#232323; border:1px solid #3a3a3a; color:#ddd;">
+        <h5 class="alert-heading" style="color:#ffd100;">🎯 The Eye Loot Summary</h5>
+        <p class="mb-2"><strong style="color:#4ea8de;">Equipment Focus:</strong> TBC 25-man Tier 5 gear — Kael'thas's tier tokens, his seven lootable Legendary weapons in the fight, and the vial and weapon rewards of the final encounter.</p>
+        <ul class="mb-0" style="margin-left: 0; padding-left: 1.2rem;">
+            <li><strong style="color:#4ea8de;">Best for:</strong> Level 70</li>
+            <li><strong style="color:#4ea8de;">Raid size:</strong> 25 players</li>
+            <li><strong style="color:#4ea8de;">Boss levels:</strong> 73 (Elite)</li>
+            <li><strong style="color:#4ea8de;">Famous for:</strong> The Kael'thas Sunstrider five-phase gauntlet and the reborn phoenix-god Al'ar</li>
+            <li><strong style="color:#4ea8de;">Includes:</strong> Al'ar's rebirth phases, Void Reaver's Pounding, Solarian's shadow-form, and the epic Kael'thas encounter</li>
+        </ul>
+    </div>
+
+    <details class="filter-bar-collapsible" open>
+    <summary class="filter-summary">🔧 Filters · all 51 items</summary>
+    <div class="filter-bar">
+        <div class="filter-row row-class">
+            <span class="label">Class:</span>
+            <div class="dropdown">
+                <select id="class-dropdown">
+                    <option value="all">All classes (51)</option>
+                    <option value="warrior">Warrior (19)</option>
+                    <option value="paladin">Paladin (26)</option>
+                    <option value="hunter">Hunter (14)</option>
+                    <option value="rogue">Rogue (11)</option>
+                    <option value="priest">Priest (17)</option>
+                    <option value="dk">Death Knight (16)</option>
+                    <option value="shaman">Shaman (27)</option>
+                    <option value="mage">Mage (16)</option>
+                    <option value="warlock">Warlock (17)</option>
+                    <option value="druid">Druid (21)</option>
+                </select>
+            </div>
+        </div>
+        <div class="filter-row row-role">
+            <span class="label">Role:</span>
+            <button class="filter-btn active" data-role="all">All (<span id="count-all">51</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">16</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">27</span>)</button>
+            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">20</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">37</span>)</button>
+        </div>
+        <div class="filter-row row-quality">
+            <span class="label">Quality:</span>
+            <div class="dropdown">
+                <select id="quality-dropdown">
+                    <option value="">Any quality</option>
+                    <option value="2" style="color:#1eff00">Uncommon and above</option>
+                    <option value="3" style="color:#0070dd">Rare and above</option>
+                    <option value="4" style="color:#a335ee">Epic only</option>
+                </select>
+            </div>
+            <button class="filter-btn reset-btn" id="reset-filters">Reset all</button>
+        </div>
+        <div class="filter-row row-buttons">
+            <button class="filter-btn apply-btn" id="apply-filters">Apply</button>
+        </div>
+        <div class="filter-row row-legend">
+            <span class="label">Legend:</span>
+            <div class="legend" style="font-size: 0.85rem;">
+                <span class="legend-item"><span class="class-pill" style="background:#C79C6E;color:#1a1a1a;">W</span> Warrior</span>
+                <span class="legend-item"><span class="class-pill" style="background:#F58CBA;color:#1a1a1a;">P</span> Paladin</span>
+                <span class="legend-item"><span class="class-pill" style="background:#ABD473;color:#1a1a1a;">H</span> Hunter</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FFF569;color:#1a1a1a;">R</span> Rogue</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FFFFFF;color:#1a1a1a;">P</span> Priest</span>
+                <span class="legend-item"><span class="class-pill" style="background:#C41F3B;color:#1a1a1a;">K</span> Death Knight</span>
+                <span class="legend-item"><span class="class-pill" style="background:#0070DE;color:#1a1a1a;">S</span> Shaman</span>
+                <span class="legend-item"><span class="class-pill" style="background:#69CCF0;color:#1a1a1a;">M</span> Mage</span>
+                <span class="legend-item"><span class="class-pill" style="background:#9482C9;color:#1a1a1a;">W</span> Warlock</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FF7D0A;color:#1a1a1a;">D</span> Druid</span>
+            </div>
+        </div>
+    </div>
+    </details>
+
+    <div class="expand-controls">
+        <button class="expand-btn" id="expand-all">▼ Expand all</button>
+        <button class="expand-btn" id="collapse-all">▲ Collapse all</button>
+    </div>
+
+
+    <!-- Al'ar -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Al'ar</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Kael'thas's phoenix-god, reborn from its own ashes · Two flight phases with platform-hopping Flame Buffet and Flame Patches; rebirths once as a Phoenix — burn the Embers; Meteor, Dive Bomb · Level 73 Elite · Entry 19514</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="melee ranged"
+                        data-classes="hunter rogue"
+                        data-req="70"
+                        data-item-id="29949"
+                        data-item-json="{&quot;id&quot;:29949,&quot;name&quot;:&quot;Arcanite Steam-Pistol&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:134,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Gun&quot;,&quot;damage&quot;:&quot;177–329 Damage&quot;,&quot;speed&quot;:2.9,&quot;dps&quot;:87.2,&quot;stats&quot;:[&quot;+20 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 19.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:99160,&quot;sellGold&quot;:9,&quot;sellSilver&quot;:91,&quot;sellCopper&quot;:60,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:19514,&quot;bossName&quot;:&quot;Al&#x27;ar&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Arcanite Steam-Pistol</span></td>
+                        <td><span class="slot-text">Ranged</span></td>
+                        <td><span class="stat-text">+20 Agility</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                        </td>
+                        <td class="text-end">134</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
+                        data-req="70"
+                        data-item-id="29922"
+                        data-item-json="{&quot;id&quot;:29922,&quot;name&quot;:&quot;Band of Al&#x27;ar&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+24 Stamina&quot;,&quot;+23 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 37.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:60256,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:56,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:19514,&quot;bossName&quot;:&quot;Al&#x27;ar&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Band of Al'ar</span></td>
+                        <td><span class="slot-text">Finger</span></td>
+                        <td><span class="stat-text">+24 Stamina, +23 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee ranged"
+                        data-classes="warrior hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="29948"
+                        data-item-json="{&quot;id&quot;:29948,&quot;name&quot;:&quot;Claw of the Phoenix&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:134,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Off-Hand&quot;,&quot;slotFilter&quot;:&quot;Off-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:13,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Fist&quot;,&quot;damage&quot;:&quot;101–189 Damage&quot;,&quot;speed&quot;:1.5,&quot;dps&quot;:96.7,&quot;stats&quot;:[&quot;+21 Agility&quot;,&quot;+30 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 40.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:131728,&quot;sellGold&quot;:13,&quot;sellSilver&quot;:17,&quot;sellCopper&quot;:28,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:19514,&quot;bossName&quot;:&quot;Al&#x27;ar&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Claw of the Phoenix</span></td>
+                        <td><span class="slot-text">Off-Hand</span></td>
+                        <td><span class="stat-text">+21 Agility, +30 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">134</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="70"
+                        data-item-id="29921"
+                        data-item-json="{&quot;id&quot;:29921,&quot;name&quot;:&quot;Fire Crest Breastplate&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+900 Armor&quot;,&quot;+36 Stamina&quot;,&quot;+34 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 43.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 13 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 34.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:140,&quot;sellPrice&quot;:79504,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:95,&quot;sellCopper&quot;:4,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:19514,&quot;bossName&quot;:&quot;Al&#x27;ar&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Fire Crest Breastplate</span></td>
+                        <td><span class="slot-text">Chest (Mail)</span></td>
+                        <td><span class="stat-text">+900 Armor, +36 Stamina, +34 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="29947"
+                        data-item-json="{&quot;id&quot;:29947,&quot;name&quot;:&quot;Gloves of the Searing Grip&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+252 Armor&quot;,&quot;+33 Agility&quot;,&quot;+37 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 66.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your expertise rating by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:31454,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:14,&quot;sellCopper&quot;:54,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:19514,&quot;bossName&quot;:&quot;Al&#x27;ar&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Gloves of the Searing Grip</span></td>
+                        <td><span class="slot-text">Hands (Leather)</span></td>
+                        <td><span class="stat-text">+252 Armor, +33 Agility, +37 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="29918"
+                        data-item-json="{&quot;id&quot;:29918,&quot;name&quot;:&quot;Mindstorm Wristbands&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+94 Armor&quot;,&quot;+13 Stamina&quot;,&quot;+13 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 36.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 23.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:26216,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:62,&quot;sellCopper&quot;:16,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:19514,&quot;bossName&quot;:&quot;Al&#x27;ar&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Mindstorm Wristbands</span></td>
+                        <td><span class="slot-text">Wrist (Cloth)</span></td>
+                        <td><span class="stat-text">+94 Armor, +13 Stamina, +13 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter rogue dk shaman"
+                        data-req="70"
+                        data-item-id="29924"
+                        data-item-json="{&quot;id&quot;:29924,&quot;name&quot;:&quot;Netherbane&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:134,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;175–327 Damage&quot;,&quot;speed&quot;:2.6,&quot;dps&quot;:96.5,&quot;stats&quot;:[&quot;+25 Agility&quot;,&quot;+21 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 40.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:105,&quot;sellPrice&quot;:139688,&quot;sellGold&quot;:13,&quot;sellSilver&quot;:96,&quot;sellCopper&quot;:88,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:19514,&quot;bossName&quot;:&quot;Al&#x27;ar&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Netherbane</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+25 Agility, +21 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">134</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
+                        data-req="70"
+                        data-item-id="29920"
+                        data-item-json="{&quot;id&quot;:29920,&quot;name&quot;:&quot;Phoenix-Ring of Rebirth&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+24 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 29.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 13 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:60256,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:56,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:19514,&quot;bossName&quot;:&quot;Al&#x27;ar&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Phoenix-Ring of Rebirth</span></td>
+                        <td><span class="slot-text">Finger</span></td>
+                        <td><span class="stat-text">+24 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank"
+                        data-classes="warrior paladin dk druid"
+                        data-req="70"
+                        data-item-id="29925"
+                        data-item-json="{&quot;id&quot;:29925,&quot;name&quot;:&quot;Phoenix-Wing Cloak&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+108 Armor&quot;,&quot;+37 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 22.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 27.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:40322,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:3,&quot;sellCopper&quot;:22,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:19514,&quot;bossName&quot;:&quot;Al&#x27;ar&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Phoenix-Wing Cloak</span></td>
+                        <td><span class="slot-text">Back</span></td>
+                        <td><span class="stat-text">+108 Armor, +37 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
+                        data-req="70"
+                        data-item-id="29923"
+                        data-item-json="{&quot;id&quot;:29923,&quot;name&quot;:&quot;Talisman of the Sun King&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Held&quot;,&quot;slotFilter&quot;:&quot;Held&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+24 Intellect&quot;,&quot;+27 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 32.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 8 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:203059,&quot;sellGold&quot;:20,&quot;sellSilver&quot;:30,&quot;sellCopper&quot;:59,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:19514,&quot;bossName&quot;:&quot;Al&#x27;ar&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Talisman of the Sun King</span></td>
+                        <td><span class="slot-text">Held</span></td>
+                        <td><span class="stat-text">+24 Intellect, +27 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles=""
+                        data-classes=""
+                        data-req="70"
+                        data-item-id="30448"
+                        data-item-json="{&quot;id&quot;:30448,&quot;name&quot;:&quot;Talon of Al&#x27;ar&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[&quot;hunter&quot;],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Your Arcane Shot ability increases the damage dealt by all other damaging shots by 40 for 6 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:72039,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:20,&quot;sellCopper&quot;:39,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:19514,&quot;bossName&quot;:&quot;Al&#x27;ar&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Talon of Al'ar</span></td>
+                        <td><span class="slot-text">Trinket</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee ranged"
+                        data-classes="warrior hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="32944"
+                        data-item-json="{&quot;id&quot;:32944,&quot;name&quot;:&quot;Talon of the Phoenix&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:134,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:13,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Fist&quot;,&quot;damage&quot;:&quot;182–339 Damage&quot;,&quot;speed&quot;:2.7,&quot;dps&quot;:96.5,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 52.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 19.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 15.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:134251,&quot;sellGold&quot;:13,&quot;sellSilver&quot;:42,&quot;sellCopper&quot;:51,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:19514,&quot;bossName&quot;:&quot;Al&#x27;ar&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Talon of the Phoenix</span></td>
+                        <td><span class="slot-text">Main Hand</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">134</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles=""
+                        data-classes=""
+                        data-req="70"
+                        data-item-id="30447"
+                        data-item-json="{&quot;id&quot;:30447,&quot;name&quot;:&quot;Tome of Fiery Redemption&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[&quot;paladin&quot;],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Each time you cast a spell, there is chance you will gain 290 spell power.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:72039,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:20,&quot;sellCopper&quot;:39,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:19514,&quot;bossName&quot;:&quot;Al&#x27;ar&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Tome of Fiery Redemption</span></td>
+                        <td><span class="slot-text">Trinket</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Void Reaver -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Void Reaver</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">A colossal arcane golem forged from the Legion's plans · Pounding (raid-wide — run out of range), Arcane Orb (targets the far-ranged), Knock Away — a loot-piñata gear check · Level 73 Elite · Entry 19516</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="29986"
+                        data-item-json="{&quot;id&quot;:29986,&quot;name&quot;:&quot;Cowl of the Grand Engineer&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+175 Armor&quot;,&quot;+22 Stamina&quot;,&quot;+27 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 53.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 16.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 35.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:37590,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:75,&quot;sellCopper&quot;:90,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:19516,&quot;bossName&quot;:&quot;Void Reaver&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Cowl of the Grand Engineer</span></td>
+                        <td><span class="slot-text">Head (Cloth)</span></td>
+                        <td><span class="stat-text">+175 Armor, +22 Stamina, +27 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="paladin priest shaman druid"
+                        data-req="70"
+                        data-item-id="30619"
+                        data-item-json="{&quot;id&quot;:30619,&quot;name&quot;:&quot;Fel Reaver&#x27;s Piston&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Your direct healing spells have a chance to place a heal over time on your target, healing 500 over 12 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 20 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:91160,&quot;sellGold&quot;:9,&quot;sellSilver&quot;:11,&quot;sellCopper&quot;:60,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:19516,&quot;bossName&quot;:&quot;Void Reaver&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Fel Reaver's Piston</span></td>
+                        <td><span class="slot-text">Trinket</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk"
+                        data-req="70"
+                        data-item-id="29983"
+                        data-item-json="{&quot;id&quot;:29983,&quot;name&quot;:&quot;Fel-Steel Warhelm&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Plate)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1306 Armor&quot;,&quot;+46 Strength&quot;,&quot;+46 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 44.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 30.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:64912,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:49,&quot;sellCopper&quot;:12,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:19516,&quot;bossName&quot;:&quot;Void Reaver&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Fel-Steel Warhelm</span></td>
+                        <td><span class="slot-text">Head (Plate)</span></td>
+                        <td><span class="stat-text">+1306 Armor, +46 Strength, +46 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="shaman druid"
+                        data-req="70"
+                        data-item-id="29984"
+                        data-item-json="{&quot;id&quot;:29984,&quot;name&quot;:&quot;Girdle of Zaetar&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Waist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+227 Armor&quot;,&quot;+22 Stamina&quot;,&quot;+23 Intellect&quot;,&quot;+24 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 39.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:31089,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:10,&quot;sellCopper&quot;:89,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:19516,&quot;bossName&quot;:&quot;Void Reaver&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Girdle of Zaetar</span></td>
+                        <td><span class="slot-text">Waist (Leather)</span></td>
+                        <td><span class="stat-text">+227 Armor, +22 Stamina, +23 Intellect, +24 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
+                        data-req="70"
+                        data-item-id="29985"
+                        data-item-json="{&quot;id&quot;:29985,&quot;name&quot;:&quot;Void Reaver Greaves&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Mail)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+787 Armor&quot;,&quot;+37 Agility&quot;,&quot;+33 Stamina&quot;,&quot;+24 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 88.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:105,&quot;sellPrice&quot;:74902,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:49,&quot;sellCopper&quot;:2,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:19516,&quot;bossName&quot;:&quot;Void Reaver&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Void Reaver Greaves</span></td>
+                        <td><span class="slot-text">Legs (Mail)</span></td>
+                        <td><span class="stat-text">+787 Armor, +37 Agility, +33 Stamina, +24 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles=""
+                        data-classes=""
+                        data-req="70"
+                        data-item-id="30450"
+                        data-item-json="{&quot;id&quot;:30450,&quot;name&quot;:&quot;Warp-Spring Coil&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[&quot;rogue&quot;],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Your special attacks have a chance to give you 142 armor penetration rating for 15 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:72039,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:20,&quot;sellCopper&quot;:39,&quot;roles&quot;:[],&quot;classes&quot;:[],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:19516,&quot;bossName&quot;:&quot;Void Reaver&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Warp-Spring Coil</span></td>
+                        <td><span class="slot-text">Trinket</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td>
+                            <span class="pill-empty">—</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk"
+                        data-req="70"
+                        data-item-id="32515"
+                        data-item-json="{&quot;id&quot;:32515,&quot;name&quot;:&quot;Wristguards of Determination&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Plate)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+703 Armor&quot;,&quot;+37 Stamina&quot;,&quot;+19 Strength&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 16.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases the block rating of your shield by 13.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:55,&quot;sellPrice&quot;:45804,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:58,&quot;sellCopper&quot;:4,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:19516,&quot;bossName&quot;:&quot;Void Reaver&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Wristguards of Determination</span></td>
+                        <td><span class="slot-text">Wrist (Plate)</span></td>
+                        <td><span class="stat-text">+703 Armor, +37 Stamina, +19 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- High Astromancer Solarian -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">High Astromancer Solarian</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Kael'thas's shadow-touched astromancer · Splits and teleports with Solarium Priests, Wrath of the Astromancer (bomb — run out), and a Void-form shadow enrage · Level 73 Elite · Entry 18805</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk"
+                        data-req="70"
+                        data-item-id="32267"
+                        data-item-json="{&quot;id&quot;:32267,&quot;name&quot;:&quot;Boots of the Resilient&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Plate)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1105 Armor&quot;,&quot;+51 Stamina&quot;,&quot;+25 Strength&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 17.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases the block rating of your shield by 16.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:67698,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:76,&quot;sellCopper&quot;:98,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:18805,&quot;bossName&quot;:&quot;High Astromancer Solarian&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Boots of the Resilient</span></td>
+                        <td><span class="slot-text">Feet (Plate)</span></td>
+                        <td><span class="stat-text">+1105 Armor, +51 Stamina, +25 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest shaman mage warlock druid"
+                        data-req="70"
+                        data-item-id="29981"
+                        data-item-json="{&quot;id&quot;:29981,&quot;name&quot;:&quot;Ethereum Life-Staff&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:134,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;144–306 Damage&quot;,&quot;speed&quot;:3.2,&quot;dps&quot;:70.3,&quot;stats&quot;:[&quot;+52 Stamina&quot;,&quot;+44 Intellect&quot;,&quot;+62 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 221.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:160275,&quot;sellGold&quot;:16,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:75,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:18805,&quot;bossName&quot;:&quot;High Astromancer Solarian&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Ethereum Life-Staff</span></td>
+                        <td><span class="slot-text">Two-Hand</span></td>
+                        <td><span class="stat-text">+52 Stamina, +44 Intellect, +62 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">134</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="paladin"
+                        data-req="70"
+                        data-item-id="29965"
+                        data-item-json="{&quot;id&quot;:29965,&quot;name&quot;:&quot;Girdle of the Righteous Path&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Waist (Plate)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+904 Armor&quot;,&quot;+27 Stamina&quot;,&quot;+33 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 41.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 27.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:55,&quot;sellPrice&quot;:43947,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:39,&quot;sellCopper&quot;:47,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:18805,&quot;bossName&quot;:&quot;High Astromancer Solarian&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Girdle of the Righteous Path</span></td>
+                        <td><span class="slot-text">Waist (Plate)</span></td>
+                        <td><span class="stat-text">+904 Armor, +27 Stamina, +33 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk"
+                        data-req="70"
+                        data-item-id="29950"
+                        data-item-json="{&quot;id&quot;:29950,&quot;name&quot;:&quot;Greaves of the Bloodwarder&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Plate)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1406 Armor&quot;,&quot;+49 Strength&quot;,&quot;+46 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 31.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:89069,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:90,&quot;sellCopper&quot;:69,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:18805,&quot;bossName&quot;:&quot;High Astromancer Solarian&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Greaves of the Bloodwarder</span></td>
+                        <td><span class="slot-text">Legs (Plate)</span></td>
+                        <td><span class="stat-text">+1406 Armor, +49 Strength, +46 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="29962"
+                        data-item-json="{&quot;id&quot;:29962,&quot;name&quot;:&quot;Heartrazor&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:134,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;121–226 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:96.4,&quot;stats&quot;:[&quot;+20 Agility&quot;,&quot;+30 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Chance on hit&quot;,&quot;text&quot;:&quot;Increases attack power by 270 for 10 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:128733,&quot;sellGold&quot;:12,&quot;sellSilver&quot;:87,&quot;sellCopper&quot;:33,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:18805,&quot;bossName&quot;:&quot;High Astromancer Solarian&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Heartrazor</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+20 Agility, +30 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">134</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank"
+                        data-classes="warrior dk"
+                        data-req="70"
+                        data-item-id="30446"
+                        data-item-json="{&quot;id&quot;:30446,&quot;name&quot;:&quot;Solarian&#x27;s Sapphire&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[&quot;warrior&quot;,&quot;dk&quot;],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+30 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Battle Shout grants you up to 110 additional attack power.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:72039,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:20,&quot;sellCopper&quot;:39,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;dk&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:18805,&quot;bossName&quot;:&quot;High Astromancer Solarian&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Solarian's Sapphire</span></td>
+                        <td><span class="slot-text">Trinket</span></td>
+                        <td><span class="stat-text">+30 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="29977"
+                        data-item-json="{&quot;id&quot;:29977,&quot;name&quot;:&quot;Star-Soul Breeches&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+188 Armor&quot;,&quot;+27 Stamina&quot;,&quot;+27 Intellect&quot;,&quot;+52 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 54.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:53592,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:35,&quot;sellCopper&quot;:92,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:18805,&quot;bossName&quot;:&quot;High Astromancer Solarian&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Star-Soul Breeches</span></td>
+                        <td><span class="slot-text">Legs (Cloth)</span></td>
+                        <td><span class="stat-text">+188 Armor, +27 Stamina, +27 Intellect, +52 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
+                        data-req="70"
+                        data-item-id="29951"
+                        data-item-json="{&quot;id&quot;:29951,&quot;name&quot;:&quot;Star-Strider Boots&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Feet (Mail)&quot;,&quot;slotFilter&quot;:&quot;Feet&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+619 Armor&quot;,&quot;+33 Agility&quot;,&quot;+13 Stamina&quot;,&quot;+18 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 66.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 5 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:57730,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:77,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:18805,&quot;bossName&quot;:&quot;High Astromancer Solarian&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Star-Strider Boots</span></td>
+                        <td><span class="slot-text">Feet (Mail)</span></td>
+                        <td><span class="stat-text">+619 Armor, +33 Agility, +13 Stamina, +18 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="29972"
+                        data-item-json="{&quot;id&quot;:29972,&quot;name&quot;:&quot;Trousers of the Astromancer&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+188 Armor&quot;,&quot;+33 Stamina&quot;,&quot;+36 Intellect&quot;,&quot;+22 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 54.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:51269,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:12,&quot;sellCopper&quot;:69,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:18805,&quot;bossName&quot;:&quot;High Astromancer Solarian&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Trousers of the Astromancer</span></td>
+                        <td><span class="slot-text">Legs (Cloth)</span></td>
+                        <td><span class="stat-text">+188 Armor, +33 Stamina, +36 Intellect, +22 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="29966"
+                        data-item-json="{&quot;id&quot;:29966,&quot;name&quot;:&quot;Vambraces of Ending&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+177 Armor&quot;,&quot;+24 Agility&quot;,&quot;+24 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 52.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:31332,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:13,&quot;sellCopper&quot;:32,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:18805,&quot;bossName&quot;:&quot;High Astromancer Solarian&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Vambraces of Ending</span></td>
+                        <td><span class="slot-text">Wrist (Leather)</span></td>
+                        <td><span class="stat-text">+177 Armor, +24 Agility, +24 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="ranged"
+                        data-classes="warlock"
+                        data-req="70"
+                        data-item-id="30449"
+                        data-item-json="{&quot;id&quot;:30449,&quot;name&quot;:&quot;Void Star Talisman&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[&quot;warlock&quot;],&quot;slot&quot;:&quot;Trinket&quot;,&quot;slotFilter&quot;:&quot;Trinket&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your pet&#x27;s resistances by 130 and increases your spell power by 48.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:72039,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:20,&quot;sellCopper&quot;:39,&quot;roles&quot;:[&quot;ranged&quot;],&quot;classes&quot;:[&quot;warlock&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:18805,&quot;bossName&quot;:&quot;High Astromancer Solarian&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Void Star Talisman</span></td>
+                        <td><span class="slot-text">Trinket</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="29982"
+                        data-item-json="{&quot;id&quot;:29982,&quot;name&quot;:&quot;Wand of the Forgotten Star&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:134,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:true,&quot;itemClass&quot;:2,&quot;subclass&quot;:19,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Wand&quot;,&quot;damage&quot;:&quot;186–346 Damage&quot;,&quot;speed&quot;:1.5,&quot;dps&quot;:177.3,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 23.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 11.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 14.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:96539,&quot;sellGold&quot;:9,&quot;sellSilver&quot;:65,&quot;sellCopper&quot;:39,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:18805,&quot;bossName&quot;:&quot;High Astromancer Solarian&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Wand of the Forgotten Star</span></td>
+                        <td><span class="slot-text">Ranged</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">134</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="70"
+                        data-item-id="29976"
+                        data-item-json="{&quot;id&quot;:29976,&quot;name&quot;:&quot;Worldstorm Gauntlets&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+562 Armor&quot;,&quot;+21 Stamina&quot;,&quot;+22 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 39.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 11 mana per 5 sec.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 15.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:40050,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:0,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:7.6923076923076925,&quot;chanceStr&quot;:&quot;7.7%&quot;,&quot;bossId&quot;:18805,&quot;bossName&quot;:&quot;High Astromancer Solarian&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Worldstorm Gauntlets</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+562 Armor, +21 Stamina, +22 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">7.7%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Kael'thas Sunstrider -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Kael'thas Sunstrider</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">The fallen prince — a five-phase raid marathon · Phase 2 the four Advisors, phase 3 loot and wield his seven Legendary weapons, phase 4 the Advisors return, phase 5 Gravity Lapse lifts the raid airborne · Level 73 Elite · Entry 19622</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter rogue dk shaman druid"
+                        data-req="70"
+                        data-item-id="29997"
+                        data-item-json="{&quot;id&quot;:29997,&quot;name&quot;:&quot;Band of the Ranger-General&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:138,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+27 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 56.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 28.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:60256,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:56,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:19622,&quot;bossName&quot;:&quot;Kael&#x27;thas Sunstrider&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Band of the Ranger-General</span></td>
+                        <td><span class="slot-text">Finger</span></td>
+                        <td><span class="stat-text">+27 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">138</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="29990"
+                        data-item-json="{&quot;id&quot;:29990,&quot;name&quot;:&quot;Crown of the Sun&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:138,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+188 Armor&quot;,&quot;+39 Stamina&quot;,&quot;+38 Intellect&quot;,&quot;+49 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 57.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:40895,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:8,&quot;sellCopper&quot;:95,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:19622,&quot;bossName&quot;:&quot;Kael&#x27;thas Sunstrider&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Crown of the Sun</span></td>
+                        <td><span class="slot-text">Head (Cloth)</span></td>
+                        <td><span class="stat-text">+188 Armor, +39 Stamina, +38 Intellect, +49 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">138</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="29987"
+                        data-item-json="{&quot;id&quot;:29987,&quot;name&quot;:&quot;Gauntlets of the Sun King&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:138,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+145 Armor&quot;,&quot;+28 Stamina&quot;,&quot;+29 Intellect&quot;,&quot;+20 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 42.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 28.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:26958,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:69,&quot;sellCopper&quot;:58,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:19622,&quot;bossName&quot;:&quot;Kael&#x27;thas Sunstrider&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Gauntlets of the Sun King</span></td>
+                        <td><span class="slot-text">Hands (Cloth)</span></td>
+                        <td><span class="stat-text">+145 Armor, +28 Stamina, +29 Intellect, +20 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">138</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="29995"
+                        data-item-json="{&quot;id&quot;:29995,&quot;name&quot;:&quot;Leggings of Murderous Intent&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:138,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Leather)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+380 Armor&quot;,&quot;+45 Agility&quot;,&quot;+31 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 92.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 37.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:71271,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:12,&quot;sellCopper&quot;:71,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:19622,&quot;bossName&quot;:&quot;Kael&#x27;thas Sunstrider&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Leggings of Murderous Intent</span></td>
+                        <td><span class="slot-text">Legs (Leather)</span></td>
+                        <td><span class="stat-text">+380 Armor, +45 Agility, +31 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">138</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin rogue dk shaman druid"
+                        data-req="70"
+                        data-item-id="29996"
+                        data-item-json="{&quot;id&quot;:29996,&quot;name&quot;:&quot;Rod of the Sun King&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:141,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mace&quot;,&quot;damage&quot;:&quot;189–352 Damage&quot;,&quot;speed&quot;:2.7,&quot;dps&quot;:100.2,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Chance on hit&quot;,&quot;text&quot;:&quot;Chance on melee attack to gain 10 Energy or 5 Rage.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 52.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:105,&quot;sellPrice&quot;:145925,&quot;sellGold&quot;:14,&quot;sellSilver&quot;:59,&quot;sellCopper&quot;:25,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:19622,&quot;bossName&quot;:&quot;Kael&#x27;thas Sunstrider&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Rod of the Sun King</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">141</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
+                        data-req="70"
+                        data-item-id="29992"
+                        data-item-json="{&quot;id&quot;:29992,&quot;name&quot;:&quot;Royal Cloak of the Sunstriders&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:138,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+116 Armor&quot;,&quot;+27 Stamina&quot;,&quot;+22 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 44.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:42305,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:23,&quot;sellCopper&quot;:5,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:19622,&quot;bossName&quot;:&quot;Kael&#x27;thas Sunstrider&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Royal Cloak of the Sunstriders</span></td>
+                        <td><span class="slot-text">Back</span></td>
+                        <td><span class="stat-text">+116 Armor, +27 Stamina, +22 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">138</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk"
+                        data-req="70"
+                        data-item-id="29998"
+                        data-item-json="{&quot;id&quot;:29998,&quot;name&quot;:&quot;Royal Gauntlets of Silvermoon&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:138,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Plate)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1080 Armor&quot;,&quot;+57 Stamina&quot;,&quot;+22 Strength&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 24.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your dodge rating by 21.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:55,&quot;sellPrice&quot;:50711,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:7,&quot;sellCopper&quot;:11,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:19622,&quot;bossName&quot;:&quot;Kael&#x27;thas Sunstrider&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Royal Gauntlets of Silvermoon</span></td>
+                        <td><span class="slot-text">Hands (Plate)</span></td>
+                        <td><span class="stat-text">+1080 Armor, +57 Stamina, +22 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">138</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="70"
+                        data-item-id="29991"
+                        data-item-json="{&quot;id&quot;:29991,&quot;name&quot;:&quot;Sunhawk Leggings&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:138,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Mail)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+847 Armor&quot;,&quot;+39 Stamina&quot;,&quot;+31 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 57.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 16 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:105,&quot;sellPrice&quot;:82099,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:20,&quot;sellCopper&quot;:99,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:19622,&quot;bossName&quot;:&quot;Kael&#x27;thas Sunstrider&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Sunhawk Leggings</span></td>
+                        <td><span class="slot-text">Legs (Mail)</span></td>
+                        <td><span class="stat-text">+847 Armor, +39 Stamina, +31 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">138</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
+                        data-req="70"
+                        data-item-id="29989"
+                        data-item-json="{&quot;id&quot;:29989,&quot;name&quot;:&quot;Sunshower Light Cloak&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:138,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+116 Armor&quot;,&quot;+18 Stamina&quot;,&quot;+24 Intellect&quot;,&quot;+20 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 41.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:40745,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:7,&quot;sellCopper&quot;:45,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:19622,&quot;bossName&quot;:&quot;Kael&#x27;thas Sunstrider&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Sunshower Light Cloak</span></td>
+                        <td><span class="slot-text">Back</span></td>
+                        <td><span class="stat-text">+116 Armor, +18 Stamina, +24 Intellect, +20 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">138</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter rogue dk shaman druid"
+                        data-req="70"
+                        data-item-id="29994"
+                        data-item-json="{&quot;id&quot;:29994,&quot;name&quot;:&quot;Thalassian Wildercloak&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:138,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+116 Armor&quot;,&quot;+28 Agility&quot;,&quot;+28 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 68.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:42609,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:26,&quot;sellCopper&quot;:9,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;dk&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:19622,&quot;bossName&quot;:&quot;Kael&#x27;thas Sunstrider&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Thalassian Wildercloak</span></td>
+                        <td><span class="slot-text">Back</span></td>
+                        <td><span class="stat-text">+116 Armor, +28 Agility, +28 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">138</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest shaman mage warlock druid"
+                        data-req="70"
+                        data-item-id="29988"
+                        data-item-json="{&quot;id&quot;:29988,&quot;name&quot;:&quot;The Nexus Key&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:141,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;145–312 Damage&quot;,&quot;speed&quot;:3.2,&quot;dps&quot;:71.4,&quot;stats&quot;:[&quot;+76 Stamina&quot;,&quot;+52 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 236.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 51.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:172526,&quot;sellGold&quot;:17,&quot;sellSilver&quot;:25,&quot;sellCopper&quot;:26,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:19622,&quot;bossName&quot;:&quot;Kael&#x27;thas Sunstrider&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">The Nexus Key</span></td>
+                        <td><span class="slot-text">Two-Hand</span></td>
+                        <td><span class="stat-text">+76 Stamina, +52 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">141</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior paladin hunter dk"
+                        data-req="70"
+                        data-item-id="29993"
+                        data-item-json="{&quot;id&quot;:29993,&quot;name&quot;:&quot;Twinblade of the Phoenix&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:141,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:8,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;375–564 Damage&quot;,&quot;speed&quot;:3.6,&quot;dps&quot;:130.4,&quot;stats&quot;:[&quot;+53 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 37.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 110.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:180462,&quot;sellGold&quot;:18,&quot;sellSilver&quot;:4,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;],&quot;chance&quot;:8.333333333333334,&quot;chanceStr&quot;:&quot;8.3%&quot;,&quot;bossId&quot;:19622,&quot;bossName&quot;:&quot;Kael&#x27;thas Sunstrider&quot;,&quot;bossLvl&quot;:73,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Twinblade of the Phoenix</span></td>
+                        <td><span class="slot-text">Two-Hand</span></td>
+                        <td><span class="stat-text">+53 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">141</td>
+                        <td class="text-end">8.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+
+<details class="trash-section">
+    <summary>🗡️ Trash drops <span class="trash-count">(1 mobs)</span></summary>
+    <p class="trash-blurb">Trash mobs you encounter clearing the dungeon —
+       set pieces, world drops, and miscellaneous gear from non-boss
+       creatures. They respawn, so multiple kills per run are possible.</p>
+    
+    <!-- Trash -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Trash</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 72 Elite · Entry 9000550</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
+                        data-req="70"
+                        data-item-id="30026"
+                        data-item-json="{&quot;id&quot;:30026,&quot;name&quot;:&quot;Bands of the Celestial Archer&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Mail)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+394 Armor&quot;,&quot;+24 Intellect&quot;,&quot;+17 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 48.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 17.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:38611,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:86,&quot;sellCopper&quot;:11,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.8333333333333335,&quot;chanceStr&quot;:&quot;0.83%&quot;,&quot;bossId&quot;:9000550,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Bands of the Celestial Archer</span></td>
+                        <td><span class="slot-text">Wrist (Mail)</span></td>
+                        <td><span class="stat-text">+394 Armor, +24 Intellect, +17 Agility</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">0.83%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="shaman druid"
+                        data-req="70"
+                        data-item-id="30029"
+                        data-item-json="{&quot;id&quot;:30029,&quot;name&quot;:&quot;Bark-Gloves of Ancient Wisdom&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Leather)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+252 Armor&quot;,&quot;+28 Stamina&quot;,&quot;+25 Intellect&quot;,&quot;+33 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 39.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:32531,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:25,&quot;sellCopper&quot;:31,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:0.8333333333333335,&quot;chanceStr&quot;:&quot;0.83%&quot;,&quot;bossId&quot;:9000550,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Bark-Gloves of Ancient Wisdom</span></td>
+                        <td><span class="slot-text">Hands (Leather)</span></td>
+                        <td><span class="stat-text">+252 Armor, +28 Stamina, +25 Intellect, +33 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">0.83%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="30020"
+                        data-item-json="{&quot;id&quot;:30020,&quot;name&quot;:&quot;Fire-Cord of the Magus&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Waist (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+121 Armor&quot;,&quot;+21 Stamina&quot;,&quot;+23 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 50.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 30.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:27073,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:70,&quot;sellCopper&quot;:73,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:0.8333333333333335,&quot;chanceStr&quot;:&quot;0.83%&quot;,&quot;bossId&quot;:9000550,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Fire-Cord of the Magus</span></td>
+                        <td><span class="slot-text">Waist (Cloth)</span></td>
+                        <td><span class="stat-text">+121 Armor, +21 Stamina, +23 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">0.83%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="70"
+                        data-item-id="30030"
+                        data-item-json="{&quot;id&quot;:30030,&quot;name&quot;:&quot;Girdle of Fallen Stars&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Waist (Mail)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+506 Armor&quot;,&quot;+26 Stamina&quot;,&quot;+18 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 39.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 13 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:39181,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:91,&quot;sellCopper&quot;:81,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:0.8333333333333335,&quot;chanceStr&quot;:&quot;0.83%&quot;,&quot;bossId&quot;:9000550,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Girdle of Fallen Stars</span></td>
+                        <td><span class="slot-text">Waist (Mail)</span></td>
+                        <td><span class="stat-text">+506 Armor, +26 Stamina, +18 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">0.83%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="30024"
+                        data-item-json="{&quot;id&quot;:30024,&quot;name&quot;:&quot;Mantle of the Elven Kings&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+161 Armor&quot;,&quot;+27 Stamina&quot;,&quot;+18 Intellect&quot;,&quot;+17 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 39.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 25.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 18.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:38324,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:83,&quot;sellCopper&quot;:24,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:0.8333333333333335,&quot;chanceStr&quot;:&quot;0.83%&quot;,&quot;bossId&quot;:9000550,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Mantle of the Elven Kings</span></td>
+                        <td><span class="slot-text">Shoulder (Cloth)</span></td>
+                        <td><span class="stat-text">+161 Armor, +27 Stamina, +18 Intellect, +17 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">0.83%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank"
+                        data-classes="warrior paladin dk druid"
+                        data-req="70"
+                        data-item-id="30028"
+                        data-item-json="{&quot;id&quot;:30028,&quot;name&quot;:&quot;Seventh Ring of the Tirisfalen&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:128,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+37 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases the block value of your shield by 48.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases the block rating of your shield by 24.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 17.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:60256,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:2,&quot;sellCopper&quot;:56,&quot;roles&quot;:[&quot;tank&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;druid&quot;],&quot;chance&quot;:0.8333333333333335,&quot;chanceStr&quot;:&quot;0.83%&quot;,&quot;bossId&quot;:9000550,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:550,&quot;dungeon&quot;:&quot;Tempest Keep: The Eye&quot;,&quot;page&quot;:&quot;tempest-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Seventh Ring of the Tirisfalen</span></td>
+                        <td><span class="slot-text">Finger</span></td>
+                        <td><span class="stat-text">+37 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">128</td>
+                        <td class="text-end">0.83%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+</details>
+
+</div>
+
+<script src="tooltip.js"></script>
+<script src="smart_filter_block.js"></script>
+<script src="kcraft_pills.js"></script>
+<script src="dungeon_filter.js"></script>
+<script src="sortable.js"></script>
+
+</body>
+</html>
