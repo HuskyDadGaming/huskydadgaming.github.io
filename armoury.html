@@ -10522,6 +10522,11 @@
         druid:   ['Arcane', 'Nature'],          // Balance
     };
 
+    // Classes that can equip a second weapon in the off-hand. Everyone else
+    // (paladin, druid, priest, mage, warlock) can only put a shield or held
+    // item there, so the Upgrade Finder must not offer them off-hand weapons.
+    const CAN_DUAL_WIELD = new Set(['warrior', 'rogue', 'hunter', 'dk', 'shaman']);
+
     // Equip slot index -> list of invType strings that fit it. Mostly 1:1,
     // but Chest accepts Robe, weapon slots accept multiple, etc.
     const UPGRADE_SLOT_INVTYPES = {
@@ -11227,6 +11232,12 @@
             // item class/subclass (armor class 4, shield subclass 6).
             if (offHandShieldOnly &&
                 !(it.itemClass === 4 && it.subclass === 6)) return false;
+            // Off Hand weapon requires DUAL WIELD. A 1H weapon (itemClass 2) in
+            // the off-hand is only legal for classes that can dual-wield —
+            // paladins and druids (and casters) can't, so they'd only ever put a
+            // shield or held item there. Without this, a Ret paladin gets offered
+            // off-hand swords/axes it can never equip.
+            if (slotIdx === 16 && it.itemClass === 2 && !CAN_DUAL_WIELD.has(cls)) return false;
             if (!isSlotEmpty && (it.req || 0) > level) return false;
             // Even for empty slots, suppress items requiring WAY more than
             // the player can reasonably chase. The Q3+ index has slots
