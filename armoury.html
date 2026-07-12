@@ -794,7 +794,7 @@
         }
         .up-item:last-child { margin-bottom: 0; }
         .up-item.up-empty, .up-item.up-none {
-            color: #666; font-style: italic; font-size: 0.85rem;
+            color: #666; font-style: italic; font-size: 0.9rem;
             border: 1px dashed #333; background: transparent;
         }
         .up-item-line {
@@ -934,7 +934,7 @@
 
 <div class="container">
     <div class="tab-bar">
-        <a class="tab-btn tab-link" href="index.html">📚 Browse Dungeons</a>
+        <a class="tab-btn tab-link" href="index.html">📚 Dungeons</a>
         <a class="tab-btn tab-link" href="index.html#raids">🌋 Raids</a>
         <a class="tab-btn tab-link" href="index.html#finder">🔍 Find Loot</a>
         <a class="tab-btn tab-link active" href="armoury.html">🛡️ Armoury</a>
@@ -11445,7 +11445,7 @@
         // us hover-tooltip + compareProvider-driven "Currently equipped"
         // comparison for free.
         const renderItem = (it, kind) => {
-            if (!it) return `<div class="up-item up-empty">(none)</div>`;
+            if (!it) return `<div class="up-item up-empty"><div class="up-item-line">(none)</div><div class="up-item-meta"></div></div>`;
             const json = JSON.stringify(it).replace(/"/g, '&quot;');
             // Dungeon boss drop (real source overlaid from loot-data) vs AH item
             // (the live-pool tag "World / AH").
@@ -11522,7 +11522,7 @@
             : (mailItem ? renderItem(mailItem, 'current') : renderItem(null, 'current'));
         const candHtml = candidates.length
             ? candidates.map(c => renderItem(c, 'cand')).join('')
-            : `<div class="up-item up-none">No upgrades for this slot at lvl ${upState.charLevel}.</div>`;
+            : `<div class="up-item up-none"><div class="up-item-line">No upgrades for this slot at lvl ${upState.charLevel}.</div><div class="up-item-meta"></div></div>`;
 
         // One enchant row: shared hover tooltip (synthetic item in
         // data-item-json) + AH-buy link; badge shows _delta (== absolute score
@@ -11604,7 +11604,7 @@
                 inner += `<div class="up-col-heading" style="opacity:0.7;">${(curEn || mailEn) ? 'Better enchants' : 'Enchant'}</div>`
                        + betterE.map(enchRow).join('');
             }
-            eqEnchHtml = `<div style="margin-top:6px;display:flex;flex-direction:column;gap:3px;">${inner}</div>`;
+            eqEnchHtml = `<div style="margin-top:8px;display:flex;flex-direction:column;gap:3px;">${inner}</div>`;
         }
 
         return `<div class="up-slot-card">
