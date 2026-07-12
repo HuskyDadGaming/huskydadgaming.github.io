@@ -10932,6 +10932,23 @@
         // relevant, so it earns no bonus rather than a spurious floor credit.
         if (cls  && !(Array.isArray(it.classes) && it.classes.includes(cls)))  return 0;
         if (role && !(Array.isArray(it.roles)   && it.roles.includes(role)))   return 0;
+        // Set-bonus credit only for a set matching the character's PRIMARY armor
+        // class at this level. A level-60 hunter is a mail user, so a leather
+        // set (e.g. the rogue Shadowcraft set) earns NO bonus credit even though
+        // hunters CAN wear leather — otherwise its off-class bonuses (a rogue
+        // "restore energy" proc, +armor, +resist) get generic anchor-stat credit
+        // and out-rank the hunter's own mail tier. The pieces' RAW stats still
+        // count in scoreItemForRole; only the set-bonus inflation is removed.
+        // Non-armor set pieces (jewelry/cloak/weapon, no armorType) are exempt.
+        if (it.armorType && cls) {
+            const floor = AH_CLASS_ARMOR_FLOOR[cls] || [];
+            const heavy = HEAVY_ARMOR_BY_CLASS[cls];
+            const primary = (heavy && (upState.charLevel || 0) >= HEAVY_ARMOR_UNLOCK_LEVEL)
+                ? heavy                                 // 40+: their heavy tier (Plate/Mail)
+                : heavy ? floor.find(a => a !== heavy)  // <40: lighter fallback (Mail/Leather)
+                        : floor[0];                     // no heavy tier: Leather / Cloth
+            if (primary && it.armorType !== primary) return 0;
+        }
         const ids = new Set(setObj.items.map(p => Number(p.id)));
         let owned = 0, sameSlot = false;
         for (const idx in (upState.equipped || {})) {
