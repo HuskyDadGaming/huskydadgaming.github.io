@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utgarde Keep — KCraft</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗡️</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #1a1a1a; color: #ddd; padding-bottom: 3rem; }
+        .container { max-width: 1100px; }
+        h1, h2, h3 { color: #ffd100; }
+        a { color: #4ea8de; text-decoration: none; }
+        a:hover { color: #88c5f0; }
+        .navbar { background: #2d2d2d !important; margin-bottom: 2rem; }
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .card { background: #232323; border: 1px solid #3a3a3a; margin-bottom: 1.5rem; }
+        .card-title { color: #ffd100; margin-bottom: 0.25rem; }
+        .boss-meta { color: #777; font-size: 0.85rem; margin-bottom: 1rem; }
+        .loot-group-heading { font-size: 0.8rem; font-weight: 700; letter-spacing: .04em;
+            text-transform: uppercase; color: #9aa; margin: 0.25rem 0 0.35rem; }
+        .loot-group-heading.heroic { color: #ff8c42; }
+
+        /* Collapsible boss cards. The whole card is a <details> element;
+           clicking the summary header toggles the items table below.
+           Defaults to open so the page reads exactly like before — the
+           collapse is opt-in, useful when scrolling through a dungeon
+           with many bosses. The trash section's inner cards inherit
+           this behavior since they share render_boss_card.
+           Arrow is anchored to the top-right corner of the card via
+           absolute positioning so it lines up consistently regardless
+           of how long the boss-meta line wraps. */
+        .boss-card {
+            display: block;  /* override Bootstrap card flex */
+            padding: 0;
+            position: relative;
+        }
+        .boss-card > summary {
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            /* Right padding leaves room for the absolutely-positioned arrow */
+            padding: 0.85rem 2.5rem 0.85rem 1rem;
+            transition: background 0.15s;
+        }
+        .boss-card > summary:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .boss-card > summary::-webkit-details-marker { display: none; }
+        .boss-card::after {
+            content: '▼';
+            position: absolute;
+            top: 0.95rem;
+            right: 1rem;
+            color: #888;
+            font-size: 0.95em;
+            pointer-events: none;  /* let the click pass through to summary */
+            transition: color 0.15s;
+        }
+        .boss-card[open]::after { content: '▲'; color: #ffd100; }
+        /* Title is the only line in summary now — meta moved into content
+           so it collapses with the table. No bottom margin needed. */
+        .boss-card > summary .card-title { margin-bottom: 0; }
+        .boss-card > .boss-card-content {
+            padding: 0.5rem 1rem 1rem;
+        }
+        .boss-card > .boss-card-content .boss-meta {
+            margin-top: 0;
+            margin-bottom: 0.85rem;
+        }
+        table.table { color: #ddd; margin-bottom: 0; }
+        table.table > :not(caption) > * > * {
+            background-color: transparent; color: #ddd;
+            border-bottom-color: #3a3a3a; vertical-align: middle;
+        }
+        table.table > thead {
+            color: #999; font-size: 0.78rem;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        table.table tbody tr:hover { background: #2a2a2a; }
+
+        .filter-bar {
+            margin-bottom: 1.5rem; padding: 1rem;
+            background: #232323; border: 1px solid #3a3a3a; border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        /* Collapsible filter wrapper. The whole <details> sticks to the top
+           of the viewport on scroll so users can change filters from
+           anywhere on a long dungeon page without scrolling back up.
+           Desktop: summary is hidden, content always visible. Mobile:
+           closed by default (set by dungeon_filter.js on init), summary
+           shown as a single-line summary that toggles the filter content.
+           The HTML defaults to <details open> so non-JS users get the
+           working default of expanded. */
+        .filter-bar-collapsible {
+            margin-bottom: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #1a1a1a;  /* matches body so scrolled content doesn't peek through */
+        }
+        .filter-bar-collapsible > .filter-bar {
+            margin-bottom: 0;  /* details element provides outer spacing */
+        }
+        .filter-bar-collapsible > summary {
+            display: none;  /* hidden on desktop */
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            padding: 0.7rem 0.9rem;
+            background: #232323;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            color: #ccc;
+            font-size: 0.92rem;
+        }
+        .filter-bar-collapsible > summary::-webkit-details-marker { display: none; }
+        .filter-bar-collapsible > summary::after {
+            content: ' ▼';
+            color: #888;
+            float: right;
+            font-size: 0.85em;
+        }
+        .filter-bar-collapsible[open] > summary::after { content: ' ▲'; }
+        .filter-bar-collapsible[open] > summary {
+            border-radius: 6px 6px 0 0;
+            border-bottom: 0;
+            margin-bottom: 0;
+        }
+        .filter-bar-collapsible[open] > .filter-bar {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+        .filter-row {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            align-items: center; margin-bottom: 8px;
+        }
+        .filter-row:last-child { margin-bottom: 0; }
+        .filter-row > .label { color: #999; font-size: 0.9rem; min-width: 90px; }
+        .filter-btn {
+            padding: 8px 14px; border-radius: 5px; border: 2px solid #555;
+            background: #2a2a2a; color: #ccc; cursor: pointer;
+            font-size: 0.85rem; transition: all 0.2s ease;
+        }
+        .filter-btn:hover { background: #3a3a3a; border-color: #777; }
+        .filter-btn.active {
+            background: #ffd100; color: #1a1a1a; border-color: #ffd100;
+            font-weight: 600;
+        }
+        /* Apply / Reset buttons. Visually identical across all pages
+           (Find Loot tab on index.html uses the same .reset-btn spec).
+           Apply is the primary action (brand yellow); Reset is destructive
+           but stays subtle so it doesn't shout for attention.
+           Override .filter-btn padding/border so these read as polished
+           action buttons rather than the chunky role-toggle base style.
+           Apply is hidden on desktop — the filter bar is always visible
+           there so collapsing-via-Apply isn't useful — and only shown
+           inside the mobile @media block below. */
+        .filter-btn.apply-btn {
+            display: none;
+            margin-left: 10px; padding: 6px 14px;
+            background: #ffd100; color: #1a1a1a;
+            border: 1px solid #ffd100; border-radius: 4px;
+            font-size: 0.85rem; font-weight: 600;
+        }
+        .filter-btn.apply-btn:hover { background: #ffe14d; border-color: #ffe14d; }
+        .filter-btn.reset-btn {
+            margin-left: 10px; padding: 6px 14px;
+            background: #4a1818; color: #ff9b9b;
+            border: 1px solid #6a2828; border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        .filter-btn.reset-btn:hover { background: #6a2828; border-color: #6a2828; }
+        /* Reset lives at the right edge of the Quality row (mirrors the
+           Find Loot finder bar). margin-left:auto pushes it past the
+           dropdown to the end of the flex row on desktop. */
+        .filter-row.row-quality .filter-btn.reset-btn { margin-left: auto; }
+        /* Desktop hides the Apply row entirely (Apply is mobile-only and
+           is the only control left in row-buttons after Reset moved out).
+           Mobile re-enables the row inside the @media block below. */
+        .filter-row.row-buttons { display: none; }
+
+        /* Expand all / Collapse all controls — sit between the filter
+           bar and the first boss card so they're always reachable. */
+        .expand-controls {
+            display: flex; gap: 0.5rem; flex-wrap: wrap;
+            margin: 0 0 1rem 0;
+        }
+        .expand-controls .expand-btn {
+            padding: 6px 12px; background: #2d2d2d; color: #ccc;
+            border: 1px solid #3a3a3a; border-radius: 4px;
+            cursor: pointer; font-size: 0.85rem;
+            transition: color 0.1s ease, border-color 0.1s ease;
+        }
+        .expand-controls .expand-btn:hover {
+            color: #ffd100; border-color: #ffd100;
+        }
+
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown select {
+            padding: 8px 12px; background: #2a2a2a; color: #ccc;
+            border: 2px solid #555; border-radius: 5px; font-size: 0.85rem;
+            min-width: 150px;
+        }
+
+        .role-pill {
+            display: inline-block; padding: 2px 7px; border-radius: 4px;
+            font-size: 0.75rem; margin-right: 3px; cursor: default;
+            font-weight: 600;
+        }
+        .class-pill {
+            display: inline-block; width: 18px; height: 18px;
+            line-height: 18px; text-align: center; border-radius: 3px;
+            font-size: 0.7rem; font-weight: 700;
+            color: #1a1a1a; margin-right: 2px; cursor: default;
+        }
+        .pill-empty {
+            color: #555; font-size: 1rem; font-weight: 400; cursor: default;
+        }
+
+        .no-loot { color: #777; font-style: italic; text-align: center; padding: 1rem; }
+        .stat-text { color: #4ea8de; font-size: 0.85rem; }
+        .slot-text { color: #bbb; font-size: 0.85rem; }
+
+        /* Notable trash collapsible — secondary content, visually quieter */
+        .trash-section {
+            margin-top: 1.5rem;
+            border-top: 1px solid #333;
+            padding-top: 1rem;
+        }
+        .trash-section > summary {
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ddd;
+            padding: 0.5rem 0;
+            list-style: none;
+            user-select: none;
+        }
+        .trash-section > summary::-webkit-details-marker { display: none; }
+        .trash-section > summary::before {
+            content: '▶';
+            display: inline-block;
+            margin-right: 8px;
+            color: #888;
+            transition: transform 0.15s ease;
+        }
+        .trash-section[open] > summary::before { transform: rotate(90deg); }
+        .trash-section > summary:hover { color: #ffd100; }
+        .trash-section .trash-count { color: #888; font-weight: normal; font-size: 0.95rem; }
+        .trash-section .trash-blurb {
+            color: #999; font-size: 0.85rem; font-style: italic;
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        /* Sortable headers (sortable.js wires up clicks) */
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.1s ease;
+            white-space: nowrap;  /* keep header text + indicator on one line */
+        }
+        th.sortable:hover { color: #ffd100; }
+        th.sortable::after {
+            content: ' ⇅';
+            color: #444;
+            font-size: 0.75em;
+            margin-left: 4px;
+        }
+        th.sortable.sort-asc::after  { content: ' ▲'; color: #ffd100; }
+        th.sortable.sort-desc::after { content: ' ▼'; color: #ffd100; }
+
+        /* ============================================================
+           Mobile (≤600px): boss-card tables become labeled cards.
+           Mirrors the Find Loot card pattern for consistency.
+           Column order: 1=ITEM 2=SLOT 3=STATS 4=ROLES 5=CLASSES 6=ILVL 7=DROP
+           ============================================================ */
+        @media (max-width: 600px) {
+            body { font-size: 0.92rem; }
+            .container { padding: 0 0.5rem; }
+
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.2rem; }
+            .summary-block { padding: 0.7rem 0.8rem; font-size: 0.88rem; }
+
+            /* Filter bar: each row stacks (label on top, controls below).
+               Role buttons go into a 2-col grid for a uniform look — when
+               there's an odd count (we have 5 roles) the last button spans
+               both columns so nothing is stranded as a half-width cell.
+               Class/Quality/Reset stack vertically as full-width controls. */
+            /* Filter bar layout. Each row gets a named class (.row-class,
+               .row-role, .row-quality, .row-buttons, .row-legend) for
+               targeted styling. HTML order is the visual order on mobile:
+               Class → Role → Quality → Reset → Apply → Legend. */
+            .filter-bar { padding: 0.75rem; }
+
+            /* Collapsible summary visible on mobile only */
+            .filter-bar-collapsible > summary {
+                display: block;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+                margin-bottom: 12px;
+            }
+            .filter-row > .label {
+                min-width: 0 !important;
+                font-size: 0.85rem;
+                margin-bottom: 0;
+                /* Override inline margin-left:18px on the Quality label */
+                margin-left: 0 !important;
+            }
+
+            /* Class & Quality dropdown rows: full-width selects */
+            .filter-row.row-class .dropdown,
+            .filter-row.row-quality .dropdown {
+                width: 100%;
+            }
+            .filter-row.row-class select,
+            .filter-row.row-quality select {
+                width: 100%;
+                font-size: 0.9rem;
+                padding: 8px 10px;
+            }
+
+            /* Role row: 2-col button grid, label spans full width.
+               5 buttons total — the lone last one (odd-position) spans
+               both cols so nothing is stranded as a half-width cell. */
+            .filter-row.row-role {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+                align-items: stretch;
+            }
+            .filter-row.row-role > .label {
+                grid-column: 1 / -1;
+            }
+            .filter-row.row-role > .filter-btn {
+                font-size: 0.82rem;
+                padding: 8px 10px;
+                margin: 0;
+            }
+            .filter-row.row-role > .filter-btn:last-child:nth-child(odd) {
+                grid-column: 1 / -1;
+            }
+
+            /* Apply row (mobile only — desktop hides it via the base
+               `.filter-row.row-buttons { display: none }` rule). Reset
+               now lives in the Quality row, so this row only contains
+               Apply; flex:1 stretches it to full width. */
+            .filter-row.row-buttons {
+                display: flex;
+                flex-direction: row;
+                gap: 6px;
+            }
+            .filter-row.row-buttons .filter-btn.apply-btn {
+                display: block;
+                flex: 1 1 0;
+                margin-left: 0;
+                padding: 10px;
+            }
+            /* Reset (mobile): stacks below the Quality dropdown as a
+               full-width control. margin-left:auto from desktop is
+               cancelled — column flow makes it a vertical stack. */
+            .filter-row.row-quality .filter-btn.reset-btn {
+                margin-left: 0;
+                padding: 10px;
+                width: 100%;
+            }
+
+            /* Legend: pills wrap naturally, just make text smaller. Each
+               entry is a .legend-item that holds the pill + name together
+               so multi-word classes (e.g. Death Knight) never split. */
+            .filter-row.row-legend .legend {
+                font-size: 0.8rem !important;
+                line-height: 1.7;
+            }
+            .filter-row.row-legend .legend-item {
+                white-space: nowrap;
+                display: inline-block;
+                margin-right: 8px;
+            }
+
+            /* Boss cards: tighter, full-width. Padding lives on summary
+               and content children (the card is a <details>). */
+            .boss-card { padding: 0; margin-bottom: 1rem; }
+            .boss-card > summary { padding: 0.7rem 0.85rem; }
+            .boss-card > .boss-card-content { padding: 0 0.85rem 0.85rem; }
+            .boss-card h3 { font-size: 1.1rem; }
+            .boss-meta { font-size: 0.8rem; }
+
+            /* Table → card list. Sortable headers don't help on mobile
+               since each row is a card with labeled fields. */
+            .boss-card table,
+            .boss-card thead,
+            .boss-card tbody,
+            .boss-card tr,
+            .boss-card td { display: block; width: 100%; }
+            .boss-card thead { display: none; }
+
+            .boss-card tbody tr {
+                background: #232323; border: 1px solid #2d2d2d;
+                border-radius: 6px;
+                padding: 0.65rem 0.85rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .boss-card tbody tr td {
+                padding: 4px 0; border: 0;
+                font-size: 0.85rem; line-height: 1.5;
+            }
+            .boss-card tbody tr td::before {
+                display: block;
+                color: #777; font-size: 0.7rem;
+                text-transform: uppercase; letter-spacing: 0.5px;
+                margin-bottom: 2px;
+            }
+            .boss-card tbody tr td:nth-child(2)::before { content: 'Slot'; }
+            .boss-card tbody tr td:nth-child(3)::before { content: 'Stats'; }
+            .boss-card tbody tr td:nth-child(4)::before { content: 'Roles'; }
+            .boss-card tbody tr td:nth-child(5)::before { content: 'Classes'; }
+            .boss-card tbody tr td:nth-child(6)::before { content: 'iLvl'; }
+            .boss-card tbody tr td:nth-child(7)::before { content: 'Drop'; }
+
+            /* Stats list: inline with spacing */
+            .boss-card .stat-text {
+                font-size: 0.82rem;
+            }
+            .boss-card .role-pill, .boss-card .class-pill {
+                margin: 0 2px 2px 0; vertical-align: middle;
+            }
+
+            /* Item name as full-width header */
+            .boss-card tbody tr td:nth-child(1) {
+                font-size: 0.95rem; font-weight: 600;
+                margin-bottom: 6px; padding: 0 0 6px 0;
+                border-bottom: 1px solid #2d2d2d;
+            }
+            .boss-card tbody tr td:nth-child(1)::before { content: none; }
+
+            /* Inline label/value for short fields: Slot, iLvl, Drop.
+               Override .text-end which would right-align the value. */
+            .boss-card tbody tr td:nth-child(2),
+            .boss-card tbody tr td:nth-child(6),
+            .boss-card tbody tr td:nth-child(7) {
+                display: flex; gap: 12px;
+                align-items: baseline;
+                font-size: 0.82rem;
+                text-align: left !important;
+            }
+            .boss-card tbody tr td:nth-child(2)::before,
+            .boss-card tbody tr td:nth-child(6)::before,
+            .boss-card tbody tr td:nth-child(7)::before {
+                display: inline-block; margin-bottom: 0;
+            }
+
+            /* Trash section: tighten */
+            .trash-section > summary { font-size: 1rem; }
+            .trash-section .trash-blurb {
+                margin: 0.5rem 0 0.75rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html" style="color: #ffd100;">⚔️ KCraft</a>
+    </div>
+</nav>
+
+<div class="container">
+    <p class="mb-2"><a href="index.html">← All dungeons</a></p>
+
+    <h1>🗡️ Utgarde Keep</h1>
+    <p class="mb-3" style="color:#bbb; font-style:italic;">"Ymirjar vrykul stronghold carved into the cliffs of the Howling Fjord — the first dungeon most players see in Northrend. Ingvar the Plunderer's warband forge-binds the fjord's dead into iron-bound revenants while captive proto-drakes wheel overhead."</p>
+
+    <div class="alert alert-dark mt-3 mb-4" style="background:#232323; border:1px solid #3a3a3a; color:#ddd;">
+        <h5 class="alert-heading" style="color:#ffd100;">🎯 UK Loot Summary</h5>
+        <p class="mb-2"><strong style="color:#4ea8de;">Equipment Focus:</strong> fresh-Northrend level 70-72 blues — the standard first-instance upgrade over Outland questing greens, spanning agility mail, caster cloth and a little tanking plate.</p>
+        <ul class="mb-0" style="margin-left: 0; padding-left: 1.2rem;">
+            <li><strong style="color:#4ea8de;">Best for:</strong> Level 70-72</li>
+            <li><strong style="color:#4ea8de;">Run time:</strong> 20-30 minutes</li>
+            <li><strong style="color:#4ea8de;">Mob levels:</strong> 70-72</li>
+            <li><strong style="color:#4ea8de;">Famous for:</strong> The entry point to Northrend dungeon gear and the Prince Keleseth undead-summoner opener</li>
+            <li><strong style="color:#4ea8de;">Includes:</strong> The paired Skarvald &amp; Dalronn fight and Ingvar's valkyr-resurrection second life</li>
+        </ul>
+    </div>
+
+    <details class="filter-bar-collapsible" open>
+    <summary class="filter-summary">🔧 Filters · all 37 items</summary>
+    <div class="filter-bar">
+        <div class="filter-row row-class">
+            <span class="label">Class:</span>
+            <div class="dropdown">
+                <select id="class-dropdown">
+                    <option value="all">All classes (37)</option>
+                    <option value="warrior">Warrior (14)</option>
+                    <option value="paladin">Paladin (17)</option>
+                    <option value="hunter">Hunter (12)</option>
+                    <option value="rogue">Rogue (11)</option>
+                    <option value="priest">Priest (8)</option>
+                    <option value="dk">Death Knight (8)</option>
+                    <option value="shaman">Shaman (24)</option>
+                    <option value="mage">Mage (8)</option>
+                    <option value="warlock">Warlock (8)</option>
+                    <option value="druid">Druid (18)</option>
+                </select>
+            </div>
+        </div>
+        <div class="filter-row row-role">
+            <span class="label">Role:</span>
+            <button class="filter-btn active" data-role="all">All (<span id="count-all">37</span>)</button>
+            <button class="filter-btn" data-role="tank">🛡 Tank (<span id="count-tank">14</span>)</button>
+            <button class="filter-btn" data-role="heal">+ Healer (<span id="count-heal">19</span>)</button>
+            <button class="filter-btn" data-role="melee">⚔ Melee (<span id="count-melee">20</span>)</button>
+            <button class="filter-btn" data-role="ranged">🏹 Ranged (<span id="count-ranged">25</span>)</button>
+        </div>
+        <div class="filter-row row-quality">
+            <span class="label">Quality:</span>
+            <div class="dropdown">
+                <select id="quality-dropdown">
+                    <option value="">Any quality</option>
+                    <option value="2" style="color:#1eff00">Uncommon and above</option>
+                    <option value="3" style="color:#0070dd">Rare and above</option>
+                    <option value="4" style="color:#a335ee">Epic only</option>
+                </select>
+            </div>
+            <button class="filter-btn reset-btn" id="reset-filters">Reset all</button>
+        </div>
+        <div class="filter-row row-buttons">
+            <button class="filter-btn apply-btn" id="apply-filters">Apply</button>
+        </div>
+        <div class="filter-row row-legend">
+            <span class="label">Legend:</span>
+            <div class="legend" style="font-size: 0.85rem;">
+                <span class="legend-item"><span class="class-pill" style="background:#C79C6E;color:#1a1a1a;">W</span> Warrior</span>
+                <span class="legend-item"><span class="class-pill" style="background:#F58CBA;color:#1a1a1a;">P</span> Paladin</span>
+                <span class="legend-item"><span class="class-pill" style="background:#ABD473;color:#1a1a1a;">H</span> Hunter</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FFF569;color:#1a1a1a;">R</span> Rogue</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FFFFFF;color:#1a1a1a;">P</span> Priest</span>
+                <span class="legend-item"><span class="class-pill" style="background:#C41F3B;color:#1a1a1a;">K</span> Death Knight</span>
+                <span class="legend-item"><span class="class-pill" style="background:#0070DE;color:#1a1a1a;">S</span> Shaman</span>
+                <span class="legend-item"><span class="class-pill" style="background:#69CCF0;color:#1a1a1a;">M</span> Mage</span>
+                <span class="legend-item"><span class="class-pill" style="background:#9482C9;color:#1a1a1a;">W</span> Warlock</span>
+                <span class="legend-item"><span class="class-pill" style="background:#FF7D0A;color:#1a1a1a;">D</span> Druid</span>
+            </div>
+        </div>
+    </div>
+    </details>
+
+    <div class="expand-controls">
+        <button class="expand-btn" id="expand-all">▼ Expand all</button>
+        <button class="expand-btn" id="collapse-all">▲ Collapse all</button>
+    </div>
+
+
+    <!-- Prince Keleseth -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Prince Keleseth</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">San'layn dark ranger commanding the keep's undead · Shadow Bolt, Frost Tomb (encases a raider — break them out), summons Frostworn skeletons · Level 72 Elite · Entry 23953</p>
+            <p class="loot-group-heading">Normal drops</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
+                        data-req="70"
+                        data-item-id="35571"
+                        data-item-json="{&quot;id&quot;:35571,&quot;name&quot;:&quot;Dragon Stabler&#x27;s Gauntlets&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Hands (Mail)&quot;,&quot;slotFilter&quot;:&quot;Hands&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+613 Armor&quot;,&quot;+32 Agility&quot;,&quot;+48 Stamina&quot;,&quot;+32 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 64.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:33942,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:39,&quot;sellCopper&quot;:42,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:23953,&quot;bossName&quot;:&quot;Prince Keleseth&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Dragon Stabler's Gauntlets</span></td>
+                        <td><span class="slot-text">Hands (Mail)</span></td>
+                        <td><span class="stat-text">+613 Armor, +32 Agility, +48 Stamina, +32 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest shaman mage warlock druid"
+                        data-req="70"
+                        data-item-id="35570"
+                        data-item-json="{&quot;id&quot;:35570,&quot;name&quot;:&quot;Keleseth&#x27;s Blade of Evocation&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;55–164 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:60.8,&quot;stats&quot;:[&quot;+24 Intellect&quot;,&quot;+31 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 233.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:112714,&quot;sellGold&quot;:11,&quot;sellSilver&quot;:27,&quot;sellCopper&quot;:14,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:23953,&quot;bossName&quot;:&quot;Prince Keleseth&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Keleseth's Blade of Evocation</span></td>
+                        <td><span class="slot-text">Main Hand</span></td>
+                        <td><span class="stat-text">+24 Intellect, +31 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="35572"
+                        data-item-json="{&quot;id&quot;:35572,&quot;name&quot;:&quot;Reinforced Velvet Helm&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+191 Armor&quot;,&quot;+48 Stamina&quot;,&quot;+49 Intellect&quot;,&quot;+43 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 51.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:34071,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:71,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:23953,&quot;bossName&quot;:&quot;Prince Keleseth&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Reinforced Velvet Helm</span></td>
+                        <td><span class="slot-text">Head (Cloth)</span></td>
+                        <td><span class="stat-text">+191 Armor, +48 Stamina, +49 Intellect, +43 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="loot-group-heading heroic">🔥 Heroic-only drops</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="shaman druid"
+                        data-req="80"
+                        data-item-id="37180"
+                        data-item-json="{&quot;id&quot;:37180,&quot;name&quot;:&quot;Battlemap Hide Helm&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Leather)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+443 Armor&quot;,&quot;+45 Stamina&quot;,&quot;+54 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 91.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 45.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:60,&quot;sellPrice&quot;:56765,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:67,&quot;sellCopper&quot;:65,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:23953,&quot;bossName&quot;:&quot;Prince Keleseth&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Battlemap Hide Helm</span></td>
+                        <td><span class="slot-text">Head (Leather)</span></td>
+                        <td><span class="stat-text">+443 Armor, +45 Stamina, +54 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk"
+                        data-req="80"
+                        data-item-id="37179"
+                        data-item-json="{&quot;id&quot;:37179,&quot;name&quot;:&quot;Infantry Assault Blade&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:7,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Sword&quot;,&quot;damage&quot;:&quot;237–440 Damage&quot;,&quot;speed&quot;:2.6,&quot;dps&quot;:130.2,&quot;stats&quot;:[&quot;+24 Strength&quot;,&quot;+49 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 33.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your expertise rating by 19.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:150830,&quot;sellGold&quot;:15,&quot;sellSilver&quot;:8,&quot;sellCopper&quot;:30,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:23953,&quot;bossName&quot;:&quot;Prince Keleseth&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Infantry Assault Blade</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+24 Strength, +49 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk"
+                        data-req="80"
+                        data-item-id="37178"
+                        data-item-json="{&quot;id&quot;:37178,&quot;name&quot;:&quot;Strategist&#x27;s Belt&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Waist (Plate)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1218 Armor&quot;,&quot;+52 Strength&quot;,&quot;+73 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves haste rating by 56.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:45,&quot;sellPrice&quot;:52900,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:29,&quot;sellCopper&quot;:0,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:23953,&quot;bossName&quot;:&quot;Prince Keleseth&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Strategist's Belt</span></td>
+                        <td><span class="slot-text">Waist (Plate)</span></td>
+                        <td><span class="stat-text">+1218 Armor, +52 Strength, +73 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="80"
+                        data-item-id="37177"
+                        data-item-json="{&quot;id&quot;:37177,&quot;name&quot;:&quot;Wand of the San&#x27;layn&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:true,&quot;itemClass&quot;:2,&quot;subclass&quot;:19,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Wand&quot;,&quot;damage&quot;:&quot;301–560 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:239.2,&quot;stats&quot;:[],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 21.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 14.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves haste rating by 34.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:112317,&quot;sellGold&quot;:11,&quot;sellSilver&quot;:23,&quot;sellCopper&quot;:17,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:14.285714285714286,&quot;chanceStr&quot;:&quot;14.3%&quot;,&quot;bossId&quot;:23953,&quot;bossName&quot;:&quot;Prince Keleseth&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Wand of the San'layn</span></td>
+                        <td><span class="slot-text">Ranged</span></td>
+                        <td><span class="stat-text"></span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">14.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Skarvald the Constructor -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Skarvald the Constructor</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Vrykul warrior fought alongside Dalronn — bring them low together · Charge, Stone Strike; when one dies his ghost aids the other, so balance their health · Level 72 Elite · Entry 24200</p>
+            <p class="loot-group-heading">Normal drops</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior rogue shaman druid"
+                        data-req="70"
+                        data-item-id="35573"
+                        data-item-json="{&quot;id&quot;:35573,&quot;name&quot;:&quot;Arm Blade of Augelmir&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:13,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Fist&quot;,&quot;damage&quot;:&quot;167–312 Damage&quot;,&quot;speed&quot;:2.4,&quot;dps&quot;:99.8,&quot;stats&quot;:[&quot;+18 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 39.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:113999,&quot;sellGold&quot;:11,&quot;sellSilver&quot;:39,&quot;sellCopper&quot;:99,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:24200,&quot;bossName&quot;:&quot;Skarvald the Constructor&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Arm Blade of Augelmir</span></td>
+                        <td><span class="slot-text">Main Hand</span></td>
+                        <td><span class="stat-text">+18 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">33.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="paladin"
+                        data-req="70"
+                        data-item-id="35574"
+                        data-item-json="{&quot;id&quot;:35574,&quot;name&quot;:&quot;Chestplate of the Northern Lights&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Plate)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1753 Armor&quot;,&quot;+52 Stamina&quot;,&quot;+55 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 47.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 15 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:135,&quot;sellPrice&quot;:80091,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:0,&quot;sellCopper&quot;:91,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:24200,&quot;bossName&quot;:&quot;Skarvald the Constructor&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Chestplate of the Northern Lights</span></td>
+                        <td><span class="slot-text">Chest (Plate)</span></td>
+                        <td><span class="stat-text">+1753 Armor, +52 Stamina, +55 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">33.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="35575"
+                        data-item-json="{&quot;id&quot;:35575,&quot;name&quot;:&quot;Skarvald&#x27;s Dragonskin Habergeon&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Leather)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+441 Armor&quot;,&quot;+60 Agility&quot;,&quot;+45 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 80.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves haste rating by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:57422,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:74,&quot;sellCopper&quot;:22,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:24200,&quot;bossName&quot;:&quot;Skarvald the Constructor&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Skarvald's Dragonskin Habergeon</span></td>
+                        <td><span class="slot-text">Chest (Leather)</span></td>
+                        <td><span class="stat-text">+441 Armor, +60 Agility, +45 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">33.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="loot-group-heading heroic">🔥 Heroic-only drops</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="80"
+                        data-item-id="37183"
+                        data-item-json="{&quot;id&quot;:37183,&quot;name&quot;:&quot;Bindings of the Tunneler&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+239 Armor&quot;,&quot;+31 Agility&quot;,&quot;+67 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 84.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your expertise rating by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:38248,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:82,&quot;sellCopper&quot;:48,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:24200,&quot;bossName&quot;:&quot;Skarvald the Constructor&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Bindings of the Tunneler</span></td>
+                        <td><span class="slot-text">Wrist (Leather)</span></td>
+                        <td><span class="stat-text">+239 Armor, +31 Agility, +67 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior hunter rogue shaman druid"
+                        data-req="80"
+                        data-item-id="37181"
+                        data-item-json="{&quot;id&quot;:37181,&quot;name&quot;:&quot;Dagger of Betrayal&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;187–281 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:130.0,&quot;stats&quot;:[&quot;+24 Agility&quot;,&quot;+28 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 66.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 32.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:151918,&quot;sellGold&quot;:15,&quot;sellSilver&quot;:19,&quot;sellCopper&quot;:18,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:24200,&quot;bossName&quot;:&quot;Skarvald the Constructor&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Dagger of Betrayal</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+24 Agility, +28 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="80"
+                        data-item-id="37184"
+                        data-item-json="{&quot;id&quot;:37184,&quot;name&quot;:&quot;Dalronn&#x27;s Jerkin&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1212 Armor&quot;,&quot;+67 Stamina&quot;,&quot;+56 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 91.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 31 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:92121,&quot;sellGold&quot;:9,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:21,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:24200,&quot;bossName&quot;:&quot;Skarvald the Constructor&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Dalronn's Jerkin</span></td>
+                        <td><span class="slot-text">Chest (Mail)</span></td>
+                        <td><span class="stat-text">+1212 Armor, +67 Stamina, +56 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="paladin"
+                        data-req="80"
+                        data-item-id="37182"
+                        data-item-json="{&quot;id&quot;:37182,&quot;name&quot;:&quot;Helmet of the Constructor&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Plate)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1760 Armor&quot;,&quot;+46 Stamina&quot;,&quot;+52 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 70.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 62.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:79882,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:98,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:24200,&quot;bossName&quot;:&quot;Skarvald the Constructor&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Helmet of the Constructor</span></td>
+                        <td><span class="slot-text">Head (Plate)</span></td>
+                        <td><span class="stat-text">+1760 Armor, +46 Stamina, +52 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Dalronn the Controller -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Dalronn the Controller</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Necromancer half of the paired encounter · Shadow Bolt, Debilitate, raises Skeletal Guardians; ghost-phases if killed before Skarvald · Level 72 Elite · Entry 24201</p>
+            <p class="loot-group-heading">Normal drops</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior rogue shaman druid"
+                        data-req="70"
+                        data-item-id="35573"
+                        data-item-json="{&quot;id&quot;:35573,&quot;name&quot;:&quot;Arm Blade of Augelmir&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Main Hand&quot;,&quot;slotFilter&quot;:&quot;Main Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:13,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Fist&quot;,&quot;damage&quot;:&quot;167–312 Damage&quot;,&quot;speed&quot;:2.4,&quot;dps&quot;:99.8,&quot;stats&quot;:[&quot;+18 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 39.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:113999,&quot;sellGold&quot;:11,&quot;sellSilver&quot;:39,&quot;sellCopper&quot;:99,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:24201,&quot;bossName&quot;:&quot;Dalronn the Controller&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Arm Blade of Augelmir</span></td>
+                        <td><span class="slot-text">Main Hand</span></td>
+                        <td><span class="stat-text">+18 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">33.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="paladin"
+                        data-req="70"
+                        data-item-id="35574"
+                        data-item-json="{&quot;id&quot;:35574,&quot;name&quot;:&quot;Chestplate of the Northern Lights&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Plate)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1753 Armor&quot;,&quot;+52 Stamina&quot;,&quot;+55 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 47.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 15 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:135,&quot;sellPrice&quot;:80091,&quot;sellGold&quot;:8,&quot;sellSilver&quot;:0,&quot;sellCopper&quot;:91,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:24201,&quot;bossName&quot;:&quot;Dalronn the Controller&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Chestplate of the Northern Lights</span></td>
+                        <td><span class="slot-text">Chest (Plate)</span></td>
+                        <td><span class="stat-text">+1753 Armor, +52 Stamina, +55 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">33.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="35575"
+                        data-item-json="{&quot;id&quot;:35575,&quot;name&quot;:&quot;Skarvald&#x27;s Dragonskin Habergeon&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Leather)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+441 Armor&quot;,&quot;+60 Agility&quot;,&quot;+45 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 80.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves haste rating by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:57422,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:74,&quot;sellCopper&quot;:22,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:24201,&quot;bossName&quot;:&quot;Dalronn the Controller&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Skarvald's Dragonskin Habergeon</span></td>
+                        <td><span class="slot-text">Chest (Leather)</span></td>
+                        <td><span class="stat-text">+441 Armor, +60 Agility, +45 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">33.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="loot-group-heading heroic">🔥 Heroic-only drops</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="80"
+                        data-item-id="37183"
+                        data-item-json="{&quot;id&quot;:37183,&quot;name&quot;:&quot;Bindings of the Tunneler&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+239 Armor&quot;,&quot;+31 Agility&quot;,&quot;+67 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 84.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your expertise rating by 25.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:38248,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:82,&quot;sellCopper&quot;:48,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:24201,&quot;bossName&quot;:&quot;Dalronn the Controller&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Bindings of the Tunneler</span></td>
+                        <td><span class="slot-text">Wrist (Leather)</span></td>
+                        <td><span class="stat-text">+239 Armor, +31 Agility, +67 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior hunter rogue shaman druid"
+                        data-req="80"
+                        data-item-id="37181"
+                        data-item-json="{&quot;id&quot;:37181,&quot;name&quot;:&quot;Dagger of Betrayal&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;One-Hand&quot;,&quot;slotFilter&quot;:&quot;One-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:15,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Dagger&quot;,&quot;damage&quot;:&quot;187–281 Damage&quot;,&quot;speed&quot;:1.8,&quot;dps&quot;:130.0,&quot;stats&quot;:[&quot;+24 Agility&quot;,&quot;+28 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 66.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 32.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:151918,&quot;sellGold&quot;:15,&quot;sellSilver&quot;:19,&quot;sellCopper&quot;:18,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:24201,&quot;bossName&quot;:&quot;Dalronn the Controller&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Dagger of Betrayal</span></td>
+                        <td><span class="slot-text">One-Hand</span></td>
+                        <td><span class="stat-text">+24 Agility, +28 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="80"
+                        data-item-id="37184"
+                        data-item-json="{&quot;id&quot;:37184,&quot;name&quot;:&quot;Dalronn&#x27;s Jerkin&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Chest (Mail)&quot;,&quot;slotFilter&quot;:&quot;Chest&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1212 Armor&quot;,&quot;+67 Stamina&quot;,&quot;+56 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 91.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 31 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:92121,&quot;sellGold&quot;:9,&quot;sellSilver&quot;:21,&quot;sellCopper&quot;:21,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:24201,&quot;bossName&quot;:&quot;Dalronn the Controller&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Dalronn's Jerkin</span></td>
+                        <td><span class="slot-text">Chest (Mail)</span></td>
+                        <td><span class="stat-text">+1212 Armor, +67 Stamina, +56 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal"
+                        data-classes="paladin"
+                        data-req="80"
+                        data-item-id="37182"
+                        data-item-json="{&quot;id&quot;:37182,&quot;name&quot;:&quot;Helmet of the Constructor&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Plate)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1760 Armor&quot;,&quot;+46 Stamina&quot;,&quot;+52 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 70.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 62.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:80,&quot;sellPrice&quot;:79882,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:98,&quot;sellCopper&quot;:82,&quot;roles&quot;:[&quot;heal&quot;],&quot;classes&quot;:[&quot;paladin&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:24201,&quot;bossName&quot;:&quot;Dalronn the Controller&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Helmet of the Constructor</span></td>
+                        <td><span class="slot-text">Head (Plate)</span></td>
+                        <td><span class="stat-text">+1760 Armor, +46 Stamina, +52 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+    <!-- Ingvar the Plunderer -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">Ingvar the Plunderer</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Warband chieftain who dies twice · Cleave, Smash, Roar; the valkyr Annhylde resurrects him as an undead form for a second phase · Level 72 Elite · Entry 23954</p>
+            <p class="loot-group-heading">Normal drops</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="shaman druid"
+                        data-req="70"
+                        data-item-id="35577"
+                        data-item-json="{&quot;id&quot;:35577,&quot;name&quot;:&quot;Holistic Patchwork Breeches&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Leather)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+386 Armor&quot;,&quot;+45 Stamina&quot;,&quot;+35 Intellect&quot;,&quot;+55 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 47.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:true,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:75,&quot;sellPrice&quot;:57850,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:78,&quot;sellCopper&quot;:50,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:23954,&quot;bossName&quot;:&quot;Ingvar the Plunderer&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Holistic Patchwork Breeches</span></td>
+                        <td><span class="slot-text">Legs (Leather)</span></td>
+                        <td><span class="stat-text">+386 Armor, +45 Stamina, +35 Intellect, +55 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">33.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee"
+                        data-classes="warrior paladin dk shaman"
+                        data-req="70"
+                        data-item-id="35576"
+                        data-item-json="{&quot;id&quot;:35576,&quot;name&quot;:&quot;Ingvar&#x27;s Monolithic Cleaver&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Axe&quot;,&quot;damage&quot;:&quot;332–498 Damage&quot;,&quot;speed&quot;:3.2,&quot;dps&quot;:129.7,&quot;stats&quot;:[&quot;+56 Strength&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 70.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:144091,&quot;sellGold&quot;:14,&quot;sellSilver&quot;:40,&quot;sellCopper&quot;:91,&quot;roles&quot;:[&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:23954,&quot;bossName&quot;:&quot;Ingvar the Plunderer&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Ingvar's Monolithic Cleaver</span></td>
+                        <td><span class="slot-text">Two-Hand</span></td>
+                        <td><span class="stat-text">+56 Strength</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">33.3%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin shaman"
+                        data-req="70"
+                        data-item-id="35578"
+                        data-item-json="{&quot;id&quot;:35578,&quot;name&quot;:&quot;Overlaid Chain Spaulders&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Mail)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+736 Armor&quot;,&quot;+39 Stamina&quot;,&quot;+41 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 35.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 11 mana per 5 sec.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:52485,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:24,&quot;sellCopper&quot;:85,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;shaman&quot;],&quot;chance&quot;:33.333333333333336,&quot;chanceStr&quot;:&quot;33.3%&quot;,&quot;bossId&quot;:23954,&quot;bossName&quot;:&quot;Ingvar the Plunderer&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Overlaid Chain Spaulders</span></td>
+                        <td><span class="slot-text">Shoulder (Mail)</span></td>
+                        <td><span class="stat-text">+736 Armor, +39 Stamina, +41 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">33.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="loot-group-heading heroic">🔥 Heroic-only drops</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
+                        data-req="80"
+                        data-item-id="37192"
+                        data-item-json="{&quot;id&quot;:37192,&quot;name&quot;:&quot;Annhylde&#x27;s Ring&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+50 Stamina&quot;,&quot;+33 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 59.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves haste rating by 49.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:71245,&quot;sellGold&quot;:7,&quot;sellSilver&quot;:12,&quot;sellCopper&quot;:45,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:23954,&quot;bossName&quot;:&quot;Ingvar the Plunderer&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Annhylde's Ring</span></td>
+                        <td><span class="slot-text">Finger</span></td>
+                        <td><span class="stat-text">+50 Stamina, +33 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="80"
+                        data-item-id="37189"
+                        data-item-json="{&quot;id&quot;:37189,&quot;name&quot;:&quot;Breeches of the Caller&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+254 Armor&quot;,&quot;+58 Stamina&quot;,&quot;+74 Intellect&quot;,&quot;+52 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 73.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:65,&quot;sellPrice&quot;:56602,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:66,&quot;sellCopper&quot;:2,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:23954,&quot;bossName&quot;:&quot;Ingvar the Plunderer&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Breeches of the Caller</span></td>
+                        <td><span class="slot-text">Legs (Cloth)</span></td>
+                        <td><span class="stat-text">+254 Armor, +58 Stamina, +74 Intellect, +52 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="melee ranged"
+                        data-classes="warrior hunter rogue"
+                        data-req="80"
+                        data-item-id="37191"
+                        data-item-json="{&quot;id&quot;:37191,&quot;name&quot;:&quot;Drake-Mounted Crossbow&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Ranged&quot;,&quot;slotFilter&quot;:&quot;Ranged&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:18,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Crossbow&quot;,&quot;damage&quot;:&quot;290–436 Damage&quot;,&quot;speed&quot;:2.8,&quot;dps&quot;:129.6,&quot;stats&quot;:[&quot;+29 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 56.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 26.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:90,&quot;sellPrice&quot;:142594,&quot;sellGold&quot;:14,&quot;sellSilver&quot;:25,&quot;sellCopper&quot;:94,&quot;roles&quot;:[&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;rogue&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:23954,&quot;bossName&quot;:&quot;Ingvar the Plunderer&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Drake-Mounted Crossbow</span></td>
+                        <td><span class="slot-text">Ranged</span></td>
+                        <td><span class="stat-text">+29 Agility</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="warrior hunter shaman druid"
+                        data-req="80"
+                        data-item-id="37190"
+                        data-item-json="{&quot;id&quot;:37190,&quot;name&quot;:&quot;Enraged Feral Staff&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Two-Hand&quot;,&quot;slotFilter&quot;:&quot;Two-Hand&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:2,&quot;subclass&quot;:10,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Staff&quot;,&quot;damage&quot;:&quot;325–488 Damage&quot;,&quot;speed&quot;:2.4,&quot;dps&quot;:169.4,&quot;stats&quot;:[&quot;+700 Armor&quot;,&quot;+78 Agility&quot;,&quot;+117 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 104.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:100,&quot;sellPrice&quot;:177562,&quot;sellGold&quot;:17,&quot;sellSilver&quot;:75,&quot;sellCopper&quot;:62,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;hunter&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:23954,&quot;bossName&quot;:&quot;Ingvar the Plunderer&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Enraged Feral Staff</span></td>
+                        <td><span class="slot-text">Two-Hand</span></td>
+                        <td><span class="stat-text">+700 Armor, +78 Agility, +117 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal melee ranged"
+                        data-classes="warrior paladin hunter dk shaman"
+                        data-req="80"
+                        data-item-id="37188"
+                        data-item-json="{&quot;id&quot;:37188,&quot;name&quot;:&quot;Plunderer&#x27;s Helmet&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Head (Mail)&quot;,&quot;slotFilter&quot;:&quot;Head&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:3,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Mail&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+985 Armor&quot;,&quot;+60 Agility&quot;,&quot;+42 Stamina&quot;,&quot;+27 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 124.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves critical strike rating by 36.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:70,&quot;sellPrice&quot;:63439,&quot;sellGold&quot;:6,&quot;sellSilver&quot;:34,&quot;sellCopper&quot;:39,&quot;roles&quot;:[&quot;heal&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;hunter&quot;,&quot;dk&quot;,&quot;shaman&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:23954,&quot;bossName&quot;:&quot;Ingvar the Plunderer&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Plunderer's Helmet</span></td>
+                        <td><span class="slot-text">Head (Mail)</span></td>
+                        <td><span class="stat-text">+985 Armor, +60 Agility, +42 Stamina, +27 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="80"
+                        data-item-id="37194"
+                        data-item-json="{&quot;id&quot;:37194,&quot;name&quot;:&quot;Sharp-Barbed Leather Belt&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Waist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Waist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+317 Armor&quot;,&quot;+45 Agility&quot;,&quot;+75 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 132.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases your expertise rating by 43.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:40,&quot;sellPrice&quot;:49369,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:93,&quot;sellCopper&quot;:69,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:23954,&quot;bossName&quot;:&quot;Ingvar the Plunderer&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Sharp-Barbed Leather Belt</span></td>
+                        <td><span class="slot-text">Waist (Leather)</span></td>
+                        <td><span class="stat-text">+317 Armor, +45 Agility, +75 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk"
+                        data-req="80"
+                        data-item-id="37193"
+                        data-item-json="{&quot;id&quot;:37193,&quot;name&quot;:&quot;Staggering Legplates&quot;,&quot;quality&quot;:4,&quot;qualityName&quot;:&quot;Epic&quot;,&quot;color&quot;:&quot;#a335ee&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Legs (Plate)&quot;,&quot;slotFilter&quot;:&quot;Legs&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:4,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Plate&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+1961 Armor&quot;,&quot;+83 Strength&quot;,&quot;+109 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 80.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:120,&quot;sellPrice&quot;:137727,&quot;sellGold&quot;:13,&quot;sellSilver&quot;:77,&quot;sellCopper&quot;:27,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:23954,&quot;bossName&quot;:&quot;Ingvar the Plunderer&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#a335ee; font-weight:600;">Staggering Legplates</span></td>
+                        <td><span class="slot-text">Legs (Plate)</span></td>
+                        <td><span class="stat-text">+1961 Armor, +83 Strength, +109 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk shaman druid"
+                        data-req="80"
+                        data-item-id="37186"
+                        data-item-json="{&quot;id&quot;:37186,&quot;name&quot;:&quot;Unsmashable Heavy Band&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Finger&quot;,&quot;slotFilter&quot;:&quot;Finger&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+43 Strength&quot;,&quot;+64 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases the block value of your shield by 81.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 30.&quot;}],&quot;bonding&quot;:1,&quot;bondingName&quot;:&quot;Soulbound&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:53434,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:34,&quot;sellCopper&quot;:34,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:25.0,&quot;chanceStr&quot;:&quot;25.0%&quot;,&quot;bossId&quot;:23954,&quot;bossName&quot;:&quot;Ingvar the Plunderer&quot;,&quot;bossLvl&quot;:72,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;boss&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Unsmashable Heavy Band</span></td>
+                        <td><span class="slot-text">Finger</span></td>
+                        <td><span class="stat-text">+43 Strength, +64 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">25.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+
+
+<details class="trash-section">
+    <summary>🗡️ Trash drops <span class="trash-count">(1 mobs)</span></summary>
+    <p class="trash-blurb">Trash mobs you encounter clearing the dungeon —
+       set pieces, world drops, and miscellaneous gear from non-boss
+       creatures. They respawn, so multiple kills per run are possible.</p>
+    
+    <!-- Trash -->
+    <details class="card boss-card">
+        <summary class="boss-card-summary">
+            <h3 class="card-title">🗡️ Trash</h3>
+        </summary>
+        <div class="boss-card-content">
+            <p class="boss-meta">Level 71 Elite · Entry 9000574</p>
+            <p class="loot-group-heading">Normal drops</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="70"
+                        data-item-id="35580"
+                        data-item-json="{&quot;id&quot;:35580,&quot;name&quot;:&quot;Skein Woven Mantle&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+176 Armor&quot;,&quot;+33 Stamina&quot;,&quot;+41 Intellect&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 30.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Restores 15 mana per 5 sec.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:35092,&quot;sellGold&quot;:3,&quot;sellSilver&quot;:50,&quot;sellCopper&quot;:92,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:1.5,&quot;chanceStr&quot;:&quot;1.5%&quot;,&quot;bossId&quot;:9000574,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:71,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Skein Woven Mantle</span></td>
+                        <td><span class="slot-text">Shoulder (Cloth)</span></td>
+                        <td><span class="stat-text">+176 Armor, +33 Stamina, +41 Intellect</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">1.5%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee ranged"
+                        data-classes="hunter rogue shaman druid"
+                        data-req="70"
+                        data-item-id="35579"
+                        data-item-json="{&quot;id&quot;:35579,&quot;name&quot;:&quot;Vrykul Shackles&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:155,&quot;req&quot;:70,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Wrist (Leather)&quot;,&quot;slotFilter&quot;:&quot;Wrist&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:2,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Leather&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+193 Armor&quot;,&quot;+39 Stamina&quot;,&quot;+27 Agility&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases attack power by 52.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Improves hit rating by 16.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:35,&quot;sellPrice&quot;:29136,&quot;sellGold&quot;:2,&quot;sellSilver&quot;:91,&quot;sellCopper&quot;:36,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;hunter&quot;,&quot;rogue&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:1.5,&quot;chanceStr&quot;:&quot;1.5%&quot;,&quot;bossId&quot;:9000574,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:71,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:false,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Vrykul Shackles</span></td>
+                        <td><span class="slot-text">Wrist (Leather)</span></td>
+                        <td><span class="stat-text">+193 Armor, +39 Stamina, +27 Agility</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#ABD473;" title="Hunter">H</span>
+                            <span class="class-pill" style="background:#FFF569;" title="Rogue">R</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">155</td>
+                        <td class="text-end">1.5%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="loot-group-heading heroic">🔥 Heroic-only drops</p>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:23%">ITEM</th>
+                        <th style="width:13%">SLOT</th>
+                        <th class="no-sort" style="width:21%">STATS</th>
+                        <th style="width:10%">ROLES</th>
+                        <th style="width:17%">CLASSES</th>
+                        <th class="text-end" style="width:8%">ILVL</th>
+                        <th class="text-end" style="width:8%">DROP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="paladin priest shaman mage warlock druid"
+                        data-req="80"
+                        data-item-id="37290"
+                        data-item-json="{&quot;id&quot;:37290,&quot;name&quot;:&quot;Dragon Prow Amulet&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Neck&quot;,&quot;slotFilter&quot;:&quot;Neck&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:0,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+31 Stamina&quot;,&quot;+33 Intellect&quot;,&quot;+43 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 50.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:true,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:53434,&quot;sellGold&quot;:5,&quot;sellSilver&quot;:34,&quot;sellCopper&quot;:34,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;paladin&quot;,&quot;priest&quot;,&quot;shaman&quot;,&quot;mage&quot;,&quot;warlock&quot;,&quot;druid&quot;],&quot;chance&quot;:1.0,&quot;chanceStr&quot;:&quot;1.0%&quot;,&quot;bossId&quot;:9000574,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:71,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Dragon Prow Amulet</span></td>
+                        <td><span class="slot-text">Neck</span></td>
+                        <td><span class="stat-text">+31 Stamina, +33 Intellect, +43 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">1.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="heal ranged"
+                        data-classes="priest mage warlock"
+                        data-req="80"
+                        data-item-id="37196"
+                        data-item-json="{&quot;id&quot;:37196,&quot;name&quot;:&quot;Runecaster&#x27;s Mantle&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Shoulder (Cloth)&quot;,&quot;slotFilter&quot;:&quot;Shoulder&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+218 Armor&quot;,&quot;+43 Stamina&quot;,&quot;+47 Intellect&quot;,&quot;+44 Spirit&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases spell power by 68.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:50,&quot;sellPrice&quot;:44759,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:47,&quot;sellCopper&quot;:59,&quot;roles&quot;:[&quot;heal&quot;,&quot;ranged&quot;],&quot;classes&quot;:[&quot;priest&quot;,&quot;mage&quot;,&quot;warlock&quot;],&quot;chance&quot;:1.0,&quot;chanceStr&quot;:&quot;1.0%&quot;,&quot;bossId&quot;:9000574,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:71,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Runecaster's Mantle</span></td>
+                        <td><span class="slot-text">Shoulder (Cloth)</span></td>
+                        <td><span class="stat-text">+218 Armor, +43 Stamina, +47 Intellect, +44 Spirit</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#2d5a3d;color:#7ec896;" title="Healer">+</span>
+                            <span class="role-pill" style="background:#7a5a2d;color:#e8c87e;" title="Ranged DPS">🏹</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#FFFFFF;" title="Priest">P</span>
+                            <span class="class-pill" style="background:#69CCF0;" title="Mage">M</span>
+                            <span class="class-pill" style="background:#9482C9;" title="Warlock">W</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">1.0%</td>
+                    </tr>
+                    <tr class="item-row"
+                        data-roles="tank melee"
+                        data-classes="warrior paladin dk shaman druid"
+                        data-req="80"
+                        data-item-id="37197"
+                        data-item-json="{&quot;id&quot;:37197,&quot;name&quot;:&quot;Tattered Castle Drape&quot;,&quot;quality&quot;:3,&quot;qualityName&quot;:&quot;Rare&quot;,&quot;color&quot;:&quot;#0070dd&quot;,&quot;ilvl&quot;:200,&quot;req&quot;:80,&quot;allowedClasses&quot;:[],&quot;slot&quot;:&quot;Back&quot;,&quot;slotFilter&quot;:&quot;Back&quot;,&quot;isWand&quot;:false,&quot;itemClass&quot;:4,&quot;subclass&quot;:1,&quot;setId&quot;:0,&quot;armorType&quot;:&quot;Cloth&quot;,&quot;damage&quot;:&quot;&quot;,&quot;speed&quot;:null,&quot;dps&quot;:null,&quot;stats&quot;:[&quot;+145 Armor&quot;,&quot;+42 Strength&quot;,&quot;+66 Stamina&quot;],&quot;effects&quot;:[{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases the block value of your shield by 84.&quot;},{&quot;trigger&quot;:&quot;Equip&quot;,&quot;text&quot;:&quot;Increases defense rating by 29.&quot;}],&quot;bonding&quot;:2,&quot;bondingName&quot;:&quot;Binds when equipped&quot;,&quot;unique&quot;:false,&quot;uniqueEquipped&quot;:false,&quot;maxDurability&quot;:0,&quot;sellPrice&quot;:44918,&quot;sellGold&quot;:4,&quot;sellSilver&quot;:49,&quot;sellCopper&quot;:18,&quot;roles&quot;:[&quot;tank&quot;,&quot;melee&quot;],&quot;classes&quot;:[&quot;warrior&quot;,&quot;paladin&quot;,&quot;dk&quot;,&quot;shaman&quot;,&quot;druid&quot;],&quot;chance&quot;:1.0,&quot;chanceStr&quot;:&quot;1.0%&quot;,&quot;bossId&quot;:9000574,&quot;bossName&quot;:&quot;Trash&quot;,&quot;bossLvl&quot;:71,&quot;mapId&quot;:574,&quot;dungeon&quot;:&quot;Utgarde Keep&quot;,&quot;page&quot;:&quot;utgarde-keep.html&quot;,&quot;faction&quot;:&quot;Both&quot;,&quot;wing&quot;:null,&quot;heroic&quot;:true,&quot;source&quot;:&quot;trash&quot;}">
+                        <td><span style="color:#0070dd; font-weight:600;">Tattered Castle Drape</span></td>
+                        <td><span class="slot-text">Back</span></td>
+                        <td><span class="stat-text">+145 Armor, +42 Strength, +66 Stamina</span></td>
+                        <td>
+                            <span class="role-pill" style="background:#3a5a7a;color:#87ceeb;" title="Tank">🛡</span>
+                            <span class="role-pill" style="background:#7a3a3a;color:#e88080;" title="Melee DPS">⚔</span>
+                        </td>
+                        <td>
+                            <span class="class-pill" style="background:#C79C6E;" title="Warrior">W</span>
+                            <span class="class-pill" style="background:#F58CBA;" title="Paladin">P</span>
+                            <span class="class-pill" style="background:#C41F3B;" title="Death Knight">K</span>
+                            <span class="class-pill" style="background:#0070DE;" title="Shaman">S</span>
+                            <span class="class-pill" style="background:#FF7D0A;" title="Druid">D</span>
+                        </td>
+                        <td class="text-end">200</td>
+                        <td class="text-end">1.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="no-loot" style="display:none;">No items match these filters for this boss.</p>
+        </div>
+    </details>
+</details>
+
+</div>
+
+<script src="tooltip.js"></script>
+<script src="smart_filter_block.js"></script>
+<script src="kcraft_pills.js"></script>
+<script src="dungeon_filter.js"></script>
+<script src="sortable.js"></script>
+
+</body>
+</html>
