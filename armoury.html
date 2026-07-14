@@ -781,9 +781,23 @@
             font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.4px;
             margin-bottom: 0.5rem;
         }
+        /* Two rows: items share the top row, enchants share the row below, so
+           the Equipped/Top-3 enchant blocks line up across the columns even
+           when the two item stacks differ in height (1 worn vs up to 3
+           candidates). Without this the enchant sections floated to different
+           heights per column. Enchant blocks carry their own top margin, so
+           row-gap is 0. */
         .up-slot-body {
-            display: grid; grid-template-columns: 1fr 2fr; gap: 1rem;
+            display: grid; grid-template-columns: 1fr 2fr;
+            grid-template-areas:
+                "curitems canditems"
+                "curench  candench";
+            column-gap: 1rem; row-gap: 0;
         }
+        .up-area-curitems  { grid-area: curitems; }
+        .up-area-canditems { grid-area: canditems; }
+        .up-area-curench   { grid-area: curench; }
+        .up-area-candench  { grid-area: candench; }
         .up-col-heading {
             color: #888; font-size: 0.72rem; text-transform: uppercase;
             letter-spacing: 0.5px; margin-bottom: 4px;
@@ -878,8 +892,11 @@
         }
 
         @media (max-width: 600px) {
-            .up-slot-body { grid-template-columns: 1fr; }
-            .up-current-col { padding-bottom: 4px; border-bottom: 1px dashed #333; }
+            .up-slot-body {
+                grid-template-columns: 1fr;
+                grid-template-areas: "curitems" "curench" "canditems" "candench";
+            }
+            .up-area-canditems { border-top: 1px dashed #333; padding-top: 6px; margin-top: 2px; }
             /* Inline AH/dungeon icons stay visible on mobile too (tapping the
                icon does its action via stopPropagation; tapping elsewhere on
                the row still opens the tooltip). */
@@ -11619,16 +11636,16 @@
         return `<div class="up-slot-card">
             <div class="up-slot-label">${escape(label)}</div>
             <div class="up-slot-body">
-                <div class="up-current-col">
+                <div class="up-current-col up-area-curitems">
                     <div class="up-col-heading">Equipped</div>
                     ${currHtml}
-                    ${eqEnchHtml}
                 </div>
-                <div class="up-cand-col">
+                <div class="up-cand-col up-area-canditems">
                     <div class="up-col-heading">Top 3 upgrades</div>
                     ${candHtml}
-                    ${enchHtml}
                 </div>
+                <div class="up-current-col up-area-curench">${eqEnchHtml}</div>
+                <div class="up-cand-col up-area-candench">${enchHtml}</div>
             </div>
         </div>`;
     }
