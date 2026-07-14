@@ -8370,6 +8370,36 @@
         return r.json();
     }
 
+    // Move a squad-held item from its holder into the currently-viewed
+    // character's bags (backend /transfer-item). Sender pays the 30c fee; both
+    // characters must be logged out. Refreshes the finder on success. Uses a
+    // direct fetch (not api()) so the backend's error detail reaches the alert.
+    window.transferSquadItem = async function(fromChar, entry, itemName) {
+        const to = lastViewedCharacter && lastViewedCharacter.name;
+        if (!to) { alert('No character selected.'); return; }
+        if (!confirm(`Move "${itemName}"\nfrom ${fromChar}  →  ${to}?\n\n`
+            + `Both characters must be logged out. ${fromChar} pays the 30c mail fee. `
+            + `It lands in ${to}'s bags.`)) return;
+        try {
+            const { base, key } = getCreds();
+            const r = await fetch(base + '/transfer-item', {
+                method: 'POST', credentials: 'omit',
+                headers: { 'X-API-Key': key, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ from_char: fromChar, to_char: to, entry: entry })
+            });
+            const data = await r.json().catch(() => ({}));
+            if (r.ok && data.ok) {
+                alert(`✓ "${itemName}" moved to ${to}'s bags (${fromChar} paid ${data.fee}c).`);
+                showUpgrades(to, (lastViewedCharacter && lastViewedCharacter.classId) || 0,
+                                 (lastViewedCharacter && lastViewedCharacter.level) || 0);
+            } else {
+                alert('Could not move it: ' + (data.detail || ('HTTP ' + r.status)));
+            }
+        } catch (e) {
+            alert('Transfer failed: ' + (e && e.message ? e.message : e));
+        }
+    };
+
     // ----- View management -----
     function showView(name) {
         ['login', 'roster', 'character', 'ah', 'upgrades', 'squads', 'logs'].forEach(v => {
@@ -11542,6 +11572,13 @@
                 ? `<a class="up-ah-link" href="${escape(it.page)}" target="_blank" rel="noopener" ` +
                   `title="View ${escape(it.dungeon || 'dungeon')}" onclick="event.stopPropagation();">💀</a>`
                 : '';
+            // Squad-held item -> a one-click "send it here" button that moves it
+            // from the holder into the viewed char's bags (sender pays 30c).
+            const _toName = (lastViewedCharacter && lastViewedCharacter.name) || '';
+            const transferLink = (kind === 'cand' && it.heldBy && it.id && _toName)
+                ? `<a class="up-ah-link" href="#" title="Move to ${escape(_toName)} — ${escape(it.heldBy)} pays the 30c fee" ` +
+                  `onclick="event.stopPropagation(); window.transferSquadItem(${JSON.stringify(it.heldBy).replace(/"/g, '&quot;')}, ${it.id}, ${JSON.stringify(it.name || '').replace(/"/g, '&quot;')}); return false;">📤</a>`
+                : '';
             // Whole-row click opens the AH on desktop — listed items only, and
             // not for items you already own (inBag).
             const rowClick = (kind === 'cand' && it.name && it.onAH && !it.inBag && !it.heldBy)
@@ -11571,7 +11608,7 @@
                     <span class="up-name" style="color:${it.color || '#fff'}">${escape(it.name || '?')}</span>
                     ${setBadge}
                     ${priceHtml}
-                    <span class="up-ah-slot">${ahLink}${dungeonLink}</span>
+                    <span class="up-ah-slot">${ahLink}${dungeonLink}${transferLink}</span>
                     ${reqBadge}
                     ${deltaBadge}
                     <span class="up-ilvl">${it.ilvl || '—'}</span>
