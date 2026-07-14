@@ -11364,8 +11364,17 @@
         }
 
         for (const it of unique) {
-            it.upgradeDelta = scoreItemForRole(it, weights, capCtx) - baselineFor(it)
-                            + setBonusDelta(it, slotIdx, weights, role, cls);
+            const rawDelta = scoreItemForRole(it, weights, capCtx) - baselineFor(it);
+            // Raw stats are the floor. Set-completion credit is only a SWEETENER
+            // on items that don't cost you weighted stats — if the piece is a raw
+            // downgrade, no amount of (often unearned, amortised) set-bonus credit
+            // can flag it as an upgrade. You never give up guaranteed stats now to
+            // chase a set you might never finish. Only when raw stats hold or
+            // improve does completing a tier add value / break ties.
+            const setCredit = rawDelta >= 0
+                ? setBonusDelta(it, slotIdx, weights, role, cls)
+                : 0;
+            it.upgradeDelta = rawDelta + setCredit;
         }
         // Minimum role-fit delta to count as a REAL upgrade. scoreItemForRole
         // already scored these with THIS slot's class/role weight profile, so
