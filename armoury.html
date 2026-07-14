@@ -11098,6 +11098,31 @@
         return null;
     }
 
+    // Best enchant you already own an applying scroll for (bags/bank), for this
+    // slot — pinned under the item like the mailbox enchant, NOT offered as a buy
+    // recommendation. Excludes the enchant already applied and the one waiting in
+    // the mailbox (each gets its own pinned line). Mirrors topEnchantsForSlot's
+    // item req-level gate + slot pools.
+    function bagsEnchantForSlot(slotIdx, equipped) {
+        const owned = upState.enchantsOwned;
+        if (!owned || !owned.size) return null;
+        const weights = getStatWeights(upState.role, upState.classSlug);
+        const itemReq = equipped ? (equipped.reqLevel || 0) : (upState.charLevel || 0);
+        const mailIds = upState.mailEnchantIds || new Set();
+        const appliedEn = equipped ? equipped.enchant : null;
+        let best = null, bestScore = -Infinity;
+        for (const pool of enchantPoolsForSlot(slotIdx, equipped))
+            for (const e of (ENCHANTS[pool] || [])) {
+                if ((e.req || 0) > itemReq) continue;
+                if (appliedEn && e.ench === appliedEn) continue;
+                if (mailIds.has(e.ench)) continue;
+                if (!(e.items || []).some(it => owned.has(it[0]))) continue;
+                const sc = scoreEnchant(e.stats, weights, upState.role, upState.schools);
+                if (sc > bestScore) { bestScore = sc; best = e; }
+            }
+        return best;
+    }
+
     // Score an enchant's flat {stat:value} map with the role weights, matching
     // scoreItemForRole's per-stat normalization. Procs (empty stats) score 0.
     function scoreEnchant(stats, weights, role, schools) {
@@ -11199,9 +11224,11 @@
                 let buy = null, ownScroll = null;
                 if (e.prof) { if (!profs.includes(e.prof)) continue; }
                 else {
-                    ownScroll = (e.items || []).find(it => owned.has(it[0]));
-                    buy       = (e.items || []).find(it => ah.has(it[0]));
-                    if (!ownScroll && !buy) continue;
+                    // Owned scrolls are pinned under the item as an "In bags" line
+                    // (like the mailbox enchant), not offered as a buy recommendation.
+                    if ((e.items || []).some(it => owned.has(it[0]))) continue;
+                    buy = (e.items || []).find(it => ah.has(it[0]));
+                    if (!buy) continue;
                 }
                 const sc = scoreEnchant(e.stats, weights, upState.role, upState.schools);
                 const delta = sc - curScore;   // == sc when not comparing (curScore 0)
@@ -11636,11 +11663,21 @@
             const nm = String(mailEn.name).replace(/^Enchant [^-]+ - /, '');
             mailEnchHtml = `<div style="font-size:0.78rem;color:#79b8e0;margin-top:2px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''} <span class="up-source">📬 In mailbox</span></div>`;
         }
-        // Applied item modifications (current enchant/kit + inbound mail enchant),
-        // pinned right under the item so they stay attached however tall the
-        // candidate column is.
-        const appliedEnchHtml = (curEnchHtml || mailEnchHtml)
-            ? `<div style="display:flex;flex-direction:column;gap:2px;">${curEnchHtml}${mailEnchHtml}</div>`
+        // Enchant you already own a scroll for (bags/bank), shown the SAME way as
+        // the mailbox enchant — a blue line pinned under the item, not a boxed
+        // recommendation row.
+        const bagsEn = bagsEnchantForSlot(slotIdx, currentItem);
+        let bagsEnchHtml = '';
+        if (bagsEn) {
+            const st = Object.entries(bagsEn.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
+            const nm = String(bagsEn.name).replace(/^Enchant [^-]+ - /, '');
+            bagsEnchHtml = `<div style="font-size:0.78rem;color:#79b8e0;margin-top:2px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''} <span class="up-source">🎒 In bags</span></div>`;
+        }
+        // Applied item modifications (current enchant/kit + inbound mail enchant +
+        // an owned "in bags" enchant), pinned right under the item so they stay
+        // attached however tall the candidate column is.
+        const appliedEnchHtml = (curEnchHtml || mailEnchHtml || bagsEnchHtml)
+            ? `<div style="display:flex;flex-direction:column;gap:2px;">${curEnchHtml}${mailEnchHtml}${bagsEnchHtml}</div>`
             : '';
         // Buyable enchant recommendations for the equipped item — these DO go in
         // the aligned enchant row (they mirror the candidate column's list).
