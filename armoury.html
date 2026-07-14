@@ -250,6 +250,9 @@
         .up-enchant .up-ench-name { flex: 1; min-width: 0; color: #79b8e0;
             font-weight: normal; font-size: 0.9rem;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* "Equipped" / "In bags" status text in an enchant row — match the
+           enchant name size (it otherwise inherits the larger page default). */
+        .up-enchant .up-source { font-size: 0.9rem; white-space: nowrap; flex-shrink: 0; }
 
         /* Money display */
         .money { font-variant-numeric: tabular-nums; }
@@ -863,10 +866,13 @@
             background: rgba(255,209,0,0.14); border-radius: 3px; padding: 1px 5px;
         }
         .up-item-meta {
-            display: flex; justify-content: space-between; gap: 0.5rem;
+            display: flex; justify-content: flex-start; gap: 0.5rem;
             color: #888; font-size: 0.75rem; margin-top: 2px;
         }
-        .up-drop { color: #aaa; font-variant-numeric: tabular-nums; }
+        /* Drop% is always pinned to the right edge so it lines up down the
+           column, whether the row's left side is a dungeon source or an
+           "In bags"/"In mailbox" status tag. */
+        .up-drop { color: #aaa; font-variant-numeric: tabular-nums; margin-left: auto; }
         /* Inline "Find on AH" affordance on the upgrade item row. Desktop
            only — mobile users get the equivalent button inside the tooltip
            since rows are too narrow to fit comfortably there. */
@@ -11536,7 +11542,7 @@
                     ${deltaBadge}
                     <span class="up-ilvl">${it.ilvl || '—'}</span>
                 </div>
-                <div class="up-item-meta">${source}${drop}${it._inMail ? '<span class="up-source">📬 In mailbox</span>' : ''}${it.inBag ? '<span class="up-source">🎒 In bags</span>' : ''}</div>
+                <div class="up-item-meta">${source}${it._inMail ? '<span class="up-source">📬 In mailbox</span>' : ''}${it.inBag ? '<span class="up-source">🎒 In bags</span>' : ''}${drop}</div>
             </div>`;
         };
 
