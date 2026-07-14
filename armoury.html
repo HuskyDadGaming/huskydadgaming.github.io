@@ -11349,9 +11349,11 @@
             // Only OBTAINABLE upgrades: items currently listed on the AH
             // (it.onAH from the API), dungeon boss drops (a real dungeon source
             // overlaid from loot-data; the live-pool tag is "World / AH"), OR
-            // items you already OWN unequipped (it.inBag). Drops the rest of the
-            // item DB that you can neither buy, farm, nor already have.
-            if (!it.onAH && !it.inBag && it.dungeon === 'World / AH') return false;
+            // items you already OWN unequipped (it.inBag), OR items a SQUAD-MATE
+            // is holding that they could hand over (it.heldBy). Drops the rest of
+            // the item DB that you can neither buy, farm, already have, nor grab
+            // from the squad.
+            if (!it.onAH && !it.inBag && !it.heldBy && it.dungeon === 'World / AH') return false;
             return true;
         });
 
@@ -11520,7 +11522,7 @@
             // Source: dungeon drops show "Boss &middot; Dungeon"; AH items show
             // "Auction House"; owned items (inBag) show their tag in the meta
             // line instead; the equipped row shows nothing.
-            const source = (kind !== 'cand' || it.inBag) ? ''
+            const source = (kind !== 'cand' || it.inBag || it.heldBy) ? ''
                 : isDungeon
                     ? `<span class="up-source">${escape(it.bossName)} &middot; ${escape(it.dungeon || '')}</span>`
                     : `<span class="up-source">Auction House</span>`;
@@ -11528,7 +11530,7 @@
             // dungeon-vs-not. Dungeon TRASH is BoE and gets listed, so it's
             // buyable; only boss loot that isn't on the AH stays looted-only.
             // Owned (inBag) items skip it — you already have it.
-            const ahLink = (kind === 'cand' && it.name && it.onAH && !it.inBag)
+            const ahLink = (kind === 'cand' && it.name && it.onAH && !it.inBag && !it.heldBy)
                 ? `<a class="up-ah-link" href="#" title="Find on AH" ` +
                   `onclick="event.stopPropagation(); window.ahForItem(${JSON.stringify(it.name).replace(/"/g, '&quot;')}); return false;">🏛️</a>`
                 : '';
@@ -11542,7 +11544,7 @@
                 : '';
             // Whole-row click opens the AH on desktop — listed items only, and
             // not for items you already own (inBag).
-            const rowClick = (kind === 'cand' && it.name && it.onAH && !it.inBag)
+            const rowClick = (kind === 'cand' && it.name && it.onAH && !it.inBag && !it.heldBy)
                 ? `onclick="if(window.innerWidth>600){window.ahForItem(${JSON.stringify(it.name).replace(/"/g, '&quot;')});}"`
                 : '';
             // Upgrade-delta badge: rounded role-fit gain over the equipped
@@ -11560,7 +11562,7 @@
                 : '';
             // Cheapest current AH buyout (copper), from the API. Owned items
             // (inBag) show no price — you already have it, nothing to buy.
-            const priceHtml = (kind === 'cand' && it.ahPrice && !it.inBag)
+            const priceHtml = (kind === 'cand' && it.ahPrice && !it.inBag && !it.heldBy)
                 ? `<span class="up-price" title="Cheapest Auction House buyout">${formatCopper(it.ahPrice)}</span>` : '';
             // ⭐ set-piece flag (candidates only) — completes-N-set / N-of-total.
             const setBadge = (kind === 'cand') ? setChipForCandidate(it, slotIdx) : setChipForEquipped(it);
@@ -11574,7 +11576,7 @@
                     ${deltaBadge}
                     <span class="up-ilvl">${it.ilvl || '—'}</span>
                 </div>
-                <div class="up-item-meta">${source}${it._inMail ? '<span class="up-source">📬 In mailbox</span>' : ''}${it.inBag ? `<span class="up-source">${it.ownedLoc === 'bank' ? '🏦 In bank' : '🎒 In bags'}</span>` : ''}${drop}</div>
+                <div class="up-item-meta">${source}${it._inMail ? '<span class="up-source">📬 In mailbox</span>' : ''}${it.inBag ? `<span class="up-source">${it.ownedLoc === 'bank' ? '🏦 In bank' : '🎒 In bags'}</span>` : ''}${it.heldBy ? `<span class="up-source" title="Held by a squad-mate — trade or mail it over">${it.ownedLoc === 'bank' ? '🏦' : '🎒'} In ${escape(it.heldBy)}'s ${it.ownedLoc === 'bank' ? 'bank' : 'bags'}</span>` : ''}${drop}</div>
             </div>`;
         };
 
