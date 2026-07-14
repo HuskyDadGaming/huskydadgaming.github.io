@@ -11574,16 +11574,23 @@
                 _ahName: (e._buy ? e._buy[1] : undefined) };
             const ttJson = JSON.stringify(ttItem).replace(/"/g, '&quot;');
             const safeName = e._buy ? JSON.stringify(e._buy[1]).replace(/"/g, '&quot;') : '';
-            const buyLink = e._buy
+            // Is this enchant already applied to the equipped item? If so it's
+            // not something to acquire — label it "Equipped" and drop the buy
+            // affordance (no price/In-bags, no AH link, row not clickable).
+            const isApplied = !!(currentItem && currentItem.enchant
+                && Number(e.ench) === Number(currentItem.enchant));
+            const buyLink = (e._buy && !isApplied)
                 ? `<a class="up-ah-link" href="#" title="Buy scroll on the Auction House" onclick="event.stopPropagation(); window.ahForItem(${safeName}); return false;">&#127963;</a>`
                 : '';
             // Whole row is clickable -> jump to the AH for the scroll (like item
             // rows). The AH icon keeps its own handler for a clear affordance.
-            // Owned scrolls have no AH action — nothing to buy.
-            const rowClick = e._buy ? `onclick="window.ahForItem(${safeName}); return false;"` : '';
-            const cursor   = e._buy ? 'cursor:pointer;' : '';
+            // Owned/applied scrolls have no AH action — nothing to buy.
+            const rowClick = (e._buy && !isApplied) ? `onclick="window.ahForItem(${safeName}); return false;"` : '';
+            const cursor   = (e._buy && !isApplied) ? 'cursor:pointer;' : '';
             const price    = (e._buy && upState.enchantPrices) ? upState.enchantPrices[e._buy[0]] : 0;
-            const priceHtml = price ? `<span class="up-price" title="Cheapest scroll buyout">${formatCopper(price)}</span>`
+            const priceHtml = isApplied
+                ? `<span class="up-source" style="color:#1eff00;" title="Already applied to this item">&#10004; Equipped</span>`
+                : price ? `<span class="up-price" title="Cheapest scroll buyout">${formatCopper(price)}</span>`
                 : (e._owned ? `<span class="up-source" title="You already own this scroll (bags/bank)">🎒 In bags</span>` : '');
             return `<div class="up-enchant" data-item-id="${ttItem.id}" data-item-json="${ttJson}" ${rowClick}
                 style="${cursor}${dim}">
@@ -11603,8 +11610,9 @@
                 <div class="up-col-heading" style="opacity:0.7;">Enchants</div>${topAbs.map(enchRow).join('')}</div>`
             : '';
 
-        // Equipped column: the enchant currently ON the item (green), plus up to
-        // 2 enchant upgrades measured AGAINST it (badge = gain over current).
+        // The enchant/kit currently ON the item (green). This is an APPLIED item
+        // modification, so it gets pinned directly under the item (appliedEnchHtml
+        // below), never floated into the aligned recommendation row.
         const curEn = (currentItem && currentItem.enchant && window.KCraftEnchantById)
             ? window.KCraftEnchantById[currentItem.enchant] : null;
         let curEnchHtml = '';
@@ -11622,15 +11630,20 @@
             const nm = String(mailEn.name).replace(/^Enchant [^-]+ - /, '');
             mailEnchHtml = `<div style="font-size:0.78rem;color:#79b8e0;margin-top:2px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''} <span class="up-source">📬 In mailbox</span></div>`;
         }
+        // Applied item modifications (current enchant/kit + inbound mail enchant),
+        // pinned right under the item so they stay attached however tall the
+        // candidate column is.
+        const appliedEnchHtml = (curEnchHtml || mailEnchHtml)
+            ? `<div style="display:flex;flex-direction:column;gap:2px;">${curEnchHtml}${mailEnchHtml}</div>`
+            : '';
+        // Buyable enchant recommendations for the equipped item — these DO go in
+        // the aligned enchant row (they mirror the candidate column's list).
         const betterE = currentItem ? topEnchantsForSlot(slotIdx, currentItem, 2, true) : [];
-        let eqEnchHtml = '';
-        if (curEnchHtml || mailEnchHtml || betterE.length) {
-            let inner = curEnchHtml + mailEnchHtml;
-            if (betterE.length) {
-                inner += `<div class="up-col-heading" style="opacity:0.7;">${(curEn || mailEn) ? 'Better enchants' : 'Enchant'}</div>`
-                       + betterE.map(enchRow).join('');
-            }
-            eqEnchHtml = `<div style="margin-top:8px;display:flex;flex-direction:column;gap:3px;">${inner}</div>`;
+        let betterEnchHtml = '';
+        if (betterE.length) {
+            betterEnchHtml = `<div style="margin-top:8px;display:flex;flex-direction:column;gap:3px;">`
+                + `<div class="up-col-heading" style="opacity:0.7;">${(curEn || mailEn) ? 'Better enchants' : 'Enchant'}</div>`
+                + betterE.map(enchRow).join('') + `</div>`;
         }
 
         return `<div class="up-slot-card">
@@ -11639,12 +11652,13 @@
                 <div class="up-current-col up-area-curitems">
                     <div class="up-col-heading">Equipped</div>
                     ${currHtml}
+                    ${appliedEnchHtml}
                 </div>
                 <div class="up-cand-col up-area-canditems">
                     <div class="up-col-heading">Top 3 upgrades</div>
                     ${candHtml}
                 </div>
-                <div class="up-current-col up-area-curench">${eqEnchHtml}</div>
+                <div class="up-current-col up-area-curench">${betterEnchHtml}</div>
                 <div class="up-cand-col up-area-candench">${enchHtml}</div>
             </div>
         </div>`;
