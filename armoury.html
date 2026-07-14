@@ -11574,7 +11574,7 @@
                     ${deltaBadge}
                     <span class="up-ilvl">${it.ilvl || '—'}</span>
                 </div>
-                <div class="up-item-meta">${source}${it._inMail ? '<span class="up-source">📬 In mailbox</span>' : ''}${it.inBag ? '<span class="up-source">🎒 In bags</span>' : ''}${drop}</div>
+                <div class="up-item-meta">${source}${it._inMail ? '<span class="up-source">📬 In mailbox</span>' : ''}${it.inBag ? `<span class="up-source">${it.ownedLoc === 'bank' ? '🏦 In bank' : '🎒 In bags'}</span>` : ''}${drop}</div>
             </div>`;
         };
 
@@ -11682,7 +11682,10 @@
         if (bagsEn && enScore(bagsEn) > curEnScore) {
             const st = Object.entries(bagsEn.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
             const nm = String(bagsEn.name).replace(/^Enchant [^-]+ - /, '');
-            bagsEnchHtml = `<div style="font-size:0.78rem;color:#79b8e0;margin-top:2px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''} <span class="up-source">🎒 In bags</span></div>`;
+            // Which owned scroll of this enchant decides bags-vs-bank.
+            const ownedScroll = (bagsEn.items || []).find(it => upState.enchantsOwned.has(it[0]));
+            const loc = (ownedScroll && upState.enchantsOwnedLoc[ownedScroll[0]] === 'bank') ? '🏦 In bank' : '🎒 In bags';
+            bagsEnchHtml = `<div style="font-size:0.78rem;color:#79b8e0;margin-top:2px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''} <span class="up-source">${loc}</span></div>`;
         }
         // Applied item modifications (current enchant/kit + inbound mail enchant +
         // an owned "in bags" enchant), pinned right under the item so they stay
@@ -11868,6 +11871,7 @@
             upState.professions = up.professions || [];  // skill ids, for enchant profession gate
             upState.enchantsOnAH = new Set(up.enchantsOnAH || []);  // enchant items buyable on AH now
             upState.enchantsOwned = new Set(up.enchantsOwned || []);  // enchant scrolls already in bags/bank
+            upState.enchantsOwnedLoc = up.enchantsOwnedLoc || {};      // scroll entry -> 'bags' | 'bank'
             upState.enchantPrices = up.enchantPrices || {};   // scroll entry -> cheapest buyout (copper)
             upState.enchantEffects = up.enchantEffects || {}; // scroll entry -> real [{trigger,text}] tooltip effects
             upState.money = up.money || 0;                    // character's gold total (copper)
