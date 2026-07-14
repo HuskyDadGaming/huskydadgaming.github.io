@@ -371,6 +371,52 @@
     return best;
   }
 
+  // Set/tier-bonus changes for a swap. Equipping `cand` may ADD a piece to its
+  // set (activating new bonuses → green "+"), and removing `eq` may DROP a
+  // piece from a DIFFERENT set (losing bonuses → red "-"). Piece counts come
+  // from the host page's window.KCraftEquippedSetCounts (set name -> equipped
+  // count); without that context (dungeon loot pages) it returns ''. A swap
+  // within the same set is neutral (piece -> piece, count unchanged).
+  function buildSetSwapLines(eq, cand) {
+    const counts = (typeof window !== 'undefined' && window.KCraftEquippedSetCounts) || null;
+    if (!counts || !eq) return '';
+    const crossed = (setObj, before, after) => {
+      const gained = [], lost = [];
+      (setObj.bonuses || []).forEach(b => {
+        if (before < b.pieces && b.pieces <= after) gained.push(b);
+        else if (after < b.pieces && b.pieces <= before) lost.push(b);
+      });
+      return { gained, lost };
+    };
+    const block = (name, before, after, gained, lost) => {
+      let s = `<div class="tt-set-heading">${escape(name)}: ${before} → ${after} pieces</div>`;
+      gained.forEach(b => { s += `<div class="tt-set-bonus tt-bonus">+ (${b.pieces}) Set: ${escape(resolveFormulas(b.text))}</div>`; });
+      lost.forEach(b => { s += `<div class="tt-set-bonus tt-effect-lost">− (${b.pieces}) Set: ${escape(resolveFormulas(b.text))}</div>`; });
+      return s;
+    };
+    let out = '';
+    // Candidate's set: equipping it adds a piece, unless eq is the same set.
+    if (cand.set && cand.set.name) {
+      const nm = cand.set.name;
+      const before = counts[nm] || 0;
+      const sameSet = !!(eq.set && eq.set.name === nm);
+      const after = sameSet ? before : before + 1;
+      if (after !== before) {
+        const { gained } = crossed(cand.set, before, after);
+        out += block(nm, before, after, gained, []);
+      }
+    }
+    // Equipped piece's (different) set: removing it drops a piece → maybe a loss.
+    if (eq.set && eq.set.name && (!cand.set || cand.set.name !== eq.set.name)) {
+      const nm = eq.set.name;
+      const before = counts[nm] || 0;
+      const after = Math.max(0, before - 1);
+      const { lost } = crossed(eq.set, before, after);
+      if (lost.length) out += block(nm, before, after, [], lost);
+    }
+    return out;
+  }
+
   // Dual-slot (ring/trinket) comparison panel, in the SAME format as a
   // single-slot item: the CANDIDATE's stat lines with "(+N)/(-N)" deltas vs
   // this equipped piece, plus grey "0 X (-N)" ghost lines for stats the
@@ -436,6 +482,9 @@
       const cls = retained ? 'tt-effect' : 'tt-effect tt-effect-lost';
       h += `<div class="${cls}">${trigger}${escape(resolveFormulas(text))}</div>`;
     });
+    // Tier/set-bonus changes from this swap (pieces gained on the candidate's
+    // set, pieces lost on the equipped piece's set).
+    h += buildSetSwapLines(eq, cand);
     return h;
   }
 
