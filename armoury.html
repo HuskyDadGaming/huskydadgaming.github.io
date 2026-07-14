@@ -11207,9 +11207,14 @@
         const mailEn = compareToCurrent ? mailEnchantForSlot(slotIdx, equipped) : null;
         const curEn  = (compareToCurrent && equipped && equipped.enchant && window.KCraftEnchantById)
             ? window.KCraftEnchantById[equipped.enchant] : null;
+        // Also rank against an enchant already sitting in your bags — a buyable
+        // recommendation worse than one you already own is pointless (e.g. don't
+        // recommend "Speed" when "Greater Speed" is in your bags).
+        const bagsEn = compareToCurrent ? bagsEnchantForSlot(slotIdx, equipped) : null;
         const curScore = Math.max(
             mailEn ? scoreEnchant(mailEn.stats, weights, upState.role, upState.schools) : 0,
-            curEn  ? scoreEnchant(curEn.stats,  weights, upState.role, upState.schools) : 0);
+            curEn  ? scoreEnchant(curEn.stats,  weights, upState.role, upState.schools) : 0,
+            bagsEn ? scoreEnchant(bagsEn.stats, weights, upState.role, upState.schools) : 0);
         const out = [], seen = new Set();
         for (const pool of pools) {
             for (const e of (ENCHANTS[pool] || [])) {
@@ -11654,21 +11659,27 @@
             const nm = String(curEn.name).replace(/^Enchant [^-]+ - /, '');
             curEnchHtml = `<div style="font-size:0.78rem;color:#1eff00;margin-top:4px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</div>`;
         }
-        // Enchant scroll bought and waiting in the mailbox for this slot — the
-        // one you'll apply next, so the "Better enchants" below rank against it.
+        // Only pin a mailbox/bags enchant when it actually BEATS the applied one —
+        // a held enchant that's a downgrade isn't worth surfacing (e.g. Crusader
+        // +100 Str under a tank's applied Titanguard +50 Sta). No applied enchant
+        // => score 0, so any real enchant you hold counts as an upgrade.
+        const _enchW = getStatWeights(upState.role, upState.classSlug);
+        const enScore = e => e ? scoreEnchant(e.stats, _enchW, upState.role, upState.schools) : 0;
+        const curEnScore = enScore(curEn);
+        // Enchant scroll bought and waiting in the mailbox for this slot.
         const mailEn = mailEnchantForSlot(slotIdx, currentItem);
         let mailEnchHtml = '';
-        if (mailEn) {
+        if (mailEn && enScore(mailEn) > curEnScore) {
             const st = Object.entries(mailEn.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
             const nm = String(mailEn.name).replace(/^Enchant [^-]+ - /, '');
             mailEnchHtml = `<div style="font-size:0.78rem;color:#79b8e0;margin-top:2px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''} <span class="up-source">📬 In mailbox</span></div>`;
         }
         // Enchant you already own a scroll for (bags/bank), shown the SAME way as
         // the mailbox enchant — a blue line pinned under the item, not a boxed
-        // recommendation row.
+        // recommendation row — and only when it beats the applied enchant.
         const bagsEn = bagsEnchantForSlot(slotIdx, currentItem);
         let bagsEnchHtml = '';
-        if (bagsEn) {
+        if (bagsEn && enScore(bagsEn) > curEnScore) {
             const st = Object.entries(bagsEn.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
             const nm = String(bagsEn.name).replace(/^Enchant [^-]+ - /, '');
             bagsEnchHtml = `<div style="font-size:0.78rem;color:#79b8e0;margin-top:2px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''} <span class="up-source">🎒 In bags</span></div>`;
@@ -11685,7 +11696,7 @@
         let betterEnchHtml = '';
         if (betterE.length) {
             betterEnchHtml = `<div style="margin-top:8px;display:flex;flex-direction:column;gap:3px;">`
-                + `<div class="up-col-heading" style="opacity:0.7;">${(curEn || mailEn) ? 'Better enchants' : 'Enchant'}</div>`
+                + `<div class="up-col-heading" style="opacity:0.7;">${(curEnchHtml || mailEnchHtml || bagsEnchHtml) ? 'Better enchants' : 'Enchant'}</div>`
                 + betterE.map(enchRow).join('') + `</div>`;
         }
 
