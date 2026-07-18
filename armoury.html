@@ -8399,8 +8399,8 @@
         const to = lastViewedCharacter && lastViewedCharacter.name;
         if (!to) { alert('No character selected.'); return; }
         if (!confirm(`Move "${itemName}"\nfrom ${fromChar}  →  ${to}?\n\n`
-            + `Both characters must be logged out. ${fromChar} pays the 30c mail fee. `
-            + `It lands in ${to}'s bags.`)) return;
+            + `Cost: 30 copper mail fee — paid by ${fromChar} (the sender).\n\n`
+            + `Both characters must be logged out. It lands in ${to}'s bags.`)) return;
         try {
             const { base, key } = getCreds();
             const r = await fetch(base + '/transfer-item', {
