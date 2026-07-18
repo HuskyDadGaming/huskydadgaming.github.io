@@ -11792,9 +11792,44 @@
         </div>`;
     }
 
+    // Assign each mailbox item to the slot it best UPGRADES for the current
+    // role. For paired slots (rings/trinkets) that's the finger/trinket
+    // holding your WEAKEST piece by ROLE SCORE — not lowest iLvl, which ties
+    // two same-iLvl rings and mis-homes the pin (a caster ring you're wearing
+    // must read as the weaker one to replace). Empty slots always win. Greedy:
+    // each mail item fills one slot, so two bought rings split across fingers.
+    // Recomputed per render so a role switch re-homes the pin correctly.
+    function recomputeMailBySlot() {
+        const mailItems = upState.mailItemsRaw || [];
+        const weights = getStatWeights(upState.role, upState.classSlug);
+        const mailBySlot = {};
+        const mailItemIds = new Set();
+        const usedMail = new Set();
+        for (const m of mailItems) {
+            if (usedMail.has(m)) continue;
+            let best = null;
+            for (const [idx] of UPGRADE_SLOT_ORDER) {
+                if (mailBySlot[idx]) continue;
+                const invTypes = UPGRADE_SLOT_INVTYPES[idx] || [];
+                if (!invTypes.includes(m.invType)) continue;
+                const eq = upState.equipped[idx];
+                const sc = eq ? scoreItemForRole(eq, weights, null) : -Infinity;
+                if (!best || sc < best.sc) best = { idx, sc };
+            }
+            if (best) {
+                mailBySlot[best.idx] = Object.assign({}, m, { _inMail: true });
+                usedMail.add(m);
+                if (m.id != null) mailItemIds.add(m.id);
+            }
+        }
+        upState.mailBySlot = mailBySlot;
+        upState.mailItemIds = mailItemIds;
+    }
+
     function renderUpgradeGrid() {
         const items = upgradeItemsCache;
         if (!items || !upState.role) return;
+        recomputeMailBySlot();   // role-aware: re-home pinned mail items
         const slotsEl = document.getElementById('up-slots');
         const cards = UPGRADE_SLOT_ORDER.map(([idx, label]) => {
             const equipped = upState.equipped[idx] || null;
@@ -11909,38 +11944,12 @@
             const mailItems = [];
             for (const m of (mailData.mail || []))
                 for (const it of (m.items || [])) mailItems.push(it);
-            const mailBySlot = {};
-            const usedMail = new Set();
-            const mailItemIds = new Set();
-            // Place each mail item under the slot it BEST fits, so a purchased
-            // ring/trinket/weapon sits under the finger (etc.) it actually goes
-            // into: prefer an empty slot, and among worn pieces pick the weakest
-            // (lowest iLvl) it would replace. Each mail item fills at most one
-            // slot, so two bought rings land one per finger (Finger 1 then
-            // Finger 2). Their ids are recorded so an item you already own in
-            // the mailbox isn't ALSO offered as a buyable upgrade on the other
-            // slot (esp. Unique-Equipped, which you could never wear twice).
-            for (const m of mailItems) {
-                if (usedMail.has(m)) continue;
-                let best = null;
-                for (const [idx] of UPGRADE_SLOT_ORDER) {
-                    if (mailBySlot[idx]) continue;
-                    const invTypes = UPGRADE_SLOT_INVTYPES[idx] || [];
-                    if (!invTypes.includes(m.invType)) continue;
-                    // Empty slots score as iLvl -1 so they sort ahead of any
-                    // worn piece; among worn pieces the lowest iLvl wins.
-                    const eq = upState.equipped[idx];
-                    const ilvl = eq ? (eq.ilvl || 0) : -1;
-                    if (!best || ilvl < best.ilvl) best = { idx, ilvl };
-                }
-                if (best) {
-                    mailBySlot[best.idx] = Object.assign({}, m, { _inMail: true });
-                    usedMail.add(m);
-                    if (m.id != null) mailItemIds.add(m.id);
-                }
-            }
-            upState.mailBySlot = mailBySlot;
-            upState.mailItemIds = mailItemIds;
+            // Stash the raw mail items; the per-slot placement is role-aware
+            // (recomputeMailBySlot) and re-run on every render, so switching
+            // role re-homes a pinned ring/trinket to the finger it actually
+            // upgrades instead of freezing the load-time guess.
+            upState.mailItemsRaw = mailItems;
+            recomputeMailBySlot();
             // Enchant scrolls sitting in the mailbox (bought, not yet applied) ->
             // set of their enchantment ids, so the finder shows "in mailbox" and
             // compares suggestions against the one you're about to apply.
