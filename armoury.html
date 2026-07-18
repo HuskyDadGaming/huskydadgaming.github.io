@@ -755,6 +755,22 @@
             background: #ffd100; color: #1a1a1a;
             border-color: #ffd100; font-weight: 600;
         }
+        /* "Obtainable now" filter toggle — sits under the role tabs. Same
+           chip styling as the role buttons but a teal accent when active, so
+           it reads as a separate filter, not another role. */
+        .up-filter-tabs { margin-top: 0.4rem; }
+        .up-filter-btn {
+            background: #2d2d2d; color: #ccc;
+            border: 1px solid #3a3a3a; border-radius: 4px;
+            padding: 5px 12px; font-size: 0.85rem; cursor: pointer;
+            transition: all 0.1s;
+        }
+        .up-filter-btn:hover { color: #5fd0c0; border-color: #5fd0c0; }
+        .up-filter-btn.active {
+            background: #2a8778; color: #eafffb;
+            border-color: #37a892; font-weight: 600;
+        }
+        .up-filter-hint { color: #888; font-size: 0.78rem; margin-left: 8px; }
 
         /* Pin the Back link, title, context and role tabs to the top of the
            screen so they stay visible while the slot list scrolls under them.
@@ -1189,6 +1205,11 @@
                 <button class="up-role-btn" data-role="heal">&#x271A; Heal</button>
                 <button class="up-role-btn" data-role="melee">&#x2694; Melee</button>
                 <button class="up-role-btn" data-role="ranged">&#x1F3F9; Ranged</button>
+            </div>
+            <div class="up-filter-tabs" id="up-filter-tabs">
+                <button class="up-filter-btn" id="up-buyable-btn"
+                        title="Show only gear you can get right now: listed on the Auction House, already in your bags/bank, or held by a squad-mate. Hides raid &amp; dungeon boss drops you'd have to go earn.">&#x1F3DB;&#xFE0F; Obtainable now</button>
+                <span class="up-filter-hint" id="up-buyable-hint">off &mdash; showing best-in-slot from all sources</span>
             </div>
         </div>
         <div id="up-loading" class="loading" style="display:none;">Loading loot data&hellip;</div>
@@ -10618,6 +10639,8 @@
         charLevel: 0,
         equipped:  {},        // slot index -> item (or undefined)
         role:      'melee',
+        buyableOnly: false,   // "Obtainable now" filter: hide BoP raid/dungeon
+                              // drops, keep only AH + bags/bank + squad items
     };
 
     // ---- Role/class -> numeric stat-weight profile ---------------------
@@ -11384,6 +11407,11 @@
             // the item DB that you can neither buy, farm, already have, nor grab
             // from the squad.
             if (!it.onAH && !it.inBag && !it.heldBy && it.dungeon === 'World / AH') return false;
+            // "Obtainable now" toggle: additionally drop anything you'd have to
+            // go earn — BoP raid/dungeon boss drops not currently on the AH.
+            // Keeps only items you can act on today: AH-listed, owned in
+            // bags/bank, or a squad-mate is holding.
+            if (upState.buyableOnly && !it.onAH && !it.inBag && !it.heldBy) return false;
             return true;
         });
 
@@ -11625,7 +11653,11 @@
             : (mailItem ? renderItem(mailItem, 'current') : renderItem(null, 'current'));
         const candHtml = candidates.length
             ? candidates.map(c => renderItem(c, 'cand')).join('')
-            : `<div class="up-item up-none"><div class="up-item-line">No upgrades for this slot at lvl ${upState.charLevel}.</div><div class="up-item-meta"></div></div>`;
+            : `<div class="up-item up-none"><div class="up-item-line">${
+                  upState.buyableOnly
+                    ? 'Nothing obtainable now for this slot &mdash; nothing on the AH, in your bags or held by the squad.'
+                    : 'No upgrades for this slot at lvl ' + upState.charLevel + '.'
+                }</div><div class="up-item-meta"></div></div>`;
 
         // One enchant row: shared hover tooltip (synthetic item in
         // data-item-json) + AH-buy link; badge shows _delta (== absolute score
@@ -11787,6 +11819,16 @@
             btn.style.display = viable.has(r) ? '' : 'none';
             btn.classList.toggle('active', r === upState.role);
         });
+        // Keep the "Obtainable now" toggle's look in sync with the (sticky)
+        // filter state when the view is (re-)entered.
+        const bbtn = document.getElementById('up-buyable-btn');
+        const bhint = document.getElementById('up-buyable-hint');
+        if (bbtn) {
+            bbtn.classList.toggle('active', upState.buyableOnly);
+            if (bhint) bhint.innerHTML = upState.buyableOnly
+                ? 'on &mdash; only AH, your bags/bank &amp; squad items'
+                : 'off &mdash; showing best-in-slot from all sources';
+        }
     }
 
     window.showUpgrades = async function(name, classId, level) {
@@ -11959,6 +12001,22 @@
             renderUpgradeGrid();
         });
     });
+
+    // "Obtainable now" toggle — flips the buyable-only filter and re-renders.
+    // Loot data is already cached, so this is a pure client-side re-filter.
+    (function () {
+        const btn  = document.getElementById('up-buyable-btn');
+        const hint = document.getElementById('up-buyable-hint');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+            upState.buyableOnly = !upState.buyableOnly;
+            btn.classList.toggle('active', upState.buyableOnly);
+            hint.innerHTML = upState.buyableOnly
+                ? 'on &mdash; only AH, your bags/bank &amp; squad items'
+                : 'off &mdash; showing best-in-slot from all sources';
+            renderUpgradeGrid();
+        });
+    })();
 
     // ----- Boot -----
     // Tag the INITIAL history entry with replaceState (not push) so Back
