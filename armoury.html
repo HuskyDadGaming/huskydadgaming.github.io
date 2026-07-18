@@ -11176,6 +11176,45 @@
         return best;
     }
 
+    // Best enchant a SQUAD-MATE is holding an applying scroll for (they could
+    // mail it to you). Mirrors bagsEnchantForSlot but sources from
+    // enchantsHeldBy (entry -> holder name). Skips the applied/mailbox enchant
+    // and anything you already own a scroll for (your own bags pin covers it).
+    // Returns the enchant plus the specific held scroll (entry/name/holder/loc)
+    // so the row can offer a one-click transfer.
+    function squadEnchantForSlot(slotIdx, equipped) {
+        const held = upState.enchantsHeldBy;
+        if (!held || !Object.keys(held).length) return null;
+        const owned   = upState.enchantsOwned || new Set();
+        const weights = getStatWeights(upState.role, upState.classSlug);
+        const itemReq = equipped ? (equipped.reqLevel || 0) : (upState.charLevel || 0);
+        const mailIds = upState.mailEnchantIds || new Set();
+        const appliedEn = equipped ? equipped.enchant : null;
+        let best = null, bestScore = -Infinity, bestScroll = null;
+        for (const pool of enchantPoolsForSlot(slotIdx, equipped))
+            for (const e of (ENCHANTS[pool] || [])) {
+                if ((e.req || 0) > itemReq) continue;
+                if (appliedEn && e.ench === appliedEn) continue;
+                if (mailIds.has(e.ench)) continue;
+                if ((e.items || []).some(it => owned.has(it[0]))) continue;   // you already have one
+                const scroll = (e.items || []).find(it => held[it[0]] != null);
+                if (!scroll) continue;
+                const sc = scoreEnchant(e.stats, weights, upState.role, upState.schools);
+                if (sc > bestScore) { bestScore = sc; best = e; bestScroll = scroll; }
+            }
+        if (!best) return null;
+        const entry = bestScroll[0];
+        return { ench: best, scrollEntry: entry, scrollName: bestScroll[1],
+                 holder: held[entry], loc: (upState.enchantsHeldByLoc || {})[entry] || 'bags' };
+    }
+    // Does a squad-mate hold a scroll for this enchant? (drops it from the buy
+    // recommendations, like an owned scroll does.)
+    function enchantHeldBySquad(e) {
+        const held = upState.enchantsHeldBy;
+        if (!held) return false;
+        return (e.items || []).some(it => held[it[0]] != null);
+    }
+
     // Score an enchant's flat {stat:value} map with the role weights, matching
     // scoreItemForRole's per-stat normalization. Procs (empty stats) score 0.
     function scoreEnchant(stats, weights, role, schools) {
@@ -11264,10 +11303,14 @@
         // recommendation worse than one you already own is pointless (e.g. don't
         // recommend "Speed" when "Greater Speed" is in your bags).
         const bagsEn = compareToCurrent ? bagsEnchantForSlot(slotIdx, equipped) : null;
+        // A squad-mate's held scroll counts as "available" too, so a buy rec
+        // must beat it (no point buying what a mate can hand over for 30c).
+        const squadEnSel = compareToCurrent ? squadEnchantForSlot(slotIdx, equipped) : null;
         const curScore = Math.max(
             mailEn ? scoreEnchant(mailEn.stats, weights, upState.role, upState.schools) : 0,
             curEn  ? scoreEnchant(curEn.stats,  weights, upState.role, upState.schools) : 0,
-            bagsEn ? scoreEnchant(bagsEn.stats, weights, upState.role, upState.schools) : 0);
+            bagsEn ? scoreEnchant(bagsEn.stats, weights, upState.role, upState.schools) : 0,
+            squadEnSel ? scoreEnchant(squadEnSel.ench.stats, weights, upState.role, upState.schools) : 0);
         const out = [], seen = new Set();
         for (const pool of pools) {
             for (const e of (ENCHANTS[pool] || [])) {
@@ -11285,6 +11328,9 @@
                     // Owned scrolls are pinned under the item as an "In bags" line
                     // (like the mailbox enchant), not offered as a buy recommendation.
                     if ((e.items || []).some(it => owned.has(it[0]))) continue;
+                    // A scroll a squad-mate holds is likewise pinned (as a
+                    // transfer line), not offered as a buy.
+                    if (compareToCurrent && enchantHeldBySquad(e)) continue;
                     buy = (e.items || []).find(it => ah.has(it[0]));
                     if (!buy) continue;
                 }
@@ -11758,11 +11804,30 @@
             const loc = (ownedScroll && upState.enchantsOwnedLoc[ownedScroll[0]] === 'bank') ? '🏦 In bank' : '🎒 In bags';
             bagsEnchHtml = `<div style="font-size:0.78rem;color:#79b8e0;margin-top:2px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''} <span class="up-source">${loc}</span></div>`;
         }
+        // Enchant a SQUAD-MATE is holding a scroll for — pinned like the bags
+        // line but with a 📤 transfer button (they mail it to you for 30c).
+        // Shown only when it beats the applied enchant AND anything already in
+        // your mailbox/bags (which are free / already yours, so take priority).
+        const squadEn = squadEnchantForSlot(slotIdx, currentItem);
+        let squadEnchHtml = '';
+        if (squadEn && enScore(squadEn.ench) > curEnScore
+                && enScore(squadEn.ench) > (bagsEn ? enScore(bagsEn) : 0)
+                && enScore(squadEn.ench) > (mailEn ? enScore(mailEn) : 0)) {
+            const e = squadEn.ench;
+            const st = Object.entries(e.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
+            const nm = String(e.name).replace(/^Enchant [^-]+ - /, '');
+            const locLabel = squadEn.loc === 'bank' ? "'s bank" : "'s bags";
+            const _to = (lastViewedCharacter && lastViewedCharacter.name) || '';
+            const xfer = _to
+                ? `<a class="up-ah-link" href="#" title="Move to ${escape(_to)} — ${escape(squadEn.holder)} pays the 30c fee" onclick="event.stopPropagation(); window.transferSquadItem(${JSON.stringify(squadEn.holder).replace(/"/g, '&quot;')}, ${squadEn.scrollEntry}, ${JSON.stringify(squadEn.scrollName || '').replace(/"/g, '&quot;')}); return false;">📤</a>`
+                : '';
+            squadEnchHtml = `<div style="font-size:0.78rem;color:#79b8e0;margin-top:2px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''} <span class="up-source">🎒 In ${escape(squadEn.holder)}${locLabel}</span> ${xfer}</div>`;
+        }
         // Applied item modifications (current enchant/kit + inbound mail enchant +
         // an owned "in bags" enchant), pinned right under the item so they stay
         // attached however tall the candidate column is.
-        const appliedEnchHtml = (curEnchHtml || mailEnchHtml || bagsEnchHtml)
-            ? `<div style="display:flex;flex-direction:column;gap:2px;">${curEnchHtml}${mailEnchHtml}${bagsEnchHtml}</div>`
+        const appliedEnchHtml = (curEnchHtml || mailEnchHtml || bagsEnchHtml || squadEnchHtml)
+            ? `<div style="display:flex;flex-direction:column;gap:2px;">${curEnchHtml}${mailEnchHtml}${bagsEnchHtml}${squadEnchHtml}</div>`
             : '';
         // Buyable enchant recommendations for the equipped item — these DO go in
         // the aligned enchant row (they mirror the candidate column's list).
@@ -11770,7 +11835,7 @@
         let betterEnchHtml = '';
         if (betterE.length) {
             betterEnchHtml = `<div style="margin-top:8px;display:flex;flex-direction:column;gap:3px;">`
-                + `<div class="up-col-heading" style="opacity:0.7;">${(curEnchHtml || mailEnchHtml || bagsEnchHtml) ? 'Better enchants' : 'Enchant'}</div>`
+                + `<div class="up-col-heading" style="opacity:0.7;">${(curEnchHtml || mailEnchHtml || bagsEnchHtml || squadEnchHtml) ? 'Better enchants' : 'Enchant'}</div>`
                 + betterE.map(enchRow).join('') + `</div>`;
         }
 
@@ -11962,6 +12027,8 @@
             upState.enchantsOnAH = new Set(up.enchantsOnAH || []);  // enchant items buyable on AH now
             upState.enchantsOwned = new Set(up.enchantsOwned || []);  // enchant scrolls already in bags/bank
             upState.enchantsOwnedLoc = up.enchantsOwnedLoc || {};      // scroll entry -> 'bags' | 'bank'
+            upState.enchantsHeldBy = up.enchantsHeldBy || {};          // scroll entry -> squad-mate name holding it
+            upState.enchantsHeldByLoc = up.enchantsHeldByLoc || {};    // scroll entry -> 'bags' | 'bank' (in the mate's inv)
             upState.enchantPrices = up.enchantPrices || {};   // scroll entry -> cheapest buyout (copper)
             upState.enchantEffects = up.enchantEffects || {}; // scroll entry -> real [{trigger,text}] tooltip effects
             upState.money = up.money || 0;                    // character's gold total (copper)
