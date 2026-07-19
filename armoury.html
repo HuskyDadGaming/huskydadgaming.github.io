@@ -807,7 +807,11 @@
            heights per column. Enchant blocks carry their own top margin, so
            row-gap is 0. */
         .up-slot-body {
-            display: grid; grid-template-columns: 1fr 2fr;
+            /* minmax(0,…) so the columns hold a strict 1:2 ratio regardless of
+               item-name length — otherwise a long equipped name (e.g. "Pauldrons
+               of Arcane Rage") stretches its column and the equipped boxes end up
+               different widths from card to card. Names wrap inside the fixed box. */
+            display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
             grid-template-areas:
                 "curitems canditems"
                 "curench  candench";
