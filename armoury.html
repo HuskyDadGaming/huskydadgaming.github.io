@@ -889,6 +889,23 @@
            column, whether the row's left side is a dungeon source or an
            "In bags"/"In mailbox" status tag. */
         .up-drop { color: #aaa; font-variant-numeric: tabular-nums; margin-left: auto; }
+        /* Pinned enchant lines under an equipped item (applied / mailbox / bags /
+           squad-held). Flex so the name truncates with an ellipsis and the status
+           tag + 📤 stay on ONE line instead of wrapping the icon to the next row;
+           padding-left aligns the wrench under the item name (.up-item = 8px pad
+           + 1px border). */
+        .up-pin-ench {
+            display: flex; align-items: baseline; gap: 4px;
+            padding-left: 9px; margin-top: 2px; font-size: 0.78rem;
+            min-width: 0; max-width: 100%;
+        }
+        .up-pin-ench .pin-nm {
+            min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .up-pin-ench .up-source { flex: none; white-space: nowrap; color: #79b8e0; }
+        .up-pin-ench .pin-xfer { flex: none; }
+        .up-pin-ench.clickable { cursor: pointer; border-radius: 3px; }
+        .up-pin-ench.clickable:hover { filter: brightness(1.25); }
         /* Inline "Find on AH" affordance on the upgrade item row. Desktop
            only — mobile users get the equivalent button inside the tooltip
            since rows are too narrow to fit comfortably there. */
@@ -11774,7 +11791,7 @@
         if (curEn) {
             const st = Object.entries(curEn.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
             const nm = String(curEn.name).replace(/^Enchant [^-]+ - /, '');
-            curEnchHtml = `<div style="font-size:0.78rem;color:#1eff00;margin-top:4px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</div>`;
+            curEnchHtml = `<div class="up-pin-ench" style="color:#1eff00;margin-top:4px;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span></div>`;
         }
         // Only pin a mailbox/bags enchant when it actually BEATS the applied one —
         // a held enchant that's a downgrade isn't worth surfacing (e.g. Crusader
@@ -11789,7 +11806,7 @@
         if (mailEn && enScore(mailEn) > curEnScore) {
             const st = Object.entries(mailEn.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
             const nm = String(mailEn.name).replace(/^Enchant [^-]+ - /, '');
-            mailEnchHtml = `<div style="font-size:0.78rem;color:#79b8e0;margin-top:2px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''} <span class="up-source">📬 In mailbox</span></div>`;
+            mailEnchHtml = `<div class="up-pin-ench" style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-source">📬 In mailbox</span></div>`;
         }
         // Enchant you already own a scroll for (bags/bank), shown the SAME way as
         // the mailbox enchant — a blue line pinned under the item, not a boxed
@@ -11802,7 +11819,7 @@
             // Which owned scroll of this enchant decides bags-vs-bank.
             const ownedScroll = (bagsEn.items || []).find(it => upState.enchantsOwned.has(it[0]));
             const loc = (ownedScroll && upState.enchantsOwnedLoc[ownedScroll[0]] === 'bank') ? '🏦 In bank' : '🎒 In bags';
-            bagsEnchHtml = `<div style="font-size:0.78rem;color:#79b8e0;margin-top:2px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''} <span class="up-source">${loc}</span></div>`;
+            bagsEnchHtml = `<div class="up-pin-ench" style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-source">${loc}</span></div>`;
         }
         // Enchant a SQUAD-MATE is holding a scroll for — pinned like the bags
         // line but with a 📤 transfer button (they mail it to you for 30c).
@@ -11818,10 +11835,15 @@
             const nm = String(e.name).replace(/^Enchant [^-]+ - /, '');
             const locLabel = squadEn.loc === 'bank' ? "'s bank" : "'s bags";
             const _to = (lastViewedCharacter && lastViewedCharacter.name) || '';
-            const xfer = _to
-                ? `<a class="up-ah-link" href="#" title="Move to ${escape(_to)} — ${escape(squadEn.holder)} pays the 30c fee" onclick="event.stopPropagation(); window.transferSquadItem(${JSON.stringify(squadEn.holder).replace(/"/g, '&quot;')}, ${squadEn.scrollEntry}, ${JSON.stringify(squadEn.scrollName || '').replace(/"/g, '&quot;')}); return false;">📤</a>`
+            // Whole line is clickable -> mail the scroll to the viewed char (the
+            // holder pays the 30c fee). 📤 stays on the end as the affordance.
+            const xferCall = _to
+                ? `window.transferSquadItem(${JSON.stringify(squadEn.holder).replace(/"/g, '&quot;')}, ${squadEn.scrollEntry}, ${JSON.stringify(squadEn.scrollName || '').replace(/"/g, '&quot;')})`
                 : '';
-            squadEnchHtml = `<div style="font-size:0.78rem;color:#79b8e0;margin-top:2px;">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''} <span class="up-source">🎒 In ${escape(squadEn.holder)}${locLabel}</span> ${xfer}</div>`;
+            const clickAttr = _to
+                ? `onclick="event.stopPropagation(); ${xferCall}; return false;" title="Click to mail to ${escape(_to)} — ${escape(squadEn.holder)} pays the 30c fee"`
+                : '';
+            squadEnchHtml = `<div class="up-pin-ench${_to ? ' clickable' : ''}" style="color:#79b8e0;" ${clickAttr}><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-source">🎒 In ${escape(squadEn.holder)}${locLabel}</span><span class="pin-xfer">📤</span></div>`;
         }
         // Applied item modifications (current enchant/kit + inbound mail enchant +
         // an owned "in bags" enchant), pinned right under the item so they stay
