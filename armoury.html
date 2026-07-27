@@ -770,7 +770,12 @@
             background: #2a8778; color: #eafffb;
             border-color: #37a892; font-weight: 600;
         }
+        /* Toggled OFF (source excluded): clearly greyed/dimmed like an inactive
+           role button, so on/off reads at a glance even with a coloured emoji. */
+        .up-filter-btn:not(.active) { opacity: 0.45; filter: grayscale(0.7); }
         .up-filter-hint { color: #888; font-size: 0.78rem; margin-left: 8px; }
+        .up-filter-label { color: #888; font-size: 0.82rem; margin-right: 4px; }
+        .up-filter-tabs { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; }
 
         /* Pin the Back link, title, context and role tabs to the top of the
            screen so they stay visible while the slot list scrolls under them.
@@ -1228,9 +1233,16 @@
                 <button class="up-role-btn" data-role="ranged">&#x1F3F9; Ranged</button>
             </div>
             <div class="up-filter-tabs" id="up-filter-tabs">
-                <button class="up-filter-btn" id="up-buyable-btn"
-                        title="Show only gear you can get right now: listed on the Auction House, already in your bags/bank, or held by a squad-mate. Hides raid &amp; dungeon boss drops you'd have to go earn.">&#x1F3DB;&#xFE0F; Obtainable now</button>
-                <span class="up-filter-hint" id="up-buyable-hint">off &mdash; showing best-in-slot from all sources</span>
+                <span class="up-filter-label">Sources:</span>
+                <button class="up-filter-btn active" data-src="raid"
+                        title="Raid boss drops (Molten Core, BWL, AQ, Naxxramas, Karazhan, etc.)">&#x1F409; Raid</button>
+                <button class="up-filter-btn active" data-src="dungeon"
+                        title="5-man dungeon boss drops">&#x1F3F0; Dungeon</button>
+                <button class="up-filter-btn active" data-src="ah"
+                        title="Items currently listed on the Auction House">&#x1F4B0; AH</button>
+                <button class="up-filter-btn active" data-src="owned"
+                        title="Already in your bags/bank, or held by a squad-mate">&#x1F392; Owned</button>
+                <span class="up-filter-hint" id="up-src-hint">all sources</span>
             </div>
         </div>
         <div id="up-loading" class="loading" style="display:none;">Loading loot data&hellip;</div>
@@ -10660,9 +10672,28 @@
         charLevel: 0,
         equipped:  {},        // slot index -> item (or undefined)
         role:      'melee',
-        buyableOnly: false,   // "Obtainable now" filter: hide BoP raid/dungeon
-                              // drops, keep only AH + bags/bank + squad items
+        // Source toggles — which upgrade pools to draw the top-3 from. All ON
+        // by default (combine everything); toggle a pool off to exclude it and
+        // the top-3 recomputes. Replaces the old single "Obtainable now" flag.
+        srcToggles: { raid: true, dungeon: true, ah: true, owned: true },
     };
+
+    // Map IDs that are RAIDS (everything else with a mapId is a 5-man dungeon).
+    // Classic + TBC raids present in loot-data: Onyxia, ZG, MC, BWL, AQ20/40,
+    // Karazhan, Naxxramas, Magtheridon, Tempest Keep, Gruul, Zul'Aman.
+    const RAID_MAPIDS = new Set([249, 309, 409, 469, 509, 531, 532, 533, 544, 550, 565, 568]);
+
+    // The source pools a candidate belongs to. An item can be in several (a BoE
+    // that drops in a dungeon AND is listed on the AH). Items with no source at
+    // all (World/AH tag, nothing on AH/in bags/held) return an empty list and
+    // get filtered out. mapId is stamped on dungeon/raid drops by the overlay.
+    function candidateSources(it) {
+        const s = [];
+        if (it.onAH)                 s.push('ah');
+        if (it.inBag || it.heldBy)   s.push('owned');
+        if (it.mapId)                s.push(RAID_MAPIDS.has(it.mapId) ? 'raid' : 'dungeon');
+        return s;
+    }
 
     // ---- Role/class -> numeric stat-weight profile ---------------------
     // Each profile is a flat { statName: weight } map. A stat's weight is
@@ -11466,19 +11497,15 @@
             // shown once under its best-fit slot's EQUIPPED as "In mailbox".
             if (upState.mailItemIds && upState.mailItemIds.has(it.id)
                 && (it.uniqueEquipped || it.unique)) return false;
-            // Only OBTAINABLE upgrades: items currently listed on the AH
-            // (it.onAH from the API), dungeon boss drops (a real dungeon source
-            // overlaid from loot-data; the live-pool tag is "World / AH"), OR
-            // items you already OWN unequipped (it.inBag), OR items a SQUAD-MATE
-            // is holding that they could hand over (it.heldBy). Drops the rest of
-            // the item DB that you can neither buy, farm, already have, nor grab
-            // from the squad.
-            if (!it.onAH && !it.inBag && !it.heldBy && it.dungeon === 'World / AH') return false;
-            // "Obtainable now" toggle: additionally drop anything you'd have to
-            // go earn — BoP raid/dungeon boss drops not currently on the AH.
-            // Keeps only items you can act on today: AH-listed, owned in
-            // bags/bank, or a squad-mate is holding.
-            if (upState.buyableOnly && !it.onAH && !it.inBag && !it.heldBy) return false;
+            // SOURCE TOGGLES — keep a candidate only if at least one of its
+            // source pools (raid / dungeon / AH / owned) is currently enabled.
+            // An item can belong to several (a BoE that drops in a dungeon AND is
+            // on the AH); it survives if ANY of those pools is on. An item with no
+            // source at all (World/AH tag, nothing on the AH, in bags, or held by
+            // the squad) has an empty source list and is always dropped. Replaces
+            // the old fixed "obtainable-now" filter with per-pool control.
+            const srcs = candidateSources(it);
+            if (!srcs.some(s => upState.srcToggles[s])) return false;
             return true;
         });
 
@@ -11721,9 +11748,9 @@
         const candHtml = candidates.length
             ? candidates.map(c => renderItem(c, 'cand')).join('')
             : `<div class="up-item up-none"><div class="up-item-line">${
-                  upState.buyableOnly
-                    ? 'Nothing obtainable now for this slot &mdash; nothing on the AH, in your bags or held by the squad.'
-                    : 'No upgrades for this slot at lvl ' + upState.charLevel + '.'
+                  (Object.values(upState.srcToggles).every(Boolean))
+                    ? 'No upgrades for this slot at lvl ' + upState.charLevel + '.'
+                    : 'Nothing for this slot from the enabled sources &mdash; try turning more source toggles on.'
                 }</div><div class="up-item-meta"></div></div>`;
 
         // One enchant row: shared hover tooltip (synthetic item in
@@ -11945,15 +11972,18 @@
             btn.style.display = viable.has(r) ? '' : 'none';
             btn.classList.toggle('active', r === upState.role);
         });
-        // Keep the "Obtainable now" toggle's look in sync with the (sticky)
-        // filter state when the view is (re-)entered.
-        const bbtn = document.getElementById('up-buyable-btn');
-        const bhint = document.getElementById('up-buyable-hint');
-        if (bbtn) {
-            bbtn.classList.toggle('active', upState.buyableOnly);
-            if (bhint) bhint.innerHTML = upState.buyableOnly
-                ? 'on &mdash; only AH, your bags/bank &amp; squad items'
-                : 'off &mdash; showing best-in-slot from all sources';
+        // Keep the source-toggle pills' look in sync with the (sticky) filter
+        // state when the view is (re-)entered or a pill is clicked.
+        document.querySelectorAll('#up-filter-tabs .up-filter-btn').forEach(btn => {
+            const src = btn.getAttribute('data-src');
+            btn.classList.toggle('active', !!upState.srcToggles[src]);
+        });
+        const shint = document.getElementById('up-src-hint');
+        if (shint) {
+            const on = Object.keys(upState.srcToggles).filter(k => upState.srcToggles[k]);
+            shint.innerHTML = on.length === 4 ? 'all sources'
+                : on.length ? on.length + ' of 4 sources'
+                : 'none &mdash; turn a source on';
         }
     }
 
@@ -12104,21 +12134,17 @@
         });
     });
 
-    // "Obtainable now" toggle — flips the buyable-only filter and re-renders.
-    // Loot data is already cached, so this is a pure client-side re-filter.
-    (function () {
-        const btn  = document.getElementById('up-buyable-btn');
-        const hint = document.getElementById('up-buyable-hint');
-        if (!btn) return;
+    // Source-toggle pills — each flips one pool (raid / dungeon / AH / owned)
+    // and recomputes the top-3. Loot data is already cached, so this is a pure
+    // client-side re-filter. renderUpgradeGrid re-syncs the pill look + hint.
+    document.querySelectorAll('#up-filter-tabs .up-filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            upState.buyableOnly = !upState.buyableOnly;
-            btn.classList.toggle('active', upState.buyableOnly);
-            hint.innerHTML = upState.buyableOnly
-                ? 'on &mdash; only AH, your bags/bank &amp; squad items'
-                : 'off &mdash; showing best-in-slot from all sources';
+            const src = btn.getAttribute('data-src');
+            if (!src) return;
+            upState.srcToggles[src] = !upState.srcToggles[src];
             renderUpgradeGrid();
         });
-    })();
+    });
 
     // ----- Boot -----
     // Tag the INITIAL history entry with replaceState (not push) so Back
