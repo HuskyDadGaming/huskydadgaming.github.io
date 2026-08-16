@@ -847,6 +847,16 @@
            the AH icon + ilvl always sit at the right edge of the row,
            lined up across all upgrade cards. */
         .up-name { font-weight: 600; font-size: 0.9rem; flex: 1; min-width: 0; }
+        /* Gem sockets — small coloured diamonds after the item name, matching the
+           in-game socket colours (Meta/Red/Yellow/Blue; prismatic/unknown violet). */
+        .up-sockets { display: inline-flex; gap: 3px; flex-shrink: 0; align-self: center; }
+        .gem-sock { width: 9px; height: 9px; transform: rotate(45deg);
+            border: 1px solid rgba(0,0,0,0.65); box-shadow: inset 0 0 2px rgba(255,255,255,0.35); }
+        .gem-red    { background: #d64545; }
+        .gem-yellow { background: #d9b53a; }
+        .gem-blue   { background: #4a76d6; }
+        .gem-meta   { background: #b9b9b9; }
+        .gem-other  { background: #9b59d0; }
         /* Cheapest-AH-buyout price shown inline (left of the AH icon). The
            g/s/c spans colour themselves; this just sizes + spaces them. */
         .up-price { font-size: 0.72rem; white-space: nowrap; flex-shrink: 0;
@@ -11886,6 +11896,17 @@
     // role-aware for free — a tank values a Stamina gem, a caster a Spell Power
     // gem. ~16 ≈ a rare-cut primary gem; bump toward 20 for epic gems. Tunable.
     const SOCKET_GEM_EQUIV = 16;
+    // socketColor bit -> CSS class for the little gem-square indicators.
+    const SOCKET_COLOR_CLASS = { 1: 'meta', 2: 'red', 4: 'yellow', 8: 'blue' };
+    const SOCKET_COLOR_NAME  = { 1: 'Meta', 2: 'Red', 4: 'Yellow', 8: 'Blue' };
+    // Coloured gem-socket squares for an item row (empty string if no sockets).
+    function socketSquaresHtml(it) {
+        const cols = it && it.socketColors;
+        if (!Array.isArray(cols) || !cols.length) return '';
+        const names = cols.map(c => SOCKET_COLOR_NAME[c] || 'Prismatic');
+        const sq = cols.map(c => `<span class="gem-sock gem-${SOCKET_COLOR_CLASS[c] || 'other'}"></span>`).join('');
+        return `<span class="up-sockets" title="${cols.length} gem socket${cols.length > 1 ? 's' : ''}: ${names.join(', ')} (valued in the ranking)">${sq}</span>`;
+    }
 
     // Which DPS weight (if any) a weapon's damage-per-second feeds, by slot.
     // Melee weapons (one/two-hand, main/off) -> 'Melee DPS'; ranged weapons
@@ -12762,6 +12783,7 @@
             return `<div class="up-item up-${kind}" data-item-id="${it.id || ''}" data-item-json="${json}" ${rowClick}>
                 <div class="up-item-line">
                     <span class="up-name" style="color:${it.color || '#fff'}">${escape(it.name || '?')}</span>
+                    ${socketSquaresHtml(it)}
                     ${setBadge}
                     ${priceHtml}
                     <span class="up-ah-slot">${ahLink}${dungeonLink}${transferLink}</span>
