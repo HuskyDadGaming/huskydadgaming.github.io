@@ -760,6 +760,38 @@
         .up-ctrl-label { color: #777; font-size: 0.66rem; text-transform: uppercase;
             letter-spacing: 0.1em; font-weight: 700; }
 
+        /* Gear-health summary row + compact toggle. */
+        .up-summary-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+        .up-summary { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+        .up-stat { font-family: inherit; display: inline-flex; align-items: center; gap: 6px;
+            font-size: 0.82rem; color: #e6e6ea; background: #26272c; border: 1px solid #3a3a3a;
+            border-radius: 7px; padding: 5px 11px; cursor: pointer; }
+        .up-stat:hover { border-color: #4a4b53; background: #2e2f35; }
+        .up-stat b { color: #ffd100; font-variant-numeric: tabular-nums; }
+        .up-stat.done { color: #888; cursor: default; background: transparent; border-color: transparent; }
+        .up-stat.done b { color: #5ac35a; }
+        .up-stat .st-ic { font-size: 0.92rem; }
+        .up-view-toggle { font-family: inherit; font-size: 0.8rem; font-weight: 600; color: #ccc;
+            background: #2d2d2d; border: 1px solid #3a3a3a; border-radius: 7px; padding: 5px 12px;
+            cursor: pointer; flex: none; white-space: nowrap; }
+        .up-view-toggle:hover { color: #ffd100; border-color: #ffd100; }
+        .up-view-toggle.active { background: #ffd100; color: #1a1a1a; border-color: #ffd100; }
+
+        /* Compact one-liner slot. */
+        .up-compact-row { display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 8px 12px; }
+        .up-compact-row:hover { border-color: #4a4b53; background: #282828; }
+        .up-cslot { color: #ffd100; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;
+            letter-spacing: 0.4px; min-width: 92px; flex: none; }
+        .up-cbody { flex: 1; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+        .up-cchip { font-size: 0.76rem; border-radius: 20px; padding: 1px 9px; border: 1px solid; }
+        .up-cchip.up   { color: #e0b566; border-color: #5a4a2a; background: #2c2617; }
+        .up-cchip.sock { color: #79b8e0; border-color: #2a4a5a; background: #17242c; }
+        .up-cchip.ench { color: #c79be0; border-color: #442a5a; background: #24172c; }
+        .up-cdone { color: #5ac35a; font-size: 0.82rem; }
+        .up-cexpand { color: #79b8e0; font-size: 0.76rem; flex: none; }
+        .up-slot-label.collapsible { cursor: pointer; }
+        .up-slot-label.collapsible:hover { filter: brightness(1.2); }
+
         .up-role-tabs {
             display: flex; gap: 0.4rem; flex-wrap: wrap;
         }
@@ -1299,6 +1331,10 @@
                                 title="Already in your bags/bank, or held by a squad-mate">&#x1F392; Owned</button>
                     </div>
                 </div>
+            </div>
+            <div class="up-summary-row">
+                <div class="up-summary" id="up-summary"></div>
+                <button class="up-view-toggle" id="up-compact-toggle" title="Collapse sorted slots to one line each">&#9776; Compact</button>
             </div>
         </div>
         <div id="up-loading" class="loading" style="display:none;">Loading loot data&hellip;</div>
@@ -15473,6 +15509,8 @@
         // by default (combine everything); toggle a pool off to exclude it and
         // the top-3 recomputes. Replaces the old single "Obtainable now" flag.
         srcToggles: { raid: true, dungeon: true, ah: true, owned: true },
+        compact: false,               // one-liner-per-slot view (default: expanded)
+        expandedSlots: new Set(),     // slot indices expanded while in compact mode
     };
 
     // Map IDs that are RAIDS (everything else with a mapId is a 5-man dungeon).
@@ -16552,7 +16590,32 @@
         return `<span class="up-set" title="${escape(s.name + ' — ' + owned + '/' + total + ' pieces equipped')}">&#11088; ${owned}/${total}</span>`;
     }
 
-    function renderUpgradeCard(slotIdx, label, currentItem, mailItem, candidates) {
+    // Collapsed one-liner for a slot in compact mode: label + status chips,
+    // click anywhere to expand. Optimal slots read "✓ optimal".
+    function renderCompactSlot(slotIdx, label, status, candidates) {
+        const chips = [];
+        if (status.hasUpgrade) {
+            const best = candidates[0];
+            const d = (best && typeof best.upgradeDelta === 'number') ? '+' + Math.round(best.upgradeDelta) + ' ' : '';
+            chips.push(`<span class="up-cchip up">&#9889; ${d}upgrade</span>`);
+        }
+        if (status.emptySockets) chips.push(`<span class="up-cchip sock">&#128142; ${status.emptySockets} gem${status.emptySockets > 1 ? 's' : ''}</span>`);
+        if (status.missingEnchant) chips.push('<span class="up-cchip ench">&#128295; enchant</span>');
+        const body = status.optimal ? '<span class="up-cdone">&#10003; optimal</span>' : chips.join('');
+        return `<div class="up-slot-card up-compact-row" id="up-slot-${slotIdx}"
+            data-st-upgrade="${status.hasUpgrade ? 1 : 0}" data-st-sockets="${status.emptySockets}" data-st-enchant="${status.missingEnchant ? 1 : 0}"
+            onclick="window.upToggleSlot(${slotIdx})" title="Click to expand">
+            <span class="up-cslot">${escape(label)}</span>
+            <span class="up-cbody">${body}</span>
+            <span class="up-cexpand">${status.optimal ? '' : 'expand &#9662;'}</span>
+        </div>`;
+    }
+
+    function renderUpgradeCard(slotIdx, label, currentItem, mailItem, candidates, status) {
+        status = status || computeSlotStatus(slotIdx, currentItem, candidates);
+        // Compact mode: collapsed slots render as a one-liner (click to expand).
+        if (upState.compact && !(upState.expandedSlots && upState.expandedSlots.has(slotIdx)))
+            return renderCompactSlot(slotIdx, label, status, candidates);
         // Tooltip provider hooks on data-item-id. Embedding the JSON gives
         // us hover-tooltip + compareProvider-driven "Currently equipped"
         // comparison for free.
@@ -16830,8 +16893,12 @@
         const improveHtml = (enchBlock || gemBlock)
             ? `<div class="up-improve">${enchBlock}${gemBlock}</div>` : '';
 
-        return `<div class="up-slot-card">
-            <div class="up-slot-label">${escape(label)}</div>
+        const labelHtml = upState.compact
+            ? `<div class="up-slot-label collapsible" onclick="window.upToggleSlot(${slotIdx})" title="Click to collapse">${escape(label)} <span class="up-cexpand">&#9652;</span></div>`
+            : `<div class="up-slot-label">${escape(label)}</div>`;
+        return `<div class="up-slot-card" id="up-slot-${slotIdx}"
+            data-st-upgrade="${status.hasUpgrade ? 1 : 0}" data-st-sockets="${status.emptySockets}" data-st-enchant="${status.missingEnchant ? 1 : 0}">
+            ${labelHtml}
             <div class="up-slot-body">
                 <div class="up-your-col">
                     <div class="up-col-heading">Equipped</div>
@@ -16880,11 +16947,50 @@
         upState.mailItemIds = mailItemIds;
     }
 
+    // Per-slot health for the gear-health summary + compact one-liners.
+    //   hasUpgrade    — a better item is available (right column non-empty)
+    //   emptySockets  — ungemmed sockets on the equipped piece
+    //   missingEnchant— an enchantable slot with no enchant applied
+    //   optimal       — nothing to do (worn, no upgrade, gemmed, enchanted)
+    function computeSlotStatus(idx, equipped, candidates) {
+        const hasUpgrade = candidates.length > 0;
+        const emptySockets = emptySocketCount(equipped);
+        let missingEnchant = false;
+        if (equipped && !equipped.enchant) {
+            const pools = enchantPoolsForSlot(idx, equipped);
+            missingEnchant = pools.some(p => (ENCHANTS[p] || []).length > 0);
+        }
+        const optimal = !!equipped && !hasUpgrade && emptySockets === 0 && !missingEnchant;
+        return { hasUpgrade, emptySockets, missingEnchant, optimal };
+    }
+
+    // Render the gear-health summary chips into the header. Actionable chips
+    // (upgrades / empty sockets / missing enchants) scroll to the first matching
+    // slot on click; "optimal" is a passive tally.
+    function renderUpgradeSummary(nUp, nSock, nEnch, nOpt) {
+        const el = document.getElementById('up-summary');
+        if (!el) return;
+        const chip = (icon, n, label, sel) => n > 0
+            ? `<button class="up-stat" data-jump='${sel}'><span class="st-ic">${icon}</span> <b>${n}</b> ${label}</button>` : '';
+        el.innerHTML =
+            chip('⚡', nUp, nUp === 1 ? 'upgrade' : 'upgrades', '[data-st-upgrade="1"]')
+          + chip('💎', nSock, nSock === 1 ? 'empty socket' : 'empty sockets', '[data-st-sockets]:not([data-st-sockets="0"])')
+          + chip('🔧', nEnch, nEnch === 1 ? 'missing enchant' : 'missing enchants', '[data-st-enchant="1"]')
+          + (nOpt > 0 ? `<span class="up-stat done"><span class="st-ic">✓</span> <b>${nOpt}</b> optimal</span>` : '');
+        el.querySelectorAll('.up-stat[data-jump]').forEach(b => {
+            b.onclick = () => {
+                const t = document.querySelector('.up-slot-card' + b.getAttribute('data-jump'));
+                if (t) t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            };
+        });
+    }
+
     function renderUpgradeGrid() {
         const items = upgradeItemsCache;
         if (!items || !upState.role) return;
         recomputeMailBySlot();   // role-aware: re-home pinned mail items
         const slotsEl = document.getElementById('up-slots');
+        let nUp = 0, nSock = 0, nEnch = 0, nOpt = 0;
         const cards = UPGRADE_SLOT_ORDER.map(([idx, label]) => {
             const equipped = upState.equipped[idx] || null;
             const mailItem = (upState.mailBySlot && upState.mailBySlot[idx]) || null;
@@ -16894,10 +17000,24 @@
             // equipped piece too so the score baseline is the BETTER of the two —
             // a bought item that's actually a downgrade won't lower the bar.
             const candidates = findUpgradesForSlot(items, idx, mailItem || equipped, mailItem ? equipped : null);
-            return renderUpgradeCard(idx, label, equipped, mailItem, candidates);
+            const status = computeSlotStatus(idx, equipped, candidates);
+            if (status.hasUpgrade) nUp++;
+            nSock += status.emptySockets;
+            if (status.missingEnchant) nEnch++;
+            if (status.optimal) nOpt++;
+            return renderUpgradeCard(idx, label, equipped, mailItem, candidates, status);
         });
         slotsEl.innerHTML = cards.join('');
+        renderUpgradeSummary(nUp, nSock, nEnch, nOpt);
     }
+
+    // Toggle a single slot's expand/collapse in compact mode, then re-render.
+    window.upToggleSlot = function(idx) {
+        if (!upState.expandedSlots) upState.expandedSlots = new Set();
+        if (upState.expandedSlots.has(idx)) upState.expandedSlots.delete(idx);
+        else upState.expandedSlots.add(idx);
+        renderUpgradeGrid();
+    };
 
     // Show only role tabs the class can plausibly fill, and highlight the
     // currently-selected one. Called on view enter and after each role click.
@@ -17094,6 +17214,20 @@
             renderUpgradeGrid();
         });
     });
+
+    // Compact/Expanded view toggle. Compact collapses every slot to a one-liner;
+    // expanded (default) shows the full cards. Switching resets per-slot expands.
+    (function () {
+        const btn = document.getElementById('up-compact-toggle');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+            upState.compact = !upState.compact;
+            upState.expandedSlots = new Set();
+            btn.classList.toggle('active', upState.compact);
+            btn.innerHTML = upState.compact ? '&#9776; Expand all' : '&#9776; Compact';
+            renderUpgradeGrid();
+        });
+    })();
 
     // ----- Boot -----
     // Tag the INITIAL history entry with replaceState (not push) so Back
