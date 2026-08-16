@@ -16969,23 +16969,22 @@
     function computeSlotStatus(idx, equipped, candidates) {
         const hasUpgrade = candidates.length > 0;
         const emptySockets = emptySocketCount(equipped);
-        let missingEnchant = false;
-        if (equipped && !equipped.enchant) {
-            const pools = enchantPoolsForSlot(idx, equipped);
-            missingEnchant = pools.some(p => (ENCHANTS[p] || []).length > 0);
-        }
-        // Gold to BUY the recommended gems (empty sockets) + best enchant on the
-        // AH. Owned/held items are free, so they add nothing. Drives the compact
-        // row's cost tag.
+        // "Missing enchant" = there's an enchant you can actually GET and apply
+        // that beats what's on the item (none). Uses the same obtainable +
+        // profession-gated check as the improve block, so a ring on a non-
+        // enchanter (Enchant Ring is Enchanter-only) correctly reads as NOT
+        // missing — there's nothing to recommend.
+        const w = equipped ? getStatWeights(upState.role, upState.classSlug) : null;
+        const bestEnch = (equipped && !equipped.enchant) ? topEnchantsForSlot(idx, equipped, 1, true) : [];
+        const missingEnchant = bestEnch.length > 0;
+        // Gold to BUY the recommended gems (empty sockets) + that enchant. Owned/
+        // held items are free (0). Drives the compact row's cost tag.
         let buyCost = 0;
         if (equipped) {
-            const w = getStatWeights(upState.role, upState.classSlug);
             if (emptySockets) for (const r of topGemsForItem(equipped, w))
                 if (r.gem && upState.gemPrices) buyCost += (upState.gemPrices[r.gem.id] || 0);
-            if (missingEnchant) {
-                const be = topEnchantsForSlot(idx, equipped, 1, true);
-                if (be[0] && be[0]._buy && upState.enchantPrices) buyCost += (upState.enchantPrices[be[0]._buy[0]] || 0);
-            }
+            if (missingEnchant && bestEnch[0]._buy && upState.enchantPrices)
+                buyCost += (upState.enchantPrices[bestEnch[0]._buy[0]] || 0);
         }
         const optimal = !!equipped && !hasUpgrade && emptySockets === 0 && !missingEnchant;
         return { hasUpgrade, emptySockets, missingEnchant, optimal, buyCost };
