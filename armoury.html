@@ -1334,7 +1334,7 @@
             </div>
             <div class="up-summary-row">
                 <div class="up-summary" id="up-summary"></div>
-                <button class="up-view-toggle" id="up-compact-toggle" title="Collapse sorted slots to one line each">&#9776; Compact</button>
+                <button class="up-view-toggle active" id="up-compact-toggle" title="Toggle compact / expanded slots">&#9776; Expand all</button>
             </div>
         </div>
         <div id="up-loading" class="loading" style="display:none;">Loading loot data&hellip;</div>
@@ -15509,7 +15509,7 @@
         // by default (combine everything); toggle a pool off to exclude it and
         // the top-3 recomputes. Replaces the old single "Obtainable now" flag.
         srcToggles: { raid: true, dungeon: true, ah: true, owned: true },
-        compact: false,               // one-liner-per-slot view (default: expanded)
+        compact: true,                // one-liner-per-slot view (default on)
         expandedSlots: new Set(),     // slot indices expanded while in compact mode
     };
 
