@@ -873,7 +873,8 @@
         /* Gem sockets — small coloured diamonds after the item name, matching the
            in-game socket colours (Meta/Red/Yellow/Blue; prismatic/unknown violet). */
         .up-sockets { display: inline-flex; gap: 3px; flex-shrink: 0; align-self: center; }
-        .gem-sock { width: 9px; height: 9px; transform: rotate(45deg);
+        .gem-sock { display: inline-block; width: 9px; height: 9px; transform: rotate(45deg);
+            vertical-align: middle; margin: 0 1px;
             border: 1px solid rgba(0,0,0,0.65); box-shadow: inset 0 0 2px rgba(255,255,255,0.35); }
         .gem-red    { background: #d64545; }
         .gem-yellow { background: #d9b53a; }
