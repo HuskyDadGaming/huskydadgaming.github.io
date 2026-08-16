@@ -3977,6 +3977,7 @@
 "Strength": 100
 },
 "ench": 1900,
+"maxlvl": 60,
 "wsub": [
 0,
 1,
@@ -4496,6 +4497,7 @@
 "req": 0,
 "stats": {},
 "ench": 1894,
+"maxlvl": 60,
 "wsub": [
 0,
 1,
@@ -4523,6 +4525,7 @@
 "req": 0,
 "stats": {},
 "ench": 1898,
+"maxlvl": 60,
 "wsub": [
 0,
 1,
@@ -11877,6 +11880,13 @@
     // as writing a tiny per-point weight, but keeps the weight tables readable.
     const STAT_NORM = { 'Armor': 20, 'Attack Power': 2 };
 
+    // Each gem socket on TBC+ gear is worth roughly a gem of the player's main
+    // stat. Valued as this many equivalent primary-stat points per socket,
+    // routed through the top scaling-stat weight (bonusAnchorWeight) so it's
+    // role-aware for free — a tank values a Stamina gem, a caster a Spell Power
+    // gem. ~16 ≈ a rare-cut primary gem; bump toward 20 for epic gems. Tunable.
+    const SOCKET_GEM_EQUIV = 16;
+
     // Which DPS weight (if any) a weapon's damage-per-second feeds, by slot.
     // Melee weapons (one/two-hand, main/off) -> 'Melee DPS'; ranged weapons
     // (bow/gun/xbow/thrown) -> 'Ranged DPS'. This keys off the SLOT, so a
@@ -11957,6 +11967,15 @@
         const dpsKey = weaponDpsKey(item);
         if (dpsKey && weights[dpsKey]) {
             score += item.dps * weights[dpsKey];
+        }
+        // Gem sockets (TBC+ gear) — credit each socket as a gem's worth of the
+        // player's main stat, routed through the top scaling-stat weight so a
+        // socketed piece ranks above an otherwise-equal unsocketed one. Both the
+        // candidate and the equipped item carry `sockets`, so the comparison is
+        // fair. Socket bonuses (colour-match reward) are small/conditional — not
+        // credited here.
+        if (item.sockets) {
+            score += item.sockets * SOCKET_GEM_EQUIV * bonusAnchorWeight(weights);
         }
         return score;
     }
@@ -12191,6 +12210,14 @@
     function enchantFitsWeapon(e, equipped) {
         return !e.wsub || (equipped && e.wsub.includes(equipped.subclass));
     }
+    // Old-world proc enchants (Crusader, Lifestealing, Icy Chill) carry maxlvl:60 —
+    // their effect is downscaled above level 60, so the finder resolves e.g.
+    // Crusader to a full +100 Strength that isn't real for a high-level char.
+    // Don't offer them as a recommendation to characters past their cap (a level-60
+    // or lower char still gets them).
+    function enchantAllowedAtLevel(e) {
+        return !(e.maxlvl && (upState.charLevel || 0) > e.maxlvl);
+    }
     // The enchant whose scroll is sitting in the mailbox for this slot (bought,
     // not yet applied), if any — the thing you'll enchant with next.
     function mailEnchantForSlot(slotIdx, equipped) {
@@ -12220,6 +12247,7 @@
         for (const pool of enchantPoolsForSlot(slotIdx, equipped))
             for (const e of (ENCHANTS[pool] || [])) {
                 if (!enchantFitsWeapon(e, equipped)) continue;
+                if (!enchantAllowedAtLevel(e)) continue;
                 if ((e.req || 0) > itemReq) continue;
                 if (appliedEn && e.ench === appliedEn) continue;
                 if (mailIds.has(e.ench)) continue;
@@ -12248,6 +12276,7 @@
         for (const pool of enchantPoolsForSlot(slotIdx, equipped))
             for (const e of (ENCHANTS[pool] || [])) {
                 if (!enchantFitsWeapon(e, equipped)) continue;
+                if (!enchantAllowedAtLevel(e)) continue;
                 if ((e.req || 0) > itemReq) continue;
                 if (appliedEn && e.ench === appliedEn) continue;
                 if (mailIds.has(e.ench)) continue;
@@ -12371,6 +12400,7 @@
             for (const e of (ENCHANTS[pool] || [])) {
                 if (seen.has(e.name)) continue;
                 if (!enchantFitsWeapon(e, equipped)) continue;    // weapon-subtype gate (Staff, scopes...)
+                if (!enchantAllowedAtLevel(e)) continue;          // reduced-above-60 procs (Crusader): not for high chars
                 if ((e.req || 0) > itemReq) continue;             // item's req-level gate (not char level)
                 if (compareToCurrent && equipped && e.ench === equipped.enchant) continue;  // skip the applied one
                 if (mailEn && e.ench === mailEn.ench) continue;   // skip the one already bought (in mailbox)
