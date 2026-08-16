@@ -16186,16 +16186,35 @@
         if (dpsKey && weights[dpsKey]) {
             score += item.dps * weights[dpsKey];
         }
-        // Gem sockets (TBC+ gear) — credit each socket as a gem's worth of the
-        // player's main stat, routed through the top scaling-stat weight so a
-        // socketed piece ranks above an otherwise-equal unsocketed one. Both the
-        // candidate and the equipped item carry `sockets`, so the comparison is
-        // fair. Socket bonuses (colour-match reward) are small/conditional — not
-        // credited here.
-        if (item.sockets) {
+        // Gem sockets (TBC+ gear) — credit each socket by the BEST gem you could
+        // actually put in it for this role + socket colour (e.g. a blue socket on
+        // a caster = the best blue Spell-Power gem). This is the accurate value of
+        // an optimally-gemmed piece, so a socketed item is compared fairly against
+        // an un-socketed one. Both equipped and candidate get it (both assumed
+        // optimally gemmed). Falls back to a flat estimate if colours are unknown.
+        // Socket bonuses (colour-match reward) are small/conditional — not credited.
+        if (item.socketColors && item.socketColors.length) {
+            for (const cbit of item.socketColors) score += bestGemScoreForColor(cbit, weights);
+        } else if (item.sockets) {
             score += item.sockets * SOCKET_GEM_EQUIV * bonusAnchorWeight(weights);
         }
         return score;
+    }
+    // Highest role-fit score any gem fitting a socket colour can give — the value
+    // of optimally gemming that socket. Not gated to what's on the AH: it's the
+    // item's POTENTIAL, since you'd gem it. Cached per colour|role|class.
+    const _gemColorScore = {};
+    function bestGemScoreForColor(colorBit, weights) {
+        const key = colorBit + '|' + upState.role + '|' + upState.classSlug;
+        if (_gemColorScore[key] !== undefined) return _gemColorScore[key];
+        let best = 0;
+        for (const g of GEMS) {
+            if (!(g.mask & colorBit)) continue;
+            const sc = scoreEnchant(g.stats, weights, upState.role, upState.schools);
+            if (sc > best) best = sc;
+        }
+        _gemColorScore[key] = best;
+        return best;
     }
 
     // --- Set-bonus scoring (permanent flat stats only; procs stay unscored) ---
@@ -17199,7 +17218,7 @@
         if (mailEn && enScore(mailEn) > curEnScore) {
             const st = Object.entries(mailEn.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
             const nm = String(mailEn.name).replace(/^Enchant [^-]+ - /, '');
-            mailEnchHtml = `<div class="up-pin-ench" ${pinTip(mailEn)} style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-source">📬 in mailbox</span><span class="up-ah-slot"></span></div>`;
+            mailEnchHtml = `<div class="up-pin-ench" ${pinTip(mailEn)} style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-source">in mailbox</span><span class="up-ah-slot">📬</span></div>`;
         }
         // Enchant you already own a scroll for (bags/bank), shown the SAME way as
         // the mailbox enchant — a blue line pinned under the item, not a boxed
@@ -17214,7 +17233,7 @@
             const inBank = ownedScroll && upState.enchantsOwnedLoc[ownedScroll[0]] === 'bank';
             const loc = inBank ? '🏦' : '🎒';
             const locT = inBank ? 'In your bank' : 'In your bags';
-            bagsEnchHtml = `<div class="up-pin-ench" ${pinTip(bagsEn)} style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-source">${loc} ${inBank ? 'in bank' : 'in bags'}</span><span class="up-ah-slot"></span></div>`;
+            bagsEnchHtml = `<div class="up-pin-ench" ${pinTip(bagsEn)} style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-source">${inBank ? 'in bank' : 'in bags'}</span><span class="up-ah-slot">${loc}</span></div>`;
         }
         // Enchant a SQUAD-MATE is holding a scroll for — pinned like the bags
         // line but with a 📤 transfer button (they mail it to you for 30c).
@@ -17239,7 +17258,7 @@
                 ? `onclick="event.stopPropagation(); ${xferCall}; return false;" title="Click to mail to ${escape(_to)} — ${escape(squadEn.holder)} pays the 30c fee"`
                 : '';
             const heldIcon = squadEn.loc === 'bank' ? '🏦' : '🎒';
-            squadEnchHtml = `<div class="up-pin-ench${_to ? ' clickable' : ''}" ${pinTip(squadEn.ench)} style="color:#79b8e0;" ${clickAttr}><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-source" title="Click to mail it over">${heldIcon} in ${escape(squadEn.holder)}${locLabel}</span><span class="up-ah-slot"><span class="pin-xfer">📤</span></span></div>`;
+            squadEnchHtml = `<div class="up-pin-ench${_to ? ' clickable' : ''}" ${pinTip(squadEn.ench)} style="color:#79b8e0;" ${clickAttr}><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-source" title="Click to mail it over">in ${escape(squadEn.holder)}${locLabel}</span><span class="up-ah-slot"><span class="pin-xfer">📤</span></span></div>`;
         }
         // Applied item modifications (current enchant/kit + inbound mail enchant +
         // an owned "in bags" enchant), pinned right under the item so they stay
@@ -17296,20 +17315,22 @@
                 // Free sources spell out the location next to the icon (in bags /
                 // in mailbox / in a mate's bags); equipped keeps its ✓ and buyables
                 // keep price + 🏛 in the rightmost slot.
+                // Location TEXT sits left; the icon sits in the rightmost slot so
+                // 🎒/📬/📤 line up with the equipped ✓ and the buy 🏛.
                 let priceCol, iconSlot;
                 if (squad) {
                     const sloc = (upState.gemsHeldByLoc && upState.gemsHeldByLoc[r.gem.id]) === 'bank' ? 'bank' : 'bags';
-                    priceCol = `<span class="up-source" title="Click to mail it over">${heldIcon} in ${escape(holder || '')}'s ${sloc}</span>`;
-                    iconSlot = _to ? '<span class="pin-xfer">📤</span>' : '';
+                    priceCol = `<span class="up-source" title="Click to mail it over">in ${escape(holder || '')}'s ${sloc}</span>`;
+                    iconSlot = _to ? '<span class="pin-xfer">📤</span>' : `<span>${heldIcon}</span>`;
                 } else if (equipped) {
                     priceCol = '<span class="up-price"></span>';
                     iconSlot = '<span style="color:#1eff00;" title="Socketed in this item">&#10003;</span>';
                 } else if (inMail) {
-                    priceCol = '<span class="up-source">📬 in mailbox</span>';
-                    iconSlot = '';
+                    priceCol = '<span class="up-source">in mailbox</span>';
+                    iconSlot = '<span title="Bought — waiting in your mailbox">📬</span>';
                 } else if (owned) {
-                    priceCol = '<span class="up-source">🎒 in bags</span>';
-                    iconSlot = '';
+                    priceCol = '<span class="up-source">in bags</span>';
+                    iconSlot = '<span title="In your bags/bank">🎒</span>';
                 } else {
                     priceCol = price
                         ? `<span class="up-price" title="Cheapest gem buyout on the Auction House">${formatCopper(price)}</span>`
