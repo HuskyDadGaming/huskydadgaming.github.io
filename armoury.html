@@ -16865,6 +16865,7 @@
         let gemRows = '';
         if (currentItem && Array.isArray(currentItem.socketColors) && currentItem.socketColors.length) {
             const gw = getStatWeights(upState.role, upState.classSlug);
+            const mailUsed = {};   // mailbox gems consumed across this item's sockets (one gem per socket)
             const rows = topGemsForItem(currentItem, gw).map(r => {
                 const cls = SOCKET_COLOR_CLASS[r.color] || 'other';
                 const cname = SOCKET_COLOR_NAME[r.color] || 'Prismatic';
@@ -16881,7 +16882,13 @@
                 // Obtainability: owned gem shows "In bags"; else the cheapest AH
                 // buyout + a buy link (jumps to the AH for this gem). The picker
                 // only returns obtainable gems, so it's always one or the other.
-                const inMail = upState.mailGemIds && upState.mailGemIds.has(r.gem.id);
+                // A mailbox gem covers one socket per copy — consume from the
+                // per-item tally so only as many sockets as you actually bought
+                // read 📬; the rest still show the buy price.
+                const _gid = r.gem.id;
+                const _mailQty = (upState.mailGemCounts && upState.mailGemCounts[_gid]) || 0;
+                const inMail = (mailUsed[_gid] || 0) < _mailQty;
+                if (inMail) mailUsed[_gid] = (mailUsed[_gid] || 0) + 1;
                 const owned  = !inMail && upState.gemsOwned && upState.gemsOwned.has(r.gem.id);
                 const free   = inMail || owned;   // already bought/owned — nothing to buy
                 const price  = (!free && upState.gemPrices) ? upState.gemPrices[r.gem.id] : 0;
@@ -16989,11 +16996,16 @@
         // held items are free (0). Drives the compact row's cost tag.
         let buyCost = 0;
         if (equipped) {
-            if (emptySockets) for (const r of topGemsForItem(equipped, w)) {
-                if (!r.gem || !upState.gemPrices) continue;
-                const gid = r.gem.id;
-                const gemFree = (upState.mailGemIds && upState.mailGemIds.has(gid)) || (upState.gemsOwned && upState.gemsOwned.has(gid));
-                if (!gemFree) buyCost += (upState.gemPrices[gid] || 0);
+            if (emptySockets) {
+                const mailUsed = {};
+                for (const r of topGemsForItem(equipped, w)) {
+                    if (!r.gem) continue;
+                    const gid = r.gem.id;
+                    const mailQty = (upState.mailGemCounts && upState.mailGemCounts[gid]) || 0;
+                    if ((mailUsed[gid] || 0) < mailQty) { mailUsed[gid] = (mailUsed[gid] || 0) + 1; continue; }  // covered by a mailbox copy
+                    if (upState.gemsOwned && upState.gemsOwned.has(gid)) continue;   // free (owned)
+                    if (upState.gemPrices) buyCost += (upState.gemPrices[gid] || 0);
+                }
             }
             if (missingEnchant && bestEnch[0]._buy && upState.enchantPrices)
                 buyCost += (upState.enchantPrices[bestEnch[0]._buy[0]] || 0);
@@ -17167,11 +17179,15 @@
             // set of their enchantment ids, so the finder shows "in mailbox" and
             // compares suggestions against the one you're about to apply.
             upState.mailEnchantIds = new Set();
-            upState.mailGemIds = new Set();   // gems bought + waiting in the mailbox
+            upState.mailGemIds = new Set();   // gem entries with at least one copy in the mailbox
+            upState.mailGemCounts = {};       // gem entry -> how many copies are waiting
             for (const m of mailItems) {
                 const me = window.KCraftEnchantByScroll && window.KCraftEnchantByScroll[m.id];
                 if (me && me.ench != null) upState.mailEnchantIds.add(me.ench);
-                if (window.KCraftGemEntries && window.KCraftGemEntries.has(m.id)) upState.mailGemIds.add(m.id);
+                if (window.KCraftGemEntries && window.KCraftGemEntries.has(m.id)) {
+                    upState.mailGemIds.add(m.id);
+                    upState.mailGemCounts[m.id] = (upState.mailGemCounts[m.id] || 0) + (m.count || 1);
+                }
             }
             upState.professions = up.professions || [];  // skill ids, for enchant profession gate
             upState.enchantsOnAH = new Set(up.enchantsOnAH || []);  // enchant items buyable on AH now
