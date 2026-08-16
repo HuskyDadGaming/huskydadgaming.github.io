@@ -788,6 +788,7 @@
         .up-cchip.sock { color: #79b8e0; border-color: #2a4a5a; background: #17242c; }
         .up-cchip.ench { color: #c79be0; border-color: #442a5a; background: #24172c; }
         .up-cdone { color: #5ac35a; font-size: 0.82rem; }
+        .up-ccost { color: #e8c268; font-size: 0.78rem; flex: none; font-variant-numeric: tabular-nums; }
         .up-cexpand { color: #79b8e0; font-size: 0.76rem; flex: none; }
         .up-slot-label.collapsible { cursor: pointer; }
         .up-slot-label.collapsible:hover { filter: brightness(1.2); }
@@ -14874,6 +14875,15 @@
         parts.push(`<span class="copper">${p}c</span>`);
         return parts.join(' ');
     }
+    // Compact single-unit gold: "86g" / "40s" / "12c" — for tight spots like the
+    // compact-slot cost tag where the full g/s/c string is too long.
+    function goldShort(c) {
+        c = Math.max(0, c | 0);
+        const g = Math.floor(c / 10000), s = Math.floor((c % 10000) / 100);
+        return g ? `<span class="gold">${g}g</span>`
+             : s ? `<span class="silver">${s}s</span>`
+             : `<span class="copper">${c % 100}c</span>`;
+    }
 
     // Set the AH wallet balance everywhere it's cached: the live session
     // (ahState.charMoney), the header line, AND the Upgrade-Finder re-entry
@@ -16602,11 +16612,15 @@
         if (status.emptySockets) chips.push(`<span class="up-cchip sock">&#128142; ${status.emptySockets} gem${status.emptySockets > 1 ? 's' : ''}</span>`);
         if (status.missingEnchant) chips.push('<span class="up-cchip ench">&#128295; enchant</span>');
         const body = status.optimal ? '<span class="up-cdone">&#10003; optimal</span>' : chips.join('');
+        // Gold to buy the recommended gems + enchant for this slot (0 = all free/owned).
+        const costTag = (status.buyCost > 0)
+            ? `<span class="up-ccost" title="Gold to buy the recommended gems + enchant">${goldShort(status.buyCost)}</span>` : '';
         return `<div class="up-slot-card up-compact-row" id="up-slot-${slotIdx}"
             data-st-upgrade="${status.hasUpgrade ? 1 : 0}" data-st-sockets="${status.emptySockets}" data-st-enchant="${status.missingEnchant ? 1 : 0}"
             onclick="window.upToggleSlot(${slotIdx})" title="Click to expand">
             <span class="up-cslot">${escape(label)}</span>
             <span class="up-cbody">${body}</span>
+            ${costTag}
             <span class="up-cexpand">${status.optimal ? '' : 'expand &#9662;'}</span>
         </div>`;
     }
@@ -16693,7 +16707,7 @@
                     ${deltaBadge}
                     <span class="up-ilvl">${it.ilvl || '—'}</span>
                 </div>
-                <div class="up-item-meta">${source}${it._inMail ? '<span class="up-source">📬 In mailbox</span>' : ''}${it.inBag ? `<span class="up-source">${it.ownedLoc === 'bank' ? '🏦 In bank' : '🎒 In bags'}</span>` : ''}${it.heldBy ? `<span class="up-source" title="Held by a squad-mate — trade or mail it over">${it.ownedLoc === 'bank' ? '🏦' : '🎒'} In ${escape(it.heldBy)}'s ${it.ownedLoc === 'bank' ? 'bank' : 'bags'}</span>` : ''}${drop}</div>
+                <div class="up-item-meta">${source}${it._inMail ? '<span class="up-source" title="Waiting in your mailbox">📬</span>' : ''}${it.inBag ? `<span class="up-source" title="${it.ownedLoc === 'bank' ? 'In your bank' : 'In your bags'}">${it.ownedLoc === 'bank' ? '🏦' : '🎒'}</span>` : ''}${it.heldBy ? `<span class="up-source" title="In ${escape(it.heldBy)}'s ${it.ownedLoc === 'bank' ? 'bank' : 'bags'} — a squad-mate can mail it over">${it.ownedLoc === 'bank' ? '🏦' : '🎒'} ${escape(it.heldBy)}</span>` : ''}${drop}</div>
             </div>`;
         };
 
@@ -16960,8 +16974,21 @@
             const pools = enchantPoolsForSlot(idx, equipped);
             missingEnchant = pools.some(p => (ENCHANTS[p] || []).length > 0);
         }
+        // Gold to BUY the recommended gems (empty sockets) + best enchant on the
+        // AH. Owned/held items are free, so they add nothing. Drives the compact
+        // row's cost tag.
+        let buyCost = 0;
+        if (equipped) {
+            const w = getStatWeights(upState.role, upState.classSlug);
+            if (emptySockets) for (const r of topGemsForItem(equipped, w))
+                if (r.gem && upState.gemPrices) buyCost += (upState.gemPrices[r.gem.id] || 0);
+            if (missingEnchant) {
+                const be = topEnchantsForSlot(idx, equipped, 1, true);
+                if (be[0] && be[0]._buy && upState.enchantPrices) buyCost += (upState.enchantPrices[be[0]._buy[0]] || 0);
+            }
+        }
         const optimal = !!equipped && !hasUpgrade && emptySockets === 0 && !missingEnchant;
-        return { hasUpgrade, emptySockets, missingEnchant, optimal };
+        return { hasUpgrade, emptySockets, missingEnchant, optimal, buyCost };
     }
 
     // Render the gear-health summary chips into the header. Actionable chips
