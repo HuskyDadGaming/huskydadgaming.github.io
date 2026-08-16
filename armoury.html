@@ -16041,36 +16041,51 @@
     // Gem item entries, for matching mailbox items (a bought gem waiting to be
     // socketed) the same way KCraftEnchantByScroll matches enchant scrolls.
     window.KCraftGemEntries = new Set(GEMS.map(g => g.id));
-    // Is a gem obtainable right now — on the AH or already in the character's
-    // bags/bank? Gates the recommender so it only suggests gems you can actually
-    // get (mirrors the enchant buyable/owned gate).
-    function gemObtainable(g) {
+    // Is a gem obtainable for a socket right now — owned, a mailbox copy still
+    // spare (mailLeft), or listed on the AH? Gates the recommender to gems you
+    // can actually get. mailLeft is the per-item running tally of mailbox copies
+    // not yet assigned to an earlier socket.
+    function gemObtainable(g, mailLeft) {
         return (upState.gemsOwned && upState.gemsOwned.has(g.id))
-            || (upState.mailGemIds && upState.mailGemIds.has(g.id))   // bought, in mailbox
+            || (mailLeft && mailLeft[g.id] > 0)                 // a bought copy still spare
             || (upState.gemsOnAH && upState.gemsOnAH.has(g.id));
     }
-    // Best OBTAINABLE gem for one socket colour, by role weights: highest role
-    // score among gems that fit the colour AND are on the AH / owned, tie-broken
-    // by quality. Returns null if nothing obtainable fits.
-    function bestGemForSocket(colorBit, weights) {
+    // Best obtainable gem for one socket colour, by role weights: highest role
+    // score among gems that fit the colour AND are gettable, tie-broken by
+    // quality. Returns null if nothing obtainable fits.
+    function bestGemForSocket(colorBit, weights, mailLeft) {
         let best = null, bestScore = -Infinity;
         for (const g of GEMS) {
             if (!(g.mask & colorBit)) continue;                 // gem colour must fit the socket
-            if (!gemObtainable(g)) continue;                    // only what you can actually get
+            if (!gemObtainable(g, mailLeft)) continue;          // only what you can actually get
             const sc = scoreEnchant(g.stats, weights, upState.role, upState.schools);
             if (sc <= 0) continue;                              // nothing this role values
             if (sc > bestScore || (sc === bestScore && best && (g.q > best.q))) { bestScore = sc; best = g; }
         }
         return best;
     }
-    // Per-socket gem recommendation for an item: [{color, gem}] for the EMPTY
-    // sockets only (skip any socket that already has a gem set — socketFilled[i]).
+    // Per-socket gem recommendation for an item's EMPTY sockets. Assigns socket
+    // by socket, consuming mailbox copies as they're used, so a gem you only own
+    // one mailbox copy of fills exactly one socket and later sockets fall back to
+    // a buyable/owned gem (or "none on the AH"). Each entry: {color, gem, source}
+    // where source is 'mail' | 'owned' | 'ah'.
     function topGemsForItem(item, weights) {
         const cols = item && item.socketColors;
         if (!Array.isArray(cols) || !cols.length) return [];
         const filled = item.socketFilled || [];
+        const mailLeft = Object.assign({}, upState.mailGemCounts || {});
         const out = [];
-        cols.forEach((c, i) => { if (!filled[i]) out.push({ color: c, gem: bestGemForSocket(c, weights) }); });
+        cols.forEach((c, i) => {
+            if (filled[i]) return;
+            const gem = bestGemForSocket(c, weights, mailLeft);
+            let source = null;
+            if (gem) {
+                if (mailLeft[gem.id] > 0) { source = 'mail'; mailLeft[gem.id]--; }       // use a bought copy
+                else if (upState.gemsOwned && upState.gemsOwned.has(gem.id)) source = 'owned';
+                else source = 'ah';                                                       // buy it
+            }
+            out.push({ color: c, gem, source });
+        });
         return out;
     }
     // Empty (ungemmed) socket count for an item — drives the gear-health summary.
@@ -16865,7 +16880,6 @@
         let gemRows = '';
         if (currentItem && Array.isArray(currentItem.socketColors) && currentItem.socketColors.length) {
             const gw = getStatWeights(upState.role, upState.classSlug);
-            const mailUsed = {};   // mailbox gems consumed across this item's sockets (one gem per socket)
             const rows = topGemsForItem(currentItem, gw).map(r => {
                 const cls = SOCKET_COLOR_CLASS[r.color] || 'other';
                 const cname = SOCKET_COLOR_NAME[r.color] || 'Prismatic';
@@ -16882,14 +16896,10 @@
                 // Obtainability: owned gem shows "In bags"; else the cheapest AH
                 // buyout + a buy link (jumps to the AH for this gem). The picker
                 // only returns obtainable gems, so it's always one or the other.
-                // A mailbox gem covers one socket per copy — consume from the
-                // per-item tally so only as many sockets as you actually bought
-                // read 📬; the rest still show the buy price.
-                const _gid = r.gem.id;
-                const _mailQty = (upState.mailGemCounts && upState.mailGemCounts[_gid]) || 0;
-                const inMail = (mailUsed[_gid] || 0) < _mailQty;
-                if (inMail) mailUsed[_gid] = (mailUsed[_gid] || 0) + 1;
-                const owned  = !inMail && upState.gemsOwned && upState.gemsOwned.has(r.gem.id);
+                // Source assigned by the consumption pass in topGemsForItem:
+                // 'mail' (a bought copy), 'owned' (bags/bank), or 'ah' (buy).
+                const inMail = r.source === 'mail';
+                const owned  = r.source === 'owned';
                 const free   = inMail || owned;   // already bought/owned — nothing to buy
                 const price  = (!free && upState.gemPrices) ? upState.gemPrices[r.gem.id] : 0;
                 const gemNm  = JSON.stringify(r.gem.name).replace(/"/g, '&quot;');
@@ -16996,17 +17006,8 @@
         // held items are free (0). Drives the compact row's cost tag.
         let buyCost = 0;
         if (equipped) {
-            if (emptySockets) {
-                const mailUsed = {};
-                for (const r of topGemsForItem(equipped, w)) {
-                    if (!r.gem) continue;
-                    const gid = r.gem.id;
-                    const mailQty = (upState.mailGemCounts && upState.mailGemCounts[gid]) || 0;
-                    if ((mailUsed[gid] || 0) < mailQty) { mailUsed[gid] = (mailUsed[gid] || 0) + 1; continue; }  // covered by a mailbox copy
-                    if (upState.gemsOwned && upState.gemsOwned.has(gid)) continue;   // free (owned)
-                    if (upState.gemPrices) buyCost += (upState.gemPrices[gid] || 0);
-                }
-            }
+            if (emptySockets) for (const r of topGemsForItem(equipped, w))
+                if (r.source === 'ah' && r.gem && upState.gemPrices) buyCost += (upState.gemPrices[r.gem.id] || 0);
             if (missingEnchant && bestEnch[0]._buy && upState.enchantPrices)
                 buyCost += (upState.enchantPrices[bestEnch[0]._buy[0]] || 0);
         }
