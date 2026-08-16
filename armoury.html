@@ -17286,22 +17286,28 @@
                 const holder = squad ? (upState.gemsHeldBy && upState.gemsHeldBy[r.gem.id]) : null;
                 const heldIcon = squad ? ((upState.gemsHeldByLoc && upState.gemsHeldByLoc[r.gem.id]) === 'bank' ? '🏦' : '🎒') : '';
                 const _to = (lastViewedCharacter && lastViewedCharacter.name) || '';
-                const srcHtml = equipped
-                    ? `<span class="up-source" style="color:#1eff00;" title="Socketed in this item">&#10003;</span>`
-                    : inMail
-                    ? `<span class="up-source" title="Bought — waiting in your mailbox">📬</span>`
-                    : owned
-                    ? `<span class="up-source" title="You already have this gem — in your bags/bank">🎒</span>`
-                    : squad
-                    ? `<span class="up-source" title="In ${escape(holder || '')}'s ${(upState.gemsHeldByLoc && upState.gemsHeldByLoc[r.gem.id]) === 'bank' ? 'bank' : 'bags'} — click to mail it over">${heldIcon} ${escape(holder || '')}</span>`
-                    : (price ? `<span class="up-price" title="Cheapest gem buyout on the Auction House">${formatCopper(price)}</span>` : '');
-                const xfer = (squad && _to) ? '<span class="pin-xfer">📤</span>' : '';
-                const buyLink = (free || !price) ? ''
-                    : `<a class="up-ah-link" href="#" title="Buy this gem on the Auction House" onclick="event.stopPropagation(); window.ahForItem(${gemNm}); return false;">&#127963;</a>`;
+                // Trailing layout mirrors the enchant rows: a fixed price column
+                // (empty for free gems) + a single icon in the rightmost slot, so
+                // 🏛/🎒/📬/✓ all line up in one vertical column. Squad-held gems are
+                // wider (holder name) and occupy the price column with a 📤 in the slot.
+                let priceCol, iconSlot;
+                if (squad) {
+                    priceCol = `<span class="up-source" title="In ${escape(holder || '')}'s ${(upState.gemsHeldByLoc && upState.gemsHeldByLoc[r.gem.id]) === 'bank' ? 'bank' : 'bags'} — click to mail it over">${heldIcon} ${escape(holder || '')}</span>`;
+                    iconSlot = _to ? '<span class="pin-xfer">📤</span>' : '';
+                } else {
+                    priceCol = price
+                        ? `<span class="up-price" title="Cheapest gem buyout on the Auction House">${formatCopper(price)}</span>`
+                        : '<span class="up-price"></span>';
+                    iconSlot = equipped ? '<span style="color:#1eff00;" title="Socketed in this item">&#10003;</span>'
+                        : inMail ? '<span title="Bought — waiting in your mailbox">📬</span>'
+                        : owned ? '<span title="You already have this gem — in your bags/bank">🎒</span>'
+                        : (price ? `<a class="up-ah-link" href="#" title="Buy this gem on the Auction House" onclick="event.stopPropagation(); window.ahForItem(${gemNm}); return false;">&#127963;</a>` : '');
+                }
+                const clickable = (squad && _to) || !!price;
                 const rowClick = squad && _to
                     ? `onclick="event.stopPropagation(); window.transferSquadItem(${JSON.stringify(holder).replace(/"/g, '&quot;')}, ${r.gem.id}, ${gemNm}); return false;"`
-                    : (!free ? `onclick="window.ahForItem(${gemNm}); return false;"` : '');
-                return `<div class="up-pin-ench${free && !squad ? '' : ' clickable'}" data-item-id="${r.gem.id}" data-item-json="${ttJson}" ${rowClick}><span class="pin-nm">${sq} <span style="color:${qcol};">${escape(r.gem.name)}</span> <span style="opacity:0.8;">(${escape(st)})</span></span><span class="up-delta"></span>${srcHtml}<span class="up-ah-slot">${buyLink}${xfer}</span></div>`;
+                    : (price ? `onclick="window.ahForItem(${gemNm}); return false;"` : '');
+                return `<div class="up-pin-ench${clickable ? ' clickable' : ''}" data-item-id="${r.gem.id}" data-item-json="${ttJson}" ${rowClick}><span class="pin-nm">${sq} <span style="color:${qcol};">${escape(r.gem.name)}</span> <span style="opacity:0.8;">(${escape(st)})</span></span><span class="up-delta"></span>${priceCol}<span class="up-ah-slot">${iconSlot}</span></div>`;
             }).join('');
             gemRows = rows;
         }
