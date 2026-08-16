@@ -17199,7 +17199,7 @@
         if (mailEn && enScore(mailEn) > curEnScore) {
             const st = Object.entries(mailEn.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
             const nm = String(mailEn.name).replace(/^Enchant [^-]+ - /, '');
-            mailEnchHtml = `<div class="up-pin-ench" ${pinTip(mailEn)} style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-price"></span><span class="up-ah-slot" title="Waiting in your mailbox">📬</span></div>`;
+            mailEnchHtml = `<div class="up-pin-ench" ${pinTip(mailEn)} style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-source">📬 in mailbox</span><span class="up-ah-slot"></span></div>`;
         }
         // Enchant you already own a scroll for (bags/bank), shown the SAME way as
         // the mailbox enchant — a blue line pinned under the item, not a boxed
@@ -17214,7 +17214,7 @@
             const inBank = ownedScroll && upState.enchantsOwnedLoc[ownedScroll[0]] === 'bank';
             const loc = inBank ? '🏦' : '🎒';
             const locT = inBank ? 'In your bank' : 'In your bags';
-            bagsEnchHtml = `<div class="up-pin-ench" ${pinTip(bagsEn)} style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-price"></span><span class="up-ah-slot" title="${locT}">${loc}</span></div>`;
+            bagsEnchHtml = `<div class="up-pin-ench" ${pinTip(bagsEn)} style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-source">${loc} ${inBank ? 'in bank' : 'in bags'}</span><span class="up-ah-slot"></span></div>`;
         }
         // Enchant a SQUAD-MATE is holding a scroll for — pinned like the bags
         // line but with a 📤 transfer button (they mail it to you for 30c).
@@ -17239,7 +17239,7 @@
                 ? `onclick="event.stopPropagation(); ${xferCall}; return false;" title="Click to mail to ${escape(_to)} — ${escape(squadEn.holder)} pays the 30c fee"`
                 : '';
             const heldIcon = squadEn.loc === 'bank' ? '🏦' : '🎒';
-            squadEnchHtml = `<div class="up-pin-ench${_to ? ' clickable' : ''}" ${pinTip(squadEn.ench)} style="color:#79b8e0;" ${clickAttr}><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-source" title="In ${escape(squadEn.holder)}${locLabel} — click to mail it over">${heldIcon} ${escape(squadEn.holder)}</span><span class="up-ah-slot"><span class="pin-xfer">📤</span></span></div>`;
+            squadEnchHtml = `<div class="up-pin-ench${_to ? ' clickable' : ''}" ${pinTip(squadEn.ench)} style="color:#79b8e0;" ${clickAttr}><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-source" title="Click to mail it over">${heldIcon} in ${escape(squadEn.holder)}${locLabel}</span><span class="up-ah-slot"><span class="pin-xfer">📤</span></span></div>`;
         }
         // Applied item modifications (current enchant/kit + inbound mail enchant +
         // an owned "in bags" enchant), pinned right under the item so they stay
@@ -17293,18 +17293,28 @@
                 // (empty for free gems) + a single icon in the rightmost slot, so
                 // 🏛/🎒/📬/✓ all line up in one vertical column. Squad-held gems are
                 // wider (holder name) and occupy the price column with a 📤 in the slot.
+                // Free sources spell out the location next to the icon (in bags /
+                // in mailbox / in a mate's bags); equipped keeps its ✓ and buyables
+                // keep price + 🏛 in the rightmost slot.
                 let priceCol, iconSlot;
                 if (squad) {
-                    priceCol = `<span class="up-source" title="In ${escape(holder || '')}'s ${(upState.gemsHeldByLoc && upState.gemsHeldByLoc[r.gem.id]) === 'bank' ? 'bank' : 'bags'} — click to mail it over">${heldIcon} ${escape(holder || '')}</span>`;
+                    const sloc = (upState.gemsHeldByLoc && upState.gemsHeldByLoc[r.gem.id]) === 'bank' ? 'bank' : 'bags';
+                    priceCol = `<span class="up-source" title="Click to mail it over">${heldIcon} in ${escape(holder || '')}'s ${sloc}</span>`;
                     iconSlot = _to ? '<span class="pin-xfer">📤</span>' : '';
+                } else if (equipped) {
+                    priceCol = '<span class="up-price"></span>';
+                    iconSlot = '<span style="color:#1eff00;" title="Socketed in this item">&#10003;</span>';
+                } else if (inMail) {
+                    priceCol = '<span class="up-source">📬 in mailbox</span>';
+                    iconSlot = '';
+                } else if (owned) {
+                    priceCol = '<span class="up-source">🎒 in bags</span>';
+                    iconSlot = '';
                 } else {
                     priceCol = price
                         ? `<span class="up-price" title="Cheapest gem buyout on the Auction House">${formatCopper(price)}</span>`
                         : '<span class="up-price"></span>';
-                    iconSlot = equipped ? '<span style="color:#1eff00;" title="Socketed in this item">&#10003;</span>'
-                        : inMail ? '<span title="Bought — waiting in your mailbox">📬</span>'
-                        : owned ? '<span title="You already have this gem — in your bags/bank">🎒</span>'
-                        : (price ? `<a class="up-ah-link" href="#" title="Buy this gem on the Auction House" onclick="event.stopPropagation(); window.ahForItem(${gemNm}); return false;">&#127963;</a>` : '');
+                    iconSlot = price ? `<a class="up-ah-link" href="#" title="Buy this gem on the Auction House" onclick="event.stopPropagation(); window.ahForItem(${gemNm}); return false;">&#127963;</a>` : '';
                 }
                 const clickable = (squad && _to) || !!price;
                 const rowClick = squad && _to
