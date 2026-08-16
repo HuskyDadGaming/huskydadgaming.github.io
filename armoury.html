@@ -738,11 +738,30 @@
             flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem;
         }
         .up-header h1 { margin: 0; font-size: 1.6rem; }
-        .up-header .up-context { color: #aaa; font-size: 0.9rem; margin-top: 4px; }
+        .up-header .up-context { color: #aaa; font-size: 0.9rem; margin-top: 4px;
+            display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        /* Balance chip — the player's gold, top-right of the header. */
+        .up-balance { display: inline-flex; align-items: center; gap: 7px;
+            background: #2a2417; border: 1px solid #5a4a2a; border-radius: 7px;
+            padding: 5px 13px; color: #e8c268; font-weight: 600; font-size: 0.95rem;
+            white-space: nowrap; }
+        .up-balance:empty { display: none; }
+        .up-balance .bal-cap { color: #b9995a; font-size: 0.66rem; text-transform: uppercase;
+            letter-spacing: 0.07em; font-weight: 700; }
+        .up-balance .money { font-variant-numeric: tabular-nums; }
+        /* Role badge in the context line (Tank / Melee / …). */
+        .up-role-badge { font-size: 0.72rem; font-weight: 700; padding: 2px 10px;
+            border-radius: 20px; background: #3a3320; color: #ffd100; letter-spacing: 0.02em; }
+        .up-role-badge.muted { background: #2d2d2d; color: #888; }
+
+        /* Labelled control groups (Role / Sources). */
+        .up-controls { display: flex; flex-wrap: wrap; gap: 0.9rem 1.6rem; margin-bottom: 1rem; }
+        .up-ctrl-group { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+        .up-ctrl-label { color: #777; font-size: 0.66rem; text-transform: uppercase;
+            letter-spacing: 0.1em; font-weight: 700; }
 
         .up-role-tabs {
             display: flex; gap: 0.4rem; flex-wrap: wrap;
-            margin-bottom: 1rem;
         }
         .up-role-btn {
             background: #2d2d2d; color: #ccc;
@@ -758,7 +777,7 @@
         /* "Obtainable now" filter toggle — sits under the role tabs. Same
            chip styling as the role buttons but a teal accent when active, so
            it reads as a separate filter, not another role. */
-        .up-filter-tabs { margin-top: 0.4rem; }
+        .up-filter-tabs { margin-top: 0; }
         .up-filter-btn {
             background: #2d2d2d; color: #ccc;
             border: 1px solid #3a3a3a; border-radius: 4px;
@@ -1235,22 +1254,31 @@
                     <h1>Find Upgrades</h1>
                     <div class="up-context" id="up-context"></div>
                 </div>
+                <div class="up-balance" id="up-balance"></div>
             </div>
-            <div class="up-role-tabs" id="up-role-tabs">
-                <button class="up-role-btn" data-role="tank">&#x1F6E1; Tank</button>
-                <button class="up-role-btn" data-role="heal">&#x271A; Heal</button>
-                <button class="up-role-btn" data-role="melee">&#x2694; Melee</button>
-                <button class="up-role-btn" data-role="ranged">&#x1F3F9; Ranged</button>
-            </div>
-            <div class="up-filter-tabs" id="up-filter-tabs">
-                <button class="up-filter-btn active" data-src="raid"
-                        title="Raid boss drops (Molten Core, BWL, AQ, Naxxramas, Karazhan, etc.)">&#x1F409; Raid</button>
-                <button class="up-filter-btn active" data-src="dungeon"
-                        title="5-man dungeon boss drops">&#x1F3F0; Dungeon</button>
-                <button class="up-filter-btn active" data-src="ah"
-                        title="Items currently listed on the Auction House">&#x1F4B0; AH</button>
-                <button class="up-filter-btn active" data-src="owned"
-                        title="Already in your bags/bank, or held by a squad-mate">&#x1F392; Owned</button>
+            <div class="up-controls">
+                <div class="up-ctrl-group">
+                    <span class="up-ctrl-label">Role</span>
+                    <div class="up-role-tabs" id="up-role-tabs">
+                        <button class="up-role-btn" data-role="tank">&#x1F6E1; Tank</button>
+                        <button class="up-role-btn" data-role="heal">&#x271A; Heal</button>
+                        <button class="up-role-btn" data-role="melee">&#x2694; Melee</button>
+                        <button class="up-role-btn" data-role="ranged">&#x1F3F9; Ranged</button>
+                    </div>
+                </div>
+                <div class="up-ctrl-group">
+                    <span class="up-ctrl-label">Sources</span>
+                    <div class="up-filter-tabs" id="up-filter-tabs">
+                        <button class="up-filter-btn active" data-src="raid"
+                                title="Raid boss drops (Molten Core, BWL, AQ, Naxxramas, Karazhan, etc.)">&#x1F409; Raid</button>
+                        <button class="up-filter-btn active" data-src="dungeon"
+                                title="5-man dungeon boss drops">&#x1F3F0; Dungeon</button>
+                        <button class="up-filter-btn active" data-src="ah"
+                                title="Items currently listed on the Auction House">&#x1F3DB; AH</button>
+                        <button class="up-filter-btn active" data-src="owned"
+                                title="Already in your bags/bank, or held by a squad-mate">&#x1F392; Owned</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="up-loading" class="loading" style="display:none;">Loading loot data&hellip;</div>
@@ -14189,6 +14217,12 @@
         1: 'warrior', 2: 'paladin', 3: 'hunter', 4: 'rogue',  5: 'priest',
         6: 'dk',      7: 'shaman',  8: 'mage',   9: 'warlock', 11: 'druid',
     };
+    // Standard WoW class colours, for the character name in the finder header.
+    const CLASS_COLORS = {
+        warrior: '#C79C6E', paladin: '#F58CBA', hunter: '#ABD473', rogue: '#FFF569',
+        priest: '#FFFFFF', dk: '#C41F3B', shaman: '#0070DE', mage: '#69CCF0',
+        warlock: '#9482C9', druid: '#FF7D0A',
+    };
 
     // Small class-icon <img> for the context headers (AH + Find Upgrades).
     // zamimg, same source as the talents pages; dk -> deathknight for the URL.
@@ -16871,9 +16905,7 @@
             ? prevRole
             : viable[0];
 
-        document.getElementById('up-context').innerHTML =
-            `<strong>${escape(name)}</strong>${classIconHTML(upState.classSlug)} &middot; Lvl ${upState.charLevel} ${escape(upState.classSlug)} ` +
-            `&middot; role: <strong>${upState.role}</strong>`;
+        updateUpgradeContext();   // renders name + role badge; Balance fills in when money loads
 
         // history.back() pops to the character view via the popstate
         // handler, instead of pushing a duplicate entry that desyncs Back.
@@ -16988,12 +17020,22 @@
     };
 
     function updateUpgradeContext() {
-        const tail = upState.role ? `role: <strong>${upState.role}</strong>` : 'pick a role';
-        const goldHtml = upState.money
-            ? ` &middot; <span class="money" title="Gold available">${formatCopper(upState.money)}</span>` : '';
+        const slug  = upState.classSlug || '';
+        const ccol  = CLASS_COLORS[slug] || '#e6e6ea';
+        const clsNm = slug === 'dk' ? 'Death Knight'
+                    : slug ? slug.charAt(0).toUpperCase() + slug.slice(1) : '';
+        const roleBadge = upState.role
+            ? `<span class="up-role-badge">${escape(upState.role.charAt(0).toUpperCase() + upState.role.slice(1))}</span>`
+            : '<span class="up-role-badge muted">pick a role</span>';
         document.getElementById('up-context').innerHTML =
-            `<strong>${escape(upState.charName)}</strong>${classIconHTML(upState.classSlug)} &middot; Lvl ${upState.charLevel} ` +
-            `${escape(upState.classSlug)}${goldHtml} &middot; ${tail}`;
+            `<strong style="color:${ccol}">${escape(upState.charName)}</strong>${classIconHTML(slug)} ` +
+            `&middot; Lvl ${upState.charLevel} ${escape(clsNm)} ${roleBadge}`;
+        // Balance chip (top-right) — the player's gold, reserved to the 💰 icon
+        // so it never reads as "buy on AH" (that's 🏛).
+        const bal = document.getElementById('up-balance');
+        if (bal) bal.innerHTML = upState.money
+            ? `<span class="bal-cap">Balance</span> &#x1F4B0; <span class="money">${formatCopper(upState.money)}</span>`
+            : '';
     }
 
     // Role tab clicks just re-render (loot data is already cached)
