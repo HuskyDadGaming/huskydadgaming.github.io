@@ -17036,7 +17036,7 @@
     }
 
     function renderUpgradeCard(slotIdx, label, currentItem, mailItem, candidates, status) {
-        status = status || computeSlotStatus(slotIdx, currentItem, candidates);
+        status = status || computeSlotStatus(slotIdx, currentItem, candidates, mailItem);
         // Compact mode: collapsed slots render as a one-liner (click to expand).
         if (upState.compact && !(upState.expandedSlots && upState.expandedSlots.has(slotIdx)))
             return renderCompactSlot(slotIdx, label, status, candidates);
@@ -17115,10 +17115,14 @@
                     <span class="up-ah-slot">${ahLink}${dungeonLink}${transferLink}</span>
                     ${reqBadge}
                     ${deltaBadge}
-                    ${(kind === 'current' && !it._inMail) ? '<span class="up-eq-tick" title="Currently equipped">&#10003;</span>' : ''}
+                    ${kind === 'current'
+                        ? (it._inMail ? '<span class="up-eq-tick" style="color:#79b8e0;" title="In your mailbox — collect and equip">📬</span>'
+                          : it.inBag ? `<span class="up-eq-tick" style="color:#79b8e0;" title="${it.ownedLoc === 'bank' ? 'In your bank — equip it' : 'In your bags — equip it'}">${it.ownedLoc === 'bank' ? '🏦' : '🎒'}</span>`
+                          : '<span class="up-eq-tick" title="Currently equipped">&#10003;</span>')
+                        : ''}
                     <span class="up-ilvl">${it.ilvl || '—'}</span>
                 </div>
-                <div class="up-item-meta">${source}${it._inMail ? '<span class="up-source" title="Waiting in your mailbox">📬</span>' : ''}${it.inBag ? `<span class="up-source" title="${it.ownedLoc === 'bank' ? 'In your bank' : 'In your bags'}">${it.ownedLoc === 'bank' ? '🏦' : '🎒'}</span>` : ''}${it.heldBy ? `<span class="up-source" title="In ${escape(it.heldBy)}'s ${it.ownedLoc === 'bank' ? 'bank' : 'bags'} — a squad-mate can mail it over">${it.ownedLoc === 'bank' ? '🏦' : '🎒'} ${escape(it.heldBy)}</span>` : ''}${drop}</div>
+                <div class="up-item-meta">${source}${(kind !== 'current' && it._inMail) ? '<span class="up-source" title="Waiting in your mailbox">📬</span>' : ''}${(kind !== 'current' && it.inBag) ? `<span class="up-source" title="${it.ownedLoc === 'bank' ? 'In your bank' : 'In your bags'}">${it.ownedLoc === 'bank' ? '🏦' : '🎒'}</span>` : ''}${it.heldBy ? `<span class="up-source" title="In ${escape(it.heldBy)}'s ${it.ownedLoc === 'bank' ? 'bank' : 'bags'} — a squad-mate can mail it over">${it.ownedLoc === 'bank' ? '🏦' : '🎒'} ${escape(it.heldBy)}</span>` : ''}${drop}</div>
             </div>`;
         };
 
@@ -17421,15 +17425,20 @@
     //   emptySockets  — ungemmed sockets on the equipped piece
     //   missingEnchant— an enchantable slot with no enchant applied
     //   optimal       — nothing to do (worn, no upgrade, gemmed, enchanted)
-    function computeSlotStatus(idx, equipped, candidates) {
-        const hasUpgrade = candidates.length > 0;
+    function computeSlotStatus(idx, equipped, candidates, mailItem) {
+        const w = getStatWeights(upState.role, upState.classSlug);
+        // Upgrade available = a better item in the candidate pool, OR a piece
+        // already waiting in the mailbox/bags that beats what's worn (needs
+        // collecting/equipping — it's not "optimal" until it's on).
+        let mailUpgrade = false;
+        if (mailItem) mailUpgrade = !equipped || scoreItemForRole(mailItem, w, null) > scoreItemForRole(equipped, w, null);
+        const hasUpgrade = candidates.length > 0 || mailUpgrade;
         const emptySockets = emptySocketCount(equipped);
         // "Missing enchant" = there's a better enchant you can actually apply —
         // buyable on the AH, OR one you already have (bags/bank/mailbox), OR one a
         // squad-mate can mail over. Profession-gated (Enchant Ring is Enchanter-
         // only, so a ring on a non-enchanter reads NOT missing). Only the buyable
         // route adds gold to the cost tag; owned/held enchants are free to apply.
-        const w = equipped ? getStatWeights(upState.role, upState.classSlug) : null;
         let missingEnchant = false, enchBuyCost = 0;
         if (equipped) {
             const curEn = (equipped.enchant && window.KCraftEnchantById) ? window.KCraftEnchantById[equipped.enchant] : null;
@@ -17491,7 +17500,7 @@
             // equipped piece too so the score baseline is the BETTER of the two —
             // a bought item that's actually a downgrade won't lower the bar.
             const candidates = findUpgradesForSlot(items, idx, mailItem || equipped, mailItem ? equipped : null);
-            const status = computeSlotStatus(idx, equipped, candidates);
+            const status = computeSlotStatus(idx, equipped, candidates, mailItem);
             if (status.hasUpgrade) nUp++;
             nSock += status.emptySockets;
             if (status.missingEnchant) nEnch++;
