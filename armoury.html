@@ -15936,31 +15936,32 @@
     let GEMS = [];
     try { GEMS = (JSON.parse(document.getElementById('gem-data').textContent || '{}').gems) || []; }
     catch (e) { GEMS = []; }
-    // Best gem for one socket colour, for the given role weights: highest role
-    // score among gems that fit the colour, tie-broken by quality then ilvl.
-    // Cached per (colour|role|class) since the same socket colour recurs across
-    // many slots in a single render.
-    const _gemBestCache = {};
-    function bestGemForSocket(colorBit, weights, cacheKey) {
-        if (cacheKey && _gemBestCache[cacheKey] !== undefined) return _gemBestCache[cacheKey];
+    // Is a gem obtainable right now — on the AH or already in the character's
+    // bags/bank? Gates the recommender so it only suggests gems you can actually
+    // get (mirrors the enchant buyable/owned gate).
+    function gemObtainable(g) {
+        return (upState.gemsOwned && upState.gemsOwned.has(g.id))
+            || (upState.gemsOnAH && upState.gemsOnAH.has(g.id));
+    }
+    // Best OBTAINABLE gem for one socket colour, by role weights: highest role
+    // score among gems that fit the colour AND are on the AH / owned, tie-broken
+    // by quality. Returns null if nothing obtainable fits.
+    function bestGemForSocket(colorBit, weights) {
         let best = null, bestScore = -Infinity;
         for (const g of GEMS) {
             if (!(g.mask & colorBit)) continue;                 // gem colour must fit the socket
+            if (!gemObtainable(g)) continue;                    // only what you can actually get
             const sc = scoreEnchant(g.stats, weights, upState.role, upState.schools);
             if (sc <= 0) continue;                              // nothing this role values
             if (sc > bestScore || (sc === bestScore && best && (g.q > best.q))) { bestScore = sc; best = g; }
         }
-        if (cacheKey) _gemBestCache[cacheKey] = best;
         return best;
     }
     // Per-socket gem recommendation for an item: [{color, gem}] in socket order.
     function topGemsForItem(item, weights) {
         const cols = item && item.socketColors;
         if (!Array.isArray(cols) || !cols.length) return [];
-        const out = [];
-        for (const c of cols)
-            out.push({ color: c, gem: bestGemForSocket(c, weights, c + '|' + upState.role + '|' + upState.classSlug) });
-        return out;
+        return cols.map(c => ({ color: c, gem: bestGemForSocket(c, weights) }));
     }
     // Enchant lookups: by enchantment id (tooltip.js renders item.enchant) and
     // by applying-item entry (map a bought scroll in the mailbox -> its enchant).
@@ -16732,14 +16733,28 @@
                 const cls = SOCKET_COLOR_CLASS[r.color] || 'other';
                 const cname = SOCKET_COLOR_NAME[r.color] || 'Prismatic';
                 const sq = `<span class="gem-sock gem-${cls}"></span>`;
+                // No obtainable gem for this socket/spec (nothing fitting on the AH
+                // or in bags) — show the socket, dimmed.
                 if (!r.gem)
-                    return `<div class="up-pin-ench"><span class="pin-nm">${sq} <span style="opacity:0.55;">${cname} socket</span></span></div>`;
+                    return `<div class="up-pin-ench"><span class="pin-nm">${sq} <span style="opacity:0.55;">${cname} socket — none on the AH</span></span></div>`;
                 const st = Object.entries(r.gem.stats).map(([k, v]) => `+${v} ${k}`).join(', ');
                 const qcol = r.gem.q >= 4 ? '#a335ee' : '#0070dd';   // epic / rare
                 const ttItem = { id: r.gem.id, name: r.gem.name, color: qcol,
                     stats: Object.entries(r.gem.stats).map(([k, v]) => `+${v} ${k}`) };
                 const ttJson = JSON.stringify(ttItem).replace(/"/g, '&quot;');
-                return `<div class="up-pin-ench" data-item-id="${r.gem.id}" data-item-json="${ttJson}"><span class="pin-nm">${sq} <span style="color:${qcol};">${escape(r.gem.name)}</span> <span style="opacity:0.8;">(${escape(st)})</span></span></div>`;
+                // Obtainability: owned gem shows "In bags"; else the cheapest AH
+                // buyout + a buy link (jumps to the AH for this gem). The picker
+                // only returns obtainable gems, so it's always one or the other.
+                const owned  = upState.gemsOwned && upState.gemsOwned.has(r.gem.id);
+                const price  = (!owned && upState.gemPrices) ? upState.gemPrices[r.gem.id] : 0;
+                const gemNm  = JSON.stringify(r.gem.name).replace(/"/g, '&quot;');
+                const srcHtml = owned
+                    ? `<span class="up-source" title="You already have this gem in your bags/bank">🎒 In bags</span>`
+                    : (price ? `<span class="up-price" title="Cheapest gem buyout on the Auction House">${formatCopper(price)}</span>` : '');
+                const buyLink = owned ? ''
+                    : `<a class="up-ah-link" href="#" title="Buy this gem on the Auction House" onclick="event.stopPropagation(); window.ahForItem(${gemNm}); return false;">&#127963;</a>`;
+                const rowClick = owned ? '' : `onclick="window.ahForItem(${gemNm}); return false;"`;
+                return `<div class="up-pin-ench${owned ? '' : ' clickable'}" data-item-id="${r.gem.id}" data-item-json="${ttJson}" ${rowClick}><span class="pin-nm">${sq} <span style="color:${qcol};">${escape(r.gem.name)}</span> <span style="opacity:0.8;">(${escape(st)})</span></span>${srcHtml}<span class="up-ah-slot">${buyLink}</span></div>`;
             }).join('');
             gemRecHtml = `<div style="margin-top:6px;display:flex;flex-direction:column;gap:2px;">`
                 + `<div class="up-col-heading" style="opacity:0.7;">Gems</div>${rows}</div>`;
@@ -16941,6 +16956,9 @@
             upState.enchantsHeldByLoc = up.enchantsHeldByLoc || {};    // scroll entry -> 'bags' | 'bank' (in the mate's inv)
             upState.enchantPrices = up.enchantPrices || {};   // scroll entry -> cheapest buyout (copper)
             upState.enchantEffects = up.enchantEffects || {}; // scroll entry -> real [{trigger,text}] tooltip effects
+            upState.gemsOnAH = new Set(up.gemsOnAH || []);    // gem items buyable on the AH now
+            upState.gemsOwned = new Set(up.gemsOwned || []);  // gems already in bags/bank
+            upState.gemPrices = up.gemPrices || {};           // gem entry -> cheapest buyout (copper)
             upState.money = up.money || 0;                    // character's gold total (copper)
             updateUpgradeContext();   // re-render the header now that the gold total is known
             // Best (highest-chance) dungeon source per item id.
