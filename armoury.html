@@ -16038,11 +16038,15 @@
     let GEMS = [];
     try { GEMS = (JSON.parse(document.getElementById('gem-data').textContent || '{}').gems) || []; }
     catch (e) { GEMS = []; }
+    // Gem item entries, for matching mailbox items (a bought gem waiting to be
+    // socketed) the same way KCraftEnchantByScroll matches enchant scrolls.
+    window.KCraftGemEntries = new Set(GEMS.map(g => g.id));
     // Is a gem obtainable right now — on the AH or already in the character's
     // bags/bank? Gates the recommender so it only suggests gems you can actually
     // get (mirrors the enchant buyable/owned gate).
     function gemObtainable(g) {
         return (upState.gemsOwned && upState.gemsOwned.has(g.id))
+            || (upState.mailGemIds && upState.mailGemIds.has(g.id))   // bought, in mailbox
             || (upState.gemsOnAH && upState.gemsOnAH.has(g.id));
     }
     // Best OBTAINABLE gem for one socket colour, by role weights: highest role
@@ -16877,16 +16881,20 @@
                 // Obtainability: owned gem shows "In bags"; else the cheapest AH
                 // buyout + a buy link (jumps to the AH for this gem). The picker
                 // only returns obtainable gems, so it's always one or the other.
-                const owned  = upState.gemsOwned && upState.gemsOwned.has(r.gem.id);
-                const price  = (!owned && upState.gemPrices) ? upState.gemPrices[r.gem.id] : 0;
+                const inMail = upState.mailGemIds && upState.mailGemIds.has(r.gem.id);
+                const owned  = !inMail && upState.gemsOwned && upState.gemsOwned.has(r.gem.id);
+                const free   = inMail || owned;   // already bought/owned — nothing to buy
+                const price  = (!free && upState.gemPrices) ? upState.gemPrices[r.gem.id] : 0;
                 const gemNm  = JSON.stringify(r.gem.name).replace(/"/g, '&quot;');
-                const srcHtml = owned
+                const srcHtml = inMail
+                    ? `<span class="up-source" title="Bought — waiting in your mailbox">📬</span>`
+                    : owned
                     ? `<span class="up-source" title="You already have this gem — in your bags/bank">🎒</span>`
                     : (price ? `<span class="up-price" title="Cheapest gem buyout on the Auction House">${formatCopper(price)}</span>` : '');
-                const buyLink = owned ? ''
+                const buyLink = free ? ''
                     : `<a class="up-ah-link" href="#" title="Buy this gem on the Auction House" onclick="event.stopPropagation(); window.ahForItem(${gemNm}); return false;">&#127963;</a>`;
-                const rowClick = owned ? '' : `onclick="window.ahForItem(${gemNm}); return false;"`;
-                return `<div class="up-pin-ench${owned ? '' : ' clickable'}" data-item-id="${r.gem.id}" data-item-json="${ttJson}" ${rowClick}><span class="pin-nm">${sq} <span style="color:${qcol};">${escape(r.gem.name)}</span> <span style="opacity:0.8;">(${escape(st)})</span></span><span class="up-delta"></span>${srcHtml}<span class="up-ah-slot">${buyLink}</span></div>`;
+                const rowClick = free ? '' : `onclick="window.ahForItem(${gemNm}); return false;"`;
+                return `<div class="up-pin-ench${free ? '' : ' clickable'}" data-item-id="${r.gem.id}" data-item-json="${ttJson}" ${rowClick}><span class="pin-nm">${sq} <span style="color:${qcol};">${escape(r.gem.name)}</span> <span style="opacity:0.8;">(${escape(st)})</span></span><span class="up-delta"></span>${srcHtml}<span class="up-ah-slot">${buyLink}</span></div>`;
             }).join('');
             gemRows = rows;
         }
@@ -16981,8 +16989,12 @@
         // held items are free (0). Drives the compact row's cost tag.
         let buyCost = 0;
         if (equipped) {
-            if (emptySockets) for (const r of topGemsForItem(equipped, w))
-                if (r.gem && upState.gemPrices) buyCost += (upState.gemPrices[r.gem.id] || 0);
+            if (emptySockets) for (const r of topGemsForItem(equipped, w)) {
+                if (!r.gem || !upState.gemPrices) continue;
+                const gid = r.gem.id;
+                const gemFree = (upState.mailGemIds && upState.mailGemIds.has(gid)) || (upState.gemsOwned && upState.gemsOwned.has(gid));
+                if (!gemFree) buyCost += (upState.gemPrices[gid] || 0);
+            }
             if (missingEnchant && bestEnch[0]._buy && upState.enchantPrices)
                 buyCost += (upState.enchantPrices[bestEnch[0]._buy[0]] || 0);
         }
@@ -17155,9 +17167,11 @@
             // set of their enchantment ids, so the finder shows "in mailbox" and
             // compares suggestions against the one you're about to apply.
             upState.mailEnchantIds = new Set();
+            upState.mailGemIds = new Set();   // gems bought + waiting in the mailbox
             for (const m of mailItems) {
                 const me = window.KCraftEnchantByScroll && window.KCraftEnchantByScroll[m.id];
                 if (me && me.ench != null) upState.mailEnchantIds.add(me.ench);
+                if (window.KCraftGemEntries && window.KCraftGemEntries.has(m.id)) upState.mailGemIds.add(m.id);
             }
             upState.professions = up.professions || [];  // skill ids, for enchant profession gate
             upState.enchantsOnAH = new Set(up.enchantsOnAH || []);  // enchant items buyable on AH now
