@@ -935,6 +935,8 @@
             color: #888; font-size: 0.75rem;
             font-variant-numeric: tabular-nums; min-width: 28px; text-align: right;
         }
+        /* Green "currently equipped" tick — matches the equipped-enchant / gem ticks. */
+        .up-eq-tick { color: #1eff00; font-weight: 700; flex: none; }
         /* Upgrade-delta badge — role-fit score gain over the equipped item.
            Always positive (non-upgrades are filtered out in
            findUpgradesForSlot), so it's unconditionally green. */
@@ -17094,6 +17096,7 @@
                     <span class="up-ah-slot">${ahLink}${dungeonLink}${transferLink}</span>
                     ${reqBadge}
                     ${deltaBadge}
+                    ${(kind === 'current' && !it._inMail) ? '<span class="up-eq-tick" title="Currently equipped">&#10003;</span>' : ''}
                     <span class="up-ilvl">${it.ilvl || '—'}</span>
                 </div>
                 <div class="up-item-meta">${source}${it._inMail ? '<span class="up-source" title="Waiting in your mailbox">📬</span>' : ''}${it.inBag ? `<span class="up-source" title="${it.ownedLoc === 'bank' ? 'In your bank' : 'In your bags'}">${it.ownedLoc === 'bank' ? '🏦' : '🎒'}</span>` : ''}${it.heldBy ? `<span class="up-source" title="In ${escape(it.heldBy)}'s ${it.ownedLoc === 'bank' ? 'bank' : 'bags'} — a squad-mate can mail it over">${it.ownedLoc === 'bank' ? '🏦' : '🎒'} ${escape(it.heldBy)}</span>` : ''}${drop}</div>
@@ -17181,7 +17184,7 @@
         if (curEn) {
             const st = Object.entries(curEn.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
             const nm = String(curEn.name).replace(/^Enchant [^-]+ - /, '');
-            curEnchHtml = `<div class="up-pin-ench" ${pinTip(curEn, '#1eff00')} style="color:#1eff00;margin-top:4px;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span></div>`;
+            curEnchHtml = `<div class="up-pin-ench" ${pinTip(curEn, '#1eff00')} style="color:#1eff00;margin-top:4px;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-price"></span><span class="up-ah-slot" style="color:#1eff00;" title="Applied to this item">&#10003;</span></div>`;
         }
         // Only pin a mailbox/bags enchant when it actually BEATS the applied one —
         // a held enchant that's a downgrade isn't worth surfacing (e.g. Crusader
@@ -17196,7 +17199,7 @@
         if (mailEn && enScore(mailEn) > curEnScore) {
             const st = Object.entries(mailEn.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
             const nm = String(mailEn.name).replace(/^Enchant [^-]+ - /, '');
-            mailEnchHtml = `<div class="up-pin-ench" ${pinTip(mailEn)} style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-source" title="Waiting in your mailbox">📬</span></div>`;
+            mailEnchHtml = `<div class="up-pin-ench" ${pinTip(mailEn)} style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-price"></span><span class="up-ah-slot" title="Waiting in your mailbox">📬</span></div>`;
         }
         // Enchant you already own a scroll for (bags/bank), shown the SAME way as
         // the mailbox enchant — a blue line pinned under the item, not a boxed
@@ -17211,7 +17214,7 @@
             const inBank = ownedScroll && upState.enchantsOwnedLoc[ownedScroll[0]] === 'bank';
             const loc = inBank ? '🏦' : '🎒';
             const locT = inBank ? 'In your bank' : 'In your bags';
-            bagsEnchHtml = `<div class="up-pin-ench" ${pinTip(bagsEn)} style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-source" title="${locT}">${loc}</span></div>`;
+            bagsEnchHtml = `<div class="up-pin-ench" ${pinTip(bagsEn)} style="color:#79b8e0;"><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-price"></span><span class="up-ah-slot" title="${locT}">${loc}</span></div>`;
         }
         // Enchant a SQUAD-MATE is holding a scroll for — pinned like the bags
         // line but with a 📤 transfer button (they mail it to you for 30c).
@@ -17236,7 +17239,7 @@
                 ? `onclick="event.stopPropagation(); ${xferCall}; return false;" title="Click to mail to ${escape(_to)} — ${escape(squadEn.holder)} pays the 30c fee"`
                 : '';
             const heldIcon = squadEn.loc === 'bank' ? '🏦' : '🎒';
-            squadEnchHtml = `<div class="up-pin-ench${_to ? ' clickable' : ''}" ${pinTip(squadEn.ench)} style="color:#79b8e0;" ${clickAttr}><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-source" title="In ${escape(squadEn.holder)}${locLabel} — click to mail it over">${heldIcon} ${escape(squadEn.holder)}</span><span class="pin-xfer">📤</span></div>`;
+            squadEnchHtml = `<div class="up-pin-ench${_to ? ' clickable' : ''}" ${pinTip(squadEn.ench)} style="color:#79b8e0;" ${clickAttr}><span class="pin-nm">&#128295; ${escape(nm)}${st ? ' (' + escape(st) + ')' : ''}</span><span class="up-delta"></span><span class="up-source" title="In ${escape(squadEn.holder)}${locLabel} — click to mail it over">${heldIcon} ${escape(squadEn.holder)}</span><span class="up-ah-slot"><span class="pin-xfer">📤</span></span></div>`;
         }
         // Applied item modifications (current enchant/kit + inbound mail enchant +
         // an owned "in bags" enchant), pinned right under the item so they stay
