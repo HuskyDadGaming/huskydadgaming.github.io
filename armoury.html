@@ -16403,19 +16403,20 @@
     // spare (mailLeft), or listed on the AH? Gates the recommender to gems you
     // can actually get. mailLeft is the per-item running tally of mailbox copies
     // not yet assigned to an earlier socket.
-    function gemObtainable(g, mailLeft) {
+    function gemObtainable(g, mailLeft, squadLeft) {
         return (upState.gemsOwned && upState.gemsOwned.has(g.id))
             || (mailLeft && mailLeft[g.id] > 0)                 // a bought copy still spare
+            || (squadLeft && squadLeft[g.id] > 0)               // a squad-mate can mail one over
             || (upState.gemsOnAH && upState.gemsOnAH.has(g.id));
     }
     // Best obtainable gem for one socket colour, by role weights: highest role
     // score among gems that fit the colour AND are gettable, tie-broken by
     // quality. Returns null if nothing obtainable fits.
-    function bestGemForSocket(colorBit, weights, mailLeft) {
+    function bestGemForSocket(colorBit, weights, mailLeft, squadLeft) {
         let best = null, bestScore = -Infinity;
         for (const g of GEMS) {
             if (!(g.mask & colorBit)) continue;                 // gem colour must fit the socket
-            if (!gemObtainable(g, mailLeft)) continue;          // only what you can actually get
+            if (!gemObtainable(g, mailLeft, squadLeft)) continue;   // only what you can actually get
             const sc = scoreEnchant(g.stats, weights, upState.role, upState.schools);
             if (sc <= 0) continue;                              // nothing this role values
             if (sc > bestScore || (sc === bestScore && best && (g.q > best.q))) { bestScore = sc; best = g; }
@@ -16435,6 +16436,7 @@
         const filled = item.socketFilled || [];
         const setGems = item.socketGems || [];
         const mailLeft = Object.assign({}, upState.mailGemCounts || {});
+        const squadLeft = Object.assign({}, upState.gemsHeldByCount || {});
         const out = [];
         cols.forEach((c, i) => {
             if (filled[i]) {
@@ -16442,11 +16444,14 @@
                 out.push({ color: c, gem: g, source: 'equipped' });   // gem is null if we lack data for it
                 return;
             }
-            const gem = bestGemForSocket(c, weights, mailLeft);
+            const gem = bestGemForSocket(c, weights, mailLeft, squadLeft);
             let source = null;
             if (gem) {
-                if (mailLeft[gem.id] > 0) { source = 'mail'; mailLeft[gem.id]--; }       // use a bought copy
-                else if (upState.gemsOwned && upState.gemsOwned.has(gem.id)) source = 'owned';
+                // Prefer free sources, count-limited ones consumed as assigned:
+                // owned (bags) -> mailbox -> squad-mate -> buy.
+                if (upState.gemsOwned && upState.gemsOwned.has(gem.id)) source = 'owned';
+                else if (mailLeft[gem.id] > 0) { source = 'mail'; mailLeft[gem.id]--; }
+                else if (squadLeft[gem.id] > 0) { source = 'squad'; squadLeft[gem.id]--; }
                 else source = 'ah';                                                       // buy it
             }
             out.push({ color: c, gem, source });
@@ -17269,25 +17274,34 @@
                 const ttItem = { id: r.gem.id, name: r.gem.name, color: qcol,
                     stats: Object.entries(r.gem.stats).map(([k, v]) => `+${v} ${k}`) };
                 const ttJson = JSON.stringify(ttItem).replace(/"/g, '&quot;');
-                // Source (from topGemsForItem): 'equipped' (already socketed, green
-                // ✓, nothing to do), 'mail' (bought, in mailbox), 'owned' (bags), or
-                // 'ah' (buy — shows price + buy link).
+                // Source (from topGemsForItem): 'equipped' (socketed, green ✓),
+                // 'mail' (bought, in mailbox), 'owned' (bags), 'squad' (a mate can
+                // mail one over), or 'ah' (buy — price + buy link).
                 const inMail = r.source === 'mail';
                 const owned  = r.source === 'owned';
-                const free   = equipped || inMail || owned;   // nothing to buy
+                const squad  = r.source === 'squad';
+                const free   = equipped || inMail || owned || squad;   // nothing to buy
                 const price  = (!free && upState.gemPrices) ? upState.gemPrices[r.gem.id] : 0;
                 const gemNm  = JSON.stringify(r.gem.name).replace(/"/g, '&quot;');
+                const holder = squad ? (upState.gemsHeldBy && upState.gemsHeldBy[r.gem.id]) : null;
+                const heldIcon = squad ? ((upState.gemsHeldByLoc && upState.gemsHeldByLoc[r.gem.id]) === 'bank' ? '🏦' : '🎒') : '';
+                const _to = (lastViewedCharacter && lastViewedCharacter.name) || '';
                 const srcHtml = equipped
                     ? `<span class="up-source" style="color:#1eff00;" title="Socketed in this item">&#10003;</span>`
                     : inMail
                     ? `<span class="up-source" title="Bought — waiting in your mailbox">📬</span>`
                     : owned
                     ? `<span class="up-source" title="You already have this gem — in your bags/bank">🎒</span>`
+                    : squad
+                    ? `<span class="up-source" title="In ${escape(holder || '')}'s ${(upState.gemsHeldByLoc && upState.gemsHeldByLoc[r.gem.id]) === 'bank' ? 'bank' : 'bags'} — click to mail it over">${heldIcon} ${escape(holder || '')}</span>`
                     : (price ? `<span class="up-price" title="Cheapest gem buyout on the Auction House">${formatCopper(price)}</span>` : '');
-                const buyLink = free ? ''
+                const xfer = (squad && _to) ? '<span class="pin-xfer">📤</span>' : '';
+                const buyLink = (free || !price) ? ''
                     : `<a class="up-ah-link" href="#" title="Buy this gem on the Auction House" onclick="event.stopPropagation(); window.ahForItem(${gemNm}); return false;">&#127963;</a>`;
-                const rowClick = free ? '' : `onclick="window.ahForItem(${gemNm}); return false;"`;
-                return `<div class="up-pin-ench${free ? '' : ' clickable'}" data-item-id="${r.gem.id}" data-item-json="${ttJson}" ${rowClick}><span class="pin-nm">${sq} <span style="color:${qcol};">${escape(r.gem.name)}</span> <span style="opacity:0.8;">(${escape(st)})</span></span><span class="up-delta"></span>${srcHtml}<span class="up-ah-slot">${buyLink}</span></div>`;
+                const rowClick = squad && _to
+                    ? `onclick="event.stopPropagation(); window.transferSquadItem(${JSON.stringify(holder).replace(/"/g, '&quot;')}, ${r.gem.id}, ${gemNm}); return false;"`
+                    : (!free ? `onclick="window.ahForItem(${gemNm}); return false;"` : '');
+                return `<div class="up-pin-ench${free && !squad ? '' : ' clickable'}" data-item-id="${r.gem.id}" data-item-json="${ttJson}" ${rowClick}><span class="pin-nm">${sq} <span style="color:${qcol};">${escape(r.gem.name)}</span> <span style="opacity:0.8;">(${escape(st)})</span></span><span class="up-delta"></span>${srcHtml}<span class="up-ah-slot">${buyLink}${xfer}</span></div>`;
             }).join('');
             gemRows = rows;
         }
@@ -17587,6 +17601,9 @@
             upState.gemsOnAH = new Set(up.gemsOnAH || []);    // gem items buyable on the AH now
             upState.gemsOwned = new Set(up.gemsOwned || []);  // gems already in bags/bank
             upState.gemPrices = up.gemPrices || {};           // gem entry -> cheapest buyout (copper)
+            upState.gemsHeldBy = up.gemsHeldBy || {};         // gem entry -> squad-mate name holding it
+            upState.gemsHeldByLoc = up.gemsHeldByLoc || {};   // gem entry -> 'bags' | 'bank' (mate's inv)
+            upState.gemsHeldByCount = up.gemsHeldByCount || {}; // gem entry -> copies the mate holds
             upState.money = up.money || 0;                    // character's gold total (copper)
             updateUpgradeContext();   // re-render the header now that the gold total is known
             // Best (highest-chance) dungeon source per item id.
