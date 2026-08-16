@@ -836,15 +836,19 @@
                of Arcane Rage") stretches its column and the equipped boxes end up
                different widths from card to card. Names wrap inside the fixed box. */
             display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-            grid-template-areas:
-                "curitems canditems"
-                "curench  candench";
-            column-gap: 1rem; row-gap: 0;
+            column-gap: 1rem; align-items: start;
         }
-        .up-area-curitems  { grid-area: curitems; }
-        .up-area-canditems { grid-area: canditems; }
-        .up-area-curench   { grid-area: curench; }
-        .up-area-candench  { grid-area: candench; }
+        .up-your-col, .up-cand-col { min-width: 0; }
+        /* "Improve this piece" rail — enchant + gems grouped under the equipped
+           item on the left, set off by a rail so it reads as one unit. */
+        .up-improve {
+            border-left: 2px solid #3a3a3a; margin: 9px 0 0 3px; padding-left: 11px;
+            display: flex; flex-direction: column; gap: 9px;
+        }
+        .up-imp-block { display: flex; flex-direction: column; gap: 2px; }
+        .up-imp-head {
+            color: #888; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em;
+        }
         .up-col-heading {
             color: #888; font-size: 0.72rem; text-transform: uppercase;
             letter-spacing: 0.5px; margin-bottom: 4px;
@@ -970,10 +974,9 @@
 
         @media (max-width: 600px) {
             .up-slot-body {
-                grid-template-columns: 1fr;
-                grid-template-areas: "curitems" "curench" "canditems" "candench";
+                grid-template-columns: 1fr; row-gap: 10px;
             }
-            .up-area-canditems { border-top: 1px dashed #333; padding-top: 6px; margin-top: 2px; }
+            .up-cand-col { border-top: 1px dashed #333; padding-top: 6px; }
             /* Inline AH/dungeon icons stay visible on mobile too (tapping the
                icon does its action via stopPropagation; tapping elsewhere on
                the row still opens the tooltip). */
@@ -16669,14 +16672,6 @@
             </div>`;
         };
 
-        // Upgrades column: absolute top-3 enchants for the slot — they accompany
-        // the new item upgrades, so they ignore what's currently applied.
-        const topAbs = topEnchantsForSlot(slotIdx, currentItem, 3, false);
-        const enchHtml = topAbs.length
-            ? `<div style="margin-top:8px;display:flex;flex-direction:column;gap:3px;">
-                <div class="up-col-heading" style="opacity:0.7;">Enchants</div>${topAbs.map(enchRow).join('')}</div>`
-            : '';
-
         // The enchant/kit currently ON the item (green). This is an APPLIED item
         // modification, so it gets pinned directly under the item (appliedEnchHtml
         // below), never floated into the aligned recommendation row.
@@ -16749,18 +16744,13 @@
         // Buyable enchant recommendations for the equipped item — these DO go in
         // the aligned enchant row (they mirror the candidate column's list).
         const betterE = currentItem ? topEnchantsForSlot(slotIdx, currentItem, 2, true) : [];
-        let betterEnchHtml = '';
-        if (betterE.length) {
-            betterEnchHtml = `<div style="margin-top:8px;display:flex;flex-direction:column;gap:3px;">`
-                + `<div class="up-col-heading" style="opacity:0.7;">${(curEnchHtml || mailEnchHtml || bagsEnchHtml || squadEnchHtml) ? 'Better enchants' : 'Enchant'}</div>`
-                + betterE.map(enchRow).join('') + `</div>`;
-        }
+        const betterEnchRows = betterE.length ? betterE.map(enchRow).join('') : '';
 
         // Recommended gem for each socket on the EQUIPPED item, by role — pinned
         // under the item like applied enchants. These are what to slot into its
         // sockets (the socket squares up top show the colours; this says what to
         // put in them). Best gem that fits each socket colour for the spec.
-        let gemRecHtml = '';
+        let gemRows = '';
         if (currentItem && Array.isArray(currentItem.socketColors) && currentItem.socketColors.length) {
             const gw = getStatWeights(upState.role, upState.classSlug);
             const rows = topGemsForItem(currentItem, gw).map(r => {
@@ -16790,25 +16780,32 @@
                 const rowClick = owned ? '' : `onclick="window.ahForItem(${gemNm}); return false;"`;
                 return `<div class="up-pin-ench${owned ? '' : ' clickable'}" data-item-id="${r.gem.id}" data-item-json="${ttJson}" ${rowClick}><span class="pin-nm">${sq} <span style="color:${qcol};">${escape(r.gem.name)}</span> <span style="opacity:0.8;">(${escape(st)})</span></span>${srcHtml}<span class="up-ah-slot">${buyLink}</span></div>`;
             }).join('');
-            gemRecHtml = `<div style="margin-top:6px;display:flex;flex-direction:column;gap:2px;">`
-                + `<div class="up-col-heading" style="opacity:0.7;">Gems</div>${rows}</div>`;
+            gemRows = rows;
         }
+
+        // "Improve this piece" — the applied enchant, a better enchant to buy, and
+        // the gems for its sockets, grouped under one rail on the LEFT with the
+        // item. Everything about improving your current gear lives together; the
+        // RIGHT column is purely replacement gear.
+        const enchBlock = (appliedEnchHtml || betterEnchRows)
+            ? `<div class="up-imp-block"><div class="up-imp-head">Enchant</div>${appliedEnchHtml}${betterEnchRows}</div>` : '';
+        const gemBlock = gemRows
+            ? `<div class="up-imp-block"><div class="up-imp-head">Gems</div>${gemRows}</div>` : '';
+        const improveHtml = (enchBlock || gemBlock)
+            ? `<div class="up-improve">${enchBlock}${gemBlock}</div>` : '';
 
         return `<div class="up-slot-card">
             <div class="up-slot-label">${escape(label)}</div>
             <div class="up-slot-body">
-                <div class="up-current-col up-area-curitems">
+                <div class="up-your-col">
                     <div class="up-col-heading">Equipped</div>
                     ${currHtml}
-                    ${appliedEnchHtml}
-                    ${gemRecHtml}
+                    ${improveHtml}
                 </div>
-                <div class="up-cand-col up-area-canditems">
-                    <div class="up-col-heading">Top 3 upgrades</div>
+                <div class="up-cand-col">
+                    <div class="up-col-heading">&#8593; Top 3 upgrades</div>
                     ${candHtml}
                 </div>
-                <div class="up-current-col up-area-curench">${betterEnchHtml}</div>
-                <div class="up-cand-col up-area-candench">${enchHtml}</div>
             </div>
         </div>`;
     }
