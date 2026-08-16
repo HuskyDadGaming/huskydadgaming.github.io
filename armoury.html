@@ -937,6 +937,8 @@
         }
         /* Green "currently equipped" tick — matches the equipped-enchant / gem ticks. */
         .up-eq-tick { color: #1eff00; font-weight: 700; flex: none; }
+        /* "in bags" / "in mailbox" location text next to a current item's icon. */
+        .up-loc-lbl { color: #79b8e0; font-size: 0.78rem; white-space: nowrap; flex: none; margin-right: 4px; }
         /* Upgrade-delta badge — role-fit score gain over the equipped item.
            Always positive (non-upgrades are filtered out in
            findUpgradesForSlot), so it's unconditionally green. */
@@ -17116,8 +17118,8 @@
                     ${reqBadge}
                     ${deltaBadge}
                     ${kind === 'current'
-                        ? (it._inMail ? '<span class="up-eq-tick" style="color:#79b8e0;" title="In your mailbox — collect and equip">📬</span>'
-                          : it.inBag ? `<span class="up-eq-tick" style="color:#79b8e0;" title="${it.ownedLoc === 'bank' ? 'In your bank — equip it' : 'In your bags — equip it'}">${it.ownedLoc === 'bank' ? '🏦' : '🎒'}</span>`
+                        ? (it._inMail ? '<span class="up-loc-lbl">in mailbox</span><span class="up-eq-tick" style="color:#79b8e0;" title="Collect it and equip">📬</span>'
+                          : it.inBag ? `<span class="up-loc-lbl">${it.ownedLoc === 'bank' ? 'in bank' : 'in bags'}</span><span class="up-eq-tick" style="color:#79b8e0;" title="Equip it">${it.ownedLoc === 'bank' ? '🏦' : '🎒'}</span>`
                           : '<span class="up-eq-tick" title="Currently equipped">&#10003;</span>')
                         : ''}
                     <span class="up-ilvl">${it.ilvl || '—'}</span>
