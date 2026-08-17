@@ -735,9 +735,27 @@
         /* ----- Upgrade Finder view ----- */
         .up-header {
             display: flex; justify-content: space-between; align-items: flex-end;
-            flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem;
+            flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem; position: relative;
         }
         .up-header h1 { margin: 0; font-size: 1.6rem; }
+        /* In-finder character switcher (name dropdown). */
+        .up-char-switch { font-family: inherit; background: none; border: none; cursor: pointer;
+            padding: 0; font-size: inherit; color: inherit; display: inline-flex; align-items: center; gap: 3px; }
+        .up-char-switch:hover .cs-caret { color: #ffd100; }
+        .cs-caret { color: #888; font-size: 0.75em; }
+        .up-char-menu { position: absolute; top: 100%; left: 0; z-index: 200; margin-top: 4px;
+            background: #1d1e22; border: 1px solid #3a3a3a; border-radius: 8px; padding: 5px;
+            box-shadow: 0 8px 20px -6px rgba(0,0,0,0.8); max-height: 60vh; overflow-y: auto;
+            min-width: 220px; }
+        .cs-item { font-family: inherit; display: grid; grid-template-columns: 18px 1fr auto;
+            align-items: center; gap: 8px; width: 100%; background: none; border: none; cursor: pointer;
+            padding: 6px 10px; border-radius: 5px; text-align: left; white-space: nowrap; }
+        .cs-item:hover { background: #2e2f35; }
+        .cs-item.current { background: #26272c; }
+        .cs-tick { color: #5ac35a; font-weight: 700; }
+        .cs-name { font-weight: 600; }
+        .cs-meta { color: #888; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+        .cs-empty { color: #888; padding: 8px 10px; font-size: 0.85rem; }
         .up-header .up-context { color: #aaa; font-size: 0.9rem; margin-top: 4px;
             display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         /* Balance chip — the player's gold, top-right of the header. */
@@ -1312,6 +1330,7 @@
                     <div class="up-context" id="up-context"></div>
                 </div>
                 <div class="up-balance" id="up-balance"></div>
+                <div class="up-char-menu" id="up-char-menu" style="display:none;"></div>
             </div>
             <div class="up-controls">
                 <div class="up-ctrl-group">
@@ -13963,6 +13982,7 @@
                 empty.style.display = '';
                 return;
             }
+            rosterChars = data.characters;   // cache for the in-finder character switcher
             grid.style.display = '';
             const squads = groupIntoSquads(data.characters);
             grid.innerHTML = renderRoster(squads);
@@ -14414,6 +14434,9 @@
     // Full character object — needed by ahForItem() to jump from the Upgrade
     // Finder into the AH view (which wants name/guid/money/raceId/classId/lvl).
     let lastViewedCharacter = null;
+    // Flat roster (all characters), cached by showRoster — powers the in-finder
+    // character switcher so you can jump Derek -> Brutus without leaving.
+    let rosterChars = [];
 
     // Fill the #char-mail section with the character's waiting mail. Lazy —
     // fetched after the page renders so it never blocks the character load.
@@ -17547,6 +17570,55 @@
         }
     }
 
+    // In-finder character switcher: swap to another character without backing
+    // out. Loads the new char's equipped data (like showCharacter) then re-enters
+    // the finder, which opens on that char's detected spec.
+    window.switchUpgradeChar = async function(name) {
+        const menu = document.getElementById('up-char-menu');
+        if (menu) menu.style.display = 'none';
+        if (!name || name === upState.charName) return;
+        try {
+            const c = await api('/armoury/' + encodeURIComponent(name));
+            lastViewedEquipped = c.equipped || {};
+            lastViewedCharacter = c;
+            cameFromAH = false;   // fresh entry -> opens on the new char's detected spec
+            showUpgrades(name, c.classId || 0, c.level || 0);
+        } catch (e) {
+            if (typeof showError === 'function') showError('Failed to switch: ' + e.message);
+        }
+    };
+
+    // Toggle the character-switcher dropdown under the finder's character name.
+    window.toggleCharSwitcher = async function(ev) {
+        if (ev) ev.stopPropagation();
+        const menu = document.getElementById('up-char-menu');
+        if (!menu) return;
+        if (menu.style.display === 'block') { menu.style.display = 'none'; return; }
+        if (!rosterChars.length) {   // deep-link may have skipped showRoster
+            try { const d = await api('/armoury'); rosterChars = d.characters || []; } catch (e) {}
+        }
+        const chars = rosterChars.slice().sort((a, b) => (b.level - a.level) || a.name.localeCompare(b.name));
+        menu.innerHTML = chars.map(c => {
+            const slug = (CLASS_ID_TO_SLUG[c.classId] || '').replace(' ', '');
+            const col = CLASS_COLORS[slug] || '#e6e6ea';
+            const cur = c.name === upState.charName;
+            return `<button class="cs-item${cur ? ' current' : ''}" onclick="window.switchUpgradeChar(${JSON.stringify(c.name).replace(/"/g, '&quot;')})">`
+                + `<span class="cs-tick">${cur ? '&#10003;' : ''}</span>`
+                + `<span class="cs-name" style="color:${col}">${escape(c.name)}</span>`
+                + `<span class="cs-meta">Lvl ${c.level}${c.online ? ' &#9679; online' : ''}</span></button>`;
+        }).join('') || '<div class="cs-empty">No characters</div>';
+        menu.style.display = 'block';
+        setTimeout(() => {   // close on the next outside click
+            const close = (e) => {
+                if (!menu.contains(e.target) && !e.target.closest('.up-char-switch')) {
+                    menu.style.display = 'none';
+                    document.removeEventListener('click', close);
+                }
+            };
+            document.addEventListener('click', close);
+        }, 0);
+    };
+
     window.showUpgrades = async function(name, classId, level) {
         const prevRole = upState.role;   // capture before overwrite
         upState.charName  = name;
@@ -17694,8 +17766,9 @@
             ? `<span class="up-role-badge">${escape(upState.role.charAt(0).toUpperCase() + upState.role.slice(1))}</span>`
             : '<span class="up-role-badge muted">pick a role</span>';
         document.getElementById('up-context').innerHTML =
-            `<strong style="color:${ccol}">${escape(upState.charName)}</strong>${classIconHTML(slug)} ` +
-            `&middot; Lvl ${upState.charLevel} ${escape(clsNm)} ${roleBadge}`;
+            `<button class="up-char-switch" onclick="window.toggleCharSwitcher(event)" title="Switch character">` +
+            `<strong style="color:${ccol}">${escape(upState.charName)}</strong> <span class="cs-caret">&#9662;</span></button>` +
+            `${classIconHTML(slug)} &middot; Lvl ${upState.charLevel} ${escape(clsNm)} ${roleBadge}`;
         // Balance chip (top-right) — the player's gold, reserved to the 💰 icon
         // so it never reads as "buy on AH" (that's 🏛).
         const bal = document.getElementById('up-balance');
