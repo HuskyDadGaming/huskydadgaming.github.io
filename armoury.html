@@ -17457,9 +17457,11 @@
             if (buyE.length && buyE[0]._buy && upState.enchantPrices)
                 enchBuyCost = upState.enchantPrices[buyE[0]._buy[0]] || 0;
         }
-        // Gold to BUY: recommended gems for empty sockets + a buyable enchant.
-        // Owned/held/socketed items are free (0). Drives the compact cost tag.
+        // Gold to BUY: the top gear upgrade (if it's an AH purchase) + recommended
+        // gems for empty sockets + a buyable enchant. A drop / owned / mailbox /
+        // squad-held upgrade is free (0). Drives the compact cost tag.
         let buyCost = enchBuyCost;
+        if (candidates.length && candidates[0] && candidates[0].ahPrice) buyCost += candidates[0].ahPrice;
         if (equipped && emptySockets) for (const r of topGemsForItem(equipped, w))
             if (r.source === 'ah' && r.gem && upState.gemPrices) buyCost += (upState.gemPrices[r.gem.id] || 0);
         const optimal = !!equipped && !hasUpgrade && emptySockets === 0 && !missingEnchant;
